@@ -3,57 +3,156 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
+    // Inventario basado en instancias de item resueltas contra ItemDatabase.
+    // La API publica trabaja con ItemId (ej. "minor_potion").
     public sealed class InventorySystem : MonoBehaviour
     {
-        private readonly Dictionary<string, int> items = new Dictionary<string, int>();
+        private readonly List<ItemInstance> items = new List<ItemInstance>();
 
+        public ItemDatabase Database;
         public PrototypeHud Hud;
         public PlayerQuestLog QuestLog;
 
-        public void AddItem(string itemName, int amount = 1)
+        public IReadOnlyList<ItemInstance> Items => items;
+
+        public void AddItem(string itemId, int amount = 1)
         {
-            if (string.IsNullOrWhiteSpace(itemName) || amount <= 0)
+            if (string.IsNullOrWhiteSpace(itemId) || amount <= 0)
             {
                 return;
             }
 
-            if (!items.ContainsKey(itemName))
+            var definition = Database != null ? Database.Get(itemId) : null;
+            if (definition == null)
             {
-                items[itemName] = 0;
+                Debug.LogWarning($"InventorySystem: item desconocido '{itemId}'.");
+                return;
             }
 
-            items[itemName] += amount;
-            QuestLog?.OnItemAdded(itemName, amount);
+            if (definition.IsStackable)
+            {
+                var stack = FindFirst(itemId);
+                if (stack != null)
+                {
+                    stack.Quantity += amount;
+                }
+                else
+                {
+                    items.Add(ItemInstance.Create(itemId, amount));
+                }
+            }
+            else
+            {
+                for (var i = 0; i < amount; i++)
+                {
+                    items.Add(ItemInstance.Create(itemId));
+                }
+            }
+
+            QuestLog?.OnItemAdded(itemId, amount);
             Hud?.RefreshInventory();
-            Hud?.AddFeed($"+{amount} {itemName}");
+            Hud?.AddFeed($"+{amount} {definition.DisplayName}");
         }
 
-        public bool TryConsume(string itemName, int amount = 1)
+        public bool TryConsume(string itemId, int amount = 1)
         {
-            if (string.IsNullOrWhiteSpace(itemName) || amount <= 0 || Count(itemName) < amount)
+            if (string.IsNullOrWhiteSpace(itemId) || amount <= 0 || Count(itemId) < amount)
             {
                 return false;
             }
 
-            items[itemName] -= amount;
-            if (items[itemName] <= 0)
+            var remaining = amount;
+            for (var i = items.Count - 1; i >= 0 && remaining > 0; i--)
             {
-                items.Remove(itemName);
+                if (items[i].ItemId != itemId)
+                {
+                    continue;
+                }
+
+                var take = Mathf.Min(items[i].Quantity, remaining);
+                items[i].Quantity -= take;
+                remaining -= take;
+
+                if (items[i].Quantity <= 0)
+                {
+                    items.RemoveAt(i);
+                }
             }
 
             Hud?.RefreshInventory();
             return true;
         }
 
-        public int Count(string itemName)
+        public int Count(string itemId)
         {
-            return !string.IsNullOrWhiteSpace(itemName) && items.TryGetValue(itemName, out var count) ? count : 0;
+            if (string.IsNullOrWhiteSpace(itemId))
+            {
+                return 0;
+            }
+
+            var total = 0;
+            foreach (var item in items)
+            {
+                if (item.ItemId == itemId)
+                {
+                    total += item.Quantity;
+                }
+            }
+
+            return total;
+        }
+
+        public ItemInstance FindFirst(string itemId)
+        {
+            foreach (var item in items)
+            {
+                if (item.ItemId == itemId)
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+        public bool RemoveInstance(ItemInstance instance)
+        {
+            if (instance == null || !items.Remove(instance))
+            {
+                return false;
+            }
+
+            Hud?.RefreshInventory();
+            return true;
+        }
+
+        public void AddInstance(ItemInstance instance)
+        {
+            if (instance == null)
+            {
+                return;
+            }
+
+            items.Add(instance);
+            Hud?.RefreshInventory();
+        }
+
+        public string DisplayNameOf(string itemId)
+        {
+            return Database != null ? Database.DisplayNameOf(itemId) : itemId;
         }
 
         public List<SavedItemEntry> ExportEntries()
         {
-            var entries = new List<SavedItemEntry>(items.Count);
-            foreach (var entry in items)
+            var totals = new Dictionary<string, int>();
+            foreach (var item in items)
+            {
+                totals.TryGetValue(item.ItemId, out var current);
+                totals[item.ItemId] = current + item.Quantity;
+            }
+
+            var entries = new List<SavedItemEntry>(totals.Count);
+            foreach (var entry in totals)
             {
                 entries.Add(new SavedItemEntry { Name = entry.Key, Count = entry.Value });
             }
@@ -69,14 +168,44 @@ namespace MmorpgPrototype
             {
                 foreach (var entry in entries)
                 {
-                    if (!string.IsNullOrWhiteSpace(entry.Name) && entry.Count > 0)
+                    var itemId = ResolveId(entry.Name);
+                    if (string.IsNullOrWhiteSpace(itemId) || entry.Count <= 0)
                     {
-                        items[entry.Name] = entry.Count;
+                        continue;
+                    }
+
+                    var definition = Database != null ? Database.Get(itemId) : null;
+                    if (definition == null)
+                    {
+                        continue;
+                    }
+
+                    if (definition.IsStackable)
+                    {
+                        items.Add(ItemInstance.Create(itemId, entry.Count));
+                    }
+                    else
+                    {
+                        for (var i = 0; i < entry.Count; i++)
+                        {
+                            items.Add(ItemInstance.Create(itemId));
+                        }
                     }
                 }
             }
 
             Hud?.RefreshInventory();
+        }
+
+        // Guardados antiguos (esquema <= 2) usaban el nombre visible como clave.
+        private static string ResolveId(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                return null;
+            }
+
+            return DefaultGameItems.LegacyNameToId.TryGetValue(key, out var mapped) ? mapped : key;
         }
 
         public string Summary()
@@ -86,10 +215,18 @@ namespace MmorpgPrototype
                 return "Inventario: vacio";
             }
 
+            var totals = ExportEntries();
             var parts = new List<string>();
-            foreach (var entry in items)
+            foreach (var entry in totals)
             {
-                parts.Add($"{entry.Key} x{entry.Value}");
+                var label = $"{DisplayNameOf(entry.Name)} x{entry.Count}";
+                if (Database != null)
+                {
+                    var hex = ColorUtility.ToHtmlStringRGB(Database.ColorOf(entry.Name));
+                    label = $"<color=#{hex}>{label}</color>";
+                }
+
+                parts.Add(label);
                 if (parts.Count >= 4)
                 {
                     break;

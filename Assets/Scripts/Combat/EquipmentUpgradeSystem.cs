@@ -30,7 +30,7 @@ namespace MmorpgPrototype
                 return;
             }
 
-            if (!Inventory.TryConsume("Mineral opaco"))
+            if (!Inventory.TryConsume(DefaultGameItems.DullOre))
             {
                 Hud?.SetStatus("Necesitas Mineral opaco para mejorar arma.");
                 return;
@@ -58,7 +58,7 @@ namespace MmorpgPrototype
                 return;
             }
 
-            if (!Inventory.TryConsume("Anillo gastado"))
+            if (!Inventory.TryConsume(DefaultGameItems.WornRing))
             {
                 Hud?.SetStatus("Necesitas Anillo gastado para reforzar armadura.");
                 return;
@@ -79,16 +79,21 @@ namespace MmorpgPrototype
 
         public void TryUsePotion()
         {
-            if (!Inventory.TryConsume("Pocion menor"))
+            if (!Inventory.TryConsume(DefaultGameItems.MinorPotion))
             {
                 Hud?.SetStatus("No tienes pociones.");
                 return;
             }
 
-            health.Heal(45);
+            var definition = Inventory.Database != null
+                ? Inventory.Database.Get(DefaultGameItems.MinorPotion) as ConsumableItemDefinition
+                : null;
+            var healAmount = definition != null ? definition.HealAmount : 45;
+
+            health.Heal(healAmount);
             Hud?.SetStatus("Usaste Pocion menor.");
-            Hud?.AddFeed("Pocion usada: +45 vida");
-            DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, "+45", new Color(0.35f, 1f, 0.78f));
+            Hud?.AddFeed($"Pocion usada: +{healAmount} vida");
+            DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, $"+{healAmount}", new Color(0.35f, 1f, 0.78f));
         }
 
         private bool CanUseShop(int cost)
@@ -117,20 +122,40 @@ namespace MmorpgPrototype
 
         public string Summary()
         {
-            return $"Equipo: arma +{WeaponLevel} (+{combat.EquipmentDamageBonus} dano) | armadura +{ArmorLevel}";
+            var equipment = GetComponent<PlayerEquipment>();
+            var pieces = equipment != null ? equipment.Summary() : "sin piezas";
+            return $"Equipo: arma +{WeaponLevel} | armadura +{ArmorLevel} | {pieces}";
         }
 
+        // Punto unico de recomputo de stats: mejoras +N y piezas equipadas.
         public void ApplyBonuses()
         {
-            combat.EquipmentDamageBonus = WeaponLevel * 4;
+            var equipment = GetComponent<PlayerEquipment>();
+            var equipDamage = equipment != null ? equipment.TotalDamageBonus : 0;
+            var equipHealth = equipment != null ? equipment.TotalMaxHealthBonus : 0;
+            var equipSpeed = equipment != null ? equipment.TotalMoveSpeedBonus : 0f;
 
-            if (ArmorLevel > 0)
+            combat.EquipmentDamageBonus = WeaponLevel * 4 + equipDamage;
+
+            var classController = GetComponent<PlayerClassController>();
+            if (classController != null && classController.Definition != null)
             {
-                var classController = GetComponent<PlayerClassController>();
-                var baseHealth = classController != null && classController.Definition != null
-                    ? classController.Definition.MaxHealth
-                    : health.MaxHealth;
-                health.ResetHealth(baseHealth + ArmorLevel * 15);
+                var definition = classController.Definition;
+                var totalHealthBonus = ArmorLevel * 15 + equipHealth;
+                if (totalHealthBonus > 0 || health.MaxHealth != definition.MaxHealth)
+                {
+                    health.ResetHealth(definition.MaxHealth + totalHealthBonus);
+                }
+
+                var movement = GetComponent<PlayerController>();
+                if (movement != null)
+                {
+                    movement.MoveSpeed = definition.MoveSpeed + equipSpeed;
+                }
+            }
+            else if (ArmorLevel > 0 || equipHealth > 0)
+            {
+                health.ResetHealth(health.MaxHealth + ArmorLevel * 15 + equipHealth);
             }
 
             Hud?.RefreshEquipment();

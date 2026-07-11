@@ -1,0 +1,286 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace MmorpgPrototype
+{
+    public enum EquipResult
+    {
+        Success,
+        UnknownItem,
+        NotEquippable,
+        LevelTooLow,
+        WrongClass
+    }
+
+    // Equipamiento por slots basado en instancias. Valida requisitos y
+    // expone los bonos totales; EquipmentUpgradeSystem.ApplyBonuses es el
+    // unico punto que los aplica al personaje.
+    public sealed class PlayerEquipment : MonoBehaviour
+    {
+        public ItemDatabase Database;
+        public InventorySystem Inventory;
+        public PlayerProgression Progression;
+        public PlayerClassController ClassController;
+        public EquipmentUpgradeSystem UpgradeSystem;
+        public PrototypeHud Hud;
+
+        private readonly Dictionary<EquipSlot, ItemInstance> equipped = new Dictionary<EquipSlot, ItemInstance>();
+
+        public IReadOnlyDictionary<EquipSlot, ItemInstance> Equipped => equipped;
+
+        public int TotalDamageBonus
+        {
+            get
+            {
+                var total = 0;
+                foreach (var entry in equipped)
+                {
+                    var definition = DefinitionOf(entry.Value);
+                    if (definition != null)
+                    {
+                        total += definition.DamageBonus;
+                    }
+                }
+
+                return total;
+            }
+        }
+
+        public int TotalMaxHealthBonus
+        {
+            get
+            {
+                var total = 0;
+                foreach (var entry in equipped)
+                {
+                    var definition = DefinitionOf(entry.Value);
+                    if (definition != null)
+                    {
+                        total += definition.MaxHealthBonus;
+                    }
+                }
+
+                return total;
+            }
+        }
+
+        public float TotalMoveSpeedBonus
+        {
+            get
+            {
+                var total = 0f;
+                foreach (var entry in equipped)
+                {
+                    var definition = DefinitionOf(entry.Value);
+                    if (definition != null)
+                    {
+                        total += definition.MoveSpeedBonus;
+                    }
+                }
+
+                return total;
+            }
+        }
+
+        public EquipResult TryEquip(ItemInstance instance)
+        {
+            var definition = DefinitionOf(instance);
+            if (definition == null)
+            {
+                return instance == null || Database == null || Database.Get(instance.ItemId) == null
+                    ? EquipResult.UnknownItem
+                    : EquipResult.NotEquippable;
+            }
+
+            if (Progression != null && Progression.Level < definition.RequiredLevel)
+            {
+                return EquipResult.LevelTooLow;
+            }
+
+            if (ClassController != null && !definition.AllowsClass(ClassController.CurrentClass))
+            {
+                return EquipResult.WrongClass;
+            }
+
+            Inventory?.RemoveInstance(instance);
+
+            if (equipped.TryGetValue(definition.Slot, out var previous) && previous != null)
+            {
+                Inventory?.AddInstance(previous);
+            }
+
+            equipped[definition.Slot] = instance;
+            UpgradeSystem?.ApplyBonuses();
+            Hud?.RefreshEquipment();
+            return EquipResult.Success;
+        }
+
+        public bool Unequip(EquipSlot slot)
+        {
+            if (!equipped.TryGetValue(slot, out var instance) || instance == null)
+            {
+                return false;
+            }
+
+            equipped.Remove(slot);
+            Inventory?.AddInstance(instance);
+            UpgradeSystem?.ApplyBonuses();
+            Hud?.RefreshEquipment();
+            return true;
+        }
+
+        // Equipa lo mejor disponible del inventario slot por slot; reporta el
+        // primer motivo de rechazo para que los requisitos sean visibles.
+        public void EquipBestFromInventory()
+        {
+            if (Inventory == null || Database == null)
+            {
+                return;
+            }
+
+            var equippedSomething = false;
+            string firstRejection = null;
+
+            var candidates = new List<ItemInstance>(Inventory.Items);
+            foreach (var candidate in candidates)
+            {
+                var definition = DefinitionOf(candidate);
+                if (definition == null)
+                {
+                    continue;
+                }
+
+                if (!IsBetterThanEquipped(definition))
+                {
+                    continue;
+                }
+
+                var result = TryEquip(candidate);
+                if (result == EquipResult.Success)
+                {
+                    equippedSomething = true;
+                    Hud?.AddFeed($"Equipado: {definition.DisplayName}");
+                }
+                else if (firstRejection == null)
+                {
+                    firstRejection = RejectionMessage(result, definition);
+                }
+            }
+
+            if (equippedSomething)
+            {
+                Hud?.SetStatus("Equipo actualizado.");
+            }
+            else
+            {
+                Hud?.SetStatus(firstRejection ?? "No hay equipo mejor en el inventario.");
+            }
+        }
+
+        public string Summary()
+        {
+            if (equipped.Count == 0)
+            {
+                return "sin piezas";
+            }
+
+            var parts = new List<string>();
+            foreach (var entry in equipped)
+            {
+                var definition = DefinitionOf(entry.Value);
+                if (definition != null)
+                {
+                    parts.Add(definition.DisplayName);
+                }
+
+                if (parts.Count >= 3)
+                {
+                    break;
+                }
+            }
+
+            var extra = equipped.Count > parts.Count ? $" (+{equipped.Count - parts.Count})" : string.Empty;
+            return string.Join(", ", parts) + extra;
+        }
+
+        public List<SavedEquipmentEntry> ExportEntries()
+        {
+            var entries = new List<SavedEquipmentEntry>(equipped.Count);
+            foreach (var entry in equipped)
+            {
+                if (entry.Value != null)
+                {
+                    entries.Add(new SavedEquipmentEntry { Slot = entry.Key.ToString(), ItemId = entry.Value.ItemId });
+                }
+            }
+
+            return entries;
+        }
+
+        public void RestoreEntries(IEnumerable<SavedEquipmentEntry> entries)
+        {
+            equipped.Clear();
+
+            if (entries != null)
+            {
+                foreach (var entry in entries)
+                {
+                    if (!System.Enum.TryParse(entry.Slot, out EquipSlot slot) || slot == EquipSlot.None)
+                    {
+                        continue;
+                    }
+
+                    var definition = Database != null ? Database.Get(entry.ItemId) as EquipmentItemDefinition : null;
+                    if (definition == null || definition.Slot != slot)
+                    {
+                        continue;
+                    }
+
+                    equipped[slot] = ItemInstance.Create(entry.ItemId);
+                }
+            }
+
+            UpgradeSystem?.ApplyBonuses();
+            Hud?.RefreshEquipment();
+        }
+
+        private bool IsBetterThanEquipped(EquipmentItemDefinition candidate)
+        {
+            if (!equipped.TryGetValue(candidate.Slot, out var current) || current == null)
+            {
+                return true;
+            }
+
+            var currentDefinition = DefinitionOf(current);
+            return currentDefinition == null || Score(candidate) > Score(currentDefinition);
+        }
+
+        private static float Score(EquipmentItemDefinition definition)
+        {
+            return definition.DamageBonus * 3f + definition.MaxHealthBonus + definition.MoveSpeedBonus * 10f;
+        }
+
+        private string RejectionMessage(EquipResult result, EquipmentItemDefinition definition)
+        {
+            switch (result)
+            {
+                case EquipResult.LevelTooLow:
+                    return $"Necesitas nivel {definition.RequiredLevel} para {definition.DisplayName}.";
+                case EquipResult.WrongClass:
+                    return $"Tu clase no puede usar {definition.DisplayName}.";
+                default:
+                    return $"No puedes equipar {definition.DisplayName}.";
+            }
+        }
+
+        private EquipmentItemDefinition DefinitionOf(ItemInstance instance)
+        {
+            if (instance == null || Database == null)
+            {
+                return null;
+            }
+
+            return Database.Get(instance.ItemId) as EquipmentItemDefinition;
+        }
+    }
+}

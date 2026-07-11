@@ -19,6 +19,7 @@ namespace MmorpgPrototype
         public PlayerProgression Progression;
         public InventorySystem Inventory;
         public EquipmentUpgradeSystem Equipment;
+        public PlayerEquipment Gear;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -111,6 +112,7 @@ namespace MmorpgPrototype
             ClassController?.ApplyClass(classType);
             Progression?.RestoreState(data.Level, data.Experience, data.Gold, data.AttributePoints);
             Inventory?.RestoreEntries(data.Items);
+            Gear?.RestoreEntries(data.Equipment);
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
 
             HasActiveCharacter = true;
@@ -140,7 +142,8 @@ namespace MmorpgPrototype
                 AttributePoints = Progression.AttributePoints,
                 WeaponLevel = Equipment != null ? Equipment.WeaponLevel : 0,
                 ArmorLevel = Equipment != null ? Equipment.ArmorLevel : 0,
-                Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>()
+                Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>(),
+                Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>()
             };
         }
 

@@ -53,9 +53,10 @@ namespace MmorpgPrototype
                 Inventory?.AddItem(drop);
             }
 
+            var dropName = Inventory != null ? Inventory.DisplayNameOf(drop) : drop;
             var message = string.IsNullOrEmpty(drop)
                 ? $"+{Experience} EXP, +{gold} oro"
-                : $"+{Experience} EXP, +{gold} oro, loot: {drop}";
+                : $"+{Experience} EXP, +{gold} oro, loot: {dropName}";
             Hud?.SetStatus(message, 3f);
             Hud?.AddFeed($"+{Experience} EXP  +{gold} oro");
         }

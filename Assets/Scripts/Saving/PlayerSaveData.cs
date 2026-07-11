@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 2;
+        public int SchemaVersion = 3;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -17,12 +17,22 @@ namespace MmorpgPrototype
         public int WeaponLevel;
         public int ArmorLevel;
         public List<SavedItemEntry> Items = new List<SavedItemEntry>();
+        public List<SavedEquipmentEntry> Equipment = new List<SavedEquipmentEntry>();
     }
 
     [Serializable]
     public struct SavedItemEntry
     {
+        // Contiene el ItemId; en guardados de esquema <= 2 era el nombre
+        // visible (InventorySystem migra al cargar).
         public string Name;
         public int Count;
+    }
+
+    [Serializable]
+    public struct SavedEquipmentEntry
+    {
+        public string Slot;
+        public string ItemId;
     }
 }

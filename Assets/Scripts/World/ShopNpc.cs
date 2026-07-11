@@ -25,7 +25,7 @@ namespace MmorpgPrototype
                 return;
             }
 
-            Inventory.AddItem("Pocion menor");
+            Inventory.AddItem(DefaultGameItems.MinorPotion);
             Hud?.SetStatus("Compraste Pocion menor.");
             Hud?.AddFeed("Mercader: pocion comprada");
         }

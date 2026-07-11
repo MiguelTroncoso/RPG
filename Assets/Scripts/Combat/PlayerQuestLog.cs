@@ -43,9 +43,9 @@ namespace MmorpgPrototype
             Hud?.AddFeed(isWorldEvent ? "Evento: monolito destruido" : $"Mision: enemigo {kills}/{KillGoal}");
         }
 
-        public void OnItemAdded(string itemName, int amount)
+        public void OnItemAdded(string itemId, int amount)
         {
-            if (itemName == "Fragmento antiguo")
+            if (itemId == DefaultGameItems.AncientFragment)
             {
                 fragments = Mathf.Min(FragmentGoal, fragments + amount);
                 CheckCompletion();
@@ -64,7 +64,7 @@ namespace MmorpgPrototype
             completed = true;
             Progression?.AddExperience(150);
             Progression?.AddGold(75);
-            Inventory?.AddItem("Medalla del valle");
+            Inventory?.AddItem(DefaultGameItems.ValleyMedal);
             Hud?.SetStatus("Mision completada: recibiste EXP, oro y una medalla.", 4f);
             Hud?.AddFeed("Mision completada: +150 EXP, +75 oro");
         }

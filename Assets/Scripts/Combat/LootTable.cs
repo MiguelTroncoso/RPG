@@ -4,24 +4,21 @@ namespace MmorpgPrototype
 {
     public static class LootTable
     {
-        private static readonly string[] Drops =
-        {
-            "Pocion menor",
-            "Fragmento antiguo",
-            "Anillo gastado",
-            "Mineral opaco",
-            "Pergamino roto"
-        };
+        private const float DropChance = 0.42f;
+        private const float EquipmentShare = 0.15f;
 
         public static string RollDrop()
         {
-            if (Random.value > 0.58f)
+            if (Random.value > DropChance)
             {
                 return string.Empty;
             }
 
-            return Drops[Random.Range(0, Drops.Length)];
+            var pool = Random.value < EquipmentShare
+                ? DefaultGameItems.EquipmentDropIds()
+                : DefaultGameItems.MaterialDropIds();
+
+            return pool[Random.Range(0, pool.Length)];
         }
     }
 }
-

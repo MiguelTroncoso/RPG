@@ -252,6 +252,21 @@ La subida de nivel deja de usar la formula fija `nivel x 100`:
 - Puntos de atributo por cada nivel ganado, visibles en el HUD y guardados en la partida (el gasto de puntos llega con la ventana de stats).
 - Al llegar al nivel 105 el HUD muestra EXP MAX y la experiencia sobrante se descarta.
 
+## Fase 5.9: Items, Rarezas Y Equipamiento
+
+El inventario deja de ser una lista de textos:
+
+- Items definidos como ScriptableObjects con ID estable, nombre, descripcion, categoria, rareza y precios (`ItemDefinition`, `ConsumableItemDefinition`, `EquipmentItemDefinition`).
+- Base de datos central (`ItemDatabase`) con validacion de IDs duplicados.
+- Rarezas Common a Mythic con colores centralizados en `RarityTable`; el inventario del HUD colorea cada item por rareza.
+- Inventario basado en instancias (`ItemInstance` con GUID) preparado para anti-duplicacion en servidor.
+- Equipamiento con slots (arma, casco, pechera, collar y mas) con requisitos de nivel y clase.
+- Boton EQUIPAR: equipa lo mejor del inventario y muestra el motivo si algo no se puede equipar.
+- 4 piezas iniciales: Espada de recluta, Casco de cuero (nivel 2), Pechera del guardia (nivel 3) y Amuleto del valle (nivel 4). Los enemigos pueden soltarlas como loot raro.
+- La pocion cura segun su definicion de datos, no un valor fijo en codigo.
+- Menu `MMORPG > Items > Generate Item Database` genera los assets; sin assets, el juego usa el set por defecto en runtime.
+- Guardado esquema v3: inventario por IDs + equipo puesto. Los guardados anteriores migran automaticamente.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

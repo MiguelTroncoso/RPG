@@ -68,7 +68,7 @@ namespace MmorpgPrototype
             reward.Experience = 120;
             reward.GoldMin = 35;
             reward.GoldMax = 55;
-            reward.GuaranteedDrop = "Fragmento antiguo";
+            reward.GuaranteedDrop = DefaultGameItems.AncientFragment;
             reward.IsWorldEvent = true;
 
             CreateFloatingLabel(activeMonolith.transform, "Monolito Corrupto\nEvento de mapa");

@@ -132,11 +132,33 @@ namespace MmorpgPrototype
             player.AddComponent<InventorySystem>();
             player.AddComponent<PlayerQuestLog>();
             player.AddComponent<EquipmentUpgradeSystem>();
+            player.AddComponent<PlayerEquipment>();
             player.AddComponent<PlayerSkills>();
             player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
 
             return player;
+        }
+
+        private static ItemDatabase LoadItemDatabase()
+        {
+            var database = Resources.Load<ItemDatabase>("Game/ItemDatabase");
+            if (database != null && database.Items != null && database.Items.Count > 0)
+            {
+                database.RebuildLookup();
+                return database;
+            }
+
+            // Fallback runtime si los assets no se generaron todavia
+            // (MMORPG > Items > Generate Item Database).
+            var rarities = Resources.Load<RarityTable>("Game/RarityTable");
+            if (rarities == null)
+            {
+                rarities = ScriptableObject.CreateInstance<RarityTable>();
+                rarities.FillWithDefaults();
+            }
+
+            return DefaultGameItems.CreateRuntimeDatabase(rarities);
         }
 
         private static LevelProgressionTable LoadLevelTable()
@@ -283,6 +305,8 @@ namespace MmorpgPrototype
             var inventory = player.GetComponent<InventorySystem>();
             var questLog = player.GetComponent<PlayerQuestLog>();
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
+            var database = LoadItemDatabase();
+            inventory.Database = database;
             inventory.Hud = hud;
             inventory.QuestLog = questLog;
             questLog.Hud = hud;
@@ -291,6 +315,13 @@ namespace MmorpgPrototype
             equipment.Hud = hud;
             equipment.Progression = progression;
             equipment.Inventory = inventory;
+            var gear = player.GetComponent<PlayerEquipment>();
+            gear.Database = database;
+            gear.Inventory = inventory;
+            gear.Progression = progression;
+            gear.ClassController = player.GetComponent<PlayerClassController>();
+            gear.UpgradeSystem = equipment;
+            gear.Hud = hud;
             skills.Hud = hud;
             var persistence = player.GetComponent<PlayerPersistence>();
             persistence.Identity = player.GetComponent<PlayerCharacterIdentity>();
@@ -298,8 +329,10 @@ namespace MmorpgPrototype
             persistence.Progression = progression;
             persistence.Inventory = inventory;
             persistence.Equipment = equipment;
+            persistence.Gear = gear;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
-            inventory.AddItem("Pocion menor", 2);
+            inventory.AddItem(DefaultGameItems.MinorPotion, 2);
+            inventory.AddItem(DefaultGameItems.RecruitSword);
             CreateShopButtons(uiRoot, player, shop);
             CreateNetworkPanel(uiRoot, player);
 
@@ -325,6 +358,10 @@ namespace MmorpgPrototype
 
             var armorButton = CreateRoundButton(parent, "Upgrade Armor Button", "ARMOR", new Vector2(0f, 1f), new Vector2(512f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.28f, 0.48f), 17);
             armorButton.onClick.AddListener(shop.UpgradeArmor);
+
+            var gear = player.GetComponent<PlayerEquipment>();
+            var equipButton = CreateRoundButton(parent, "Auto Equip Button", "EQUIPAR", new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
+            equipButton.onClick.AddListener(gear.EquipBestFromInventory);
         }
 
         private static void CreateNetworkPanel(Transform parent, GameObject player)

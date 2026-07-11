@@ -599,9 +599,9 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 
 | Etapa | Contenido | Resultado verificable |
 |---|---|---|
-| **A. Datos base** | Enums, `StatBlock`, `StatSheet`, `RarityConfig`, `ItemDefinition` + jerarquía, `ItemDatabase`, `LevelProgressionTable` + `ExpCurveConfig` | SOs de ejemplo creados; validador de IDs pasa |
+| **A. Datos base** ✅ MVP | Enums, `RarityTable`, `ItemDefinition` + jerarquía, `ItemDatabase`, `LevelProgressionTable` + `ExpCurveConfig` (`StatBlock`/`StatSheet` llegan con D) | SOs de ejemplo creados; validador de IDs pasa |
 | **B. Progresión** ✅ | `ExperienceResolver` puro conectado a `PlayerProgression`, `LevelProgressionTable` + `ExpCurveConfig`, cap 105, multi-level-up, puntos de atributo | Matar enemigos sube nivel según tabla; HUD reacciona por eventos |
-| **C. Inventario + equipo** | `ItemInstance`, `InventoryManager`, `EquipmentManager`, migración de `InventorySystem` | 1 espada, 1 casco, 1 pechera, 1 accesorio equipables con requisitos |
+| **C. Inventario + equipo** ✅ | `ItemInstance`, `InventorySystem` por instancias, `PlayerEquipment` con slots y requisitos | 1 espada, 1 casco, 1 pechera, 1 accesorio equipables con requisitos |
 | **D. Combate refactor** | `DamageCalculator` puro, interfaces, loot por `LootTable` (SO) | Daño idéntico o mejor que el actual; crit/miss visibles |
 | **E. Mejora +0..+15** | `UpgradeConfig`, `UpgradeResolver` puro, `UpgradeService`, migrar `EquipmentUpgradeSystem` | Mejorar espada con éxito/fallo según tabla configurable |
 | **F. Misiones** | `QuestDefinition`, objetivos Talk/Kill/Collect, `QuestLog`, `RewardService` | Las 3 misiones (hablar, matar, recolectar) completables con recompensas |
@@ -613,11 +613,12 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 
 ### Próxima tarea concreta recomendada
 
-Con G (MVP) y B hechas, sigue la **Etapa A restante + C**: jerarquía
-`ItemDefinition` con rarezas e `ItemDatabase`, e inventario/equipamiento
-basados en `ItemInstance` con slots y requisitos, migrando el
-`InventorySystem` actual de strings a instancias. Es el prerrequisito de
-combate refactor (D), mejora +0..+15 (E) y misiones (F).
+Con A (MVP), B, C y G (MVP) hechas, sigue la **Etapa D** (`DamageCalculator`
+puro con crítico/fallo, interfaces `IDamageable`/`ILootSource`, loot por
+`LootTable` como SO) o la **Etapa E** (migrar la mejora +0..+15 a
+`UpgradeConfig` con probabilidades y `UpgradeResolver` puro). D desbloquea
+stats reales por pieza; E convierte la mejora actual en el sistema clásico
+con riesgo.
 
 ---
 
