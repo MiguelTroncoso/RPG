@@ -14,6 +14,32 @@ namespace MmorpgPrototype.Editor
         private const string ConfigAssetPath = GameFolder + "/ExpCurveConfig.asset";
         private const string TableAssetPath = GameFolder + "/LevelProgressionTable.asset";
 
+        private const string AttributeAssetPath = GameFolder + "/AttributeConfig.asset";
+
+        [MenuItem("MMORPG/Progression/Generate Attribute Config")]
+        public static void GenerateAttributeConfig()
+        {
+            if (!AssetDatabase.IsValidFolder(ResourcesRoot))
+            {
+                AssetDatabase.CreateFolder("Assets", "Resources");
+            }
+
+            if (!AssetDatabase.IsValidFolder(GameFolder))
+            {
+                AssetDatabase.CreateFolder(ResourcesRoot, "Game");
+            }
+
+            var config = AssetDatabase.LoadAssetAtPath<AttributeConfig>(AttributeAssetPath);
+            if (config == null)
+            {
+                config = ScriptableObject.CreateInstance<AttributeConfig>();
+                AssetDatabase.CreateAsset(config, AttributeAssetPath);
+                AssetDatabase.SaveAssets();
+            }
+
+            Debug.Log($"AttributeConfig en {AttributeAssetPath}: {config.DamagePerStrength} dano/Fuerza, {config.HealthPerVitality} vida/Vitalidad.");
+        }
+
         [MenuItem("MMORPG/Progression/Generate Level Table")]
         public static void GenerateLevelTable()
         {

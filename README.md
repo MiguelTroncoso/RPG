@@ -343,6 +343,15 @@ Cierre de la hoja de ruta inicial (Etapa K):
 - Capa de intenciones: las acciones criticas (subir de nivel, mejora exitosa) se reportan al servidor como mensajes `action`; el servidor las difunde como actividad y los demas jugadores las ven en el chat ("Valle: X subio a nivel 5"). Es la base para que el servidor valide estas acciones cuando tenga autoridad.
 - El servidor sanitiza y valida el sexo recibido (solo Masculino/Femenino).
 
+## Fase 5.16: Ventana De Atributos
+
+Los puntos de atributo por fin se pueden gastar:
+
+- Boton STATS abre la ventana de atributos: Fuerza (+dano), Vitalidad (+vida maxima) y Agilidad (+velocidad y +critico).
+- Cuanto aporta cada punto es configurable en un asset `AttributeConfig` (menu `MMORPG > Progression > Generate Attribute Config`).
+- Los bonos pasan por el recomputo central de stats junto con equipo, mejoras y montura; el critico extra entra al calculo de dano.
+- Los atributos gastados se guardan (esquema v8).
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

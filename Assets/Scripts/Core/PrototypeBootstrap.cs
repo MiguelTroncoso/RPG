@@ -178,6 +178,7 @@ namespace MmorpgPrototype
             player.AddComponent<PetService>();
             player.AddComponent<MountService>();
             player.AddComponent<StorageService>();
+            player.AddComponent<PlayerAttributes>();
             player.AddComponent<PlayerSkills>();
             player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
@@ -303,6 +304,19 @@ namespace MmorpgPrototype
             }
 
             return DefaultCompanions.CreateMounts();
+        }
+
+        private static AttributeConfig LoadAttributeConfig()
+        {
+            var config = Resources.Load<AttributeConfig>("Game/AttributeConfig");
+            if (config != null)
+            {
+                return config;
+            }
+
+            // Fallback runtime si el asset no se genero todavia
+            // (MMORPG > Progression > Generate Attribute Config).
+            return ScriptableObject.CreateInstance<AttributeConfig>();
         }
 
         private static LootTableConfig LoadLootTable()
@@ -503,6 +517,12 @@ namespace MmorpgPrototype
             storageService.Inventory = inventory;
             storageService.Hud = hud;
             persistence.Storage = storageService;
+            var attributes = player.GetComponent<PlayerAttributes>();
+            attributes.Config = LoadAttributeConfig();
+            attributes.Progression = progression;
+            attributes.UpgradeSystem = equipment;
+            attributes.Hud = hud;
+            persistence.Attributes = attributes;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
@@ -550,6 +570,54 @@ namespace MmorpgPrototype
 
             var storageButton = CreateRoundButton(parent, "Storage Button", "ALMACEN", new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
             storageButton.onClick.AddListener(storage.ToggleStorage);
+
+            var statsWindow = CreateStatsWindow(parent, player);
+            var statsButton = CreateRoundButton(parent, "Stats Button", "STATS", new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
+            statsButton.onClick.AddListener(statsWindow.Toggle);
+        }
+
+        private static StatsWindowController CreateStatsWindow(Transform parent, GameObject player)
+        {
+            var window = CreateUiObject("Stats Window", parent);
+            var windowRect = window.GetComponent<RectTransform>();
+            SetRect(windowRect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 320f), Vector2.zero);
+
+            var background = window.AddComponent<Image>();
+            background.color = new Color(0.04f, 0.055f, 0.07f, 0.94f);
+            background.raycastTarget = true;
+
+            var title = CreateText(window.transform, "Title", "Atributos", 30, TextAnchor.MiddleCenter);
+            title.fontStyle = FontStyle.Bold;
+            SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(520f, 44f), new Vector2(0f, -14f));
+
+            var controller = window.AddComponent<StatsWindowController>();
+            controller.Panel = window;
+            controller.Attributes = player.GetComponent<PlayerAttributes>();
+            controller.Progression = player.GetComponent<PlayerProgression>();
+
+            controller.PointsText = CreateText(window.transform, "Points", string.Empty, 22, TextAnchor.MiddleLeft);
+            SetRect(controller.PointsText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(480f, 34f), new Vector2(26f, -62f));
+
+            controller.StrengthText = CreateText(window.transform, "Strength", string.Empty, 20, TextAnchor.MiddleLeft);
+            SetRect(controller.StrengthText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(420f, 32f), new Vector2(26f, -110f));
+            var strengthButton = CreateRoundButton(window.transform, "Add Strength", "+", new Vector2(1f, 1f), new Vector2(-52f, -110f), new Vector2(52f, 36f), new Color(0.58f, 0.24f, 0.16f), 24);
+            strengthButton.onClick.AddListener(controller.SpendStrength);
+
+            controller.VitalityText = CreateText(window.transform, "Vitality", string.Empty, 20, TextAnchor.MiddleLeft);
+            SetRect(controller.VitalityText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(420f, 32f), new Vector2(26f, -158f));
+            var vitalityButton = CreateRoundButton(window.transform, "Add Vitality", "+", new Vector2(1f, 1f), new Vector2(-52f, -158f), new Vector2(52f, 36f), new Color(0.16f, 0.5f, 0.3f), 24);
+            vitalityButton.onClick.AddListener(controller.SpendVitality);
+
+            controller.AgilityText = CreateText(window.transform, "Agility", string.Empty, 20, TextAnchor.MiddleLeft);
+            SetRect(controller.AgilityText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(420f, 32f), new Vector2(26f, -206f));
+            var agilityButton = CreateRoundButton(window.transform, "Add Agility", "+", new Vector2(1f, 1f), new Vector2(-52f, -206f), new Vector2(52f, 36f), new Color(0.2f, 0.36f, 0.62f), 24);
+            agilityButton.onClick.AddListener(controller.SpendAgility);
+
+            var closeButton = CreateRoundButton(window.transform, "Close Stats", "CERRAR", new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(160f, 44f), new Color(0.32f, 0.32f, 0.36f), 19);
+            closeButton.onClick.AddListener(controller.Toggle);
+
+            window.SetActive(false);
+            return controller;
         }
 
         private static void TalkToNearest(Transform player, ShopNpc shop, BlacksmithNpc blacksmith)

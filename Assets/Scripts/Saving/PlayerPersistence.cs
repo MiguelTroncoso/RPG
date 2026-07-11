@@ -24,6 +24,7 @@ namespace MmorpgPrototype
         public PetService Pets;
         public MountService Mounts;
         public StorageService Storage;
+        public PlayerAttributes Attributes;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -115,6 +116,7 @@ namespace MmorpgPrototype
             Identity?.ApplySelection(data.CharacterName, gender);
             ClassController?.ApplyClass(classType);
             Progression?.RestoreState(data.Level, data.Experience, data.Gold, data.AttributePoints);
+            Attributes?.Restore(data.SpentStrength, data.SpentVitality, data.SpentAgility);
             Inventory?.RestoreEntries(data.Items);
             Gear?.RestoreEntries(data.Equipment);
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
@@ -156,6 +158,9 @@ namespace MmorpgPrototype
                 Experience = Progression.Experience,
                 Gold = Progression.Gold,
                 AttributePoints = Progression.AttributePoints,
+                SpentStrength = Attributes != null ? Attributes.Strength : 0,
+                SpentVitality = Attributes != null ? Attributes.Vitality : 0,
+                SpentAgility = Attributes != null ? Attributes.Agility : 0,
                 WeaponLevel = Equipment != null ? Equipment.WeaponLevel : 0,
                 ArmorLevel = Equipment != null ? Equipment.ArmorLevel : 0,
                 Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>(),

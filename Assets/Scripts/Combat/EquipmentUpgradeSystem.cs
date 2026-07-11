@@ -184,13 +184,18 @@ namespace MmorpgPrototype
             return $"Equipo: {pieces}";
         }
 
-        // Punto unico de recomputo de stats derivados del equipamiento.
+        // Punto unico de recomputo de stats derivados: equipo, mejoras,
+        // atributos gastados y montura.
         public void ApplyBonuses()
         {
             var equipment = GetComponent<PlayerEquipment>();
-            var equipDamage = equipment != null ? equipment.TotalDamageBonus : 0;
-            var equipHealth = equipment != null ? equipment.TotalMaxHealthBonus : 0;
-            var equipSpeed = equipment != null ? equipment.TotalMoveSpeedBonus : 0f;
+            var attributes = GetComponent<PlayerAttributes>();
+            var equipDamage = (equipment != null ? equipment.TotalDamageBonus : 0)
+                + (attributes != null ? attributes.BonusDamage : 0);
+            var equipHealth = (equipment != null ? equipment.TotalMaxHealthBonus : 0)
+                + (attributes != null ? attributes.BonusMaxHealth : 0);
+            var equipSpeed = (equipment != null ? equipment.TotalMoveSpeedBonus : 0f)
+                + (attributes != null ? attributes.BonusMoveSpeed : 0f);
 
             combat.EquipmentDamageBonus = equipDamage;
 

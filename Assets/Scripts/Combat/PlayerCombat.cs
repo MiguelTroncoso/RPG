@@ -162,15 +162,18 @@ namespace MmorpgPrototype
 
         private CombatStats BuildAttackerStats(int baseDamage)
         {
+            var attributes = GetComponent<PlayerAttributes>();
+            var critBonus = attributes != null ? attributes.BonusCritChance : 0f;
+
             var definition = GetComponent<PlayerClassController>()?.Definition;
             if (definition == null)
             {
-                return new CombatStats(baseDamage, 0.08f, 1.5f, 0.95f, 0f, 0);
+                return new CombatStats(baseDamage, 0.08f + critBonus, 1.5f, 0.95f, 0f, 0);
             }
 
             return new CombatStats(
                 baseDamage,
-                definition.CritChance,
+                definition.CritChance + critBonus,
                 definition.CritMultiplier,
                 definition.Accuracy,
                 definition.Evasion,

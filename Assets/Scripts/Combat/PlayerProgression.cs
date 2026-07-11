@@ -81,6 +81,18 @@ namespace MmorpgPrototype
             Hud?.RefreshProgression();
         }
 
+        public bool TrySpendAttributePoint()
+        {
+            if (AttributePoints <= 0)
+            {
+                return false;
+            }
+
+            AttributePoints--;
+            Hud?.RefreshProgression();
+            return true;
+        }
+
         public bool SpendGold(int amount)
         {
             if (amount <= 0)
