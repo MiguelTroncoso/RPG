@@ -377,6 +377,25 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Cadena de misiones extendida de 8 a 10: Ecos del bosque (3 Sombras) y El corazon del bosque (el Anciano).
 - Crear la Zona 3 en adelante = un asset mas de `ZoneDefinition` (menu `MMORPG > World > Generate Zones`).
 
+## Fase 5.20: Autoridad De Servidor Sobre Intenciones
+
+- El servidor valida las intenciones antes de difundirlas: level_up debe subir el nivel registrado (sincronizado en el hello, tope 105) y upgrade debe estar entre +1 y +15, con limite de ritmo de 800 ms por jugador.
+- Las intenciones invalidas ya no se difunden: vuelven solo al emisor como `actionRejected` y el cliente las muestra en el chat.
+- El nivel viaja con la identidad y se ve en la etiqueta de los jugadores remotos (Nv X).
+
+## Fase 5.21: Zona 3 - Colinas Cenicientas
+
+- Tercera region (niveles 21-30) al norte del bosque, construida SOLO con datos: Cenicientos errantes, Devoradores de ceniza (elites) y el Corazon de Ceniza como jefe.
+- Cadena de misiones extendida de 10 a 13.
+- Cero codigo nuevo: los moldes de zona absorbieron la region completa.
+
+## Fase 5.22: Pipeline De Modelos 3D Para El Avatar
+
+- Cada clase define su modelo real (`CharacterModelResource`): Guerrero=Knight, Ninja=Rogue, Chaman=Mage, Umbra=Barbarian del pack CC0 KayKit Adventurers.
+- `PlayerAvatarVisual` carga el modelo desde Resources si existe; si no, usa el avatar procedural de siempre. Jugadores remotos incluidos, sin tocar mas codigo.
+- Para activarlo: descargar la version gratuita de https://kaylousberg.itch.io/kaykit-adventurers y copiar `Knight.fbx`, `Rogue.fbx`, `Mage.fbx` y `Barbarian.fbx` (con su textura) a `Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/`. Ver `ASSET_LICENSES.md`.
+- Los modelos apareceran en T-pose (las animaciones se conectan en una fase posterior).
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

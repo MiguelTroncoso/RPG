@@ -28,13 +28,19 @@ namespace MmorpgPrototype
                 Destroy(visualRoot);
             }
 
-            visualRoot = new GameObject("Procedural Avatar Visual");
+            visualRoot = new GameObject("Avatar Visual");
             visualRoot.transform.SetParent(transform, false);
             visualRoot.transform.localPosition = Vector3.zero;
             visualRoot.transform.localRotation = Quaternion.identity;
             visualRoot.transform.localScale = gender == CharacterGender.Femenino
                 ? new Vector3(0.88f, 0.98f, 0.88f)
                 : new Vector3(1.02f, 1.04f, 1.02f);
+
+            // Modelo real si el asset existe en Resources; procedural si no.
+            if (TryBuildCharacterModel(definition))
+            {
+                return;
+            }
 
             var baseColor = definition.BodyColor;
             var accentColor = definition.SkillColor;
@@ -64,6 +70,35 @@ namespace MmorpgPrototype
                     BuildGuerrero(accentColor);
                     break;
             }
+        }
+
+        private bool TryBuildCharacterModel(ClassDefinition definition)
+        {
+            if (string.IsNullOrEmpty(definition.CharacterModelResource))
+            {
+                return false;
+            }
+
+            var prefab = Resources.Load<GameObject>(definition.CharacterModelResource);
+            if (prefab == null)
+            {
+                return false;
+            }
+
+            var model = Instantiate(prefab, visualRoot.transform);
+            model.name = "Character Model";
+            // El pivote de los personajes KayKit esta en los pies; el del
+            // jugador (capsula) en el centro, a 1 unidad del suelo.
+            model.transform.localPosition = new Vector3(0f, -1f, 0f);
+            model.transform.localRotation = Quaternion.identity;
+            model.transform.localScale = Vector3.one;
+
+            foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
+            {
+                Destroy(modelCollider);
+            }
+
+            return true;
         }
 
         private void BuildGuerrero(Color accentColor)

@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.19 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.22 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -25,8 +25,9 @@ equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
 data-driven con `QuestDefinition`/`RewardService`, mascotas y monturas
 con bonos pasivos, generador de variantes de items por nivel en el
 editor, Zonas 1 y 2 data-driven con herrero/almacén/élites/jefes,
-identidad completa sincronizada en red con capa de intenciones, y textos
-del sistema con claves i18n en tabla `es`). Detalle en
+identidad completa sincronizada en red con capa de intenciones validadas
+por el servidor, textos del sistema con claves i18n en tabla `es`, Zona 3
+data-only, y pipeline de modelos 3D con fallback procedural). Detalle en
 `docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
@@ -55,6 +56,9 @@ simple y autocontenido.
 10. **Una etapa a la vez** (ver hoja de ruta en `GAME_ARCHITECTURE.md` §16).
     No avanzar si la etapa anterior no compila y funciona en Play.
 11. Si una tarea es ambigua, **preguntar antes de asumir**.
+12. **Al cerrar cada fase, actualizar `docs/claude-handoff.md`** (estado,
+    esquema de guardado y próximos objetivos) además del README y este
+    contrato.
 
 ## Cómo probar
 
@@ -71,6 +75,10 @@ simple y autocontenido.
 - El avatar visual es procedural (`PlayerAvatarVisual`); no es arte final.
 - Textos pendientes de migrar a i18n: panel de creación de personaje y
   habilidades (`PlayerSkills`).
-- Siguientes candidatos: `StatSheet` con modificadores por origen,
-  autoridad de servidor sobre las intenciones `action`, Zona 3 (solo
-  datos), o modelos 3D reales CC0 para reemplazar el avatar procedural.
+- Los modelos 3D del avatar se activan al copiar los FBX de KayKit
+  Adventurers (ver `ASSET_LICENSES.md`); mientras tanto hay fallback
+  procedural. Animaciones aún no conectadas (T-pose).
+- Siguientes candidatos: animaciones del avatar (Animator con
+  idle/run/attack del pack), `StatSheet` con modificadores por origen,
+  terminar i18n (panel de creación y `PlayerSkills`), Zona 4, o
+  persistencia de estado en el servidor.

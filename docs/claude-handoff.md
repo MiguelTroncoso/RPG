@@ -17,7 +17,7 @@ ANTES DE TOCAR NADA lee, en este orden:
 3. README.md (historial de fases 1 a 5.13 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.19 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.22 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -44,20 +44,23 @@ Estado actual (fases 1-5.19 completadas; hoja de ruta A-K completa):
 - Textos del sistema via Localization.Tr(clave) con tabla es
   (LocalizationTable + DefaultLocalization, ~90 claves). Pendiente: panel
   de creacion y PlayerSkills.
-- Zonas 1 y 2 (ZoneDefinition + DefaultZones, spawner data-driven por
-  zona): Bosque de los Susurros (niveles 11-20) al norte con terreno
-  propio, elites (Sombras del bosque) y jefe (Anciano de Espinas). Los
-  objetivos de matar filtran por tier o por id de enemigo. Cadena de 10
-  misiones. Zona 1: cartel de zona, Herrero
+- Zonas 1, 2 y 3 (ZoneDefinition + DefaultZones, spawner 100% data-driven
+  por zona, una instancia por zona): Bosque de los Susurros (11-20) y
+  Colinas Cenicientas (21-30) al norte, cada una con terreno propio,
+  enemigos normales, elites y jefe de zona. Los objetivos de matar filtran
+  por tier o por id de enemigo. Cadena de 13 misiones. Zona 1: Herrero
   (las mejoras WEAPON/ARMOR se hacen cerca de el), Almacen (boton ALMACEN
   deposita/retira materiales, persistido), area de elites al este y jefe de
   zona (Coloso de las Reliquias) al noroeste con respawn propio. Cadena de
   8 misiones (incluye objetivo UpgradeItem y kills filtrados por
   EnemyTier). HABLAR habla con el NPC mas cercano.
-- Red: identidad completa (nombre/clase/sexo) sincronizada; los remotos se
-  ven con su sexo real. Capa de intenciones: level_up y upgrade se envian
-  como mensajes "action" y el servidor los difunde como actividad
-  (Server/src/server.js).
+- Red: identidad completa (nombre/clase/sexo/nivel) sincronizada; los
+  remotos se ven con su sexo real y nivel en la etiqueta. Capa de
+  intenciones CON autoridad inicial: level_up y upgrade viajan como
+  mensajes "action" con valor; el servidor (Server/src/server.js) valida
+  plausibilidad (nivel creciente <=105, mejora +1..+15) y ritmo (800ms),
+  difunde las validas como actividad y devuelve actionRejected al emisor
+  si no pasan.
 - Guardado local JSON (esquema v9) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
@@ -69,7 +72,13 @@ Estado actual (fases 1-5.19 completadas; hoja de ruta A-K completa):
   Table, Quests, Companions, Level Table, Item Variant Generator (ventana
   que genera equipo 1-105 desde ItemArchetype).
 - EquipmentUpgradeSystem.ApplyBonuses es el UNICO punto de recomputo de
-  stats derivados (equipo + mejoras + montura). No sumar bonos por fuera.
+  stats derivados (equipo + mejoras + atributos + montura). No sumar bonos
+  por fuera.
+- Avatar: pipeline de modelos 3D listo. ClassDefinition.CharacterModelResource
+  apunta a ThirdParty/KayKit/Adventurers/Characters/{Knight|Rogue|Mage|
+  Barbarian}; si el FBX esta en Resources se instancia (T-pose, sin
+  animaciones aun), si no, fallback procedural. Los FBX se copian a mano
+  desde el pack CC0 KayKit Adventurers (ver ASSET_LICENSES.md).
 
 Reglas de trabajo (resumen; el detalle esta en CLAUDE.md):
 - Datos en ScriptableObjects/JSON, nunca hardcodeados en logica.
@@ -89,12 +98,15 @@ Como probar:
   a ws://localhost:7777 (IP local del equipo para movil fisico).
 - No intentar build Android si falta PlaybackEngines/AndroidPlayer.
 
+Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
+este handoff (docs/claude-handoff.md).
+
 Proximos objetivos sugeridos:
-- Autoridad de servidor sobre las intenciones "action" ya definidas.
+- Animaciones del avatar (Animator con idle/run/attack del pack KayKit).
 - StatSheet con modificadores por origen (reemplazo del recomputo simple).
 - Terminar i18n (panel de creacion de personaje y PlayerSkills).
-- Zona 3 en adelante (solo datos con ZoneDefinition).
-- Modelos 3D reales CC0 para reemplazar el avatar procedural.
+- Zona 4 en adelante (solo datos con ZoneDefinition).
+- Persistencia de estado en el servidor (hoy el hello fija el nivel base).
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

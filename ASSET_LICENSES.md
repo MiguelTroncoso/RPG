@@ -17,3 +17,13 @@
 
 Attribution is not required by the license, but crediting KayKit is recommended.
 
+
+## KayKit Character Pack: Adventurers - Personajes (pendiente de importar)
+
+- Archivos esperados en `Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/`:
+  `Knight.fbx`, `Rogue.fbx`, `Mage.fbx`, `Barbarian.fbx` (+ textura del pack).
+- Fuente: https://kaylousberg.itch.io/kaykit-adventurers (version gratuita).
+- Licencia: CC0 1.0 Universal.
+- Uso: modelos del avatar del jugador y jugadores remotos (mapeo:
+  Guerrero=Knight, Ninja=Rogue, Chaman=Mage, Umbra=Barbarian). Mientras los
+  archivos no esten presentes, el juego usa el avatar procedural.
