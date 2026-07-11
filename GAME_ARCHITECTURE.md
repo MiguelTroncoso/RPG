@@ -606,17 +606,17 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 | **E. Mejora +0..+15** ✅ | `UpgradeConfig`, `UpgradeResolver` puro, mejora sobre la instancia equipada, runa de protección, tope por rareza | Mejorar espada con éxito/fallo según tabla configurable |
 | **F. Misiones** ✅ | `QuestDefinition`, objetivos Talk/Kill/Collect/WorldEvent, `PlayerQuestLog`, `RewardService`, cadena de 4 misiones | Las 3 misiones (hablar, matar, recolectar) completables con recompensas |
 | **G. Guardado** ✅ MVP | `ISaveStorage`, `JsonFileStorage`, `SaveManager`, `ISaveable` en B–F. **MVP hecho:** nombre/clase/sexo/nivel/oro/inventario/mejoras/puntos | Cerrar y abrir conserva todo (objetivo inmediato del handoff) |
-| **H. Mascota + montura** | `PetDefinition`/`MountDefinition` + servicios, 1 de cada | Mascota sigue y da bono; montura acelera |
-| **I. Herramienta editor** | `ItemVariantGeneratorWindow` + generadores de tablas | Generar set de espadas 1–105 en un clic |
+| **H. Mascota + montura** ✅ | `PetDefinition`/`MountDefinition` + servicios, 1 de cada | Mascota sigue y da bono; montura acelera |
+| **I. Herramienta editor** ✅ | `ItemVariantGeneratorWindow` + `ItemArchetype` + generadores de tablas | Generar set de espadas 1–105 en un clic |
 | **J. Zona 1** | `ZoneDefinition`, cadena de misiones 1–10, NPCs, jefe | Campaña 1–10 jugable de punta a punta |
 | **K. Red** | Sincronizar identidad completa (sexo incluido); intenciones para acciones críticas | Remotos se ven correctos; base para autoridad de servidor |
 
 ### Próxima tarea concreta recomendada
 
-Con A (MVP), B, C, D, E, F y G (MVP) hechas, sigue la **Etapa H** (mascota y
-montura básicas con `PetDefinition`/`MountDefinition` y sus servicios), la
-**Etapa I** (generador de variantes de items por nivel) o la **Etapa K**
-(sincronizar identidad completa en el online local).
+Con A–I y G (MVP) hechas, quedan la **Etapa J** (Zona 1 completa:
+`ZoneDefinition`, más NPCs —herrero, almacén—, áreas de élite y jefe de
+zona) y la **Etapa K** (sincronizar identidad completa en el online local
+y capa de intenciones para acciones críticas).
 
 ---
 

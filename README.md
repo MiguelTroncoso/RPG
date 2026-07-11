@@ -311,6 +311,15 @@ Primeros companeros del jugador:
 - La mascota activa y la montura seleccionada se guardan (esquema v6).
 - Menu `MMORPG > Companions > Generate Companions` genera los assets; sin assets hay fallback runtime.
 
+## Fase 5.13: Generador De Variantes De Items
+
+Herramienta de editor para poblar el equipo de niveles 1 a 105 sin crear items a mano:
+
+- `ItemArchetype` (ScriptableObject): plantilla con slot, stats base en nivel 1, curva de crecimiento (exponente), rareza por conjunto visual de 10 niveles y formato de nombre.
+- Ventana `MMORPG > Items > Item Variant Generator`: elige arquetipo, rango de niveles y paso, y genera los assets con IDs deterministas (`valley_sword_lv025`). Regenerar actualiza en lugar de duplicar.
+- Las variantes se registran automaticamente en el `ItemDatabase` asset y se valida que no haya IDs duplicados.
+- Incluye boton para crear un arquetipo de ejemplo (espada del valle).
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.
