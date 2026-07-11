@@ -16,6 +16,10 @@ namespace MmorpgPrototype
         public LevelProgressionTable Table;
         public PrototypeHud Hud;
 
+        // Multiplicadores pasivos (mascotas, eventos); 1 = sin bono.
+        public float ExperienceMultiplier = 1f;
+        public float GoldMultiplier = 1f;
+
         public int EffectiveMaxLevel => ExperienceResolver.MaxLevelOf(Table);
         public bool IsMaxLevel => Level >= EffectiveMaxLevel;
 
@@ -30,6 +34,7 @@ namespace MmorpgPrototype
                 return;
             }
 
+            amount = Mathf.Max(1, Mathf.RoundToInt(amount * ExperienceMultiplier));
             var result = ExperienceResolver.AddExperience(Table, Level, Experience, amount);
             Level = result.Level;
             Experience = result.Experience;
@@ -60,7 +65,7 @@ namespace MmorpgPrototype
                 return;
             }
 
-            Gold += amount;
+            Gold += Mathf.Max(1, Mathf.RoundToInt(amount * GoldMultiplier));
             Hud?.RefreshProgression();
         }
 

@@ -300,6 +300,17 @@ Misiones (Etapa F):
 - Menu `MMORPG > Quests > Generate Quests` genera los assets; sin assets hay fallback runtime.
 - Guardado esquema v5: mision activa, progreso de objetivos y misiones completadas se conservan al cerrar.
 
+## Fase 5.12: Mascotas Y Monturas
+
+Primeros companeros del jugador:
+
+- Mascotas definidas como ScriptableObjects (`PetDefinition`): tipo (apoyo, recolectora, ofensiva, defensiva, experiencia), rareza y bonos pasivos.
+- Zorro del valle: mascota inicial de experiencia (+10% EXP, +5% oro mientras esta invocada). Boton MASCOTA para invocar/guardar; te sigue con un visual procedural y etiqueta.
+- Monturas definidas como ScriptableObjects (`MountDefinition`): categoria (caballo, lobo, tigre, criatura magica, dragon terrestre y voladora para el futuro), nivel requerido y multiplicador de velocidad.
+- Caballo bayo: montura inicial (nivel 5, velocidad x1.6). Boton MONTURA para montar/desmontar; el multiplicador pasa por el recomputo central de stats.
+- La mascota activa y la montura seleccionada se guardan (esquema v6).
+- Menu `MMORPG > Companions > Generate Companions` genera los assets; sin assets hay fallback runtime.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

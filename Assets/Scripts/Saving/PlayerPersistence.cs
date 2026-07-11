@@ -21,6 +21,8 @@ namespace MmorpgPrototype
         public EquipmentUpgradeSystem Equipment;
         public PlayerEquipment Gear;
         public PlayerQuestLog QuestLog;
+        public PetService Pets;
+        public MountService Mounts;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -117,6 +119,16 @@ namespace MmorpgPrototype
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
             QuestLog?.Restore(data.Quests);
 
+            if (Mounts != null && !string.IsNullOrEmpty(data.SelectedMountId))
+            {
+                Mounts.SelectMount(data.SelectedMountId);
+            }
+
+            if (Pets != null && !string.IsNullOrEmpty(data.ActivePetId))
+            {
+                Pets.Summon(data.ActivePetId);
+            }
+
             HasActiveCharacter = true;
             autoSaveTimer = 0f;
         }
@@ -146,7 +158,9 @@ namespace MmorpgPrototype
                 ArmorLevel = Equipment != null ? Equipment.ArmorLevel : 0,
                 Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>(),
                 Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>(),
-                Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData()
+                Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData(),
+                ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
+                SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty
             };
         }
 

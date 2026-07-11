@@ -133,6 +133,8 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerQuestLog>();
             player.AddComponent<EquipmentUpgradeSystem>();
             player.AddComponent<PlayerEquipment>();
+            player.AddComponent<PetService>();
+            player.AddComponent<MountService>();
             player.AddComponent<PlayerSkills>();
             player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
@@ -235,6 +237,28 @@ namespace MmorpgPrototype
             // Fallback runtime si los assets no se generaron todavia
             // (MMORPG > Quests > Generate Quests).
             return DefaultQuests.CreateAll();
+        }
+
+        private static System.Collections.Generic.List<PetDefinition> LoadPets()
+        {
+            var loaded = Resources.LoadAll<PetDefinition>("Game/Pets");
+            if (loaded != null && loaded.Length > 0)
+            {
+                return new System.Collections.Generic.List<PetDefinition>(loaded);
+            }
+
+            return DefaultCompanions.CreatePets();
+        }
+
+        private static System.Collections.Generic.List<MountDefinition> LoadMounts()
+        {
+            var loaded = Resources.LoadAll<MountDefinition>("Game/Mounts");
+            if (loaded != null && loaded.Length > 0)
+            {
+                return new System.Collections.Generic.List<MountDefinition>(loaded);
+            }
+
+            return DefaultCompanions.CreateMounts();
         }
 
         private static LootTableConfig LoadLootTable()
@@ -381,6 +405,17 @@ namespace MmorpgPrototype
             persistence.Equipment = equipment;
             persistence.Gear = gear;
             persistence.QuestLog = questLog;
+            var petService = player.GetComponent<PetService>();
+            petService.Hud = hud;
+            petService.Progression = progression;
+            petService.Initialize(LoadPets());
+            var mountService = player.GetComponent<MountService>();
+            mountService.Hud = hud;
+            mountService.Progression = progression;
+            mountService.UpgradeSystem = equipment;
+            mountService.Initialize(LoadMounts());
+            persistence.Pets = petService;
+            persistence.Mounts = mountService;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
@@ -417,6 +452,14 @@ namespace MmorpgPrototype
 
             var talkButton = CreateRoundButton(parent, "Talk Button", "HABLAR", new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
             talkButton.onClick.AddListener(shop.Talk);
+
+            var petService = player.GetComponent<PetService>();
+            var petButton = CreateRoundButton(parent, "Pet Button", "MASCOTA", new Vector2(0f, 1f), new Vector2(92f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.4f, 0.14f), 17);
+            petButton.onClick.AddListener(petService.ToggleDefault);
+
+            var mountService = player.GetComponent<MountService>();
+            var mountButton = CreateRoundButton(parent, "Mount Button", "MONTURA", new Vector2(0f, 1f), new Vector2(232f, -396f), new Vector2(128f, 42f), new Color(0.32f, 0.36f, 0.2f), 17);
+            mountButton.onClick.AddListener(mountService.ToggleMount);
         }
 
         private static void CreateNetworkPanel(Transform parent, GameObject player)

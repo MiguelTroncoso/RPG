@@ -204,7 +204,9 @@ namespace MmorpgPrototype
                 var movement = GetComponent<PlayerController>();
                 if (movement != null)
                 {
-                    movement.MoveSpeed = definition.MoveSpeed + equipSpeed;
+                    var mount = GetComponent<MountService>();
+                    var mountMultiplier = mount != null ? mount.SpeedMultiplier : 1f;
+                    movement.MoveSpeed = (definition.MoveSpeed + equipSpeed) * mountMultiplier;
                 }
             }
             else if (equipHealth > 0)
