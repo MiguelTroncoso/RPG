@@ -352,6 +352,11 @@ Los puntos de atributo por fin se pueden gastar:
 - Los bonos pasan por el recomputo central de stats junto con equipo, mejoras y montura; el critico extra entra al calculo de dano.
 - Los atributos gastados se guardan (esquema v8).
 
+## Fase 5.17: Posicion Persistente
+
+- La posicion y orientacion del jugador se guardan con el resto del estado (esquema v9).
+- Al CONTINUAR reapareces exactamente donde cerraste el juego, no en el punto inicial.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

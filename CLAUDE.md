@@ -13,10 +13,10 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.15 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.17 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
-avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v6,
+avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
 progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
 equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
@@ -68,12 +68,8 @@ simple y autocontenido.
 ## Estado conocido / limitaciones
 
 - El avatar visual es procedural (`PlayerAvatarVisual`); no es arte final.
-- La posición del jugador no se guarda todavía (siempre reaparece en el
-  punto inicial).
-- Los puntos de atributo se acumulan pero aún no se pueden gastar (falta la
-  ventana de stats).
-- La hoja de ruta inicial (A–K) está completa. Siguientes candidatos:
-  ventana de stats para gastar puntos de atributo, guardar posición del
-  jugador, i18n con tabla `es`, `StatSheet` con modificadores por origen,
-  Zona 2 reutilizando `ZoneDefinition`, o autoridad de servidor real sobre
-  las intenciones ya enviadas.
+- La hoja de ruta inicial (A–K) está completa, más ventana de atributos y
+  posición persistente. Siguientes candidatos: i18n con tabla `es`,
+  `StatSheet` con modificadores por origen, Zona 2 reutilizando
+  `ZoneDefinition`, o autoridad de servidor real sobre las intenciones ya
+  enviadas.

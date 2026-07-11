@@ -17,14 +17,15 @@ ANTES DE TOCAR NADA lee, en este orden:
 3. README.md (historial de fases 1 a 5.13 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.15 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.17 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
   (critico, precision, evasion, defensa) en ClassDefinition.cs.
 - Progresion 1-105: LevelProgressionTable generada desde ExpCurveConfig;
   la subida de nivel se resuelve en ExperienceResolver (funcion pura).
-  Puntos de atributo se acumulan (aun no se gastan: falta ventana de stats).
+  Los puntos de atributo se gastan en la ventana STATS (PlayerAttributes +
+  AttributeConfig: Fuerza/Vitalidad/Agilidad).
 - Items: ItemDefinition/ConsumableItemDefinition/EquipmentItemDefinition
   (ScriptableObjects) + ItemDatabase con validacion de IDs + RarityTable
   (colores centralizados). Inventario por instancias (ItemInstance con GUID)
@@ -50,10 +51,11 @@ Estado actual (fases 1-5.15 completadas; hoja de ruta A-K completa):
   ven con su sexo real. Capa de intenciones: level_up y upgrade se envian
   como mensajes "action" y el servidor los difunde como actividad
   (Server/src/server.js).
-- Guardado local JSON (esquema v7) via ISaveStorage/JsonFileStorage con
-  escritura atomica + backup: identidad, nivel, EXP, oro, puntos,
-  inventario, equipo con niveles de mejora, mision activa y progreso,
-  mascota activa, montura y almacen. PlayerPrefs solo para settings.
+- Guardado local JSON (esquema v9) via ISaveStorage/JsonFileStorage con
+  escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
+  atributos gastados, inventario, equipo con niveles de mejora, mision
+  activa y progreso, mascota activa, montura, almacen y posicion del
+  jugador. PlayerPrefs solo para settings.
 - Patron de datos establecido: cada config es un ScriptableObject con un
   generador en el menu de editor (MMORPG > ...) y un fallback runtime en el
   bootstrap si el asset no existe. Generadores: Items, Upgrade Config, Loot
@@ -80,10 +82,11 @@ Como probar:
   a ws://localhost:7777 (IP local del equipo para movil fisico).
 - No intentar build Android si falta PlaybackEngines/AndroidPlayer.
 
-Proximos objetivos sugeridos (la hoja de ruta A-K esta completa):
-- Ventana de stats para gastar puntos de atributo.
-- Guardar posicion del jugador.
+Proximos objetivos sugeridos (hoja de ruta A-K + atributos + posicion
+completos):
 - i18n: mover textos visibles a claves con tabla es (hoy hay literales).
+- Zona 2 reutilizando ZoneDefinition y los generadores existentes.
+- Autoridad de servidor sobre las intenciones "action" ya definidas.
 - StatSheet con modificadores por origen (reemplazo del recomputo simple).
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok

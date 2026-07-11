@@ -133,8 +133,32 @@ namespace MmorpgPrototype
                 Pets.Summon(data.ActivePetId);
             }
 
+            if (data.HasPosition)
+            {
+                RestorePosition(new Vector3(data.PosX, data.PosY, data.PosZ), data.Yaw);
+            }
+
             HasActiveCharacter = true;
             autoSaveTimer = 0f;
+        }
+
+        // El CharacterController pisa los cambios directos de transform:
+        // hay que apagarlo para teletransportar.
+        private void RestorePosition(Vector3 position, float yaw)
+        {
+            var controller = GetComponent<CharacterController>();
+            if (controller != null)
+            {
+                controller.enabled = false;
+            }
+
+            transform.position = position;
+            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+            if (controller != null)
+            {
+                controller.enabled = true;
+            }
         }
 
         public void DeleteSave()
@@ -168,7 +192,12 @@ namespace MmorpgPrototype
                 Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData(),
                 ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
                 SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty,
-                Storage = Storage != null ? Storage.ExportEntries() : new List<SavedItemEntry>()
+                Storage = Storage != null ? Storage.ExportEntries() : new List<SavedItemEntry>(),
+                HasPosition = true,
+                PosX = transform.position.x,
+                PosY = transform.position.y,
+                PosZ = transform.position.z,
+                Yaw = transform.eulerAngles.y
             };
         }
 
