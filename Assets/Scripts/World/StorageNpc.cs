@@ -23,7 +23,7 @@ namespace MmorpgPrototype
 
             if (Vector3.Distance(transform.position, Player.position) > InteractionRange)
             {
-                Hud?.SetStatus("Acercate al Almacen del campamento.");
+                Hud?.SetStatus(Localization.Tr("storage.too_far"));
                 return;
             }
 

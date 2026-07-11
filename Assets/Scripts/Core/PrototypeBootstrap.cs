@@ -22,6 +22,7 @@ namespace MmorpgPrototype
 
         private void Build()
         {
+            Localization.Initialize(Resources.Load<LocalizationTable>("Game/LocalizationTable"));
             ConfigureRuntime();
             EnsureEventSystem();
             CreateLighting();

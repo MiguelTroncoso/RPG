@@ -35,7 +35,7 @@ namespace MmorpgPrototype
             var instance = gear != null ? gear.GetEquipped(EquipSlot.Weapon) : null;
             if (instance == null)
             {
-                Hud?.SetStatus("Equipa un arma primero (boton EQUIPAR).");
+                Hud?.SetStatus(Localization.Tr("upgrade.need_weapon"));
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace MmorpgPrototype
             var instance = gear != null && slot != EquipSlot.None ? gear.GetEquipped(slot) : null;
             if (instance == null)
             {
-                Hud?.SetStatus("Equipa una pieza de armadura primero (boton EQUIPAR).");
+                Hud?.SetStatus(Localization.Tr("upgrade.need_armor"));
                 return;
             }
 
@@ -60,7 +60,7 @@ namespace MmorpgPrototype
         {
             if (Progression == null || Inventory == null)
             {
-                Hud?.SetStatus("Sistema de mejora no inicializado.");
+                Hud?.SetStatus(Localization.Tr("upgrade.not_ready"));
                 return;
             }
 
@@ -70,7 +70,7 @@ namespace MmorpgPrototype
 
             if (instance.UpgradeLevel >= maxLevel)
             {
-                Hud?.SetStatus($"{itemName} ya esta al maximo (+{instance.UpgradeLevel}).");
+                Hud?.SetStatus(Localization.Tr("upgrade.at_max", itemName, instance.UpgradeLevel));
                 return;
             }
 
@@ -78,13 +78,13 @@ namespace MmorpgPrototype
 
             if (Progression.Gold < step.GoldCost)
             {
-                Hud?.SetStatus($"Oro insuficiente: necesitas {step.GoldCost}.");
+                Hud?.SetStatus(Localization.Tr("upgrade.need_gold", step.GoldCost));
                 return;
             }
 
             if (Inventory.Count(materialId) < step.MaterialCost)
             {
-                Hud?.SetStatus($"Necesitas {step.MaterialCost} {Inventory.DisplayNameOf(materialId)}.");
+                Hud?.SetStatus(Localization.Tr("upgrade.need_material", step.MaterialCost, Inventory.DisplayNameOf(materialId)));
                 return;
             }
 
@@ -96,7 +96,7 @@ namespace MmorpgPrototype
             if (useProtection)
             {
                 Inventory.TryConsume(DefaultGameItems.ProtectionRune);
-                Hud?.AddFeed("Runa de proteccion aplicada");
+                Hud?.AddFeed(Localization.Tr("upgrade.rune_used"));
             }
 
             var outcome = UpgradeResolver.Resolve(step, Random.value, useProtection);
@@ -105,29 +105,29 @@ namespace MmorpgPrototype
             {
                 case UpgradeOutcome.Success:
                     instance.UpgradeLevel++;
-                    Hud?.SetStatus($"{itemName} mejorado a +{instance.UpgradeLevel}.");
-                    Hud?.AddFeed($"{itemName} +{instance.UpgradeLevel}");
+                    Hud?.SetStatus(Localization.Tr("upgrade.success", itemName, instance.UpgradeLevel));
+                    Hud?.AddFeed(Localization.Tr("upgrade.feed_success", itemName, instance.UpgradeLevel));
                     DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, $"+{instance.UpgradeLevel}", new Color(1f, 0.85f, 0.3f));
                     GetComponent<PlayerQuestLog>()?.OnItemUpgraded();
-                    GetComponent<MmorpgNetworkClient>()?.SendAction("upgrade", $"mejoro {itemName} a +{instance.UpgradeLevel}");
+                    GetComponent<MmorpgNetworkClient>()?.SendAction("upgrade", Localization.Tr("net.upgrade", itemName, instance.UpgradeLevel));
                     break;
 
                 case UpgradeOutcome.FailKept:
                     Hud?.SetStatus(useProtection
-                        ? $"La mejora fallo, pero la runa protegio {itemName}."
-                        : $"La mejora de {itemName} fallo. El objeto se mantiene.");
+                        ? Localization.Tr("upgrade.fail_protected", itemName)
+                        : Localization.Tr("upgrade.fail_kept", itemName));
                     break;
 
                 case UpgradeOutcome.FailDowngraded:
                     instance.UpgradeLevel = Mathf.Max(0, instance.UpgradeLevel - 1);
-                    Hud?.SetStatus($"La mejora fallo: {itemName} bajo a +{instance.UpgradeLevel}.");
-                    Hud?.AddFeed($"{itemName} bajo a +{instance.UpgradeLevel}");
+                    Hud?.SetStatus(Localization.Tr("upgrade.fail_down", itemName, instance.UpgradeLevel));
+                    Hud?.AddFeed(Localization.Tr("upgrade.feed_down", itemName, instance.UpgradeLevel));
                     break;
 
                 case UpgradeOutcome.Destroyed:
                     gear.DestroyEquipped(slot);
-                    Hud?.SetStatus($"La mejora fallo: {itemName} se destruyo.", 4f);
-                    Hud?.AddFeed($"{itemName} destruido en la mejora");
+                    Hud?.SetStatus(Localization.Tr("upgrade.destroyed", itemName), 4f);
+                    Hud?.AddFeed(Localization.Tr("upgrade.feed_destroyed", itemName));
                     break;
             }
 
@@ -138,7 +138,7 @@ namespace MmorpgPrototype
         {
             if (!Inventory.TryConsume(DefaultGameItems.MinorPotion))
             {
-                Hud?.SetStatus("No tienes pociones.");
+                Hud?.SetStatus(Localization.Tr("potion.none"));
                 return;
             }
 
@@ -148,8 +148,8 @@ namespace MmorpgPrototype
             var healAmount = definition != null ? definition.HealAmount : 45;
 
             health.Heal(healAmount);
-            Hud?.SetStatus("Usaste Pocion menor.");
-            Hud?.AddFeed($"Pocion usada: +{healAmount} vida");
+            Hud?.SetStatus(Localization.Tr("potion.used"));
+            Hud?.AddFeed(Localization.Tr("potion.feed", healAmount));
             DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, $"+{healAmount}", new Color(0.35f, 1f, 0.78f));
         }
 
@@ -180,8 +180,8 @@ namespace MmorpgPrototype
         public string Summary()
         {
             var equipment = GetComponent<PlayerEquipment>();
-            var pieces = equipment != null ? equipment.Summary() : "sin piezas";
-            return $"Equipo: {pieces}";
+            var pieces = equipment != null ? equipment.Summary() : Localization.Tr("hud.no_pieces");
+            return Localization.Tr("hud.equipment", pieces);
         }
 
         // Punto unico de recomputo de stats derivados: equipo, mejoras,

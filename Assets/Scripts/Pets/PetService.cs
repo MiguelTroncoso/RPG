@@ -42,7 +42,7 @@ namespace MmorpgPrototype
 
             if (pets.Count == 0)
             {
-                Hud?.SetStatus("No tienes mascotas.");
+                Hud?.SetStatus(Localization.Tr("pet.none"));
                 return;
             }
 
@@ -61,8 +61,8 @@ namespace MmorpgPrototype
             active = pet;
             CreateVisual(pet);
             ApplyBonuses();
-            Hud?.SetStatus($"{pet.DisplayName} te acompana (+{pet.ExpBonusPercent:0}% EXP, +{pet.GoldBonusPercent:0}% oro).", 4f);
-            Hud?.AddFeed($"Mascota invocada: {pet.DisplayName}");
+            Hud?.SetStatus(Localization.Tr("pet.summoned", pet.DisplayName, pet.ExpBonusPercent.ToString("0"), pet.GoldBonusPercent.ToString("0")), 4f);
+            Hud?.AddFeed(Localization.Tr("pet.feed_summon", pet.DisplayName));
         }
 
         public void Dismiss(bool silent = false)
@@ -85,8 +85,8 @@ namespace MmorpgPrototype
 
             if (!silent)
             {
-                Hud?.SetStatus($"{name} descansa.");
-                Hud?.AddFeed($"Mascota guardada: {name}");
+                Hud?.SetStatus(Localization.Tr("pet.dismissed", name));
+                Hud?.AddFeed(Localization.Tr("pet.feed_dismiss", name));
             }
         }
 

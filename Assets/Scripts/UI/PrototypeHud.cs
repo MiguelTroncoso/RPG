@@ -88,7 +88,7 @@ namespace MmorpgPrototype
 
             if (StatusText != null && statusUntil > 0f && Time.time > statusUntil)
             {
-                StatusText.text = "Cambia clase, completa la mision, mejora equipo y busca el monolito.";
+                StatusText.text = Localization.Tr("hud.hint");
                 statusUntil = 0f;
             }
 
@@ -149,20 +149,20 @@ namespace MmorpgPrototype
             }
 
             var bonusLabel = progression.ExperienceMultiplier > 1.001f
-                ? $"  (+{(progression.ExperienceMultiplier - 1f) * 100f:0}% EXP)"
+                ? Localization.Tr("hud.exp_bonus_suffix", ((progression.ExperienceMultiplier - 1f) * 100f).ToString("0"))
                 : string.Empty;
             var expLabel = progression.IsMaxLevel
-                ? "EXP MAX"
-                : $"EXP {progression.Experience}/{progression.NextLevelExperience}";
-            var pointsLabel = progression.AttributePoints > 0 ? $"  Puntos {progression.AttributePoints}" : string.Empty;
-            ProgressionText.text = $"Nivel {progression.Level}  {expLabel}  Oro {progression.Gold}{pointsLabel}{bonusLabel}";
+                ? Localization.Tr("hud.exp_max")
+                : Localization.Tr("hud.exp", progression.Experience, progression.NextLevelExperience);
+            var pointsLabel = progression.AttributePoints > 0 ? Localization.Tr("hud.points_suffix", progression.AttributePoints) : string.Empty;
+            ProgressionText.text = Localization.Tr("hud.progression", progression.Level, expLabel, progression.Gold, pointsLabel, bonusLabel);
         }
 
         public void RefreshInventory()
         {
             if (InventoryText != null)
             {
-                InventoryText.text = inventory != null ? inventory.Summary() : "Inventario: -";
+                InventoryText.text = inventory != null ? inventory.Summary() : Localization.Tr("inv.empty");
             }
         }
 
@@ -170,7 +170,7 @@ namespace MmorpgPrototype
         {
             if (QuestText != null)
             {
-                QuestText.text = questLog != null ? questLog.Summary() : "Mision: -";
+                QuestText.text = questLog != null ? questLog.Summary() : Localization.Tr("quest.none");
             }
         }
 
@@ -178,7 +178,7 @@ namespace MmorpgPrototype
         {
             if (EquipmentText != null)
             {
-                EquipmentText.text = equipment != null ? equipment.Summary() : "Equipo: -";
+                EquipmentText.text = equipment != null ? equipment.Summary() : Localization.Tr("hud.equipment", "-");
             }
         }
 
@@ -218,7 +218,7 @@ namespace MmorpgPrototype
 
             if (PlayerHealthText != null)
             {
-                PlayerHealthText.text = $"Jugador {playerHealth.CurrentHealth}/{playerHealth.MaxHealth}";
+                PlayerHealthText.text = Localization.Tr("hud.player_hp", playerHealth.CurrentHealth, playerHealth.MaxHealth);
             }
         }
 
@@ -233,7 +233,7 @@ namespace MmorpgPrototype
 
             if (EnemyHealthText != null)
             {
-                EnemyHealthText.text = hasEnemy ? $"Objetivo {watchedEnemy.CurrentHealth}/{watchedEnemy.MaxHealth}" : "Sin objetivo";
+                EnemyHealthText.text = hasEnemy ? Localization.Tr("hud.target_hp", watchedEnemy.CurrentHealth, watchedEnemy.MaxHealth) : Localization.Tr("hud.no_target");
             }
         }
     }

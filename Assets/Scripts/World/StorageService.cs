@@ -36,7 +36,7 @@ namespace MmorpgPrototype
             var taken = Inventory.TakeAllOfCategory(ItemCategory.Material);
             if (taken.Count == 0)
             {
-                Hud?.SetStatus("No tienes materiales para guardar.");
+                Hud?.SetStatus(Localization.Tr("storage.nothing"));
                 return;
             }
 
@@ -47,8 +47,8 @@ namespace MmorpgPrototype
                 total += entry.Count;
             }
 
-            Hud?.SetStatus($"Guardaste {total} materiales en el almacen.");
-            Hud?.AddFeed($"Almacen: +{total} materiales");
+            Hud?.SetStatus(Localization.Tr("storage.deposited", total));
+            Hud?.AddFeed(Localization.Tr("storage.feed", total));
         }
 
         public void WithdrawAll()
@@ -64,7 +64,7 @@ namespace MmorpgPrototype
             }
 
             stash.Clear();
-            Hud?.SetStatus("Retiraste todo del almacen.");
+            Hud?.SetStatus(Localization.Tr("storage.withdrawn"));
         }
 
         public List<SavedItemEntry> ExportEntries()

@@ -34,7 +34,7 @@ namespace MmorpgPrototype
 
             if (hud != null && (bundle.Experience > 0 || bundle.Gold > 0))
             {
-                hud.AddFeed($"{sourceLabel}: +{bundle.Experience} EXP, +{bundle.Gold} oro");
+                hud.AddFeed(Localization.Tr("reward.feed", sourceLabel, bundle.Experience, bundle.Gold));
             }
         }
     }

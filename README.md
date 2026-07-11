@@ -357,6 +357,16 @@ Los puntos de atributo por fin se pueden gastar:
 - La posicion y orientacion del jugador se guardan con el resto del estado (esquema v9).
 - Al CONTINUAR reapareces exactamente donde cerraste el juego, no en el punto inicial.
 
+## Fase 5.18: Textos Con Claves i18n
+
+Cumple la regla del contrato: los mensajes del sistema ya no son literales en el codigo.
+
+- `Localization.Tr(clave)` resuelve todos los mensajes de progresion, mejora, equipo, inventario, mascotas, monturas, almacen, NPCs, misiones, combate y HUD (~85 claves).
+- La tabla espanola vive en un asset `LocalizationTable` (menu `MMORPG > Localization > Generate Localization`); sin asset, fallback runtime con la tabla por defecto.
+- Si falta una clave, se muestra la clave misma para que el hueco sea evidente.
+- Agregar otro idioma = crear otra tabla; el contenido de datos (nombres de items, dialogos de misiones) sigue en sus ScriptableObjects.
+- Pendiente de migrar: textos del panel de creacion de personaje y habilidades (estan en el bootstrap/PlayerSkills).
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

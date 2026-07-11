@@ -57,10 +57,10 @@ namespace MmorpgPrototype
 
             var dropName = Inventory != null ? Inventory.DisplayNameOf(drop) : drop;
             var message = string.IsNullOrEmpty(drop)
-                ? $"+{Experience} EXP, +{gold} oro"
-                : $"+{Experience} EXP, +{gold} oro, loot: {dropName}";
+                ? Localization.Tr("reward.kill", Experience, gold)
+                : Localization.Tr("reward.kill_loot", Experience, gold, dropName);
             Hud?.SetStatus(message, 3f);
-            Hud?.AddFeed($"+{Experience} EXP  +{gold} oro");
+            Hud?.AddFeed(Localization.Tr("reward.kill_feed", Experience, gold));
         }
 
         public string RollLoot()

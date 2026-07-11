@@ -104,7 +104,7 @@ namespace MmorpgPrototype
 
             if (result.IsMiss)
             {
-                DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, "Esquivado", new Color(0.6f, 0.85f, 1f));
+                DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, Localization.Tr("combat.dodge_popup"), new Color(0.6f, 0.85f, 1f));
                 return;
             }
 

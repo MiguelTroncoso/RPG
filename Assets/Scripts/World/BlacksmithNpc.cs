@@ -25,7 +25,7 @@ namespace MmorpgPrototype
             }
 
             var dialog = QuestLog != null ? QuestLog.DialogFor(NpcId) : null;
-            Hud?.SetStatus(dialog ?? "Herrero: traeme oro y materiales y reforzare tu equipo.", 5f);
+            Hud?.SetStatus(dialog ?? Localization.Tr("smith.dialog"), 5f);
             QuestLog?.OnNpcTalked(NpcId);
         }
 
@@ -57,7 +57,7 @@ namespace MmorpgPrototype
                 return true;
             }
 
-            Hud?.SetStatus("Acercate al Herrero del campamento.");
+            Hud?.SetStatus(Localization.Tr("smith.too_far"));
             return false;
         }
     }

@@ -25,7 +25,7 @@ namespace MmorpgPrototype
             }
 
             var dialog = QuestLog != null ? QuestLog.DialogFor(NpcId) : null;
-            Hud?.SetStatus(dialog ?? "Mercader: bienvenido, viajero. Compra pociones o mejora tu equipo.", 5f);
+            Hud?.SetStatus(dialog ?? Localization.Tr("shop.dialog"), 5f);
             QuestLog?.OnNpcTalked(NpcId);
         }
 
@@ -39,13 +39,13 @@ namespace MmorpgPrototype
             const int cost = 25;
             if (!Progression.SpendGold(cost))
             {
-                Hud?.SetStatus($"Necesitas {cost} oro para comprar pocion.");
+                Hud?.SetStatus(Localization.Tr("shop.need_gold", cost));
                 return;
             }
 
             Inventory.AddItem(DefaultGameItems.MinorPotion);
-            Hud?.SetStatus("Compraste Pocion menor.");
-            Hud?.AddFeed("Mercader: pocion comprada");
+            Hud?.SetStatus(Localization.Tr("shop.bought_potion"));
+            Hud?.AddFeed(Localization.Tr("shop.feed_potion"));
         }
 
         private bool IsPlayerNear()
@@ -60,7 +60,7 @@ namespace MmorpgPrototype
                 return true;
             }
 
-            Hud?.SetStatus("Acercate al Mercader del Valle.");
+            Hud?.SetStatus(Localization.Tr("shop.too_far"));
             return false;
         }
     }

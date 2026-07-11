@@ -25,7 +25,7 @@ namespace MmorpgPrototype
         {
             if (Progression == null || !Progression.TrySpendAttributePoint())
             {
-                Hud?.SetStatus("No tienes puntos de atributo disponibles.");
+                Hud?.SetStatus(Localization.Tr("attr.no_points"));
                 return false;
             }
 
@@ -33,15 +33,15 @@ namespace MmorpgPrototype
             {
                 case AttributeType.Strength:
                     Strength++;
-                    Hud?.AddFeed($"Fuerza {Strength} (+{Config?.DamagePerStrength ?? 1} dano)");
+                    Hud?.AddFeed(Localization.Tr("attr.strength_up", Strength, Config != null ? Config.DamagePerStrength : 1));
                     break;
                 case AttributeType.Vitality:
                     Vitality++;
-                    Hud?.AddFeed($"Vitalidad {Vitality} (+{Config?.HealthPerVitality ?? 8} vida)");
+                    Hud?.AddFeed(Localization.Tr("attr.vitality_up", Vitality, Config != null ? Config.HealthPerVitality : 8));
                     break;
                 default:
                     Agility++;
-                    Hud?.AddFeed($"Agilidad {Agility} (velocidad y critico)");
+                    Hud?.AddFeed(Localization.Tr("attr.agility_up", Agility));
                     break;
             }
 

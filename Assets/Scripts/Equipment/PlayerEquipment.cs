@@ -198,7 +198,7 @@ namespace MmorpgPrototype
                 if (result == EquipResult.Success)
                 {
                     equippedSomething = true;
-                    Hud?.AddFeed($"Equipado: {definition.DisplayName}");
+                    Hud?.AddFeed(Localization.Tr("equip.feed", definition.DisplayName));
                 }
                 else if (firstRejection == null)
                 {
@@ -208,11 +208,11 @@ namespace MmorpgPrototype
 
             if (equippedSomething)
             {
-                Hud?.SetStatus("Equipo actualizado.");
+                Hud?.SetStatus(Localization.Tr("equip.updated"));
             }
             else
             {
-                Hud?.SetStatus(firstRejection ?? "No hay equipo mejor en el inventario.");
+                Hud?.SetStatus(firstRejection ?? Localization.Tr("equip.nothing_better"));
             }
         }
 
@@ -220,7 +220,7 @@ namespace MmorpgPrototype
         {
             if (equipped.Count == 0)
             {
-                return "sin piezas";
+                return Localization.Tr("hud.no_pieces");
             }
 
             var parts = new List<string>();
@@ -312,11 +312,11 @@ namespace MmorpgPrototype
             switch (result)
             {
                 case EquipResult.LevelTooLow:
-                    return $"Necesitas nivel {definition.RequiredLevel} para {definition.DisplayName}.";
+                    return Localization.Tr("equip.need_level", definition.RequiredLevel, definition.DisplayName);
                 case EquipResult.WrongClass:
-                    return $"Tu clase no puede usar {definition.DisplayName}.";
+                    return Localization.Tr("equip.wrong_class", definition.DisplayName);
                 default:
-                    return $"No puedes equipar {definition.DisplayName}.";
+                    return Localization.Tr("equip.cannot", definition.DisplayName);
             }
         }
 

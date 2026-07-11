@@ -33,14 +33,14 @@ namespace MmorpgPrototype
 
             if (enemy == null)
             {
-                Hud?.SetStatus("No hay enemigos en rango.");
+                Hud?.SetStatus(Localization.Tr("combat.no_target"));
                 return;
             }
 
             var health = enemy.GetComponent<Health>();
             if (health == null || health.IsDead)
             {
-                Hud?.SetStatus("El objetivo ya fue derrotado.");
+                Hud?.SetStatus(Localization.Tr("combat.already_dead"));
                 return;
             }
 
@@ -49,17 +49,17 @@ namespace MmorpgPrototype
             var result = DamageEnemy(enemy, AttackDamage + EquipmentDamageBonus, new Color(1f, 0.9f, 0.28f));
             if (result.IsMiss)
             {
-                Hud?.SetStatus($"{enemy.name} esquivo tu ataque.");
+                Hud?.SetStatus(Localization.Tr("combat.dodged", enemy.name));
             }
             else if (health.IsDead)
             {
-                Hud?.SetStatus($"{enemy.name} derrotado.");
+                Hud?.SetStatus(Localization.Tr("combat.defeated", enemy.name));
             }
             else
             {
                 Hud?.SetStatus(result.IsCritical
-                    ? $"Golpe critico a {enemy.name} por {result.Amount}."
-                    : $"Golpeaste a {enemy.name} por {result.Amount}.");
+                    ? Localization.Tr("combat.crit", enemy.name, result.Amount)
+                    : Localization.Tr("combat.hit", enemy.name, result.Amount));
             }
         }
 
@@ -148,7 +148,7 @@ namespace MmorpgPrototype
 
             if (result.IsMiss)
             {
-                DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, "Fallo", new Color(0.72f, 0.76f, 0.8f));
+                DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, Localization.Tr("combat.miss_popup"), new Color(0.72f, 0.76f, 0.8f));
                 return result;
             }
 

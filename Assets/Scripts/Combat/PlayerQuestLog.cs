@@ -85,8 +85,8 @@ namespace MmorpgPrototype
             if (activeQuest == null)
             {
                 return completedIds.Count > 0
-                    ? "Mision: valle estabilizado. Esperando nuevas tareas."
-                    : "Mision: -";
+                    ? Localization.Tr("quest.all_done")
+                    : Localization.Tr("quest.none");
             }
 
             var parts = new List<string>();
@@ -97,7 +97,7 @@ namespace MmorpgPrototype
                 parts.Add($"{objective.Label} {current}/{objective.RequiredCount}");
             }
 
-            return $"Mision: {activeQuest.Title} — {string.Join(" | ", parts)}";
+            return Localization.Tr("quest.summary", activeQuest.Title, string.Join(" | ", parts));
         }
 
         public QuestSaveData Export()
@@ -175,7 +175,7 @@ namespace MmorpgPrototype
 
                 counters[i] = Mathf.Min(objective.RequiredCount, counters[i] + amount);
                 changed = true;
-                Hud?.AddFeed($"Mision: {objective.Label} {counters[i]}/{objective.RequiredCount}");
+                Hud?.AddFeed(Localization.Tr("quest.feed_progress", objective.Label, counters[i], objective.RequiredCount));
             }
 
             if (!changed)
@@ -212,7 +212,7 @@ namespace MmorpgPrototype
             counters = null;
 
             RewardService.Grant(quest.Reward, Progression, Inventory, Hud, $"Mision '{quest.Title}'");
-            Hud?.SetStatus($"Mision completada: {quest.Title}. {quest.CompleteDialog}", 5f);
+            Hud?.SetStatus(Localization.Tr("quest.completed", quest.Title, quest.CompleteDialog), 5f);
 
             if (!string.IsNullOrWhiteSpace(quest.NextQuestId))
             {
@@ -262,7 +262,7 @@ namespace MmorpgPrototype
 
             if (announce)
             {
-                Hud?.AddFeed($"Nueva mision: {quest.Title}");
+                Hud?.AddFeed(Localization.Tr("quest.new", quest.Title));
             }
 
             if (AllObjectivesComplete())

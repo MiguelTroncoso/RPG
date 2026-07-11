@@ -58,21 +58,21 @@ namespace MmorpgPrototype
 
             if (selected == null)
             {
-                Hud?.SetStatus("No tienes monturas.");
+                Hud?.SetStatus(Localization.Tr("mount.none"));
                 return;
             }
 
             if (Progression != null && Progression.Level < selected.RequiredLevel)
             {
-                Hud?.SetStatus($"Necesitas nivel {selected.RequiredLevel} para montar {selected.DisplayName}.");
+                Hud?.SetStatus(Localization.Tr("mount.need_level", selected.RequiredLevel, selected.DisplayName));
                 return;
             }
 
             IsMounted = true;
             CreateVisual(selected);
             UpgradeSystem?.ApplyBonuses();
-            Hud?.SetStatus($"Montaste {selected.DisplayName} (velocidad x{selected.SpeedMultiplier:0.0}).", 3.5f);
-            Hud?.AddFeed($"Montura: {selected.DisplayName}");
+            Hud?.SetStatus(Localization.Tr("mount.mounted", selected.DisplayName, selected.SpeedMultiplier.ToString("0.0")), 3.5f);
+            Hud?.AddFeed(Localization.Tr("mount.feed", selected.DisplayName));
         }
 
         public void Dismount(bool silent = false)
@@ -94,7 +94,7 @@ namespace MmorpgPrototype
 
             if (!silent && selected != null)
             {
-                Hud?.SetStatus($"Bajaste de {selected.DisplayName}.");
+                Hud?.SetStatus(Localization.Tr("mount.dismounted", selected.DisplayName));
             }
         }
 

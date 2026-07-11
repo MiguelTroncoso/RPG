@@ -47,15 +47,15 @@ namespace MmorpgPrototype
                 health?.Heal(health.MaxHealth);
 
                 Hud?.SetStatus(IsMaxLevel
-                    ? $"Alcanzaste el nivel maximo {Level}."
-                    : $"Subiste a nivel {Level}.");
+                    ? Localization.Tr("status.max_level", Level)
+                    : Localization.Tr("status.level_up", Level));
 
                 if (result.AttributePointsGained > 0)
                 {
-                    Hud?.AddFeed($"+{result.AttributePointsGained} puntos de atributo");
+                    Hud?.AddFeed(Localization.Tr("feed.attribute_points", result.AttributePointsGained));
                 }
 
-                Network?.SendAction("level_up", $"subio a nivel {Level}");
+                Network?.SendAction("level_up", Localization.Tr("net.level_up", Level));
             }
 
             Hud?.RefreshProgression();

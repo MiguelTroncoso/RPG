@@ -51,7 +51,7 @@ namespace MmorpgPrototype
 
             QuestLog?.OnItemAdded(itemId, amount);
             Hud?.RefreshInventory();
-            Hud?.AddFeed($"+{amount} {definition.DisplayName}");
+            Hud?.AddFeed(Localization.Tr("inv.feed_add", amount, definition.DisplayName));
         }
 
         public bool TryConsume(string itemId, int amount = 1)
@@ -243,7 +243,7 @@ namespace MmorpgPrototype
         {
             if (items.Count == 0)
             {
-                return "Inventario: vacio";
+                return Localization.Tr("inv.empty");
             }
 
             var totals = ExportEntries();
@@ -264,7 +264,7 @@ namespace MmorpgPrototype
                 }
             }
 
-            return $"Inventario: {string.Join(" | ", parts)}";
+            return Localization.Tr("inv.summary", string.Join(" | ", parts));
         }
     }
 }
