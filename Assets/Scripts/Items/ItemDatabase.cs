@@ -41,6 +41,13 @@ namespace MmorpgPrototype
             return Rarities != null ? Rarities.GetColor(definition.Rarity) : RarityTable.DefaultRow(definition.Rarity).UiColor;
         }
 
+        public RarityTable.RarityRow RarityRowOf(string itemId)
+        {
+            var definition = Get(itemId);
+            var tier = definition != null ? definition.Rarity : Rarity.Common;
+            return Rarities != null ? Rarities.GetRow(tier) : RarityTable.DefaultRow(tier);
+        }
+
         public List<string> Validate()
         {
             var problems = new List<string>();

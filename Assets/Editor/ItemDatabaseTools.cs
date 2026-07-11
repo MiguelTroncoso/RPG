@@ -78,6 +78,30 @@ namespace MmorpgPrototype.Editor
             }
         }
 
+        private const string UpgradeAssetPath = GameFolder + "/UpgradeConfig.asset";
+
+        [MenuItem("MMORPG/Items/Generate Upgrade Config")]
+        public static void GenerateUpgradeConfig()
+        {
+            EnsureFolder("Assets", "Resources");
+            EnsureFolder(ResourcesRoot, "Game");
+
+            var config = AssetDatabase.LoadAssetAtPath<UpgradeConfig>(UpgradeAssetPath);
+            if (config == null)
+            {
+                config = ScriptableObject.CreateInstance<UpgradeConfig>();
+                AssetDatabase.CreateAsset(config, UpgradeAssetPath);
+            }
+
+            config.FillWithDefaults();
+            EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
+
+            var first = config.GetStep(1);
+            var last = config.GetStep(config.MaxUpgradeLevel);
+            Debug.Log($"UpgradeConfig regenerado: +1 ({first.SuccessChance:P0}) .. +{config.MaxUpgradeLevel} ({last.SuccessChance:P0}, {last.OnFailure}).");
+        }
+
         private static void EnsureFolder(string parent, string child)
         {
             if (!AssetDatabase.IsValidFolder($"{parent}/{child}"))

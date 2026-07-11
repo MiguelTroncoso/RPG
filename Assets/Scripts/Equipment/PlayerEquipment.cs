@@ -22,6 +22,7 @@ namespace MmorpgPrototype
         public PlayerProgression Progression;
         public PlayerClassController ClassController;
         public EquipmentUpgradeSystem UpgradeSystem;
+        public UpgradeConfig Upgrades;
         public PrototypeHud Hud;
 
         private readonly Dictionary<EquipSlot, ItemInstance> equipped = new Dictionary<EquipSlot, ItemInstance>();
@@ -38,7 +39,7 @@ namespace MmorpgPrototype
                     var definition = DefinitionOf(entry.Value);
                     if (definition != null)
                     {
-                        total += definition.DamageBonus;
+                        total += definition.DamageBonus + UpgradeDamageOf(definition, entry.Value);
                     }
                 }
 
@@ -56,12 +57,32 @@ namespace MmorpgPrototype
                     var definition = DefinitionOf(entry.Value);
                     if (definition != null)
                     {
-                        total += definition.MaxHealthBonus;
+                        total += definition.MaxHealthBonus + UpgradeHealthOf(definition, entry.Value);
                     }
                 }
 
                 return total;
             }
+        }
+
+        private int UpgradeDamageOf(EquipmentItemDefinition definition, ItemInstance instance)
+        {
+            if (Upgrades == null || instance == null || definition.Slot != EquipSlot.Weapon)
+            {
+                return 0;
+            }
+
+            return instance.UpgradeLevel * Upgrades.WeaponDamagePerLevel;
+        }
+
+        private int UpgradeHealthOf(EquipmentItemDefinition definition, ItemInstance instance)
+        {
+            if (Upgrades == null || instance == null || definition.Slot == EquipSlot.Weapon)
+            {
+                return 0;
+            }
+
+            return instance.UpgradeLevel * Upgrades.ArmorHealthPerLevel;
         }
 
         public float TotalMoveSpeedBonus
@@ -113,6 +134,24 @@ namespace MmorpgPrototype
             UpgradeSystem?.ApplyBonuses();
             Hud?.RefreshEquipment();
             return EquipResult.Success;
+        }
+
+        public ItemInstance GetEquipped(EquipSlot slot)
+        {
+            return equipped.TryGetValue(slot, out var instance) ? instance : null;
+        }
+
+        // Elimina la pieza sin devolverla al inventario (mejora destructiva).
+        public bool DestroyEquipped(EquipSlot slot)
+        {
+            if (!equipped.Remove(slot))
+            {
+                return false;
+            }
+
+            UpgradeSystem?.ApplyBonuses();
+            Hud?.RefreshEquipment();
+            return true;
         }
 
         public bool Unequip(EquipSlot slot)
@@ -190,7 +229,8 @@ namespace MmorpgPrototype
                 var definition = DefinitionOf(entry.Value);
                 if (definition != null)
                 {
-                    parts.Add(definition.DisplayName);
+                    var levelSuffix = entry.Value.UpgradeLevel > 0 ? $" +{entry.Value.UpgradeLevel}" : string.Empty;
+                    parts.Add(definition.DisplayName + levelSuffix);
                 }
 
                 if (parts.Count >= 3)
@@ -210,7 +250,12 @@ namespace MmorpgPrototype
             {
                 if (entry.Value != null)
                 {
-                    entries.Add(new SavedEquipmentEntry { Slot = entry.Key.ToString(), ItemId = entry.Value.ItemId });
+                    entries.Add(new SavedEquipmentEntry
+                    {
+                        Slot = entry.Key.ToString(),
+                        ItemId = entry.Value.ItemId,
+                        UpgradeLevel = entry.Value.UpgradeLevel
+                    });
                 }
             }
 
@@ -236,7 +281,9 @@ namespace MmorpgPrototype
                         continue;
                     }
 
-                    equipped[slot] = ItemInstance.Create(entry.ItemId);
+                    var instance = ItemInstance.Create(entry.ItemId);
+                    instance.UpgradeLevel = Mathf.Max(0, entry.UpgradeLevel);
+                    equipped[slot] = instance;
                 }
             }
 

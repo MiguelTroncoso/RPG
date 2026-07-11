@@ -267,6 +267,19 @@ El inventario deja de ser una lista de textos:
 - Menu `MMORPG > Items > Generate Item Database` genera los assets; sin assets, el juego usa el set por defecto en runtime.
 - Guardado esquema v3: inventario por IDs + equipo puesto. Los guardados anteriores migran automaticamente.
 
+## Fase 5.10: Mejora +0..+15 Con Riesgo
+
+Los botones WEAPON y ARMOR ahora mejoran la pieza equipada (la instancia real), al estilo de los MMORPG clasicos:
+
+- Tabla de mejora configurable (`UpgradeConfig`): probabilidad de exito, costo en oro, cantidad de materiales y politica de fallo por cada paso +1..+15.
+- Por defecto: +1 a +6 sin riesgo (solo se pierden materiales), +7 a +9 puede bajar un nivel, +10 a +15 puede destruir el objeto.
+- Runa de proteccion (drop raro): se consume automaticamente en mejoras riesgosas y evita la perdida o destruccion.
+- La rareza limita la mejora maxima (Common llega a +9; rarezas superiores a +15).
+- La resolucion del intento es una funcion pura (`UpgradeResolver`), portable al servidor.
+- El arma mejora dano por nivel y la armadura vida por nivel; los valores por nivel tambien son datos.
+- Menu `MMORPG > Items > Generate Upgrade Config` genera el asset; sin asset hay valores por defecto en runtime.
+- Guardado esquema v4: el nivel de mejora viaja con cada pieza equipada. Los guardados antiguos (contador global de arma/armadura) migran automaticamente.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

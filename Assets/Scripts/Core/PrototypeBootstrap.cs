@@ -161,6 +161,21 @@ namespace MmorpgPrototype
             return DefaultGameItems.CreateRuntimeDatabase(rarities);
         }
 
+        private static UpgradeConfig LoadUpgradeConfig()
+        {
+            var config = Resources.Load<UpgradeConfig>("Game/UpgradeConfig");
+            if (config != null && config.HasSteps)
+            {
+                return config;
+            }
+
+            // Fallback runtime si el asset no se genero todavia
+            // (MMORPG > Items > Generate Upgrade Config).
+            var runtimeConfig = ScriptableObject.CreateInstance<UpgradeConfig>();
+            runtimeConfig.FillWithDefaults();
+            return runtimeConfig;
+        }
+
         private static LevelProgressionTable LoadLevelTable()
         {
             var table = Resources.Load<LevelProgressionTable>("Game/LevelProgressionTable");
@@ -315,12 +330,15 @@ namespace MmorpgPrototype
             equipment.Hud = hud;
             equipment.Progression = progression;
             equipment.Inventory = inventory;
+            var upgradeConfig = LoadUpgradeConfig();
+            equipment.Config = upgradeConfig;
             var gear = player.GetComponent<PlayerEquipment>();
             gear.Database = database;
             gear.Inventory = inventory;
             gear.Progression = progression;
             gear.ClassController = player.GetComponent<PlayerClassController>();
             gear.UpgradeSystem = equipment;
+            gear.Upgrades = upgradeConfig;
             gear.Hud = hud;
             skills.Hud = hud;
             var persistence = player.GetComponent<PlayerPersistence>();

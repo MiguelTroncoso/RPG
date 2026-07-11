@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 3;
+        public int SchemaVersion = 4;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -34,5 +34,6 @@ namespace MmorpgPrototype
     {
         public string Slot;
         public string ItemId;
+        public int UpgradeLevel;
     }
 }
