@@ -46,9 +46,21 @@ namespace MmorpgPrototype
 
             FaceTarget(enemy.transform.position);
 
-            var damage = Mathf.Max(1, AttackDamage + EquipmentDamageBonus + Random.Range(-4, 5));
-            DamageEnemy(enemy, damage, new Color(1f, 0.9f, 0.28f));
-            Hud?.SetStatus(health.IsDead ? $"{enemy.name} derrotado." : $"Golpeaste a {enemy.name} por {damage}.");
+            var result = DamageEnemy(enemy, AttackDamage + EquipmentDamageBonus, new Color(1f, 0.9f, 0.28f));
+            if (result.IsMiss)
+            {
+                Hud?.SetStatus($"{enemy.name} esquivo tu ataque.");
+            }
+            else if (health.IsDead)
+            {
+                Hud?.SetStatus($"{enemy.name} derrotado.");
+            }
+            else
+            {
+                Hud?.SetStatus(result.IsCritical
+                    ? $"Golpe critico a {enemy.name} por {result.Amount}."
+                    : $"Golpeaste a {enemy.name} por {result.Amount}.");
+            }
         }
 
         public EnemyAI FindNearestEnemy(float range)
@@ -100,31 +112,69 @@ namespace MmorpgPrototype
                     continue;
                 }
 
-                DamageEnemy(enemy, damage, SkillTint);
-                hits++;
+                var result = DamageEnemy(enemy, damage, SkillTint);
+                if (!result.IsMiss)
+                {
+                    hits++;
+                }
             }
 
             return hits;
         }
 
-        public void DamageEnemy(EnemyAI enemy, int damage, Color color)
+        // Resuelve el golpe con DamageCalculator (critico/evasion) y aplica
+        // el resultado. baseDamage ya debe incluir los bonos que correspondan.
+        public DamageResult DamageEnemy(EnemyAI enemy, int baseDamage, Color color)
         {
             if (enemy == null)
             {
-                return;
+                return new DamageResult(0, false, true);
             }
 
             var health = enemy.GetComponent<Health>();
             if (health == null || health.IsDead)
             {
-                return;
+                return new DamageResult(0, false, true);
             }
 
             FaceTarget(enemy.transform.position);
-            health.TakeDamage(Mathf.Max(1, damage));
+
+            var result = DamageCalculator.Resolve(
+                BuildAttackerStats(baseDamage),
+                enemy.DefenderStats,
+                Random.value, Random.value, Random.value);
+
             Hud?.WatchEnemy(health);
-            DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, damage.ToString(), color);
-            PrototypePulseAndDestroy.Spawn(enemy.transform.position + Vector3.up * 1.1f, color);
+
+            if (result.IsMiss)
+            {
+                DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, "Fallo", new Color(0.72f, 0.76f, 0.8f));
+                return result;
+            }
+
+            health.TakeDamage(result.Amount);
+            var popupText = result.IsCritical ? $"{result.Amount}!" : result.Amount.ToString();
+            var popupColor = result.IsCritical ? new Color(1f, 0.55f, 0.12f) : color;
+            DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, popupText, popupColor);
+            PrototypePulseAndDestroy.Spawn(enemy.transform.position + Vector3.up * 1.1f, popupColor);
+            return result;
+        }
+
+        private CombatStats BuildAttackerStats(int baseDamage)
+        {
+            var definition = GetComponent<PlayerClassController>()?.Definition;
+            if (definition == null)
+            {
+                return new CombatStats(baseDamage, 0.08f, 1.5f, 0.95f, 0f, 0);
+            }
+
+            return new CombatStats(
+                baseDamage,
+                definition.CritChance,
+                definition.CritMultiplier,
+                definition.Accuracy,
+                definition.Evasion,
+                definition.Defense);
         }
 
         private void FaceTarget(Vector3 targetPosition)

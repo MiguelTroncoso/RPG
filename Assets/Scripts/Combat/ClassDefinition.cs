@@ -16,6 +16,11 @@ namespace MmorpgPrototype
         public float MoveSpeed;
         public float AttackRange;
         public float AttackCooldown;
+        public float CritChance;
+        public float CritMultiplier;
+        public float Accuracy;
+        public float Evasion;
+        public int Defense;
 
         public static ClassDefinition Create(CharacterClassType type)
         {
@@ -35,7 +40,12 @@ namespace MmorpgPrototype
                         BaseDamage = 23,
                         MoveSpeed = 6.35f,
                         AttackRange = 2.05f,
-                        AttackCooldown = 0.48f
+                        AttackCooldown = 0.48f,
+                        CritChance = 0.18f,
+                        CritMultiplier = 1.7f,
+                        Accuracy = 0.97f,
+                        Evasion = 0.1f,
+                        Defense = 1
                     };
 
                 case CharacterClassType.Chaman:
@@ -52,7 +62,12 @@ namespace MmorpgPrototype
                         BaseDamage = 20,
                         MoveSpeed = 5.05f,
                         AttackRange = 3.25f,
-                        AttackCooldown = 0.72f
+                        AttackCooldown = 0.72f,
+                        CritChance = 0.1f,
+                        CritMultiplier = 1.6f,
+                        Accuracy = 0.96f,
+                        Evasion = 0.05f,
+                        Defense = 2
                     };
 
                 case CharacterClassType.Umbra:
@@ -69,7 +84,12 @@ namespace MmorpgPrototype
                         BaseDamage = 28,
                         MoveSpeed = 5.35f,
                         AttackRange = 2.35f,
-                        AttackCooldown = 0.76f
+                        AttackCooldown = 0.76f,
+                        CritChance = 0.14f,
+                        CritMultiplier = 1.65f,
+                        Accuracy = 0.95f,
+                        Evasion = 0.06f,
+                        Defense = 2
                     };
 
                 default:
@@ -86,7 +106,12 @@ namespace MmorpgPrototype
                         BaseDamage = 27,
                         MoveSpeed = 5.2f,
                         AttackRange = 2.25f,
-                        AttackCooldown = 0.65f
+                        AttackCooldown = 0.65f,
+                        CritChance = 0.08f,
+                        CritMultiplier = 1.5f,
+                        Accuracy = 0.95f,
+                        Evasion = 0.04f,
+                        Defense = 3
                     };
             }
         }

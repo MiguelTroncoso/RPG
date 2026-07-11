@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    public sealed class Health : MonoBehaviour
+    public sealed class Health : MonoBehaviour, IDamageable
     {
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private int currentHealth = 100;

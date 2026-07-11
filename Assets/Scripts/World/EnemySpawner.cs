@@ -9,6 +9,7 @@ namespace MmorpgPrototype
         public InventorySystem Inventory;
         public PlayerQuestLog QuestLog;
         public PrototypeHud Hud;
+        public LootTableConfig Loot;
         public float RespawnDelay = 4.5f;
 
         private readonly Vector3[] positions =
@@ -77,8 +78,11 @@ namespace MmorpgPrototype
             ai.Target = Target;
             ai.MoveSpeed = 2.05f + index * 0.11f;
             ai.AttackDamage = 7 + index;
+            ai.Defense = index / 2;
+            ai.Evasion = 0.03f + index * 0.005f;
 
             var reward = enemy.AddComponent<EnemyReward>();
+            reward.Loot = Loot;
             reward.Progression = Progression;
             reward.Inventory = Inventory;
             reward.QuestLog = QuestLog;

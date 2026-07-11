@@ -102,6 +102,27 @@ namespace MmorpgPrototype.Editor
             Debug.Log($"UpgradeConfig regenerado: +1 ({first.SuccessChance:P0}) .. +{config.MaxUpgradeLevel} ({last.SuccessChance:P0}, {last.OnFailure}).");
         }
 
+        private const string LootAssetPath = GameFolder + "/LootTable.asset";
+
+        [MenuItem("MMORPG/Items/Generate Loot Table")]
+        public static void GenerateLootTable()
+        {
+            EnsureFolder("Assets", "Resources");
+            EnsureFolder(ResourcesRoot, "Game");
+
+            var loot = AssetDatabase.LoadAssetAtPath<LootTableConfig>(LootAssetPath);
+            if (loot == null)
+            {
+                loot = ScriptableObject.CreateInstance<LootTableConfig>();
+                AssetDatabase.CreateAsset(loot, LootAssetPath);
+            }
+
+            loot.FillWithDefaults();
+            EditorUtility.SetDirty(loot);
+            AssetDatabase.SaveAssets();
+            Debug.Log($"LootTable regenerada: {loot.Entries.Length} entradas, drop chance {loot.DropChance:P0}.");
+        }
+
         private static void EnsureFolder(string parent, string child)
         {
             if (!AssetDatabase.IsValidFolder($"{parent}/{child}"))

@@ -12,6 +12,12 @@ namespace MmorpgPrototype
         public float MoveSpeed = 2.25f;
         public int AttackDamage = 8;
         public float AttackCooldown = 1.2f;
+        public float Evasion = 0.03f;
+        public int Defense;
+        public float CritChance = 0.05f;
+        public float Accuracy = 0.92f;
+
+        public CombatStats DefenderStats => CombatStats.Defender(Evasion, Defense);
 
         private CharacterController controller;
         private Health health;
@@ -88,8 +94,23 @@ namespace MmorpgPrototype
                 return;
             }
 
-            playerHealth.TakeDamage(AttackDamage);
-            DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, AttackDamage.ToString(), new Color(1f, 0.28f, 0.22f));
+            var playerDefinition = Target.GetComponent<PlayerClassController>()?.Definition;
+            var defender = playerDefinition != null
+                ? CombatStats.Defender(playerDefinition.Evasion, playerDefinition.Defense)
+                : CombatStats.Defender(0f, 0);
+
+            var attacker = new CombatStats(AttackDamage, CritChance, 1.5f, Accuracy, Evasion, Defense);
+            var result = DamageCalculator.Resolve(attacker, defender, Random.value, Random.value, Random.value);
+
+            if (result.IsMiss)
+            {
+                DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, "Esquivado", new Color(0.6f, 0.85f, 1f));
+                return;
+            }
+
+            playerHealth.TakeDamage(result.Amount);
+            var text = result.IsCritical ? $"{result.Amount}!" : result.Amount.ToString();
+            DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, text, new Color(1f, 0.28f, 0.22f));
         }
 
         private void HandleDeath(Health _)

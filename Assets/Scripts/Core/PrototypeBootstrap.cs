@@ -219,6 +219,22 @@ namespace MmorpgPrototype
             spawner.Inventory = player.GetComponent<InventorySystem>();
             spawner.QuestLog = player.GetComponent<PlayerQuestLog>();
             spawner.Hud = hud;
+            spawner.Loot = LoadLootTable();
+        }
+
+        private static LootTableConfig LoadLootTable()
+        {
+            var loot = Resources.Load<LootTableConfig>("Game/LootTable");
+            if (loot != null && loot.HasEntries)
+            {
+                return loot;
+            }
+
+            // Fallback runtime si el asset no se genero todavia
+            // (MMORPG > Items > Generate Loot Table).
+            var runtimeLoot = ScriptableObject.CreateInstance<LootTableConfig>();
+            runtimeLoot.FillWithDefaults();
+            return runtimeLoot;
         }
 
         private static ShopNpc CreateShopNpc(GameObject player)

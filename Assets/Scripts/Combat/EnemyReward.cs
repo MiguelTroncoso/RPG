@@ -3,12 +3,13 @@ using UnityEngine;
 namespace MmorpgPrototype
 {
     [RequireComponent(typeof(Health))]
-    public sealed class EnemyReward : MonoBehaviour
+    public sealed class EnemyReward : MonoBehaviour, ILootSource
     {
         public int Experience = 35;
         public int GoldMin = 3;
         public int GoldMax = 9;
         public string GuaranteedDrop = string.Empty;
+        public LootTableConfig Loot;
         public bool IsWorldEvent;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
@@ -42,7 +43,7 @@ namespace MmorpgPrototype
 
             granted = true;
             var gold = Random.Range(GoldMin, GoldMax + 1);
-            var drop = string.IsNullOrEmpty(GuaranteedDrop) ? LootTable.RollDrop() : GuaranteedDrop;
+            var drop = RollLoot();
 
             Progression.AddExperience(Experience);
             Progression.AddGold(gold);
@@ -59,6 +60,16 @@ namespace MmorpgPrototype
                 : $"+{Experience} EXP, +{gold} oro, loot: {dropName}";
             Hud?.SetStatus(message, 3f);
             Hud?.AddFeed($"+{Experience} EXP  +{gold} oro");
+        }
+
+        public string RollLoot()
+        {
+            if (!string.IsNullOrEmpty(GuaranteedDrop))
+            {
+                return GuaranteedDrop;
+            }
+
+            return Loot != null ? Loot.Roll(Random.value, Random.value) : string.Empty;
         }
     }
 }
