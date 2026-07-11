@@ -10,15 +10,19 @@ namespace MmorpgPrototype
     {
         public const string Zone1 = "valley_zone1";
         public const string Zone2 = "forest_zone2";
+        public const string Zone3 = "ashes_zone3";
 
         public const string ValleyEliteId = "valley_elite";
         public const string ValleyBossId = "valley_boss";
         public const string ForestEliteId = "forest_elite";
         public const string ForestBossId = "forest_boss";
+        public const string AshCreatureId = "ash_creature";
+        public const string AshEliteId = "ash_elite";
+        public const string AshBossId = "ash_boss";
 
         public static List<ZoneDefinition> CreateAll()
         {
-            return new List<ZoneDefinition> { CreateZone1(), CreateZone2() };
+            return new List<ZoneDefinition> { CreateZone1(), CreateZone2(), CreateZone3() };
         }
 
         public static ZoneDefinition CreateZone1()
@@ -86,6 +90,62 @@ namespace MmorpgPrototype
             zone.BossGoldMax = 350;
             zone.BossGuaranteedDrop = DefaultGameItems.ProtectionRune;
             zone.BossRespawnSeconds = 120f;
+
+            return zone;
+        }
+
+        public static ZoneDefinition CreateZone3()
+        {
+            var zone = ScriptableObject.CreateInstance<ZoneDefinition>();
+            zone.name = Zone3;
+            zone.ZoneId = Zone3;
+            zone.DisplayName = "Colinas Cenicientas";
+            zone.MinLevel = 21;
+            zone.MaxLevel = 30;
+
+            zone.HasOwnGround = true;
+            zone.GroundCenter = new Vector3(0f, 0f, 140f);
+            zone.GroundColor = new Color(0.3f, 0.27f, 0.26f);
+            zone.SignPosition = new Vector3(0f, 0f, 108f);
+
+            zone.NormalEnemyId = AshCreatureId;
+            zone.NormalName = "Ceniciento errante";
+            zone.NormalColor = new Color(0.45f, 0.42f, 0.4f);
+            zone.NormalCount = 6;
+            zone.NormalAreaCenter = new Vector3(0f, 1f, 132f);
+            zone.NormalAreaRadius = 12f;
+            zone.NormalHealth = 650;
+            zone.NormalDamage = 32;
+            zone.NormalDefense = 5;
+            zone.NormalExp = 220;
+            zone.NormalGoldMin = 25;
+            zone.NormalGoldMax = 40;
+            zone.NormalMoveSpeed = 2.6f;
+
+            zone.EliteEnemyId = AshEliteId;
+            zone.EliteName = "Devorador de ceniza";
+            zone.EliteCount = 2;
+            zone.EliteAreaCenter = new Vector3(-16f, 1f, 150f);
+            zone.EliteAreaRadius = 6f;
+            zone.EliteHealth = 1600;
+            zone.EliteDamage = 55;
+            zone.EliteDefense = 12;
+            zone.EliteExp = 600;
+            zone.EliteGoldMin = 80;
+            zone.EliteGoldMax = 120;
+            zone.EliteRespawnSeconds = 35f;
+
+            zone.BossEnemyId = AshBossId;
+            zone.BossName = "Corazon de Ceniza";
+            zone.BossPosition = new Vector3(18f, 1f, 154f);
+            zone.BossHealth = 5200;
+            zone.BossDamage = 85;
+            zone.BossDefense = 18;
+            zone.BossExp = 2200;
+            zone.BossGoldMin = 600;
+            zone.BossGoldMax = 800;
+            zone.BossGuaranteedDrop = DefaultGameItems.ValleyAmulet;
+            zone.BossRespawnSeconds = 150f;
 
             return zone;
         }

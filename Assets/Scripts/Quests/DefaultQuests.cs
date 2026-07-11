@@ -21,6 +21,9 @@ namespace MmorpgPrototype
         public const string ZoneBoss = "zone_boss";
         public const string ForestEliteHunt = "forest_elite_hunt";
         public const string ForestBossHunt = "forest_boss_hunt";
+        public const string AshWanderers = "ash_wanderers";
+        public const string AshEliteHunt = "ash_elite_hunt";
+        public const string AshBossHunt = "ash_boss_hunt";
 
         public static List<QuestDefinition> CreateAll()
         {
@@ -120,12 +123,42 @@ namespace MmorpgPrototype
 
                 Quest(ForestBossHunt, 10, "El corazon del bosque",
                     "El Anciano de Espinas corrompe el bosque desde su corazon, al noroeste. Derrotalo.",
-                    "El bosque respira de nuevo. Has liberado dos regiones del valle: descansa, viajero.",
+                    "El bosque respira... pero el viento trae ceniza desde las colinas del norte.",
                     new[]
                     {
                         Objective(QuestObjectiveType.KillEnemies, DefaultZones.ForestBossId, 1, "Derrota al Anciano de Espinas")
                     },
                     Reward(800, 400, Item(DefaultGameItems.ProtectionRune, 1)),
+                    AshWanderers),
+
+                Quest(AshWanderers, 11, "Cenizas al viento",
+                    "Mas alla del bosque, las Colinas Cenicientas arden sin fuego. Reduce a los Cenicientos errantes.",
+                    "La ceniza no cae del cielo: alguien la respira y la devuelve. Sigue subiendo.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.AshCreatureId, 8, "Derrota Cenicientos errantes")
+                    },
+                    Reward(1200, 500, Item(DefaultGameItems.MinorPotion, 3)),
+                    AshEliteHunt),
+
+                Quest(AshEliteHunt, 12, "Los devoradores",
+                    "Los Devoradores de ceniza custodian el paso alto, al oeste de las colinas. Caza dos.",
+                    "Solo queda su origen: un corazon que late ceniza en lo alto de la colina.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.AshEliteId, 2, "Derrota Devoradores de ceniza")
+                    },
+                    Reward(1600, 700, Item(DefaultGameItems.ProtectionRune, 1)),
+                    AshBossHunt),
+
+                Quest(AshBossHunt, 13, "El corazon de ceniza",
+                    "El Corazon de Ceniza arde en el este de las colinas. Apagalo para siempre.",
+                    "Las colinas se enfrian. Tres regiones liberadas: el valle entero te lo agradece.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.AshBossId, 1, "Derrota al Corazon de Ceniza")
+                    },
+                    Reward(3000, 1500, Item(DefaultGameItems.ValleyMedal, 1)),
                     string.Empty)
             };
         }
