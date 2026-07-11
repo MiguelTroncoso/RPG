@@ -461,7 +461,7 @@ namespace MmorpgPrototype
             hud.PlayerHealthText = playerText;
             hud.EnemyHealthFill = CreateBar(uiRoot, "Enemy Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(430f, 28f), new Vector2(28f, -76f), new Color(0.05f, 0.08f, 0.1f), new Color(0.95f, 0.24f, 0.18f), out var enemyText);
             hud.EnemyHealthText = enemyText;
-            hud.StatusText = CreateText(uiRoot, "Status", "Fase 5: prototipo Android preparado para pruebas.", 25, TextAnchor.MiddleLeft);
+            hud.StatusText = CreateText(uiRoot, "Status", Localization.Tr("hud.initial_status"), 25, TextAnchor.MiddleLeft);
             SetRect(hud.StatusText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 36f), new Vector2(28f, -118f));
             hud.ClassText = CreateText(uiRoot, "Class Info", string.Empty, 23, TextAnchor.MiddleLeft);
             SetRect(hud.ClassText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 34f), new Vector2(28f, -158f));
@@ -557,7 +557,7 @@ namespace MmorpgPrototype
             CreateShopButtons(uiRoot, player, shop, blacksmith, storage);
             CreateNetworkPanel(uiRoot, player);
 
-            var help = CreateText(uiRoot, "Controls Help", "WASD/joystick moverse  |  ATK/Space ataque  |  Q/E habilidades  |  Click derecho camara", 20, TextAnchor.MiddleCenter);
+            var help = CreateText(uiRoot, "Controls Help", Localization.Tr("hud.controls_help"), 20, TextAnchor.MiddleCenter);
             SetRect(help.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1040f, 34f), new Vector2(0f, 28f));
             CreateStartupSplash(uiRoot);
             CreateCharacterSelectionPanel(uiRoot, player, hud);
@@ -852,11 +852,11 @@ namespace MmorpgPrototype
 
             CreatePanel(overlay.transform, "Selection Frame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1060f, 660f), Vector2.zero, new Color(0.04f, 0.055f, 0.07f, 0.94f));
 
-            var title = CreateText(overlay.transform, "Selection Title", "Crear personaje", 48, TextAnchor.MiddleCenter);
+            var title = CreateText(overlay.transform, "Selection Title", Localization.Tr("character.title"), 48, TextAnchor.MiddleCenter);
             title.fontStyle = FontStyle.Bold;
             SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820f, 62f), new Vector2(0f, 252f));
 
-            var subtitle = CreateText(overlay.transform, "Selection Subtitle", "Elige clase, sexo y nombre para entrar al Valle de las Reliquias.", 22, TextAnchor.MiddleCenter);
+            var subtitle = CreateText(overlay.transform, "Selection Subtitle", Localization.Tr("character.subtitle"), 22, TextAnchor.MiddleCenter);
             subtitle.color = new Color(0.78f, 0.86f, 0.94f);
             SetRect(subtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(880f, 38f), new Vector2(0f, 204f));
 
@@ -865,14 +865,14 @@ namespace MmorpgPrototype
             preview.color = new Color(1f, 0.9f, 0.55f);
             SetRect(preview.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820f, 48f), new Vector2(0f, 132f));
 
-            var nameInput = CreateInputField(overlay.transform, "Character Name Input", savedData != null ? savedData.CharacterName : "Heroe", "nombre del personaje", new Vector2(0.5f, 0.5f), new Vector2(0f, 74f), new Vector2(520f, 52f));
+            var nameInput = CreateInputField(overlay.transform, "Character Name Input", savedData != null ? savedData.CharacterName : Localization.Tr("identity.default_name"), Localization.Tr("character.name_placeholder"), new Vector2(0.5f, 0.5f), new Vector2(0f, 74f), new Vector2(520f, 52f));
             nameInput.characterLimit = 14;
 
-            var classLabel = CreateText(overlay.transform, "Class Label", "Clase", 22, TextAnchor.MiddleCenter);
+            var classLabel = CreateText(overlay.transform, "Class Label", Localization.Tr("character.class_label"), 22, TextAnchor.MiddleCenter);
             classLabel.fontStyle = FontStyle.Bold;
             SetRect(classLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(280f, 32f), new Vector2(-292f, 10f));
 
-            var genderLabel = CreateText(overlay.transform, "Gender Label", "Sexo", 22, TextAnchor.MiddleCenter);
+            var genderLabel = CreateText(overlay.transform, "Gender Label", Localization.Tr("character.gender_label"), 22, TextAnchor.MiddleCenter);
             genderLabel.fontStyle = FontStyle.Bold;
             SetRect(genderLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(280f, 32f), new Vector2(292f, 10f));
 
@@ -888,7 +888,7 @@ namespace MmorpgPrototype
             {
                 var classType = classes[i];
                 var definition = ClassDefinition.Create(classType);
-                var button = CreateRoundButton(overlay.transform, $"Create {definition.DisplayName} Button", definition.DisplayName, new Vector2(0.5f, 0.5f), new Vector2(-292f, -44f - i * 58f), new Vector2(250f, 44f), definition.BodyColor, 19);
+                var button = CreateRoundButton(overlay.transform, $"Create {definition.DisplayName} Button", ClassDisplayName(classType), new Vector2(0.5f, 0.5f), new Vector2(-292f, -44f - i * 58f), new Vector2(250f, 44f), definition.BodyColor, 19);
                 button.onClick.AddListener(() =>
                 {
                     selectedClass = classType;
@@ -897,7 +897,7 @@ namespace MmorpgPrototype
                 });
             }
 
-            var maleButton = CreateRoundButton(overlay.transform, "Select Male Button", "Masculino", new Vector2(0.5f, 0.5f), new Vector2(292f, -56f), new Vector2(260f, 52f), new Color(0.18f, 0.34f, 0.72f), 20);
+            var maleButton = CreateRoundButton(overlay.transform, "Select Male Button", Localization.Tr("identity.gender_male"), new Vector2(0.5f, 0.5f), new Vector2(292f, -56f), new Vector2(260f, 52f), new Color(0.18f, 0.34f, 0.72f), 20);
             maleButton.onClick.AddListener(() =>
             {
                 selectedGender = CharacterGender.Masculino;
@@ -906,7 +906,7 @@ namespace MmorpgPrototype
                 RefreshPreview();
             });
 
-            var femaleButton = CreateRoundButton(overlay.transform, "Select Female Button", "Femenino", new Vector2(0.5f, 0.5f), new Vector2(292f, -124f), new Vector2(260f, 52f), new Color(0.62f, 0.24f, 0.58f), 20);
+            var femaleButton = CreateRoundButton(overlay.transform, "Select Female Button", Localization.Tr("identity.gender_female"), new Vector2(0.5f, 0.5f), new Vector2(292f, -124f), new Vector2(260f, 52f), new Color(0.62f, 0.24f, 0.58f), 20);
             femaleButton.onClick.AddListener(() =>
             {
                 selectedGender = CharacterGender.Femenino;
@@ -923,7 +923,7 @@ namespace MmorpgPrototype
             });
 
             var confirmPosition = savedData != null ? new Vector2(150f, -254f) : new Vector2(0f, -254f);
-            var confirm = CreateRoundButton(overlay.transform, "Confirm Character Button", "CREAR", new Vector2(0.5f, 0.5f), confirmPosition, new Vector2(260f, 58f), new Color(0.11f, 0.54f, 0.36f), 24);
+            var confirm = CreateRoundButton(overlay.transform, "Confirm Character Button", Localization.Tr("character.create_button"), new Vector2(0.5f, 0.5f), confirmPosition, new Vector2(260f, 58f), new Color(0.11f, 0.54f, 0.36f), 24);
             confirm.onClick.AddListener(() =>
             {
                 identity.ApplySelection(nameInput.text, selectedGender);
@@ -935,8 +935,8 @@ namespace MmorpgPrototype
                 }
 
                 hud.RefreshClass();
-                hud.SetStatus($"Personaje creado: {identity.DisplayLabel}", 3.5f);
-                hud.AddFeed($"Entraste como {identity.DisplayLabel}");
+                hud.SetStatus(Localization.Tr("character.created", identity.DisplayLabel), 3.5f);
+                hud.AddFeed(Localization.Tr("character.created_feed", identity.DisplayLabel));
                 overlay.SetActive(false);
                 Time.timeScale = 1f;
                 persistence?.MarkCharacterActive();
@@ -944,13 +944,13 @@ namespace MmorpgPrototype
 
             if (savedData != null)
             {
-                var continueButton = CreateRoundButton(overlay.transform, "Continue Character Button", "CONTINUAR", new Vector2(0.5f, 0.5f), new Vector2(-150f, -254f), new Vector2(260f, 58f), new Color(0.16f, 0.36f, 0.66f), 22);
+                var continueButton = CreateRoundButton(overlay.transform, "Continue Character Button", Localization.Tr("character.continue_button"), new Vector2(0.5f, 0.5f), new Vector2(-150f, -254f), new Vector2(260f, 58f), new Color(0.16f, 0.36f, 0.66f), 22);
                 continueButton.onClick.AddListener(() =>
                 {
                     persistence.ApplyLoadedData(savedData);
                     hud.RefreshClass();
-                    hud.SetStatus($"Bienvenido de nuevo: {identity.DisplayLabel}", 3.5f);
-                    hud.AddFeed($"Partida cargada: nivel {savedData.Level}");
+                    hud.SetStatus(Localization.Tr("character.welcome_back", identity.DisplayLabel), 3.5f);
+                    hud.AddFeed(Localization.Tr("character.loaded_feed", savedData.Level));
                     overlay.SetActive(false);
                     Time.timeScale = 1f;
                 });
@@ -964,12 +964,17 @@ namespace MmorpgPrototype
             void RefreshPreview()
             {
                 var definition = ClassDefinition.Create(selectedClass);
-                var name = string.IsNullOrWhiteSpace(nameInput.text) ? "Heroe" : nameInput.text.Trim();
-                var gender = selectedGender == CharacterGender.Femenino ? "Femenino" : "Masculino";
-                preview.text = $"{name}  |  {definition.DisplayName}  |  {gender}";
+                var name = string.IsNullOrWhiteSpace(nameInput.text) ? Localization.Tr("identity.default_name") : nameInput.text.Trim();
+                var gender = selectedGender == CharacterGender.Femenino ? Localization.Tr("identity.gender_female") : Localization.Tr("identity.gender_male");
+                preview.text = Localization.Tr("character.preview", name, ClassDisplayName(selectedClass), gender);
                 preview.color = Color.Lerp(definition.BodyColor, Color.white, 0.28f);
                 hud.RefreshClass();
             }
+        }
+
+        private static string ClassDisplayName(CharacterClassType type)
+        {
+            return Localization.Tr($"class.{type.ToString().ToLowerInvariant()}");
         }
 
         private static Image CreateBar(Transform parent, string name, Vector2 anchor, Vector2 pivot, Vector2 size, Vector2 position, Color backgroundColor, Color fillColor, out Text label)

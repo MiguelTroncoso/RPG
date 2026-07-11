@@ -6,8 +6,8 @@ namespace MmorpgPrototype
     {
         public string CharacterName { get; private set; } = "Heroe";
         public CharacterGender Gender { get; private set; } = CharacterGender.Masculino;
-        public string GenderLabel => Gender == CharacterGender.Femenino ? "Femenino" : "Masculino";
-        public string DisplayLabel => $"{CharacterName} ({GenderLabel})";
+        public string GenderLabel => Gender == CharacterGender.Femenino ? Localization.Tr("identity.gender_female") : Localization.Tr("identity.gender_male");
+        public string DisplayLabel => Localization.Tr("identity.display", CharacterName, GenderLabel);
 
         private Renderer bodyRenderer;
         private PlayerAvatarVisual avatarVisual;
@@ -99,15 +99,15 @@ namespace MmorpgPrototype
                 return;
             }
 
-            var className = currentClass != null ? currentClass.DisplayName : "Guerrero";
-            nameLabel.text = $"{CharacterName}\n{className} - {GenderLabel}";
+            var className = currentClass != null ? currentClass.DisplayName : Localization.Tr("class.guerrero");
+            nameLabel.text = Localization.Tr("identity.name_label", CharacterName, className, GenderLabel);
         }
 
         private static string SanitizeName(string rawName)
         {
             if (string.IsNullOrWhiteSpace(rawName))
             {
-                return "Heroe";
+                return Localization.Tr("identity.default_name");
             }
 
             var trimmed = rawName.Trim();

@@ -135,6 +135,17 @@ Objetivo: centralizar stats para que equipo, atributos, buffs y montura no sumen
 
 Criterio de exito: cualquier bono nuevo tiene un origen claro y pasa por un recomputo unico.
 
+## Fase 5.25: i18n De Creacion Y Habilidades
+
+Objetivo: eliminar los textos hardcodeados mas visibles que quedaban en creacion de personaje y habilidades.
+
+- Fallback de localizacion mezclado con asset generado. [Implementado]
+- Panel de creacion con claves i18n. [Implementado]
+- PlayerSkills con claves i18n. [Implementado]
+- Etiquetas de genero local/remoto con claves i18n. [Implementado]
+
+Criterio de exito: crear/continuar personaje y usar habilidades no depende de literales en codigo.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

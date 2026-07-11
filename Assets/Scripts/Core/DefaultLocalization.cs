@@ -13,6 +13,7 @@ namespace MmorpgPrototype
                 // Progresion
                 { "status.level_up", "Subiste a nivel {0}." },
                 { "status.max_level", "Alcanzaste el nivel maximo {0}." },
+                { "status.class_active", "Clase activa: {0}" },
                 { "feed.attribute_points", "+{0} puntos de atributo" },
                 { "net.level_up", "subio a nivel {0}" },
                 { "attr.no_points", "No tienes puntos de atributo disponibles." },
@@ -108,6 +109,24 @@ namespace MmorpgPrototype
                 { "combat.miss_popup", "Fallo" },
                 { "combat.dodge_popup", "Esquivado" },
 
+                // Habilidades
+                { "skill.one_cooldown", "Habilidad 1 en recarga." },
+                { "skill.two_cooldown", "Habilidad 2 en recarga." },
+                { "skill.cleave_hit", "Corte pesado golpeo {0} enemigo(s)." },
+                { "skill.cleave_miss", "Corte pesado no encontro objetivo." },
+                { "skill.ninja_dash_hit", "Estocada veloz conecto." },
+                { "skill.ninja_dash", "Estocada veloz." },
+                { "skill.no_target", "{0}: sin objetivo." },
+                { "skill.hit", "{0} impacto a {1}." },
+                { "skill.heal", "Bendicion espiritual: curacion." },
+                { "skill.mark_no_target", "Marca del vacio: sin objetivo." },
+                { "skill.mark_hit", "Marca del vacio debilito a {0}." },
+                { "skill.buff", "{0}: dano aumentado." },
+                { "skill.spiritual_bolt", "Rayo espiritual" },
+                { "skill.dark_blade", "Hoja oscura" },
+                { "skill.shadow_dash", "Sombra fugaz" },
+                { "skill.battle_cry", "Grito de batalla" },
+
                 // Recompensas de enemigos
                 { "reward.kill", "+{0} EXP, +{1} oro" },
                 { "reward.kill_loot", "+{0} EXP, +{1} oro, loot: {2}" },
@@ -119,6 +138,8 @@ namespace MmorpgPrototype
                 { "zone.boss_label", "Jefe de zona" },
 
                 // HUD
+                { "hud.initial_status", "Fase 5: prototipo Android preparado para pruebas." },
+                { "hud.controls_help", "WASD/joystick moverse  |  ATK/Space ataque  |  Q/E habilidades  |  Click derecho camara" },
                 { "hud.hint", "Cambia clase, completa la mision, mejora equipo y busca el monolito." },
                 { "hud.player_hp", "Jugador {0}/{1}" },
                 { "hud.target_hp", "Objetivo {0}/{1}" },
@@ -127,7 +148,30 @@ namespace MmorpgPrototype
                 { "hud.exp", "EXP {0}/{1}" },
                 { "hud.exp_max", "EXP MAX" },
                 { "hud.points_suffix", "  Puntos {0}" },
-                { "hud.exp_bonus_suffix", "  (+{0}% EXP)" }
+                { "hud.exp_bonus_suffix", "  (+{0}% EXP)" },
+
+                // Identidad / creacion de personaje
+                { "identity.default_name", "Heroe" },
+                { "identity.gender_male", "Masculino" },
+                { "identity.gender_female", "Femenino" },
+                { "identity.display", "{0} ({1})" },
+                { "identity.name_label", "{0}\n{1} - {2}" },
+                { "character.title", "Crear personaje" },
+                { "character.subtitle", "Elige clase, sexo y nombre para entrar al Valle de las Reliquias." },
+                { "character.name_placeholder", "nombre del personaje" },
+                { "character.class_label", "Clase" },
+                { "character.gender_label", "Sexo" },
+                { "character.create_button", "CREAR" },
+                { "character.continue_button", "CONTINUAR" },
+                { "character.created", "Personaje creado: {0}" },
+                { "character.created_feed", "Entraste como {0}" },
+                { "character.welcome_back", "Bienvenido de nuevo: {0}" },
+                { "character.loaded_feed", "Partida cargada: nivel {0}" },
+                { "character.preview", "{0}  |  {1}  |  {2}" },
+                { "class.guerrero", "Guerrero" },
+                { "class.ninja", "Ninja" },
+                { "class.chaman", "Chaman" },
+                { "class.umbra", "Umbra" }
             };
         }
     }

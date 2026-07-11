@@ -54,7 +54,7 @@ namespace MmorpgPrototype
         {
             if (Time.time < nextSkillOne)
             {
-                Hud?.SetStatus("Habilidad 1 en recarga.");
+                Hud?.SetStatus(Localization.Tr("skill.one_cooldown"));
                 return;
             }
 
@@ -67,10 +67,10 @@ namespace MmorpgPrototype
                     NinjaDash();
                     break;
                 case CharacterClassType.Chaman:
-                    MagicBurst("Rayo espiritual", 38, 5.8f, classController.Definition.SkillColor);
+                    MagicBurst(Localization.Tr("skill.spiritual_bolt"), 38, 5.8f, classController.Definition.SkillColor);
                     break;
                 case CharacterClassType.Umbra:
-                    MagicBurst("Hoja oscura", 44, 3.2f, classController.Definition.SkillColor);
+                    MagicBurst(Localization.Tr("skill.dark_blade"), 44, 3.2f, classController.Definition.SkillColor);
                     break;
                 default:
                     Cleave();
@@ -84,7 +84,7 @@ namespace MmorpgPrototype
         {
             if (Time.time < nextSkillTwo)
             {
-                Hud?.SetStatus("Habilidad 2 en recarga.");
+                Hud?.SetStatus(Localization.Tr("skill.two_cooldown"));
                 return;
             }
 
@@ -94,7 +94,7 @@ namespace MmorpgPrototype
             switch (classController.CurrentClass)
             {
                 case CharacterClassType.Ninja:
-                    ApplyDamageBuff("Sombra fugaz", 10, 3.5f);
+                    ApplyDamageBuff(Localization.Tr("skill.shadow_dash"), 10, 3.5f);
                     break;
                 case CharacterClassType.Chaman:
                     HealSelf();
@@ -103,7 +103,7 @@ namespace MmorpgPrototype
                     MarkNearbyEnemy();
                     break;
                 default:
-                    ApplyDamageBuff("Grito de batalla", 8, 4.5f);
+                    ApplyDamageBuff(Localization.Tr("skill.battle_cry"), 8, 4.5f);
                     break;
             }
 
@@ -113,7 +113,7 @@ namespace MmorpgPrototype
         private void Cleave()
         {
             var hits = combat.DamageEnemiesInRange(2.8f, 34, 3);
-            Hud?.SetStatus(hits > 0 ? $"Corte pesado golpeo {hits} enemigo(s)." : "Corte pesado no encontro objetivo.");
+            Hud?.SetStatus(hits > 0 ? Localization.Tr("skill.cleave_hit", hits) : Localization.Tr("skill.cleave_miss"));
         }
 
         private void NinjaDash()
@@ -123,7 +123,7 @@ namespace MmorpgPrototype
             controller.Move(dash);
 
             var hits = combat.DamageEnemiesInRange(2.35f, 31, 1);
-            Hud?.SetStatus(hits > 0 ? "Estocada veloz conecto." : "Estocada veloz.");
+            Hud?.SetStatus(hits > 0 ? Localization.Tr("skill.ninja_dash_hit") : Localization.Tr("skill.ninja_dash"));
             PrototypePulseAndDestroy.Spawn(transform.position + Vector3.up * 1.1f, classController.Definition.SkillColor);
         }
 
@@ -132,19 +132,19 @@ namespace MmorpgPrototype
             var target = combat.FindNearestEnemy(range);
             if (target == null)
             {
-                Hud?.SetStatus($"{label}: sin objetivo.");
+                Hud?.SetStatus(Localization.Tr("skill.no_target", label));
                 return;
             }
 
             combat.DamageEnemy(target, damage, color);
-            Hud?.SetStatus($"{label} impacto a {target.name}.");
+            Hud?.SetStatus(Localization.Tr("skill.hit", label, target.name));
         }
 
         private void HealSelf()
         {
             var health = GetComponent<Health>();
             health.Heal(38);
-            Hud?.SetStatus("Bendicion espiritual: curacion.");
+            Hud?.SetStatus(Localization.Tr("skill.heal"));
             DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, "+38", new Color(0.35f, 1f, 0.78f));
         }
 
@@ -153,13 +153,13 @@ namespace MmorpgPrototype
             var target = combat.FindNearestEnemy(4f);
             if (target == null)
             {
-                Hud?.SetStatus("Marca del vacio: sin objetivo.");
+                Hud?.SetStatus(Localization.Tr("skill.mark_no_target"));
                 return;
             }
 
             combat.DamageEnemy(target, 18, classController.Definition.SkillColor);
             target.MoveSpeed *= 0.7f;
-            Hud?.SetStatus($"Marca del vacio debilito a {target.name}.");
+            Hud?.SetStatus(Localization.Tr("skill.mark_hit", target.name));
         }
 
         private void ApplyDamageBuff(string label, int bonusDamage, float duration)
@@ -167,7 +167,7 @@ namespace MmorpgPrototype
             damageBuff = bonusDamage;
             buffUntil = Time.time + duration;
             upgradeSystem?.ApplyBonuses();
-            Hud?.SetStatus($"{label}: dano aumentado.");
+            Hud?.SetStatus(Localization.Tr("skill.buff", label));
             Hud?.RefreshClass();
         }
 

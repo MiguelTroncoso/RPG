@@ -412,6 +412,14 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Combate y HUD leen el dano total desde `PlayerStatSheet`; los buffs de habilidades ya no sobrescriben el dano base.
 - La montura queda modelada como modificador de velocidad dentro de la hoja, lista para balance futuro.
 
+## Fase 5.25: i18n De Creacion Y Habilidades
+
+- `Localization.Initialize` ahora mezcla la tabla por defecto con el asset generado: si el asset esta desactualizado, las claves nuevas siguen resolviendo.
+- El panel de creacion usa claves i18n para titulo, subtitulo, placeholder, botones, preview, genero y mensajes de crear/continuar.
+- `PlayerSkills` usa claves i18n para recargas, impactos, curacion, marca, buffs y nombres internos de efectos.
+- Las etiquetas de genero del jugador local y remoto salen de `Localization`.
+- Textos iniciales del HUD/ayuda tambien pasan por claves.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

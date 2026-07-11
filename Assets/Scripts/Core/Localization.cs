@@ -11,9 +11,16 @@ namespace MmorpgPrototype
 
         public static void Initialize(LocalizationTable source)
         {
-            table = source != null && source.HasEntries
-                ? source.ToDictionary()
-                : DefaultLocalization.CreateSpanish();
+            table = DefaultLocalization.CreateSpanish();
+            if (source == null || !source.HasEntries)
+            {
+                return;
+            }
+
+            foreach (var entry in source.ToDictionary())
+            {
+                table[entry.Key] = entry.Value;
+            }
         }
 
         public static string Tr(string key)

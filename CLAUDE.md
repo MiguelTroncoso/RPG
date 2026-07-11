@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.24 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.25 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -28,8 +28,8 @@ editor, Zonas 1 y 2 data-driven con herrero/almacén/élites/jefes,
 identidad completa sincronizada en red con capa de intenciones validadas
 por el servidor, textos del sistema con claves i18n en tabla `es`, Zona 3
 data-only, pipeline de modelos 3D con fallback procedural, animacion procedural
-idle/walk/attack para avatar y fallback, y `StatSheet` con modificadores por
-origen). Detalle en
+idle/walk/attack para avatar y fallback, `StatSheet` con modificadores por
+origen, y creacion de personaje/habilidades migradas a i18n). Detalle en
 `docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
@@ -75,11 +75,11 @@ simple y autocontenido.
 ## Estado conocido / limitaciones
 
 - El avatar visual puede ser procedural (`PlayerAvatarVisual` + `AvatarMotionAnimator`) o modelo FBX KayKit si existe en Resources; no es arte final.
-- Textos pendientes de migrar a i18n: panel de creación de personaje y
-  habilidades (`PlayerSkills`).
+- Textos pendientes de migrar a i18n: algunos mensajes secundarios de red,
+  eventos de mundo y botones utilitarios.
 - Los modelos 3D del avatar se activan al copiar los FBX de KayKit
   Adventurers (ver `ASSET_LICENSES.md`); mientras tanto hay fallback procedural.
   El puente alimenta `Speed` y `Attack` si el modelo trae un Animator compatible.
-- Siguientes candidatos: terminar i18n (panel de creación y `PlayerSkills`),
-  Zona 4, persistencia de estado en el servidor, o importar/controlar
-  animaciones reales del pack KayKit.
+- Siguientes candidatos: Zona 4, persistencia de estado en el servidor,
+  importar/controlar animaciones reales del pack KayKit, o terminar los textos
+  secundarios restantes de i18n.

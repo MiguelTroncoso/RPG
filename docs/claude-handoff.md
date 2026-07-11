@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.24 y como ejecutar).
+3. README.md (historial de fases 1 a 5.25 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.24 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.25 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -42,8 +42,9 @@ Estado actual (fases 1-5.24 completadas; hoja de ruta A-K completa):
   valle: +10% EXP/+5% oro, sigue al jugador) y MountService (Caballo bayo:
   nivel 5, velocidad x1.6). Botones MASCOTA/MONTURA.
 - Textos del sistema via Localization.Tr(clave) con tabla es
-  (LocalizationTable + DefaultLocalization, ~90 claves). Pendiente: panel
-  de creacion y PlayerSkills.
+  (LocalizationTable + DefaultLocalization, fallback mezclado con asset).
+  Creacion de personaje y PlayerSkills ya usan claves i18n; quedan textos
+  secundarios de red/eventos/botones para una pasada final.
 - Zonas 1, 2 y 3 (ZoneDefinition + DefaultZones, spawner 100% data-driven
   por zona, una instancia por zona): Bosque de los Susurros (11-20) y
   Colinas Cenicientas (21-30) al norte, cada una con terreno propio,
@@ -105,10 +106,10 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Terminar i18n (panel de creacion de personaje y PlayerSkills).
 - Zona 4 en adelante (solo datos con ZoneDefinition).
 - Persistencia de estado en el servidor (hoy el hello fija el nivel base).
 - Importar/controlar animaciones reales del pack KayKit si se agregan FBX/clips.
+- Pasada final de i18n para red/eventos/botones utilitarios.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

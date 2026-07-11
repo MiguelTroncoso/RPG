@@ -617,10 +617,10 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 **La hoja de ruta inicial (A–K) está completa.** Varias extensiones posteriores
 tambien estan implementadas (zonas 2-3, guardado de posicion, i18n parcial,
 ventana de stats, autoridad inicial del servidor, animacion procedural del
-avatar y `StatSheet` con modificadores por origen). Siguientes candidatos, en
-orden sugerido: terminar i18n con tabla `es`, Zona 4 reutilizando
-`ZoneDefinition`, persistencia de estado en servidor, e importacion/control de
-animaciones reales.
+avatar, `StatSheet` con modificadores por origen, y creacion/habilidades con
+claves i18n). Siguientes candidatos, en orden sugerido: Zona 4 reutilizando
+`ZoneDefinition`, persistencia de estado en servidor, importacion/control de
+animaciones reales, y pasada final de textos secundarios i18n.
 
 ---
 

@@ -43,7 +43,7 @@ namespace MmorpgPrototype
 
             if (label != null)
             {
-                var genderLabel = gender == CharacterGender.Femenino ? "Femenino" : "Masculino";
+                var genderLabel = gender == CharacterGender.Femenino ? Localization.Tr("identity.gender_female") : Localization.Tr("identity.gender_male");
                 var levelLabel = state.level > 0 ? $" Nv{state.level}" : string.Empty;
                 label.text = $"{state.name}\n{state.className}{levelLabel} - {genderLabel}";
             }

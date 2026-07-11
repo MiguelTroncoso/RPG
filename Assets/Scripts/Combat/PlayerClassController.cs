@@ -56,7 +56,7 @@ namespace MmorpgPrototype
             }
 
             EquipWeapon(Definition.WeaponResource);
-            combat.Hud?.SetStatus($"Clase activa: {Definition.DisplayName}");
+            combat.Hud?.SetStatus(Localization.Tr("status.class_active", Definition.DisplayName));
             combat.Hud?.RefreshClass();
         }
 
