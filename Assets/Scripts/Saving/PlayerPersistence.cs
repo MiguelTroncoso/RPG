@@ -20,6 +20,7 @@ namespace MmorpgPrototype
         public InventorySystem Inventory;
         public EquipmentUpgradeSystem Equipment;
         public PlayerEquipment Gear;
+        public PlayerQuestLog QuestLog;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -114,6 +115,7 @@ namespace MmorpgPrototype
             Inventory?.RestoreEntries(data.Items);
             Gear?.RestoreEntries(data.Equipment);
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
+            QuestLog?.Restore(data.Quests);
 
             HasActiveCharacter = true;
             autoSaveTimer = 0f;
@@ -143,7 +145,8 @@ namespace MmorpgPrototype
                 WeaponLevel = Equipment != null ? Equipment.WeaponLevel : 0,
                 ArmorLevel = Equipment != null ? Equipment.ArmorLevel : 0,
                 Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>(),
-                Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>()
+                Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>(),
+                Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData()
             };
         }
 

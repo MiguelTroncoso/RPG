@@ -222,6 +222,21 @@ namespace MmorpgPrototype
             spawner.Loot = LoadLootTable();
         }
 
+        private static System.Collections.Generic.List<QuestDefinition> LoadQuestLine()
+        {
+            var loaded = Resources.LoadAll<QuestDefinition>("Game/Quests");
+            if (loaded != null && loaded.Length > 0)
+            {
+                var quests = new System.Collections.Generic.List<QuestDefinition>(loaded);
+                quests.Sort((a, b) => a.SortOrder.CompareTo(b.SortOrder));
+                return quests;
+            }
+
+            // Fallback runtime si los assets no se generaron todavia
+            // (MMORPG > Quests > Generate Quests).
+            return DefaultQuests.CreateAll();
+        }
+
         private static LootTableConfig LoadLootTable()
         {
             var loot = Resources.Load<LootTableConfig>("Game/LootTable");
@@ -253,6 +268,7 @@ namespace MmorpgPrototype
             shop.Progression = player.GetComponent<PlayerProgression>();
             shop.Inventory = player.GetComponent<InventorySystem>();
             shop.Equipment = player.GetComponent<EquipmentUpgradeSystem>();
+            shop.QuestLog = player.GetComponent<PlayerQuestLog>();
 
             CreateWorldLabel(npc.transform, "Mercader\ncompra y mejora", new Color(1f, 0.92f, 0.55f), 1.55f);
             return shop;
@@ -364,7 +380,9 @@ namespace MmorpgPrototype
             persistence.Inventory = inventory;
             persistence.Equipment = equipment;
             persistence.Gear = gear;
+            persistence.QuestLog = questLog;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
+            questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
             inventory.AddItem(DefaultGameItems.RecruitSword);
             CreateShopButtons(uiRoot, player, shop);
@@ -396,6 +414,9 @@ namespace MmorpgPrototype
             var gear = player.GetComponent<PlayerEquipment>();
             var equipButton = CreateRoundButton(parent, "Auto Equip Button", "EQUIPAR", new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
             equipButton.onClick.AddListener(gear.EquipBestFromInventory);
+
+            var talkButton = CreateRoundButton(parent, "Talk Button", "HABLAR", new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
+            talkButton.onClick.AddListener(shop.Talk);
         }
 
         private static void CreateNetworkPanel(Transform parent, GameObject player)

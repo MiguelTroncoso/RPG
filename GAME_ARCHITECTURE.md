@@ -602,9 +602,9 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 | **A. Datos base** ✅ MVP | Enums, `RarityTable`, `ItemDefinition` + jerarquía, `ItemDatabase`, `LevelProgressionTable` + `ExpCurveConfig` (`StatBlock`/`StatSheet` llegan con D) | SOs de ejemplo creados; validador de IDs pasa |
 | **B. Progresión** ✅ | `ExperienceResolver` puro conectado a `PlayerProgression`, `LevelProgressionTable` + `ExpCurveConfig`, cap 105, multi-level-up, puntos de atributo | Matar enemigos sube nivel según tabla; HUD reacciona por eventos |
 | **C. Inventario + equipo** ✅ | `ItemInstance`, `InventorySystem` por instancias, `PlayerEquipment` con slots y requisitos | 1 espada, 1 casco, 1 pechera, 1 accesorio equipables con requisitos |
-| **D. Combate refactor** | `DamageCalculator` puro, interfaces, loot por `LootTable` (SO) | Daño idéntico o mejor que el actual; crit/miss visibles |
+| **D. Combate refactor** ✅ | `DamageCalculator` puro, interfaces, loot por `LootTableConfig` (SO) | Daño idéntico o mejor que el actual; crit/miss visibles |
 | **E. Mejora +0..+15** ✅ | `UpgradeConfig`, `UpgradeResolver` puro, mejora sobre la instancia equipada, runa de protección, tope por rareza | Mejorar espada con éxito/fallo según tabla configurable |
-| **F. Misiones** | `QuestDefinition`, objetivos Talk/Kill/Collect, `QuestLog`, `RewardService` | Las 3 misiones (hablar, matar, recolectar) completables con recompensas |
+| **F. Misiones** ✅ | `QuestDefinition`, objetivos Talk/Kill/Collect/WorldEvent, `PlayerQuestLog`, `RewardService`, cadena de 4 misiones | Las 3 misiones (hablar, matar, recolectar) completables con recompensas |
 | **G. Guardado** ✅ MVP | `ISaveStorage`, `JsonFileStorage`, `SaveManager`, `ISaveable` en B–F. **MVP hecho:** nombre/clase/sexo/nivel/oro/inventario/mejoras/puntos | Cerrar y abrir conserva todo (objetivo inmediato del handoff) |
 | **H. Mascota + montura** | `PetDefinition`/`MountDefinition` + servicios, 1 de cada | Mascota sigue y da bono; montura acelera |
 | **I. Herramienta editor** | `ItemVariantGeneratorWindow` + generadores de tablas | Generar set de espadas 1–105 en un clic |
@@ -613,11 +613,10 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 
 ### Próxima tarea concreta recomendada
 
-Con A (MVP), B, C, E y G (MVP) hechas, sigue la **Etapa D**
-(`DamageCalculator` puro con crítico/evasión, interfaces
-`IDamageable`/`ILootSource`, loot por `LootTable` como SO) o la **Etapa F**
-(misiones data-driven: `QuestDefinition` con objetivos Talk/Kill/Collect,
-`QuestLog` y `RewardService`, migrando la misión fija actual).
+Con A (MVP), B, C, D, E, F y G (MVP) hechas, sigue la **Etapa H** (mascota y
+montura básicas con `PetDefinition`/`MountDefinition` y sus servicios), la
+**Etapa I** (generador de variantes de items por nivel) o la **Etapa K**
+(sincronizar identidad completa en el online local).
 
 ---
 

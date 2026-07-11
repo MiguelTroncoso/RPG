@@ -1,72 +1,277 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MmorpgPrototype
 {
+    // Registro de misiones data-driven: recorre la cadena de QuestDefinition
+    // en orden, avanza objetivos cuando los demas sistemas notifican
+    // (enemigo derrotado, item obtenido, NPC hablado) y entrega recompensas
+    // via RewardService.
     public sealed class PlayerQuestLog : MonoBehaviour
     {
-        private const int KillGoal = 6;
-        private const int FragmentGoal = 2;
-        private const int MonolithGoal = 1;
-
         public PrototypeHud Hud;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
 
-        private int kills;
-        private int fragments;
-        private int monoliths;
-        private bool completed;
+        private readonly List<QuestDefinition> questLine = new List<QuestDefinition>();
+        private readonly List<string> completedIds = new List<string>();
+        private QuestDefinition activeQuest;
+        private int[] counters;
 
-        public string Summary()
+        public string ActiveQuestId => activeQuest != null ? activeQuest.QuestId : string.Empty;
+
+        public void Initialize(List<QuestDefinition> quests)
         {
-            if (completed)
+            questLine.Clear();
+            if (quests != null)
             {
-                return "Mision: Valle estabilizado. Esperando nueva tarea.";
+                foreach (var quest in quests)
+                {
+                    if (quest != null && quest.HasObjectives && !string.IsNullOrWhiteSpace(quest.QuestId))
+                    {
+                        questLine.Add(quest);
+                    }
+                }
             }
 
-            return $"Mision: elimina {kills}/{KillGoal}, fragmentos {fragments}/{FragmentGoal}, monolito {monoliths}/{MonolithGoal}";
+            if (activeQuest == null)
+            {
+                ActivateNext(announce: false);
+            }
         }
 
         public void OnEnemyDefeated(bool isWorldEvent)
         {
-            if (!isWorldEvent)
-            {
-                kills = Mathf.Min(KillGoal, kills + 1);
-            }
-            else
-            {
-                monoliths = Mathf.Min(MonolithGoal, monoliths + 1);
-            }
-
-            CheckCompletion();
-            Hud?.RefreshQuest();
-            Hud?.AddFeed(isWorldEvent ? "Evento: monolito destruido" : $"Mision: enemigo {kills}/{KillGoal}");
+            Progress(isWorldEvent ? QuestObjectiveType.DefeatWorldEvent : QuestObjectiveType.KillEnemies, string.Empty, 1);
         }
 
         public void OnItemAdded(string itemId, int amount)
         {
-            if (itemId == DefaultGameItems.AncientFragment)
-            {
-                fragments = Mathf.Min(FragmentGoal, fragments + amount);
-                CheckCompletion();
-                Hud?.RefreshQuest();
-                Hud?.AddFeed($"Mision: fragmentos {fragments}/{FragmentGoal}");
-            }
+            Progress(QuestObjectiveType.CollectItems, itemId, amount);
         }
 
-        private void CheckCompletion()
+        public void OnNpcTalked(string npcId)
         {
-            if (completed || kills < KillGoal || fragments < FragmentGoal || monoliths < MonolithGoal)
+            Progress(QuestObjectiveType.TalkToNpc, npcId, 1);
+        }
+
+        // Dialogo del NPC segun la mision activa: instruccion si la mision es
+        // suya, null si no tiene nada que decir.
+        public string DialogFor(string npcId)
+        {
+            if (activeQuest == null || activeQuest.GiverNpcId != npcId)
+            {
+                return null;
+            }
+
+            return activeQuest.StartDialog;
+        }
+
+        public string Summary()
+        {
+            if (activeQuest == null)
+            {
+                return completedIds.Count > 0
+                    ? "Mision: valle estabilizado. Esperando nuevas tareas."
+                    : "Mision: -";
+            }
+
+            var parts = new List<string>();
+            for (var i = 0; i < activeQuest.Objectives.Length; i++)
+            {
+                var objective = activeQuest.Objectives[i];
+                var current = counters != null && i < counters.Length ? counters[i] : 0;
+                parts.Add($"{objective.Label} {current}/{objective.RequiredCount}");
+            }
+
+            return $"Mision: {activeQuest.Title} — {string.Join(" | ", parts)}";
+        }
+
+        public QuestSaveData Export()
+        {
+            var data = new QuestSaveData { ActiveQuestId = ActiveQuestId };
+            data.CompletedQuestIds.AddRange(completedIds);
+            if (counters != null)
+            {
+                data.Counters.AddRange(counters);
+            }
+
+            return data;
+        }
+
+        public void Restore(QuestSaveData data)
+        {
+            if (data == null)
             {
                 return;
             }
 
-            completed = true;
-            Progression?.AddExperience(150);
-            Progression?.AddGold(75);
-            Inventory?.AddItem(DefaultGameItems.ValleyMedal);
-            Hud?.SetStatus("Mision completada: recibiste EXP, oro y una medalla.", 4f);
-            Hud?.AddFeed("Mision completada: +150 EXP, +75 oro");
+            completedIds.Clear();
+            if (data.CompletedQuestIds != null)
+            {
+                completedIds.AddRange(data.CompletedQuestIds);
+            }
+
+            activeQuest = null;
+            counters = null;
+
+            if (!string.IsNullOrWhiteSpace(data.ActiveQuestId))
+            {
+                var quest = FindQuest(data.ActiveQuestId);
+                if (quest != null)
+                {
+                    activeQuest = quest;
+                    counters = new int[quest.Objectives.Length];
+                    for (var i = 0; i < counters.Length; i++)
+                    {
+                        var saved = data.Counters != null && i < data.Counters.Count ? data.Counters[i] : 0;
+                        counters[i] = Mathf.Clamp(saved, 0, quest.Objectives[i].RequiredCount);
+                    }
+                }
+            }
+
+            if (activeQuest == null)
+            {
+                ActivateNext(announce: false);
+            }
+
+            Hud?.RefreshQuest();
+        }
+
+        private void Progress(QuestObjectiveType type, string targetId, int amount)
+        {
+            if (activeQuest == null || counters == null || amount <= 0)
+            {
+                return;
+            }
+
+            var changed = false;
+            for (var i = 0; i < activeQuest.Objectives.Length; i++)
+            {
+                var objective = activeQuest.Objectives[i];
+                if (objective.Type != type)
+                {
+                    continue;
+                }
+
+                var matchesTarget = string.IsNullOrEmpty(objective.TargetId) || objective.TargetId == targetId;
+                if (!matchesTarget || counters[i] >= objective.RequiredCount)
+                {
+                    continue;
+                }
+
+                counters[i] = Mathf.Min(objective.RequiredCount, counters[i] + amount);
+                changed = true;
+                Hud?.AddFeed($"Mision: {objective.Label} {counters[i]}/{objective.RequiredCount}");
+            }
+
+            if (!changed)
+            {
+                return;
+            }
+
+            if (AllObjectivesComplete())
+            {
+                CompleteActiveQuest();
+            }
+
+            Hud?.RefreshQuest();
+        }
+
+        private bool AllObjectivesComplete()
+        {
+            for (var i = 0; i < activeQuest.Objectives.Length; i++)
+            {
+                if (counters[i] < activeQuest.Objectives[i].RequiredCount)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void CompleteActiveQuest()
+        {
+            var quest = activeQuest;
+            completedIds.Add(quest.QuestId);
+            activeQuest = null;
+            counters = null;
+
+            RewardService.Grant(quest.Reward, Progression, Inventory, Hud, $"Mision '{quest.Title}'");
+            Hud?.SetStatus($"Mision completada: {quest.Title}. {quest.CompleteDialog}", 5f);
+
+            if (!string.IsNullOrWhiteSpace(quest.NextQuestId))
+            {
+                Activate(FindQuest(quest.NextQuestId), announce: true);
+            }
+            else
+            {
+                ActivateNext(announce: true);
+            }
+        }
+
+        private void ActivateNext(bool announce)
+        {
+            foreach (var quest in questLine)
+            {
+                if (!completedIds.Contains(quest.QuestId))
+                {
+                    Activate(quest, announce);
+                    return;
+                }
+            }
+
+            Hud?.RefreshQuest();
+        }
+
+        private void Activate(QuestDefinition quest, bool announce)
+        {
+            if (quest == null || completedIds.Contains(quest.QuestId))
+            {
+                ActivateNext(announce);
+                return;
+            }
+
+            activeQuest = quest;
+            counters = new int[quest.Objectives.Length];
+
+            // Los objetivos de recoleccion cuentan lo que ya hay en el
+            // inventario al activarse.
+            for (var i = 0; i < quest.Objectives.Length; i++)
+            {
+                var objective = quest.Objectives[i];
+                if (objective.Type == QuestObjectiveType.CollectItems && Inventory != null && !string.IsNullOrEmpty(objective.TargetId))
+                {
+                    counters[i] = Mathf.Min(objective.RequiredCount, Inventory.Count(objective.TargetId));
+                }
+            }
+
+            if (announce)
+            {
+                Hud?.AddFeed($"Nueva mision: {quest.Title}");
+            }
+
+            if (AllObjectivesComplete())
+            {
+                CompleteActiveQuest();
+                return;
+            }
+
+            Hud?.RefreshQuest();
+        }
+
+        private QuestDefinition FindQuest(string questId)
+        {
+            foreach (var quest in questLine)
+            {
+                if (quest.QuestId == questId)
+                {
+                    return quest;
+                }
+            }
+
+            return null;
         }
     }
 }

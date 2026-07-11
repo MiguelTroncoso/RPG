@@ -280,6 +280,26 @@ Los botones WEAPON y ARMOR ahora mejoran la pieza equipada (la instancia real), 
 - Menu `MMORPG > Items > Generate Upgrade Config` genera el asset; sin asset hay valores por defecto en runtime.
 - Guardado esquema v4: el nivel de mejora viaja con cada pieza equipada. Los guardados antiguos (contador global de arma/armadura) migran automaticamente.
 
+## Fase 5.11: Combate Con Critico/Evasion Y Misiones Data-Driven
+
+Combate (Etapa D):
+
+- Calculo de dano centralizado en `DamageCalculator`, funcion pura con rolls inyectados: precision vs evasion, variacion ±15%, golpes criticos por clase y reduccion por defensa.
+- Cada clase tiene critico, precision, evasion y defensa propios (el Ninja critea 18%, el Guerrero aguanta mas).
+- Popups distintos: critico naranja con "!", fallo "Fallo"/"Esquivado". Los enemigos tambien pueden fallar y critear.
+- Tabla de botin como asset (`LootTableConfig`): probabilidad global + entradas con peso, editable sin tocar codigo (menu `MMORPG > Items > Generate Loot Table`).
+- Interfaces de combate: `IDamageable`, `IAttackable`, `ILootSource`, `IInteractable`.
+
+Misiones (Etapa F):
+
+- Misiones definidas como ScriptableObjects (`QuestDefinition`): titulo, dialogos, objetivos, recompensas y mision siguiente.
+- Objetivos soportados: hablar con NPC, derrotar enemigos, recolectar items y destruir el evento de mundo.
+- Cadena inicial de 4 misiones originales: Ecos del valle (hablar con el Mercader) > Campos inquietos (derrotar 6) > Energia residual (2 fragmentos) > El Monolito Corrupto.
+- Boton HABLAR cerca del Mercader: muestra el dialogo de la mision activa y avanza los objetivos de conversacion.
+- Recompensas entregadas por `RewardService`, punto unico para EXP, oro e items.
+- Menu `MMORPG > Quests > Generate Quests` genera los assets; sin assets hay fallback runtime.
+- Guardado esquema v5: mision activa, progreso de objetivos y misiones completadas se conservan al cerrar.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

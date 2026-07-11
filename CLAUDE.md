@@ -13,15 +13,17 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.10 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.11 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v3,
 progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
-equipamiento con slots y requisitos, y mejora +0..+15 con riesgo vía
-`UpgradeConfig`/`UpgradeResolver`). Detalle en `docs/roadmap.md` y
-`docs/claude-handoff.md`. La escena se genera en runtime
+equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
+`UpgradeConfig`/`UpgradeResolver`, daño con crítico/evasión vía
+`DamageCalculator` puro, botín por `LootTableConfig`, y misiones
+data-driven con `QuestDefinition`/`RewardService`). Detalle en
+`docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
 
@@ -69,6 +71,6 @@ simple y autocontenido.
   todavía (la misión reinicia en cada sesión).
 - Los puntos de atributo se acumulan pero aún no se pueden gastar (falta la
   ventana de stats).
-- Siguiente objetivo recomendado: Etapa D de la hoja de ruta
-  (`DamageCalculator` puro con crítico/evasión e interfaces de combate) o
-  Etapa F (misiones data-driven con `QuestDefinition` y `RewardService`).
+- Siguiente objetivo recomendado: Etapa H (mascota y montura básicas con
+  `PetDefinition`/`MountDefinition`) o Etapa K (sincronizar identidad
+  completa —sexo incluido— en el online local).
