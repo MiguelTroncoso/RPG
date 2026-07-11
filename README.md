@@ -367,6 +367,16 @@ Cumple la regla del contrato: los mensajes del sistema ya no son literales en el
 - Agregar otro idioma = crear otra tabla; el contenido de datos (nombres de items, dialogos de misiones) sigue en sus ScriptableObjects.
 - Pendiente de migrar: textos del panel de creacion de personaje y habilidades (estan en el bootstrap/PlayerSkills).
 
+## Fase 5.19: Zona 2 - Bosque De Los Susurros
+
+Segunda region jugable, construida 100% con los moldes de la Zona 1:
+
+- `ZoneDefinition` ahora tambien describe a los enemigos normales, el terreno y el cartel: el spawner es completamente data-driven y se crea una instancia por zona.
+- Bosque de los Susurros (niveles 11-20) al norte del campamento: terreno propio, Espinosos del bosque, dos Sombras del bosque (elites) y el Anciano de Espinas como jefe de zona (2200 de vida, drop garantizado).
+- Los enemigos llevan un id propio (`forest_elite`, `valley_boss`...) y los objetivos de matar pueden filtrar por tier o por id: las misiones del bosque no se completan cazando en el valle.
+- Cadena de misiones extendida de 8 a 10: Ecos del bosque (3 Sombras) y El corazon del bosque (el Anciano).
+- Crear la Zona 3 en adelante = un asset mas de `ZoneDefinition` (menu `MMORPG > World > Generate Zones`).
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

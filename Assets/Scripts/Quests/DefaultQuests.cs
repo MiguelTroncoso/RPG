@@ -19,6 +19,8 @@ namespace MmorpgPrototype
         public const string ForgeFirstSteel = "forge_first_steel";
         public const string EliteHunt = "elite_hunt";
         public const string ZoneBoss = "zone_boss";
+        public const string ForestEliteHunt = "forest_elite_hunt";
+        public const string ForestBossHunt = "forest_boss_hunt";
 
         public static List<QuestDefinition> CreateAll()
         {
@@ -91,19 +93,39 @@ namespace MmorpgPrototype
                     "Asi que el claro ya tiene dueno... El coloso que los lidera sigue alli.",
                     new[]
                     {
-                        Objective(QuestObjectiveType.KillEnemies, EnemyTier.Elite.ToString(), 2, "Derrota Acechadores de elite")
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ValleyEliteId, 2, "Derrota Acechadores de elite")
                     },
                     Reward(150, 70, Item(DefaultGameItems.MinorPotion, 2)),
                     ZoneBoss),
 
                 Quest(ZoneBoss, 8, "El coloso del claro",
                     "El Coloso de las Reliquias domina el claro al noroeste. Derrotalo y libera la zona.",
-                    "El claro esta en paz. La ruta hacia la proxima region se abrira pronto.",
+                    "El claro esta en paz. Al norte, el Bosque de los Susurros despierta...",
                     new[]
                     {
-                        Objective(QuestObjectiveType.KillEnemies, EnemyTier.Boss.ToString(), 1, "Derrota al Coloso de las Reliquias")
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ValleyBossId, 1, "Derrota al Coloso de las Reliquias")
                     },
                     Reward(300, 150),
+                    ForestEliteHunt),
+
+                Quest(ForestEliteHunt, 9, "Ecos del bosque",
+                    "En el Bosque de los Susurros, al norte, rondan Sombras que susurran nombres olvidados. Caza tres.",
+                    "Las Sombras callan... pero el Anciano de Espinas sigue despierto en lo profundo.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ForestEliteId, 3, "Derrota Sombras del bosque")
+                    },
+                    Reward(400, 180, Item(DefaultGameItems.MinorPotion, 2)),
+                    ForestBossHunt),
+
+                Quest(ForestBossHunt, 10, "El corazon del bosque",
+                    "El Anciano de Espinas corrompe el bosque desde su corazon, al noroeste. Derrotalo.",
+                    "El bosque respira de nuevo. Has liberado dos regiones del valle: descansa, viajero.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ForestBossId, 1, "Derrota al Anciano de Espinas")
+                    },
+                    Reward(800, 400, Item(DefaultGameItems.ProtectionRune, 1)),
                     string.Empty)
             };
         }

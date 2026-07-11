@@ -17,7 +17,7 @@ ANTES DE TOCAR NADA lee, en este orden:
 3. README.md (historial de fases 1 a 5.13 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.17 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.19 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -41,7 +41,14 @@ Estado actual (fases 1-5.17 completadas; hoja de ruta A-K completa):
 - Mascotas y monturas: PetDefinition/MountDefinition + PetService (Zorro del
   valle: +10% EXP/+5% oro, sigue al jugador) y MountService (Caballo bayo:
   nivel 5, velocidad x1.6). Botones MASCOTA/MONTURA.
-- Zona 1 completa (ZoneDefinition + DefaultZones): cartel de zona, Herrero
+- Textos del sistema via Localization.Tr(clave) con tabla es
+  (LocalizationTable + DefaultLocalization, ~90 claves). Pendiente: panel
+  de creacion y PlayerSkills.
+- Zonas 1 y 2 (ZoneDefinition + DefaultZones, spawner data-driven por
+  zona): Bosque de los Susurros (niveles 11-20) al norte con terreno
+  propio, elites (Sombras del bosque) y jefe (Anciano de Espinas). Los
+  objetivos de matar filtran por tier o por id de enemigo. Cadena de 10
+  misiones. Zona 1: cartel de zona, Herrero
   (las mejoras WEAPON/ARMOR se hacen cerca de el), Almacen (boton ALMACEN
   deposita/retira materiales, persistido), area de elites al este y jefe de
   zona (Coloso de las Reliquias) al noroeste con respawn propio. Cadena de
@@ -82,12 +89,12 @@ Como probar:
   a ws://localhost:7777 (IP local del equipo para movil fisico).
 - No intentar build Android si falta PlaybackEngines/AndroidPlayer.
 
-Proximos objetivos sugeridos (hoja de ruta A-K + atributos + posicion
-completos):
-- i18n: mover textos visibles a claves con tabla es (hoy hay literales).
-- Zona 2 reutilizando ZoneDefinition y los generadores existentes.
+Proximos objetivos sugeridos:
 - Autoridad de servidor sobre las intenciones "action" ya definidas.
 - StatSheet con modificadores por origen (reemplazo del recomputo simple).
+- Terminar i18n (panel de creacion de personaje y PlayerSkills).
+- Zona 3 en adelante (solo datos con ZoneDefinition).
+- Modelos 3D reales CC0 para reemplazar el avatar procedural.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

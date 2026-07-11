@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.17 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.19 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -24,8 +24,9 @@ equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
 `DamageCalculator` puro, botín por `LootTableConfig`, y misiones
 data-driven con `QuestDefinition`/`RewardService`, mascotas y monturas
 con bonos pasivos, generador de variantes de items por nivel en el
-editor, Zona 1 completa con herrero/almacén/élites/jefe, e identidad
-completa sincronizada en red con capa de intenciones). Detalle en
+editor, Zonas 1 y 2 data-driven con herrero/almacén/élites/jefes,
+identidad completa sincronizada en red con capa de intenciones, y textos
+del sistema con claves i18n en tabla `es`). Detalle en
 `docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
@@ -68,8 +69,8 @@ simple y autocontenido.
 ## Estado conocido / limitaciones
 
 - El avatar visual es procedural (`PlayerAvatarVisual`); no es arte final.
-- La hoja de ruta inicial (A–K) está completa, más ventana de atributos y
-  posición persistente. Siguientes candidatos: i18n con tabla `es`,
-  `StatSheet` con modificadores por origen, Zona 2 reutilizando
-  `ZoneDefinition`, o autoridad de servidor real sobre las intenciones ya
-  enviadas.
+- Textos pendientes de migrar a i18n: panel de creación de personaje y
+  habilidades (`PlayerSkills`).
+- Siguientes candidatos: `StatSheet` con modificadores por origen,
+  autoridad de servidor sobre las intenciones `action`, Zona 3 (solo
+  datos), o modelos 3D reales CC0 para reemplazar el avatar procedural.

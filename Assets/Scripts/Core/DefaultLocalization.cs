@@ -112,6 +112,11 @@ namespace MmorpgPrototype
                 { "reward.kill_loot", "+{0} EXP, +{1} oro, loot: {2}" },
                 { "reward.kill_feed", "+{0} EXP  +{1} oro" },
 
+                // Zonas
+                { "zone.boss_respawn", "{0} reaparecera pronto" },
+                { "zone.elite_label", "Elite" },
+                { "zone.boss_label", "Jefe de zona" },
+
                 // HUD
                 { "hud.hint", "Cambia clase, completa la mision, mejora equipo y busca el monolito." },
                 { "hud.player_hp", "Jugador {0}/{1}" },

@@ -30,7 +30,7 @@ namespace MmorpgPrototype
 
             var player = CreatePlayer();
             CreateCamera(player.transform);
-            var zone = LoadZone();
+            var zones = LoadZones();
             var shop = CreateShopNpc(player);
             var blacksmith = CreateBlacksmithNpc(player);
             var storage = CreateStorageNpc(player);
@@ -38,22 +38,47 @@ namespace MmorpgPrototype
             shop.Hud = hud;
             blacksmith.Hud = hud;
             storage.Hud = hud;
-            CreateZoneSign(zone);
-            CreateEnemySpawner(player, hud, zone);
+
+            foreach (var zone in zones)
+            {
+                CreateZoneGround(zone);
+                CreateZoneSign(zone);
+                CreateEnemySpawner(player, hud, zone);
+            }
+
             CreateWorldEvent(player, hud);
         }
 
-        private static ZoneDefinition LoadZone()
+        private static System.Collections.Generic.List<ZoneDefinition> LoadZones()
         {
-            var zones = Resources.LoadAll<ZoneDefinition>("Game/Zones");
-            if (zones != null && zones.Length > 0)
+            var loaded = Resources.LoadAll<ZoneDefinition>("Game/Zones");
+            if (loaded != null && loaded.Length > 0)
             {
-                return zones[0];
+                var zones = new System.Collections.Generic.List<ZoneDefinition>(loaded);
+                zones.Sort((a, b) => a.MinLevel.CompareTo(b.MinLevel));
+                return zones;
             }
 
-            // Fallback runtime si el asset no se genero todavia
+            // Fallback runtime si los assets no se generaron todavia
             // (MMORPG > World > Generate Zones).
-            return DefaultZones.CreateZone1();
+            return DefaultZones.CreateAll();
+        }
+
+        private static void CreateZoneGround(ZoneDefinition zone)
+        {
+            if (zone == null || !zone.HasOwnGround)
+            {
+                return;
+            }
+
+            var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            ground.name = $"Ground - {zone.DisplayName}";
+            ground.transform.position = zone.GroundCenter;
+            ground.transform.localScale = new Vector3(7f, 1f, 7f);
+
+            var material = new Material(Shader.Find("Standard"));
+            material.color = zone.GroundColor;
+            ground.GetComponent<Renderer>().sharedMaterial = material;
         }
 
         private static void CreateZoneSign(ZoneDefinition zone)
@@ -63,8 +88,8 @@ namespace MmorpgPrototype
                 return;
             }
 
-            var sign = new GameObject("Zone Sign");
-            sign.transform.position = new Vector3(0f, 0f, -6.5f);
+            var sign = new GameObject($"Zone Sign - {zone.DisplayName}");
+            sign.transform.position = zone.SignPosition;
 
             var post = GameObject.CreatePrimitive(PrimitiveType.Cube);
             post.name = "Post";

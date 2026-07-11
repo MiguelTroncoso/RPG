@@ -40,7 +40,7 @@ namespace MmorpgPrototype
             }
         }
 
-        public void OnEnemyDefeated(EnemyTier tier, bool isWorldEvent)
+        public void OnEnemyDefeated(EnemyTier tier, string enemyId, bool isWorldEvent)
         {
             if (isWorldEvent)
             {
@@ -48,9 +48,9 @@ namespace MmorpgPrototype
                 return;
             }
 
-            // El TargetId del objetivo filtra por tier ("Elite", "Boss");
-            // vacio = cualquier enemigo.
-            Progress(QuestObjectiveType.KillEnemies, tier.ToString(), 1);
+            // El TargetId del objetivo filtra por tier ("Elite", "Boss") o
+            // por id de enemigo ("forest_elite"); vacio = cualquier enemigo.
+            ProgressAny(QuestObjectiveType.KillEnemies, new[] { tier.ToString(), enemyId }, 1);
         }
 
         public void OnItemUpgraded()
@@ -153,6 +153,11 @@ namespace MmorpgPrototype
 
         private void Progress(QuestObjectiveType type, string targetId, int amount)
         {
+            ProgressAny(type, new[] { targetId }, amount);
+        }
+
+        private void ProgressAny(QuestObjectiveType type, string[] targetIds, int amount)
+        {
             if (activeQuest == null || counters == null || amount <= 0)
             {
                 return;
@@ -167,7 +172,7 @@ namespace MmorpgPrototype
                     continue;
                 }
 
-                var matchesTarget = string.IsNullOrEmpty(objective.TargetId) || objective.TargetId == targetId;
+                var matchesTarget = string.IsNullOrEmpty(objective.TargetId) || MatchesAny(objective.TargetId, targetIds);
                 if (!matchesTarget || counters[i] >= objective.RequiredCount)
                 {
                     continue;
@@ -189,6 +194,24 @@ namespace MmorpgPrototype
             }
 
             Hud?.RefreshQuest();
+        }
+
+        private static bool MatchesAny(string targetId, string[] candidates)
+        {
+            if (candidates == null)
+            {
+                return false;
+            }
+
+            foreach (var candidate in candidates)
+            {
+                if (!string.IsNullOrEmpty(candidate) && candidate == targetId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool AllObjectivesComplete()

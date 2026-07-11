@@ -11,6 +11,7 @@ namespace MmorpgPrototype
         public string GuaranteedDrop = string.Empty;
         public LootTableConfig Loot;
         public EnemyTier Tier = EnemyTier.Normal;
+        public string EnemyId = string.Empty;
         public bool IsWorldEvent;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
@@ -48,7 +49,7 @@ namespace MmorpgPrototype
 
             Progression.AddExperience(Experience);
             Progression.AddGold(gold);
-            QuestLog?.OnEnemyDefeated(Tier, IsWorldEvent);
+            QuestLog?.OnEnemyDefeated(Tier, EnemyId, IsWorldEvent);
 
             if (!string.IsNullOrEmpty(drop))
             {

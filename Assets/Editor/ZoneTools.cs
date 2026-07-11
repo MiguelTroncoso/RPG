@@ -19,24 +19,29 @@ namespace MmorpgPrototype.Editor
             EnsureFolder(ResourcesRoot, "Game");
             EnsureFolder(GameFolder, "Zones");
 
-            var template = DefaultZones.CreateZone1();
-            var path = $"{ZonesFolder}/{template.ZoneId}.asset";
-            var existing = AssetDatabase.LoadAssetAtPath<ZoneDefinition>(path);
-
-            if (existing == null)
+            var count = 0;
+            foreach (var template in DefaultZones.CreateAll())
             {
-                AssetDatabase.CreateAsset(template, path);
-                existing = template;
-            }
-            else
-            {
-                EditorUtility.CopySerialized(template, existing);
-                Object.DestroyImmediate(template);
+                var path = $"{ZonesFolder}/{template.ZoneId}.asset";
+                var existing = AssetDatabase.LoadAssetAtPath<ZoneDefinition>(path);
+
+                if (existing == null)
+                {
+                    AssetDatabase.CreateAsset(template, path);
+                    existing = template;
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(template, existing);
+                    Object.DestroyImmediate(template);
+                }
+
+                EditorUtility.SetDirty(existing);
+                count++;
             }
 
-            EditorUtility.SetDirty(existing);
             AssetDatabase.SaveAssets();
-            Debug.Log($"Zona regenerada: {existing.DisplayName} (niveles {existing.MinLevel}-{existing.MaxLevel}) en {path}.");
+            Debug.Log($"Zonas regeneradas: {count} assets en {ZonesFolder}.");
         }
 
         private static void EnsureFolder(string parent, string child)
