@@ -113,6 +113,17 @@ Objetivo: dejar de depender de una capsula generica mientras llegan modelos real
 
 Criterio de exito: al mirar el juego se reconoce la clase del personaje sin leer el HUD.
 
+## Fase 5.23: Animacion Procedural Del Avatar
+
+Objetivo: que el avatar deje de sentirse estatico mientras no existan animaciones finales.
+
+- Idle con respiracion. [Base implementada]
+- Caminar con bob/swing procedural. [Base implementada]
+- Ataque basico y habilidades con impulso visual. [Base implementada]
+- Puente para modelos con Animator (`Speed`/`Attack`). [Base implementada]
+
+Criterio de exito: moverse y atacar se siente vivo aunque el arte siga siendo placeholder.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

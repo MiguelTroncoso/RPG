@@ -55,6 +55,7 @@ namespace MmorpgPrototype
             }
 
             nextSkillOne = Time.time + SkillOneCooldown;
+            PlaySkillMotion();
 
             switch (classController.CurrentClass)
             {
@@ -84,6 +85,7 @@ namespace MmorpgPrototype
             }
 
             nextSkillTwo = Time.time + SkillTwoCooldown;
+            PlaySkillMotion();
 
             switch (classController.CurrentClass)
             {
@@ -167,6 +169,11 @@ namespace MmorpgPrototype
             buffUntil = Time.time + duration;
             Hud?.SetStatus($"{label}: dano aumentado.");
             Hud?.RefreshClass();
+        }
+
+        private void PlaySkillMotion()
+        {
+            GetComponent<AvatarMotionAnimator>()?.PlayAttack();
         }
     }
 }

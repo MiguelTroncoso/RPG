@@ -6,6 +6,9 @@ namespace MmorpgPrototype
     {
         private GameObject visualRoot;
         private Renderer baseRenderer;
+        private CharacterClassType currentClass;
+        private CharacterGender currentGender;
+        private bool hasVisual;
 
         private void Awake()
         {
@@ -22,6 +25,15 @@ namespace MmorpgPrototype
             {
                 return;
             }
+
+            if (hasVisual && currentClass == definition.Type && currentGender == gender)
+            {
+                return;
+            }
+
+            currentClass = definition.Type;
+            currentGender = gender;
+            hasVisual = true;
 
             if (visualRoot != null)
             {
@@ -70,6 +82,8 @@ namespace MmorpgPrototype
                     BuildGuerrero(accentColor);
                     break;
             }
+
+            BindMotionAnimator();
         }
 
         private bool TryBuildCharacterModel(ClassDefinition definition)
@@ -98,7 +112,20 @@ namespace MmorpgPrototype
                 Destroy(modelCollider);
             }
 
+            BindMotionAnimator(model.GetComponentInChildren<Animator>());
+
             return true;
+        }
+
+        private void BindMotionAnimator(Animator modelAnimator = null)
+        {
+            var animator = GetComponent<AvatarMotionAnimator>();
+            if (animator == null)
+            {
+                animator = gameObject.AddComponent<AvatarMotionAnimator>();
+            }
+
+            animator.SetVisualRoot(visualRoot.transform, modelAnimator);
         }
 
         private void BuildGuerrero(Color accentColor)

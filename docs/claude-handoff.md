@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.13 y como ejecutar).
+3. README.md (historial de fases 1 a 5.23 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.22 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.23 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -76,9 +76,11 @@ Estado actual (fases 1-5.22 completadas; hoja de ruta A-K completa):
   por fuera.
 - Avatar: pipeline de modelos 3D listo. ClassDefinition.CharacterModelResource
   apunta a ThirdParty/KayKit/Adventurers/Characters/{Knight|Rogue|Mage|
-  Barbarian}; si el FBX esta en Resources se instancia (T-pose, sin
-  animaciones aun), si no, fallback procedural. Los FBX se copian a mano
-  desde el pack CC0 KayKit Adventurers (ver ASSET_LICENSES.md).
+  Barbarian}; si el FBX esta en Resources se instancia, si no, fallback
+  procedural. `AvatarMotionAnimator` da idle/walk/attack procedural al fallback
+  y alimenta `Speed`/`Attack` si el modelo real trae un Animator compatible.
+  Los FBX se copian a mano desde el pack CC0 KayKit Adventurers (ver
+  ASSET_LICENSES.md).
 
 Reglas de trabajo (resumen; el detalle esta en CLAUDE.md):
 - Datos en ScriptableObjects/JSON, nunca hardcodeados en logica.
@@ -102,11 +104,11 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Animaciones del avatar (Animator con idle/run/attack del pack KayKit).
 - StatSheet con modificadores por origen (reemplazo del recomputo simple).
 - Terminar i18n (panel de creacion de personaje y PlayerSkills).
 - Zona 4 en adelante (solo datos con ZoneDefinition).
 - Persistencia de estado en el servidor (hoy el hello fija el nivel base).
+- Importar/controlar animaciones reales del pack KayKit si se agregan FBX/clips.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

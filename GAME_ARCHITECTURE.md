@@ -614,11 +614,12 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 
 ### Próxima tarea concreta recomendada
 
-**La hoja de ruta inicial (A–K) está completa.** Siguientes candidatos, en
-orden sugerido: ventana de stats para gastar puntos de atributo, guardado
-de posición, i18n con tabla `es`, `StatSheet` con modificadores por
-origen, Zona 2 reutilizando los moldes de la Zona 1, y autoridad real del
-servidor sobre las intenciones `action` ya definidas.
+**La hoja de ruta inicial (A–K) está completa.** Varias extensiones posteriores
+tambien estan implementadas (zonas 2-3, guardado de posicion, i18n parcial,
+ventana de stats, autoridad inicial del servidor y animacion procedural del
+avatar). Siguientes candidatos, en orden sugerido: `StatSheet` con modificadores
+por origen, terminar i18n con tabla `es`, Zona 4 reutilizando `ZoneDefinition`,
+persistencia de estado en servidor, e importacion/control de animaciones reales.
 
 ---
 

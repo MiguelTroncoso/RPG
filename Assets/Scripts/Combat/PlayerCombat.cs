@@ -29,6 +29,7 @@ namespace MmorpgPrototype
             }
 
             nextAttackTime = Time.time + AttackCooldown;
+            GetComponent<AvatarMotionAnimator>()?.PlayAttack();
             var enemy = FindNearestEnemy(AttackRange);
 
             if (enemy == null)

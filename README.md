@@ -394,7 +394,15 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Cada clase define su modelo real (`CharacterModelResource`): Guerrero=Knight, Ninja=Rogue, Chaman=Mage, Umbra=Barbarian del pack CC0 KayKit Adventurers.
 - `PlayerAvatarVisual` carga el modelo desde Resources si existe; si no, usa el avatar procedural de siempre. Jugadores remotos incluidos, sin tocar mas codigo.
 - Para activarlo: descargar la version gratuita de https://kaylousberg.itch.io/kaykit-adventurers y copiar `Knight.fbx`, `Rogue.fbx`, `Mage.fbx` y `Barbarian.fbx` (con su textura) a `Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/`. Ver `ASSET_LICENSES.md`.
-- Los modelos apareceran en T-pose (las animaciones se conectan en una fase posterior).
+- Si los modelos traen `Animator` y parametros `Speed`/`Attack`, el puente de animacion puede alimentarlos.
+
+## Fase 5.23: Animacion Procedural Del Avatar
+
+- Nuevo `AvatarMotionAnimator`: idle con respiracion, caminar con bob/swing y golpe con impulso corto.
+- El fallback procedural ya no queda rigido: brazos y cuerpo reaccionan al movimiento y a ataques/habilidades.
+- `PlayerAvatarVisual` evita reconstruir el avatar en cada snapshot de red si clase/sexo no cambiaron.
+- Si en el futuro un modelo real incluye un `Animator` con parametros `Speed` y trigger `Attack`, el mismo componente los actualiza sin cambiar gameplay.
+- El golpe basico y las habilidades Q/E disparan la animacion de ataque.
 
 ## Clases Iniciales
 
