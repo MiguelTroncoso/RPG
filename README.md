@@ -404,6 +404,14 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Si en el futuro un modelo real incluye un `Animator` con parametros `Speed` y trigger `Attack`, el mismo componente los actualiza sin cambiar gameplay.
 - El golpe basico y las habilidades Q/E disparan la animacion de ataque.
 
+## Fase 5.24: StatSheet Con Modificadores Por Origen
+
+- Nuevo `StatSheet`: base por clase + modificadores separados por origen (`Equipment`, `Attributes`, `Mount`, `Buff`).
+- Nuevo `PlayerStatSheet`: expone dano, vida, defensa, velocidad, rango, cooldown, critico, precision y evasion ya resueltos.
+- `EquipmentUpgradeSystem.ApplyBonuses` sigue siendo el punto unico de recomputo, pero ahora alimenta la hoja en vez de sumar todo a mano.
+- Combate y HUD leen el dano total desde `PlayerStatSheet`; los buffs de habilidades ya no sobrescriben el dano base.
+- La montura queda modelada como modificador de velocidad dentro de la hoja, lista para balance futuro.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

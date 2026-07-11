@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    // Puntos de atributo gastados por el jugador. Los bonos resultantes se
-    // aplican en el recomputo central (EquipmentUpgradeSystem.ApplyBonuses)
-    // y en las stats de ataque; aqui solo viven los contadores y la regla.
+    // Puntos de atributo gastados por el jugador. Los bonos resultantes entran
+    // al StatSheet desde EquipmentUpgradeSystem.ApplyBonuses; aqui solo viven
+    // los contadores y la regla de gasto.
     public sealed class PlayerAttributes : MonoBehaviour
     {
         public AttributeConfig Config;

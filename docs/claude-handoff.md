@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.23 y como ejecutar).
+3. README.md (historial de fases 1 a 5.24 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.23 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.24 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -72,8 +72,9 @@ Estado actual (fases 1-5.23 completadas; hoja de ruta A-K completa):
   Table, Quests, Companions, Level Table, Item Variant Generator (ventana
   que genera equipo 1-105 desde ItemArchetype).
 - EquipmentUpgradeSystem.ApplyBonuses es el UNICO punto de recomputo de
-  stats derivados (equipo + mejoras + atributos + montura). No sumar bonos
-  por fuera.
+  stats derivados. Alimenta PlayerStatSheet/StatSheet con modificadores por
+  origen (equipo + mejoras, atributos, buffs y montura). No sumar bonos por
+  fuera.
 - Avatar: pipeline de modelos 3D listo. ClassDefinition.CharacterModelResource
   apunta a ThirdParty/KayKit/Adventurers/Characters/{Knight|Rogue|Mage|
   Barbarian}; si el FBX esta en Resources se instancia, si no, fallback
@@ -104,7 +105,6 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- StatSheet con modificadores por origen (reemplazo del recomputo simple).
 - Terminar i18n (panel de creacion de personaje y PlayerSkills).
 - Zona 4 en adelante (solo datos con ZoneDefinition).
 - Persistencia de estado en el servidor (hoy el hello fija el nivel base).

@@ -125,7 +125,7 @@ namespace MmorpgPrototype
             }
 
             var definition = classController.Definition;
-            var damage = combat != null ? combat.AttackDamage + combat.EquipmentDamageBonus : definition.BaseDamage;
+            var damage = combat != null ? combat.TotalAttackDamage : definition.BaseDamage;
             var maxHealth = playerHealth != null ? playerHealth.MaxHealth : definition.MaxHealth;
             var identityLabel = identity != null ? $"{identity.CharacterName}  {identity.GenderLabel}" : definition.DisplayName;
             ClassText.text = $"{identityLabel}  {definition.DisplayName}  DMG {damage}  HP {maxHealth}";

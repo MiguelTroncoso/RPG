@@ -12,6 +12,16 @@ namespace MmorpgPrototype
         public int EquipmentDamageBonus;
 
         private float nextAttackTime;
+        private PlayerStatSheet statSheet;
+
+        private PlayerStatSheet Stats => statSheet != null ? statSheet : statSheet = GetComponent<PlayerStatSheet>();
+
+        public int TotalAttackDamage => Stats != null ? Stats.Damage : AttackDamage + EquipmentDamageBonus;
+
+        private void Awake()
+        {
+            statSheet = GetComponent<PlayerStatSheet>();
+        }
 
         private void Update()
         {
@@ -47,7 +57,7 @@ namespace MmorpgPrototype
 
             FaceTarget(enemy.transform.position);
 
-            var result = DamageEnemy(enemy, AttackDamage + EquipmentDamageBonus, new Color(1f, 0.9f, 0.28f));
+            var result = DamageEnemy(enemy, TotalAttackDamage, new Color(1f, 0.9f, 0.28f));
             if (result.IsMiss)
             {
                 Hud?.SetStatus(Localization.Tr("combat.dodged", enemy.name));
@@ -165,6 +175,18 @@ namespace MmorpgPrototype
         {
             var attributes = GetComponent<PlayerAttributes>();
             var critBonus = attributes != null ? attributes.BonusCritChance : 0f;
+
+            var stats = Stats;
+            if (stats != null)
+            {
+                return new CombatStats(
+                    baseDamage,
+                    stats.CritChance,
+                    stats.CritMultiplier,
+                    stats.Accuracy,
+                    stats.Evasion,
+                    stats.Defense);
+            }
 
             var definition = GetComponent<PlayerClassController>()?.Definition;
             if (definition == null)

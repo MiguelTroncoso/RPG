@@ -194,6 +194,7 @@ namespace MmorpgPrototype
 
             player.AddComponent<PlayerCharacterIdentity>();
             player.AddComponent<PlayerAvatarVisual>();
+            player.AddComponent<PlayerStatSheet>();
             player.AddComponent<PlayerClassController>();
             var progression = player.AddComponent<PlayerProgression>();
             progression.Table = LoadLevelTable();

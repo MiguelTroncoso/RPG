@@ -5,6 +5,7 @@ namespace MmorpgPrototype
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(PlayerCombat))]
     [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(PlayerStatSheet))]
     public sealed class PlayerClassController : MonoBehaviour
     {
         public CharacterClassType CurrentClass { get; private set; } = CharacterClassType.Guerrero;
@@ -39,6 +40,7 @@ namespace MmorpgPrototype
             health.ResetHealth(Definition.MaxHealth);
             movement.MoveSpeed = Definition.MoveSpeed;
             combat.AttackDamage = Definition.BaseDamage;
+            combat.EquipmentDamageBonus = 0;
             combat.AttackRange = Definition.AttackRange;
             combat.AttackCooldown = Definition.AttackCooldown;
             combat.SkillTint = Definition.SkillColor;

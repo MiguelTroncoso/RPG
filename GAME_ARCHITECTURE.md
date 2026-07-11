@@ -600,7 +600,7 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 
 | Etapa | Contenido | Resultado verificable |
 |---|---|---|
-| **A. Datos base** ✅ MVP | Enums, `RarityTable`, `ItemDefinition` + jerarquía, `ItemDatabase`, `LevelProgressionTable` + `ExpCurveConfig` (`StatBlock`/`StatSheet` llegan con D) | SOs de ejemplo creados; validador de IDs pasa |
+| **A. Datos base** ✅ MVP | Enums, `RarityTable`, `ItemDefinition` + jerarquía, `ItemDatabase`, `LevelProgressionTable` + `ExpCurveConfig`, `StatSheet` base | SOs de ejemplo creados; validador de IDs pasa |
 | **B. Progresión** ✅ | `ExperienceResolver` puro conectado a `PlayerProgression`, `LevelProgressionTable` + `ExpCurveConfig`, cap 105, multi-level-up, puntos de atributo | Matar enemigos sube nivel según tabla; HUD reacciona por eventos |
 | **C. Inventario + equipo** ✅ | `ItemInstance`, `InventorySystem` por instancias, `PlayerEquipment` con slots y requisitos | 1 espada, 1 casco, 1 pechera, 1 accesorio equipables con requisitos |
 | **D. Combate refactor** ✅ | `DamageCalculator` puro, interfaces, loot por `LootTableConfig` (SO) | Daño idéntico o mejor que el actual; crit/miss visibles |
@@ -616,10 +616,11 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 
 **La hoja de ruta inicial (A–K) está completa.** Varias extensiones posteriores
 tambien estan implementadas (zonas 2-3, guardado de posicion, i18n parcial,
-ventana de stats, autoridad inicial del servidor y animacion procedural del
-avatar). Siguientes candidatos, en orden sugerido: `StatSheet` con modificadores
-por origen, terminar i18n con tabla `es`, Zona 4 reutilizando `ZoneDefinition`,
-persistencia de estado en servidor, e importacion/control de animaciones reales.
+ventana de stats, autoridad inicial del servidor, animacion procedural del
+avatar y `StatSheet` con modificadores por origen). Siguientes candidatos, en
+orden sugerido: terminar i18n con tabla `es`, Zona 4 reutilizando
+`ZoneDefinition`, persistencia de estado en servidor, e importacion/control de
+animaciones reales.
 
 ---
 

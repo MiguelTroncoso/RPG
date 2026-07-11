@@ -124,6 +124,17 @@ Objetivo: que el avatar deje de sentirse estatico mientras no existan animacione
 
 Criterio de exito: moverse y atacar se siente vivo aunque el arte siga siendo placeholder.
 
+## Fase 5.24: StatSheet Con Modificadores Por Origen
+
+Objetivo: centralizar stats para que equipo, atributos, buffs y montura no sumen reglas por fuera.
+
+- `StatSheet` con base por clase y modificadores por origen. [Base implementada]
+- `PlayerStatSheet` como lectura resuelta para combate/HUD. [Base implementada]
+- Buffs de dano modelados como origen `Buff`, sin sobrescribir base. [Base implementada]
+- Montura como modificador de velocidad dentro de la hoja. [Base implementada]
+
+Criterio de exito: cualquier bono nuevo tiene un origen claro y pasa por un recomputo unico.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

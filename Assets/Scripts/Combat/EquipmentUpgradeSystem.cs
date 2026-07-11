@@ -17,6 +17,7 @@ namespace MmorpgPrototype
 
         private PlayerCombat combat;
         private Health health;
+        private PlayerStatSheet statSheet;
 
         // Derivados de las piezas equipadas; se conservan para el guardado
         // legacy y como informacion rapida.
@@ -27,6 +28,7 @@ namespace MmorpgPrototype
         {
             combat = GetComponent<PlayerCombat>();
             health = GetComponent<Health>();
+            statSheet = GetComponent<PlayerStatSheet>();
         }
 
         public void TryUpgradeWeapon()
@@ -184,41 +186,81 @@ namespace MmorpgPrototype
             return Localization.Tr("hud.equipment", pieces);
         }
 
-        // Punto unico de recomputo de stats derivados: equipo, mejoras,
-        // atributos gastados y montura.
+        // Punto unico de recomputo de stats derivados: clase, equipo,
+        // atributos gastados, buffs y montura.
         public void ApplyBonuses()
         {
+            if (statSheet == null)
+            {
+                statSheet = GetComponent<PlayerStatSheet>();
+            }
+
             var equipment = GetComponent<PlayerEquipment>();
             var attributes = GetComponent<PlayerAttributes>();
-            var equipDamage = (equipment != null ? equipment.TotalDamageBonus : 0)
-                + (attributes != null ? attributes.BonusDamage : 0);
-            var equipHealth = (equipment != null ? equipment.TotalMaxHealthBonus : 0)
-                + (attributes != null ? attributes.BonusMaxHealth : 0);
-            var equipSpeed = (equipment != null ? equipment.TotalMoveSpeedBonus : 0f)
-                + (attributes != null ? attributes.BonusMoveSpeed : 0f);
-
-            combat.EquipmentDamageBonus = equipDamage;
-
+            var mount = GetComponent<MountService>();
+            var skills = GetComponent<PlayerSkills>();
             var classController = GetComponent<PlayerClassController>();
             if (classController != null && classController.Definition != null)
             {
                 var definition = classController.Definition;
-                if (equipHealth > 0 || health.MaxHealth != definition.MaxHealth)
-                {
-                    health.ResetHealth(definition.MaxHealth + equipHealth);
-                }
 
-                var movement = GetComponent<PlayerController>();
-                if (movement != null)
+                if (statSheet != null)
                 {
-                    var mount = GetComponent<MountService>();
-                    var mountMultiplier = mount != null ? mount.SpeedMultiplier : 1f;
-                    movement.MoveSpeed = (definition.MoveSpeed + equipSpeed) * mountMultiplier;
+                    statSheet.Rebuild(definition, equipment, attributes, mount, skills);
+                    combat.AttackDamage = statSheet.BaseDamage;
+                    combat.EquipmentDamageBonus = statSheet.BonusDamage;
+                    combat.AttackRange = statSheet.AttackRange;
+                    combat.AttackCooldown = statSheet.AttackCooldown;
+
+                    if (health.MaxHealth != statSheet.MaxHealth)
+                    {
+                        health.ResetHealth(statSheet.MaxHealth);
+                    }
+
+                    var movement = GetComponent<PlayerController>();
+                    if (movement != null)
+                    {
+                        movement.MoveSpeed = statSheet.MoveSpeed;
+                    }
+                }
+                else
+                {
+                    var equipDamage = (equipment != null ? equipment.TotalDamageBonus : 0)
+                        + (attributes != null ? attributes.BonusDamage : 0)
+                        + (skills != null ? skills.DamageBuff : 0);
+                    var equipHealth = (equipment != null ? equipment.TotalMaxHealthBonus : 0)
+                        + (attributes != null ? attributes.BonusMaxHealth : 0);
+                    var equipSpeed = (equipment != null ? equipment.TotalMoveSpeedBonus : 0f)
+                        + (attributes != null ? attributes.BonusMoveSpeed : 0f);
+
+                    combat.EquipmentDamageBonus = equipDamage;
+
+                    if (equipHealth > 0 || health.MaxHealth != definition.MaxHealth)
+                    {
+                        health.ResetHealth(definition.MaxHealth + equipHealth);
+                    }
+
+                    var movement = GetComponent<PlayerController>();
+                    if (movement != null)
+                    {
+                        var mountMultiplier = mount != null ? mount.SpeedMultiplier : 1f;
+                        movement.MoveSpeed = (definition.MoveSpeed + equipSpeed) * mountMultiplier;
+                    }
                 }
             }
-            else if (equipHealth > 0)
+            else
             {
-                health.ResetHealth(health.MaxHealth + equipHealth);
+                var equipDamage = (equipment != null ? equipment.TotalDamageBonus : 0)
+                    + (attributes != null ? attributes.BonusDamage : 0)
+                    + (skills != null ? skills.DamageBuff : 0);
+                var equipHealth = (equipment != null ? equipment.TotalMaxHealthBonus : 0)
+                    + (attributes != null ? attributes.BonusMaxHealth : 0);
+
+                combat.EquipmentDamageBonus = equipDamage;
+                if (equipHealth > 0)
+                {
+                    health.ResetHealth(health.MaxHealth + equipHealth);
+                }
             }
 
             Hud?.RefreshEquipment();

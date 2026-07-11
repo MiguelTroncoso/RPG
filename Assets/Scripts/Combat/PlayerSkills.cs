@@ -12,18 +12,21 @@ namespace MmorpgPrototype
 
         private PlayerCombat combat;
         private PlayerClassController classController;
+        private EquipmentUpgradeSystem upgradeSystem;
         private float nextSkillOne;
         private float nextSkillTwo;
         private float buffUntil;
-        private int baseDamageBeforeBuff;
+        private int damageBuff;
 
         public float SkillOneRemaining => Mathf.Max(0f, nextSkillOne - Time.time);
         public float SkillTwoRemaining => Mathf.Max(0f, nextSkillTwo - Time.time);
+        public int DamageBuff => buffUntil > 0f ? damageBuff : 0;
 
         private void Awake()
         {
             combat = GetComponent<PlayerCombat>();
             classController = GetComponent<PlayerClassController>();
+            upgradeSystem = GetComponent<EquipmentUpgradeSystem>();
         }
 
         private void Update()
@@ -40,8 +43,9 @@ namespace MmorpgPrototype
 
             if (buffUntil > 0f && Time.time > buffUntil)
             {
-                combat.AttackDamage = baseDamageBeforeBuff;
+                damageBuff = 0;
                 buffUntil = 0f;
+                upgradeSystem?.ApplyBonuses();
                 Hud?.RefreshClass();
             }
         }
@@ -160,13 +164,9 @@ namespace MmorpgPrototype
 
         private void ApplyDamageBuff(string label, int bonusDamage, float duration)
         {
-            if (buffUntil <= 0f)
-            {
-                baseDamageBeforeBuff = combat.AttackDamage;
-            }
-
-            combat.AttackDamage = baseDamageBeforeBuff + bonusDamage;
+            damageBuff = bonusDamage;
             buffUntil = Time.time + duration;
+            upgradeSystem?.ApplyBonuses();
             Hud?.SetStatus($"{label}: dano aumentado.");
             Hud?.RefreshClass();
         }
