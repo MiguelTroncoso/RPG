@@ -572,6 +572,8 @@ namespace MmorpgPrototype
             var network = player.GetComponent<MmorpgNetworkClient>();
             network.PlayerTransform = player.transform;
             network.ClassController = player.GetComponent<PlayerClassController>();
+            network.Identity = player.GetComponent<PlayerCharacterIdentity>();
+            player.GetComponent<PlayerProgression>().Network = network;
 
             network.NetworkStatusText = CreateText(parent, "Network Status", "Offline", 20, TextAnchor.MiddleRight);
             SetRect(network.NetworkStatusText.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(520f, 28f), new Vector2(-24f, -96f));

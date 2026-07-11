@@ -539,8 +539,9 @@ autoridad:
    (`DamageCalculator`, `UpgradeResolver`, curva de EXP) son **funciones puras
    sin dependencias de Unity** → portables a Node/servidor tal cual como
    especificación.
-3. **Pendiente inmediato de red:** sincronizar sexo/identidad completa de
-   jugadores remotos (hoy remotos usan clase + masculino por defecto).
+3. **Hecho:** la identidad completa (nombre, clase, sexo) se sincroniza y
+   las acciones críticas (level up, mejora) viajan como intenciones
+   `action` que el servidor difunde como actividad.
 4. **Futuro:** el servidor valida intenciones y emite resultados; los
    servicios locales pasan a ser proxies. `InstanceId` (GUID) por item desde
    el día 1 es la base anti-duplicación.
@@ -608,15 +609,16 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 | **G. Guardado** ✅ MVP | `ISaveStorage`, `JsonFileStorage`, `SaveManager`, `ISaveable` en B–F. **MVP hecho:** nombre/clase/sexo/nivel/oro/inventario/mejoras/puntos | Cerrar y abrir conserva todo (objetivo inmediato del handoff) |
 | **H. Mascota + montura** ✅ | `PetDefinition`/`MountDefinition` + servicios, 1 de cada | Mascota sigue y da bono; montura acelera |
 | **I. Herramienta editor** ✅ | `ItemVariantGeneratorWindow` + `ItemArchetype` + generadores de tablas | Generar set de espadas 1–105 en un clic |
-| **J. Zona 1** | `ZoneDefinition`, cadena de misiones 1–10, NPCs, jefe | Campaña 1–10 jugable de punta a punta |
-| **K. Red** | Sincronizar identidad completa (sexo incluido); intenciones para acciones críticas | Remotos se ven correctos; base para autoridad de servidor |
+| **J. Zona 1** ✅ | `ZoneDefinition`, cadena de 8 misiones, herrero, almacén, élites y jefe de zona | Campaña 1–10 jugable de punta a punta |
+| **K. Red** ✅ | Identidad completa (sexo incluido) sincronizada; intenciones `action` difundidas como actividad | Remotos se ven correctos; base para autoridad de servidor |
 
 ### Próxima tarea concreta recomendada
 
-Con A–I y G (MVP) hechas, quedan la **Etapa J** (Zona 1 completa:
-`ZoneDefinition`, más NPCs —herrero, almacén—, áreas de élite y jefe de
-zona) y la **Etapa K** (sincronizar identidad completa en el online local
-y capa de intenciones para acciones críticas).
+**La hoja de ruta inicial (A–K) está completa.** Siguientes candidatos, en
+orden sugerido: ventana de stats para gastar puntos de atributo, guardado
+de posición, i18n con tabla `es`, `StatSheet` con modificadores por
+origen, Zona 2 reutilizando los moldes de la Zona 1, y autoridad real del
+servidor sobre las intenciones `action` ya definidas.
 
 ---
 

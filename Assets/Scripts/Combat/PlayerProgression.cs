@@ -15,6 +15,7 @@ namespace MmorpgPrototype
 
         public LevelProgressionTable Table;
         public PrototypeHud Hud;
+        public MmorpgNetworkClient Network;
 
         // Multiplicadores pasivos (mascotas, eventos); 1 = sin bono.
         public float ExperienceMultiplier = 1f;
@@ -53,6 +54,8 @@ namespace MmorpgPrototype
                 {
                     Hud?.AddFeed($"+{result.AttributePointsGained} puntos de atributo");
                 }
+
+                Network?.SendAction("level_up", $"subio a nivel {Level}");
             }
 
             Hud?.RefreshProgression();

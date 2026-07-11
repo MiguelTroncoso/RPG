@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.13 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.15 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v6,
@@ -23,8 +23,10 @@ equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
 `UpgradeConfig`/`UpgradeResolver`, daño con crítico/evasión vía
 `DamageCalculator` puro, botín por `LootTableConfig`, y misiones
 data-driven con `QuestDefinition`/`RewardService`, mascotas y monturas
-con bonos pasivos, y generador de variantes de items por nivel en el
-editor). Detalle en `docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
+con bonos pasivos, generador de variantes de items por nivel en el
+editor, Zona 1 completa con herrero/almacén/élites/jefe, e identidad
+completa sincronizada en red con capa de intenciones). Detalle en
+`docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
 
@@ -66,12 +68,12 @@ simple y autocontenido.
 ## Estado conocido / limitaciones
 
 - El avatar visual es procedural (`PlayerAvatarVisual`); no es arte final.
-- El sexo de jugadores remotos aún no se sincroniza por red; los remotos usan
-  clase + masculino por defecto.
 - La posición del jugador no se guarda todavía (siempre reaparece en el
   punto inicial).
 - Los puntos de atributo se acumulan pero aún no se pueden gastar (falta la
   ventana de stats).
-- Siguiente objetivo recomendado: Etapa J (Zona 1 completa con
-  `ZoneDefinition`, más NPCs y jefe) o Etapa K (sincronizar identidad
-  completa —sexo incluido— en el online local).
+- La hoja de ruta inicial (A–K) está completa. Siguientes candidatos:
+  ventana de stats para gastar puntos de atributo, guardar posición del
+  jugador, i18n con tabla `es`, `StatSheet` con modificadores por origen,
+  Zona 2 reutilizando `ZoneDefinition`, o autoridad de servidor real sobre
+  las intenciones ya enviadas.

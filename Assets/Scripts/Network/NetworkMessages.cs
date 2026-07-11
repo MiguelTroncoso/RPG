@@ -53,6 +53,7 @@ namespace MmorpgPrototype
         public string id;
         public string name;
         public string className;
+        public string gender;
         public float x;
         public float y;
         public float z;
@@ -65,6 +66,28 @@ namespace MmorpgPrototype
         public string type = "hello";
         public string name;
         public string className;
+        public string gender;
+    }
+
+    // Intencion de accion critica: hoy el servidor solo la difunde como
+    // actividad; manana la validara antes de aplicar el resultado.
+    [Serializable]
+    public sealed class ActionPayload
+    {
+        public string type = "action";
+        public string action;
+        public string detail;
+    }
+
+    [Serializable]
+    public sealed class ActivityMessage
+    {
+        public string type;
+        public string id;
+        public string name;
+        public string action;
+        public string detail;
+        public long serverTime;
     }
 
     [Serializable]

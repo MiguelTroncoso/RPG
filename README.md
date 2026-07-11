@@ -334,6 +334,15 @@ El campamento se convierte en la primera zona real (Etapa J):
 - Los objetivos de matar ahora filtran por tier (cualquiera / Elite / Boss).
 - Guardado esquema v7 (incluye el almacen). Menu `MMORPG > World > Generate Zones`.
 
+## Fase 5.15: Identidad Completa En Red E Intenciones
+
+Cierre de la hoja de ruta inicial (Etapa K):
+
+- El sexo del personaje ahora se sincroniza por red: los jugadores remotos se ven con su clase y sexo reales (avatar procedural y etiqueta), no mas masculino por defecto.
+- El hello se reenvia automaticamente al cambiar nombre, clase o sexo.
+- Capa de intenciones: las acciones criticas (subir de nivel, mejora exitosa) se reportan al servidor como mensajes `action`; el servidor las difunde como actividad y los demas jugadores las ven en el chat ("Valle: X subio a nivel 5"). Es la base para que el servidor valide estas acciones cuando tenga autoridad.
+- El servidor sanitiza y valida el sexo recibido (solo Masculino/Femenino).
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

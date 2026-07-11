@@ -39,9 +39,12 @@ namespace MmorpgPrototype
             targetPosition = new Vector3(state.x, state.y, state.z);
             targetRotation = Quaternion.Euler(0f, state.yaw, 0f);
 
+            var gender = ParseGender(state.gender);
+
             if (label != null)
             {
-                label.text = $"{state.name}\n{state.className}";
+                var genderLabel = gender == CharacterGender.Femenino ? "Femenino" : "Masculino";
+                label.text = $"{state.name}\n{state.className} - {genderLabel}";
             }
 
             if (bodyRenderer != null)
@@ -52,7 +55,7 @@ namespace MmorpgPrototype
             avatarVisual ??= GetComponent<PlayerAvatarVisual>();
             if (avatarVisual != null)
             {
-                avatarVisual.Apply(ClassDefinition.Create(ParseClass(state.className)), CharacterGender.Masculino);
+                avatarVisual.Apply(ClassDefinition.Create(ParseClass(state.className)), gender);
             }
 
             if (immediate)
@@ -110,6 +113,13 @@ namespace MmorpgPrototype
                 default:
                     return new Color(0.18f, 0.42f, 0.9f);
             }
+        }
+
+        private static CharacterGender ParseGender(string genderName)
+        {
+            return System.Enum.TryParse(genderName, out CharacterGender gender)
+                ? gender
+                : CharacterGender.Masculino;
         }
 
         private static CharacterClassType ParseClass(string className)

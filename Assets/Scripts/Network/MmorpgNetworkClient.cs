@@ -15,6 +15,7 @@ namespace MmorpgPrototype
         public string PlayerName = "Heroe";
         public Transform PlayerTransform;
         public PlayerClassController ClassController;
+        public PlayerCharacterIdentity Identity;
         public Text NetworkStatusText;
         public Text ChatLogText;
         public InputField UrlInput;
@@ -31,6 +32,8 @@ namespace MmorpgPrototype
         private string localId = string.Empty;
         private string pendingStatus = "Offline";
         private string lastClassName = string.Empty;
+        private string lastGenderName = string.Empty;
+        private string lastPlayerName = string.Empty;
         private float nextPositionSend;
         private float nextHelloCheck;
         private bool isConnecting;
@@ -220,6 +223,9 @@ namespace MmorpgPrototype
                     case "chat":
                         HandleChat(JsonUtility.FromJson<NetworkChatMessage>(json));
                         break;
+                    case "activity":
+                        HandleActivity(JsonUtility.FromJson<ActivityMessage>(json));
+                        break;
                     case "error":
                         SetStatus(json);
                         break;
@@ -276,6 +282,29 @@ namespace MmorpgPrototype
             }
         }
 
+        private void HandleActivity(ActivityMessage message)
+        {
+            if (message == null || string.IsNullOrEmpty(message.detail) || message.id == localId)
+            {
+                return;
+            }
+
+            AppendChat("Valle", $"{message.name} {message.detail}");
+        }
+
+        // Capa de intenciones: las acciones criticas se reportan al servidor.
+        // Hoy solo se difunden como actividad; es la base para que el
+        // servidor las valide cuando tenga autoridad.
+        public void SendAction(string action, string detail)
+        {
+            if (!IsConnected || string.IsNullOrWhiteSpace(action))
+            {
+                return;
+            }
+
+            _ = SendJsonAsync(new ActionPayload { action = action, detail = detail });
+        }
+
         private void ApplyRemotePlayer(RemotePlayerState state)
         {
             if (state == null || string.IsNullOrEmpty(state.id) || state.id == localId)
@@ -320,7 +349,8 @@ namespace MmorpgPrototype
 
             nextHelloCheck = Time.time + 0.5f;
             var className = ClassController.Definition.DisplayName;
-            if (className == lastClassName)
+            var genderName = CurrentGenderName();
+            if (className == lastClassName && genderName == lastGenderName && PlayerName == lastPlayerName)
             {
                 return;
             }
@@ -333,13 +363,22 @@ namespace MmorpgPrototype
             var className = ClassController != null && ClassController.Definition != null
                 ? ClassController.Definition.DisplayName
                 : "Guerrero";
+            var genderName = CurrentGenderName();
 
             lastClassName = className;
+            lastGenderName = genderName;
+            lastPlayerName = PlayerName;
             await SendJsonAsync(new HelloPayload
             {
                 name = PlayerName,
-                className = className
+                className = className,
+                gender = genderName
             });
+        }
+
+        private string CurrentGenderName()
+        {
+            return Identity != null ? Identity.Gender.ToString() : CharacterGender.Masculino.ToString();
         }
 
         private async Task SendJsonAsync(object payload)

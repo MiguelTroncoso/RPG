@@ -13,6 +13,7 @@ server.on("connection", (socket, request) => {
     id,
     name: `Player-${id.slice(0, 4)}`,
     className: "Guerrero",
+    gender: "Masculino",
     x: 0,
     y: 1,
     z: 0,
@@ -56,6 +57,7 @@ function handleMessage(player, raw) {
     case "hello":
       player.name = sanitizeText(message.name, 24) || player.name;
       player.className = sanitizeText(message.className, 24) || player.className;
+      player.gender = sanitizeGender(message.gender) ?? player.gender;
       broadcast({ type: "playerUpdated", player: publicPlayer(player) });
       break;
 
@@ -75,6 +77,26 @@ function handleMessage(player, raw) {
             id: player.id,
             name: player.name,
             text,
+            serverTime: Date.now()
+          });
+        }
+      }
+      break;
+
+    // Intencion de accion critica del cliente. Por ahora el servidor solo
+    // la difunde como actividad; cuando tenga autoridad, validara aqui el
+    // resultado antes de aplicarlo.
+    case "action":
+      {
+        const action = sanitizeText(message.action, 24);
+        const detail = sanitizeText(message.detail, 90);
+        if (action.length > 0 && detail.length > 0) {
+          broadcast({
+            type: "activity",
+            id: player.id,
+            name: player.name,
+            action,
+            detail,
             serverTime: Date.now()
           });
         }
@@ -127,11 +149,17 @@ function publicPlayer(player) {
     id: player.id,
     name: player.name,
     className: player.className,
+    gender: player.gender,
     x: player.x,
     y: player.y,
     z: player.z,
     yaw: player.yaw
   };
+}
+
+function sanitizeGender(value) {
+  const gender = sanitizeText(value, 12);
+  return gender === "Masculino" || gender === "Femenino" ? gender : null;
 }
 
 function toNumber(value, fallback) {

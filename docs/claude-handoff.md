@@ -17,7 +17,7 @@ ANTES DE TOCAR NADA lee, en este orden:
 3. README.md (historial de fases 1 a 5.13 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.13 completadas):
+Estado actual (fases 1-5.15 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -40,10 +40,20 @@ Estado actual (fases 1-5.13 completadas):
 - Mascotas y monturas: PetDefinition/MountDefinition + PetService (Zorro del
   valle: +10% EXP/+5% oro, sigue al jugador) y MountService (Caballo bayo:
   nivel 5, velocidad x1.6). Botones MASCOTA/MONTURA.
-- Guardado local JSON (esquema v6) via ISaveStorage/JsonFileStorage con
+- Zona 1 completa (ZoneDefinition + DefaultZones): cartel de zona, Herrero
+  (las mejoras WEAPON/ARMOR se hacen cerca de el), Almacen (boton ALMACEN
+  deposita/retira materiales, persistido), area de elites al este y jefe de
+  zona (Coloso de las Reliquias) al noroeste con respawn propio. Cadena de
+  8 misiones (incluye objetivo UpgradeItem y kills filtrados por
+  EnemyTier). HABLAR habla con el NPC mas cercano.
+- Red: identidad completa (nombre/clase/sexo) sincronizada; los remotos se
+  ven con su sexo real. Capa de intenciones: level_up y upgrade se envian
+  como mensajes "action" y el servidor los difunde como actividad
+  (Server/src/server.js).
+- Guardado local JSON (esquema v7) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos,
   inventario, equipo con niveles de mejora, mision activa y progreso,
-  mascota activa y montura. PlayerPrefs solo para settings.
+  mascota activa, montura y almacen. PlayerPrefs solo para settings.
 - Patron de datos establecido: cada config es un ScriptableObject con un
   generador en el menu de editor (MMORPG > ...) y un fallback runtime en el
   bootstrap si el asset no existe. Generadores: Items, Upgrade Config, Loot
@@ -70,11 +80,7 @@ Como probar:
   a ws://localhost:7777 (IP local del equipo para movil fisico).
 - No intentar build Android si falta PlaybackEngines/AndroidPlayer.
 
-Proximas etapas pendientes (hoja de ruta en GAME_ARCHITECTURE.md §16):
-- Etapa J: Zona 1 completa (ZoneDefinition, campamento, herrero, almacen,
-  area de elites, jefe de zona, mas misiones de la cadena 1-10).
-- Etapa K: red — sincronizar identidad completa (sexo incluido) de
-  jugadores remotos y capa de intenciones para acciones criticas.
+Proximos objetivos sugeridos (la hoja de ruta A-K esta completa):
 - Ventana de stats para gastar puntos de atributo.
 - Guardar posicion del jugador.
 - i18n: mover textos visibles a claves con tabla es (hoy hay literales).
