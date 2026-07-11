@@ -132,6 +132,7 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerQuestLog>();
             player.AddComponent<EquipmentUpgradeSystem>();
             player.AddComponent<PlayerSkills>();
+            player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
 
             return player;
@@ -273,6 +274,12 @@ namespace MmorpgPrototype
             equipment.Progression = progression;
             equipment.Inventory = inventory;
             skills.Hud = hud;
+            var persistence = player.GetComponent<PlayerPersistence>();
+            persistence.Identity = player.GetComponent<PlayerCharacterIdentity>();
+            persistence.ClassController = player.GetComponent<PlayerClassController>();
+            persistence.Progression = progression;
+            persistence.Inventory = inventory;
+            persistence.Equipment = equipment;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             inventory.AddItem("Pocion menor", 2);
             CreateShopButtons(uiRoot, player, shop);
@@ -461,9 +468,24 @@ namespace MmorpgPrototype
             var identity = player.GetComponent<PlayerCharacterIdentity>();
             var classController = player.GetComponent<PlayerClassController>();
             var network = player.GetComponent<MmorpgNetworkClient>();
+            var persistence = player.GetComponent<PlayerPersistence>();
+            var savedData = persistence != null ? persistence.LoadOrNull() : null;
 
             var selectedClass = CharacterClassType.Guerrero;
             var selectedGender = CharacterGender.Masculino;
+
+            if (savedData != null)
+            {
+                if (System.Enum.TryParse(savedData.ClassName, out CharacterClassType savedClass))
+                {
+                    selectedClass = savedClass;
+                }
+
+                if (System.Enum.TryParse(savedData.GenderName, out CharacterGender savedGender))
+                {
+                    selectedGender = savedGender;
+                }
+            }
 
             var overlay = CreateUiObject("Character Selection Overlay", parent);
             StretchToParent(overlay.GetComponent<RectTransform>());
@@ -487,7 +509,7 @@ namespace MmorpgPrototype
             preview.color = new Color(1f, 0.9f, 0.55f);
             SetRect(preview.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820f, 48f), new Vector2(0f, 132f));
 
-            var nameInput = CreateInputField(overlay.transform, "Character Name Input", "Heroe", "nombre del personaje", new Vector2(0.5f, 0.5f), new Vector2(0f, 74f), new Vector2(520f, 52f));
+            var nameInput = CreateInputField(overlay.transform, "Character Name Input", savedData != null ? savedData.CharacterName : "Heroe", "nombre del personaje", new Vector2(0.5f, 0.5f), new Vector2(0f, 74f), new Vector2(520f, 52f));
             nameInput.characterLimit = 14;
 
             var classLabel = CreateText(overlay.transform, "Class Label", "Clase", 22, TextAnchor.MiddleCenter);
@@ -544,7 +566,8 @@ namespace MmorpgPrototype
                 RefreshPreview();
             });
 
-            var confirm = CreateRoundButton(overlay.transform, "Confirm Character Button", "CREAR", new Vector2(0.5f, 0.5f), new Vector2(0f, -254f), new Vector2(260f, 58f), new Color(0.11f, 0.54f, 0.36f), 24);
+            var confirmPosition = savedData != null ? new Vector2(150f, -254f) : new Vector2(0f, -254f);
+            var confirm = CreateRoundButton(overlay.transform, "Confirm Character Button", "CREAR", new Vector2(0.5f, 0.5f), confirmPosition, new Vector2(260f, 58f), new Color(0.11f, 0.54f, 0.36f), 24);
             confirm.onClick.AddListener(() =>
             {
                 identity.ApplySelection(nameInput.text, selectedGender);
@@ -560,7 +583,22 @@ namespace MmorpgPrototype
                 hud.AddFeed($"Entraste como {identity.DisplayLabel}");
                 overlay.SetActive(false);
                 Time.timeScale = 1f;
+                persistence?.MarkCharacterActive();
             });
+
+            if (savedData != null)
+            {
+                var continueButton = CreateRoundButton(overlay.transform, "Continue Character Button", "CONTINUAR", new Vector2(0.5f, 0.5f), new Vector2(-150f, -254f), new Vector2(260f, 58f), new Color(0.16f, 0.36f, 0.66f), 22);
+                continueButton.onClick.AddListener(() =>
+                {
+                    persistence.ApplyLoadedData(savedData);
+                    hud.RefreshClass();
+                    hud.SetStatus($"Bienvenido de nuevo: {identity.DisplayLabel}", 3.5f);
+                    hud.AddFeed($"Partida cargada: nivel {savedData.Level}");
+                    overlay.SetActive(false);
+                    Time.timeScale = 1f;
+                });
+            }
 
             identity.ApplySelection(nameInput.text, selectedGender);
             classController.ApplyClass(selectedClass);

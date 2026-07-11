@@ -4,6 +4,8 @@ namespace MmorpgPrototype
 {
     public sealed class PlayerProgression : MonoBehaviour
     {
+        public const int MaxLevel = 105;
+
         public int Level { get; private set; } = 1;
         public int Experience { get; private set; }
         public int Gold { get; private set; }
@@ -13,14 +15,14 @@ namespace MmorpgPrototype
 
         public void AddExperience(int amount)
         {
-            if (amount <= 0)
+            if (amount <= 0 || Level >= MaxLevel)
             {
                 return;
             }
 
             Experience += amount;
 
-            while (Experience >= NextLevelExperience)
+            while (Level < MaxLevel && Experience >= NextLevelExperience)
             {
                 Experience -= NextLevelExperience;
                 Level++;
@@ -40,6 +42,14 @@ namespace MmorpgPrototype
             }
 
             Gold += amount;
+            Hud?.RefreshProgression();
+        }
+
+        public void RestoreState(int level, int experience, int gold)
+        {
+            Level = Mathf.Clamp(level, 1, MaxLevel);
+            Experience = Mathf.Clamp(experience, 0, Mathf.Max(0, NextLevelExperience - 1));
+            Gold = Mathf.Max(0, gold);
             Hud?.RefreshProgression();
         }
 

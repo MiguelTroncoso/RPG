@@ -227,6 +227,19 @@ Esta fase reemplaza la capsula generica por un avatar temporal armado con primit
 
 El objetivo no es arte final, sino tener lectura visual de clase/identidad hasta importar modelos definitivos con licencia segura.
 
+## Fase 5.7: Persistencia Local MVP
+
+El progreso ya no se pierde al cerrar el juego:
+
+- Se guardan nombre, clase, sexo, nivel, experiencia, oro, inventario y niveles de mejora de arma/armadura.
+- Guardado en JSON local (`Application.persistentDataPath/saves/player.json`) con escritura atomica y respaldo automatico del ultimo guardado valido.
+- Autosave cada 30 segundos, al pausar la app (Android) y al cerrar.
+- Si existe un guardado, el panel de creacion muestra un boton CONTINUAR con los datos previos precargados; CREAR empieza un personaje nuevo y sobreescribe el guardado.
+- El almacenamiento es intercambiable (`ISaveStorage`) para migrar a servidor mas adelante.
+- Limite de nivel configurado en 105.
+
+Limitaciones actuales: el progreso de la mision activa y la posicion del jugador no se guardan todavia; la mision reinicia en cada sesion.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

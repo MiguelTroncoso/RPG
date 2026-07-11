@@ -50,6 +50,35 @@ namespace MmorpgPrototype
             return !string.IsNullOrWhiteSpace(itemName) && items.TryGetValue(itemName, out var count) ? count : 0;
         }
 
+        public List<SavedItemEntry> ExportEntries()
+        {
+            var entries = new List<SavedItemEntry>(items.Count);
+            foreach (var entry in items)
+            {
+                entries.Add(new SavedItemEntry { Name = entry.Key, Count = entry.Value });
+            }
+
+            return entries;
+        }
+
+        public void RestoreEntries(IEnumerable<SavedItemEntry> entries)
+        {
+            items.Clear();
+
+            if (entries != null)
+            {
+                foreach (var entry in entries)
+                {
+                    if (!string.IsNullOrWhiteSpace(entry.Name) && entry.Count > 0)
+                    {
+                        items[entry.Name] = entry.Count;
+                    }
+                }
+            }
+
+            Hud?.RefreshInventory();
+        }
+
         public string Summary()
         {
             if (items.Count == 0)

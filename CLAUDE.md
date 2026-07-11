@@ -13,11 +13,12 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.6 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.7 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, inventario,
 misión, mercader, mejora de equipo, Android-ready a 60 FPS, creación de
-personaje con nombre/clase/sexo, avatar procedural). Detalle en
-`docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
+personaje con nombre/clase/sexo, avatar procedural, persistencia local MVP
+vía `ISaveStorage` + JSON). Detalle en `docs/roadmap.md` y
+`docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
 
@@ -61,6 +62,7 @@ simple y autocontenido.
 - El avatar visual es procedural (`PlayerAvatarVisual`); no es arte final.
 - El sexo de jugadores remotos aún no se sincroniza por red; los remotos usan
   clase + masculino por defecto.
-- Siguiente objetivo recomendado: persistencia local MVP (nombre, clase,
-  sexo, nivel, oro, inventario en JSON local) — Etapa G reducida de la hoja
-  de ruta.
+- El progreso de la misión activa y la posición del jugador no se guardan
+  todavía (la misión reinicia en cada sesión).
+- Siguiente objetivo recomendado: Etapa A + B de la hoja de ruta (datos base
+  de stats + tabla de niveles con curva configurable y `ExperienceSystem`).

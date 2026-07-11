@@ -108,6 +108,13 @@ namespace MmorpgPrototype
             return true;
         }
 
+        public void RestoreUpgrades(int weaponLevel, int armorLevel)
+        {
+            WeaponLevel = Mathf.Max(0, weaponLevel);
+            ArmorLevel = Mathf.Max(0, armorLevel);
+            ApplyBonuses();
+        }
+
         public string Summary()
         {
             return $"Equipo: arma +{WeaponLevel} (+{combat.EquipmentDamageBonus} dano) | armadura +{ArmorLevel}";
