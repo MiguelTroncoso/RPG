@@ -16,6 +16,7 @@ namespace MmorpgPrototype
         public Transform PlayerTransform;
         public PlayerClassController ClassController;
         public PlayerCharacterIdentity Identity;
+        public PlayerProgression Progression;
         public Text NetworkStatusText;
         public Text ChatLogText;
         public InputField UrlInput;
@@ -34,6 +35,7 @@ namespace MmorpgPrototype
         private string lastClassName = string.Empty;
         private string lastGenderName = string.Empty;
         private string lastPlayerName = string.Empty;
+        private int lastLevel = -1;
         private float nextPositionSend;
         private float nextHelloCheck;
         private bool isConnecting;
@@ -226,6 +228,9 @@ namespace MmorpgPrototype
                     case "activity":
                         HandleActivity(JsonUtility.FromJson<ActivityMessage>(json));
                         break;
+                    case "actionRejected":
+                        HandleActionRejected(JsonUtility.FromJson<ActionRejectedMessage>(json));
+                        break;
                     case "error":
                         SetStatus(json);
                         break;
@@ -292,17 +297,25 @@ namespace MmorpgPrototype
             AppendChat("Valle", $"{message.name} {message.detail}");
         }
 
-        // Capa de intenciones: las acciones criticas se reportan al servidor.
-        // Hoy solo se difunden como actividad; es la base para que el
-        // servidor las valide cuando tenga autoridad.
-        public void SendAction(string action, string detail)
+        private void HandleActionRejected(ActionRejectedMessage message)
+        {
+            if (message != null)
+            {
+                AppendChat("Servidor", Localization.Tr("net.rejected", message.action, message.reason));
+            }
+        }
+
+        // Capa de intenciones: las acciones criticas se reportan con su
+        // valor resultante; el servidor valida plausibilidad y ritmo antes
+        // de difundirlas como actividad.
+        public void SendAction(string action, string detail, int value)
         {
             if (!IsConnected || string.IsNullOrWhiteSpace(action))
             {
                 return;
             }
 
-            _ = SendJsonAsync(new ActionPayload { action = action, detail = detail });
+            _ = SendJsonAsync(new ActionPayload { action = action, detail = detail, value = value });
         }
 
         private void ApplyRemotePlayer(RemotePlayerState state)
@@ -350,7 +363,8 @@ namespace MmorpgPrototype
             nextHelloCheck = Time.time + 0.5f;
             var className = ClassController.Definition.DisplayName;
             var genderName = CurrentGenderName();
-            if (className == lastClassName && genderName == lastGenderName && PlayerName == lastPlayerName)
+            var level = Progression != null ? Progression.Level : 1;
+            if (className == lastClassName && genderName == lastGenderName && PlayerName == lastPlayerName && level == lastLevel)
             {
                 return;
             }
@@ -365,14 +379,17 @@ namespace MmorpgPrototype
                 : "Guerrero";
             var genderName = CurrentGenderName();
 
+            var level = Progression != null ? Progression.Level : 1;
             lastClassName = className;
             lastGenderName = genderName;
             lastPlayerName = PlayerName;
+            lastLevel = level;
             await SendJsonAsync(new HelloPayload
             {
                 name = PlayerName,
                 className = className,
-                gender = genderName
+                gender = genderName,
+                level = level
             });
         }
 

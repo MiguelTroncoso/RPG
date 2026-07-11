@@ -109,7 +109,7 @@ namespace MmorpgPrototype
                     Hud?.AddFeed(Localization.Tr("upgrade.feed_success", itemName, instance.UpgradeLevel));
                     DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, $"+{instance.UpgradeLevel}", new Color(1f, 0.85f, 0.3f));
                     GetComponent<PlayerQuestLog>()?.OnItemUpgraded();
-                    GetComponent<MmorpgNetworkClient>()?.SendAction("upgrade", Localization.Tr("net.upgrade", itemName, instance.UpgradeLevel));
+                    GetComponent<MmorpgNetworkClient>()?.SendAction("upgrade", Localization.Tr("net.upgrade", itemName, instance.UpgradeLevel), instance.UpgradeLevel);
                     break;
 
                 case UpgradeOutcome.FailKept:

@@ -37,6 +37,7 @@ namespace MmorpgPrototype
                 { "upgrade.destroyed", "La mejora fallo: {0} se destruyo." },
                 { "upgrade.feed_destroyed", "{0} destruido en la mejora" },
                 { "net.upgrade", "mejoro {0} a +{1}" },
+                { "net.rejected", "Accion '{0}' rechazada por el servidor ({1})." },
 
                 // Pociones
                 { "potion.none", "No tienes pociones." },

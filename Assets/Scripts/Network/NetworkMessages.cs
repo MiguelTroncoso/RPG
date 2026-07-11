@@ -54,6 +54,7 @@ namespace MmorpgPrototype
         public string name;
         public string className;
         public string gender;
+        public int level;
         public float x;
         public float y;
         public float z;
@@ -67,16 +68,26 @@ namespace MmorpgPrototype
         public string name;
         public string className;
         public string gender;
+        public int level = 1;
     }
 
-    // Intencion de accion critica: hoy el servidor solo la difunde como
-    // actividad; manana la validara antes de aplicar el resultado.
+    // Intencion de accion critica: el servidor la valida (plausibilidad y
+    // ritmo) antes de difundirla como actividad.
     [Serializable]
     public sealed class ActionPayload
     {
         public string type = "action";
         public string action;
         public string detail;
+        public int value;
+    }
+
+    [Serializable]
+    public sealed class ActionRejectedMessage
+    {
+        public string type;
+        public string action;
+        public string reason;
     }
 
     [Serializable]

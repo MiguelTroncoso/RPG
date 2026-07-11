@@ -14,6 +14,8 @@ server.on("connection", (socket, request) => {
     name: `Player-${id.slice(0, 4)}`,
     className: "Guerrero",
     gender: "Masculino",
+    level: 1,
+    lastActionAt: 0,
     x: 0,
     y: 1,
     z: 0,
@@ -58,6 +60,7 @@ function handleMessage(player, raw) {
       player.name = sanitizeText(message.name, 24) || player.name;
       player.className = sanitizeText(message.className, 24) || player.className;
       player.gender = sanitizeGender(message.gender) ?? player.gender;
+      player.level = sanitizeLevel(message.level) ?? player.level;
       broadcast({ type: "playerUpdated", player: publicPlayer(player) });
       break;
 
@@ -83,23 +86,35 @@ function handleMessage(player, raw) {
       }
       break;
 
-    // Intencion de accion critica del cliente. Por ahora el servidor solo
-    // la difunde como actividad; cuando tenga autoridad, validara aqui el
-    // resultado antes de aplicarlo.
+    // Intencion de accion critica. El servidor valida plausibilidad y
+    // ritmo antes de difundirla; una intencion rechazada solo vuelve al
+    // emisor. Este es el punto donde crecera la autoridad del servidor.
     case "action":
       {
         const action = sanitizeText(message.action, 24);
         const detail = sanitizeText(message.detail, 90);
-        if (action.length > 0 && detail.length > 0) {
-          broadcast({
-            type: "activity",
-            id: player.id,
-            name: player.name,
-            action,
-            detail,
-            serverTime: Date.now()
-          });
+        const value = Number(message.value);
+
+        if (action.length === 0 || detail.length === 0) {
+          break;
         }
+
+        const rejection = validateAction(player, action, value);
+        if (rejection) {
+          send(player.socket, { type: "actionRejected", action, reason: rejection });
+          console.warn(`[action-rejected] ${player.id} ${action}=${value}: ${rejection}`);
+          break;
+        }
+
+        player.lastActionAt = Date.now();
+        broadcast({
+          type: "activity",
+          id: player.id,
+          name: player.name,
+          action,
+          detail,
+          serverTime: Date.now()
+        });
       }
       break;
 
@@ -150,6 +165,7 @@ function publicPlayer(player) {
     name: player.name,
     className: player.className,
     gender: player.gender,
+    level: player.level,
     x: player.x,
     y: player.y,
     z: player.z,
@@ -160,6 +176,37 @@ function publicPlayer(player) {
 function sanitizeGender(value) {
   const gender = sanitizeText(value, 12);
   return gender === "Masculino" || gender === "Femenino" ? gender : null;
+}
+
+function sanitizeLevel(value) {
+  const level = Number(value);
+  return Number.isInteger(level) && level >= 1 && level <= 105 ? level : null;
+}
+
+// Validacion de intenciones: null = aceptada, string = motivo de rechazo.
+function validateAction(player, action, value) {
+  const minActionIntervalMs = 800;
+  if (Date.now() - player.lastActionAt < minActionIntervalMs) {
+    return "too_fast";
+  }
+
+  switch (action) {
+    case "level_up":
+      if (!Number.isInteger(value) || value <= player.level || value > 105) {
+        return "invalid_level";
+      }
+      player.level = value;
+      return null;
+
+    case "upgrade":
+      if (!Number.isInteger(value) || value < 1 || value > 15) {
+        return "invalid_upgrade";
+      }
+      return null;
+
+    default:
+      return "unknown_action";
+  }
 }
 
 function toNumber(value, fallback) {

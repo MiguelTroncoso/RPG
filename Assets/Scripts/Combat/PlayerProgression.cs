@@ -55,7 +55,7 @@ namespace MmorpgPrototype
                     Hud?.AddFeed(Localization.Tr("feed.attribute_points", result.AttributePointsGained));
                 }
 
-                Network?.SendAction("level_up", Localization.Tr("net.level_up", Level));
+                Network?.SendAction("level_up", Localization.Tr("net.level_up", Level), Level);
             }
 
             Hud?.RefreshProgression();
