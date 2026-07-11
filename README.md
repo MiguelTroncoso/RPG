@@ -4,6 +4,12 @@ Este proyecto apunta a crear un MMORPG de accion para Android inspirado en clasi
 
 La meta no es construir todo el MMORPG de una vez. La estrategia recomendada es avanzar por versiones jugables pequenas, donde cada fase agrega una capa real del juego: movimiento, combate, clases, progresion, online, economia y publicacion.
 
+Documentos clave:
+
+- [`GAME_ARCHITECTURE.md`](GAME_ARCHITECTURE.md): arquitectura tecnica objetivo y hoja de ruta de las proximas etapas.
+- [`CLAUDE.md`](CLAUDE.md): contrato de desarrollo (reglas, como probar, estado conocido).
+- `docs/`: roadmap, plan tecnico, diseno de juego y checklist Android.
+
 ## Recomendacion Inicial
 
 - Cliente: Unity 3D.
