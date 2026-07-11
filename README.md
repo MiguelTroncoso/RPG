@@ -320,6 +320,20 @@ Herramienta de editor para poblar el equipo de niveles 1 a 105 sin crear items a
 - Las variantes se registran automaticamente en el `ItemDatabase` asset y se valida que no haya IDs duplicados.
 - Incluye boton para crear un arquetipo de ejemplo (espada del valle).
 
+## Fase 5.14: Zona 1 Completa
+
+El campamento se convierte en la primera zona real (Etapa J):
+
+- `ZoneDefinition` (ScriptableObject): nombre, rango de niveles, configuracion de elites y jefe de zona. Las zonas siguientes usaran el mismo molde.
+- Cartel de zona en el campamento: Valle de las Reliquias, niveles 1-10.
+- Herrero del Campamento (NPC nuevo): las mejoras WEAPON/ARMOR ahora se hacen cerca de el; el Mercader queda para pociones.
+- Almacen del Campamento (NPC nuevo) + boton ALMACEN: deposita todos tus materiales y retiralos cuando quieras; el contenido se guarda.
+- Area de elites al este: Acechadores del claro (mas vida, dano y defensa, mejor recompensa) con reaparicion propia.
+- Jefe de zona al noroeste: el Coloso de las Reliquias, con drop garantizado y reaparicion lenta.
+- Cadena de misiones extendida de 4 a 8: herrero > mejorar una pieza (nuevo objetivo UpgradeItem) > cazar 2 elites > derrotar al Coloso.
+- Los objetivos de matar ahora filtran por tier (cualquiera / Elite / Boss).
+- Guardado esquema v7 (incluye el almacen). Menu `MMORPG > World > Generate Zones`.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

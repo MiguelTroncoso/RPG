@@ -108,6 +108,7 @@ namespace MmorpgPrototype
                     Hud?.SetStatus($"{itemName} mejorado a +{instance.UpgradeLevel}.");
                     Hud?.AddFeed($"{itemName} +{instance.UpgradeLevel}");
                     DamagePopup.Spawn(transform.position + Vector3.up * 2.15f, $"+{instance.UpgradeLevel}", new Color(1f, 0.85f, 0.3f));
+                    GetComponent<PlayerQuestLog>()?.OnItemUpgraded();
                     break;
 
                 case UpgradeOutcome.FailKept:

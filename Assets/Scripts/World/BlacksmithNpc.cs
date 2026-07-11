@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    public sealed class ShopNpc : MonoBehaviour, IInteractable
+    // Herrero del campamento: las mejoras de equipo se hacen cerca de el.
+    public sealed class BlacksmithNpc : MonoBehaviour, IInteractable
     {
-        public string NpcId = DefaultQuests.MerchantNpcId;
+        public string NpcId = DefaultQuests.BlacksmithNpcId;
         public Transform Player;
-        public PlayerProgression Progression;
-        public InventorySystem Inventory;
+        public EquipmentUpgradeSystem Equipment;
         public PlayerQuestLog QuestLog;
         public PrototypeHud Hud;
         public float InteractionRange = 4f;
@@ -25,27 +25,24 @@ namespace MmorpgPrototype
             }
 
             var dialog = QuestLog != null ? QuestLog.DialogFor(NpcId) : null;
-            Hud?.SetStatus(dialog ?? "Mercader: bienvenido, viajero. Compra pociones o mejora tu equipo.", 5f);
+            Hud?.SetStatus(dialog ?? "Herrero: traeme oro y materiales y reforzare tu equipo.", 5f);
             QuestLog?.OnNpcTalked(NpcId);
         }
 
-        public void BuyPotion()
+        public void UpgradeWeapon()
         {
-            if (!IsPlayerNear())
+            if (IsPlayerNear())
             {
-                return;
+                Equipment?.TryUpgradeWeapon();
             }
+        }
 
-            const int cost = 25;
-            if (!Progression.SpendGold(cost))
+        public void UpgradeArmor()
+        {
+            if (IsPlayerNear())
             {
-                Hud?.SetStatus($"Necesitas {cost} oro para comprar pocion.");
-                return;
+                Equipment?.TryUpgradeArmor();
             }
-
-            Inventory.AddItem(DefaultGameItems.MinorPotion);
-            Hud?.SetStatus("Compraste Pocion menor.");
-            Hud?.AddFeed("Mercader: pocion comprada");
         }
 
         private bool IsPlayerNear()
@@ -60,7 +57,7 @@ namespace MmorpgPrototype
                 return true;
             }
 
-            Hud?.SetStatus("Acercate al Mercader del Valle.");
+            Hud?.SetStatus("Acercate al Herrero del campamento.");
             return false;
         }
     }

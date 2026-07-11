@@ -29,11 +29,53 @@ namespace MmorpgPrototype
 
             var player = CreatePlayer();
             CreateCamera(player.transform);
+            var zone = LoadZone();
             var shop = CreateShopNpc(player);
-            var hud = CreateHudAndControls(player, shop);
+            var blacksmith = CreateBlacksmithNpc(player);
+            var storage = CreateStorageNpc(player);
+            var hud = CreateHudAndControls(player, shop, blacksmith, storage);
             shop.Hud = hud;
-            CreateEnemySpawner(player, hud);
+            blacksmith.Hud = hud;
+            storage.Hud = hud;
+            CreateZoneSign(zone);
+            CreateEnemySpawner(player, hud, zone);
             CreateWorldEvent(player, hud);
+        }
+
+        private static ZoneDefinition LoadZone()
+        {
+            var zones = Resources.LoadAll<ZoneDefinition>("Game/Zones");
+            if (zones != null && zones.Length > 0)
+            {
+                return zones[0];
+            }
+
+            // Fallback runtime si el asset no se genero todavia
+            // (MMORPG > World > Generate Zones).
+            return DefaultZones.CreateZone1();
+        }
+
+        private static void CreateZoneSign(ZoneDefinition zone)
+        {
+            if (zone == null)
+            {
+                return;
+            }
+
+            var sign = new GameObject("Zone Sign");
+            sign.transform.position = new Vector3(0f, 0f, -6.5f);
+
+            var post = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            post.name = "Post";
+            post.transform.SetParent(sign.transform, false);
+            post.transform.localPosition = new Vector3(0f, 1.1f, 0f);
+            post.transform.localScale = new Vector3(0.25f, 2.2f, 0.25f);
+
+            var material = new Material(Shader.Find("Standard"));
+            material.color = new Color(0.35f, 0.26f, 0.16f);
+            post.GetComponent<Renderer>().sharedMaterial = material;
+
+            CreateWorldLabel(sign.transform, $"{zone.DisplayName}\nZona {zone.MinLevel}-{zone.MaxLevel}", new Color(1f, 0.9f, 0.6f), 2.6f);
         }
 
         private static void ConfigureRuntime()
@@ -135,6 +177,7 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerEquipment>();
             player.AddComponent<PetService>();
             player.AddComponent<MountService>();
+            player.AddComponent<StorageService>();
             player.AddComponent<PlayerSkills>();
             player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
@@ -212,7 +255,7 @@ namespace MmorpgPrototype
             follow.Target = target;
         }
 
-        private static void CreateEnemySpawner(GameObject player, PrototypeHud hud)
+        private static void CreateEnemySpawner(GameObject player, PrototypeHud hud, ZoneDefinition zone)
         {
             var spawnerObject = new GameObject("Enemy Spawner");
             var spawner = spawnerObject.AddComponent<EnemySpawner>();
@@ -222,6 +265,7 @@ namespace MmorpgPrototype
             spawner.QuestLog = player.GetComponent<PlayerQuestLog>();
             spawner.Hud = hud;
             spawner.Loot = LoadLootTable();
+            spawner.Zone = zone;
         }
 
         private static System.Collections.Generic.List<QuestDefinition> LoadQuestLine()
@@ -291,11 +335,50 @@ namespace MmorpgPrototype
             shop.Player = player.transform;
             shop.Progression = player.GetComponent<PlayerProgression>();
             shop.Inventory = player.GetComponent<InventorySystem>();
-            shop.Equipment = player.GetComponent<EquipmentUpgradeSystem>();
             shop.QuestLog = player.GetComponent<PlayerQuestLog>();
 
-            CreateWorldLabel(npc.transform, "Mercader\ncompra y mejora", new Color(1f, 0.92f, 0.55f), 1.55f);
+            CreateWorldLabel(npc.transform, "Mercader\ncompra pociones", new Color(1f, 0.92f, 0.55f), 1.55f);
             return shop;
+        }
+
+        private static BlacksmithNpc CreateBlacksmithNpc(GameObject player)
+        {
+            var npc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            npc.name = "Herrero del Campamento";
+            npc.transform.position = new Vector3(3.6f, 1f, -3.4f);
+            npc.transform.localScale = new Vector3(0.75f, 1.05f, 0.75f);
+
+            var material = new Material(Shader.Find("Standard"));
+            material.color = new Color(0.5f, 0.5f, 0.56f);
+            npc.GetComponent<Renderer>().sharedMaterial = material;
+
+            var blacksmith = npc.AddComponent<BlacksmithNpc>();
+            blacksmith.Player = player.transform;
+            blacksmith.Equipment = player.GetComponent<EquipmentUpgradeSystem>();
+            blacksmith.QuestLog = player.GetComponent<PlayerQuestLog>();
+
+            CreateWorldLabel(npc.transform, "Herrero\nmejora tu equipo", new Color(0.8f, 0.85f, 0.95f), 1.55f);
+            return blacksmith;
+        }
+
+        private static StorageNpc CreateStorageNpc(GameObject player)
+        {
+            var npc = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            npc.name = "Almacen del Campamento";
+            npc.transform.position = new Vector3(0.4f, 0.7f, -4.8f);
+            npc.transform.localScale = new Vector3(1.2f, 1.4f, 1.2f);
+
+            var material = new Material(Shader.Find("Standard"));
+            material.color = new Color(0.55f, 0.42f, 0.22f);
+            npc.GetComponent<Renderer>().sharedMaterial = material;
+
+            var storageService = player.GetComponent<StorageService>();
+            var storage = npc.AddComponent<StorageNpc>();
+            storage.Player = player.transform;
+            storage.Storage = storageService;
+
+            CreateWorldLabel(npc.transform, "Almacen\nguarda materiales", new Color(0.95f, 0.85f, 0.6f), 1.35f);
+            return storage;
         }
 
         private static void CreateWorldEvent(GameObject player, PrototypeHud hud)
@@ -309,7 +392,7 @@ namespace MmorpgPrototype
             worldEvent.Hud = hud;
         }
 
-        private static PrototypeHud CreateHudAndControls(GameObject player, ShopNpc shop)
+        private static PrototypeHud CreateHudAndControls(GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage)
         {
             var canvasObject = new GameObject("Prototype HUD");
             var canvas = canvasObject.AddComponent<Canvas>();
@@ -416,11 +499,15 @@ namespace MmorpgPrototype
             mountService.Initialize(LoadMounts());
             persistence.Pets = petService;
             persistence.Mounts = mountService;
+            var storageService = player.GetComponent<StorageService>();
+            storageService.Inventory = inventory;
+            storageService.Hud = hud;
+            persistence.Storage = storageService;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
             inventory.AddItem(DefaultGameItems.RecruitSword);
-            CreateShopButtons(uiRoot, player, shop);
+            CreateShopButtons(uiRoot, player, shop, blacksmith, storage);
             CreateNetworkPanel(uiRoot, player);
 
             var help = CreateText(uiRoot, "Controls Help", "WASD/joystick moverse  |  ATK/Space ataque  |  Q/E habilidades  |  Click derecho camara", 20, TextAnchor.MiddleCenter);
@@ -430,7 +517,7 @@ namespace MmorpgPrototype
             return hud;
         }
 
-        private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop)
+        private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage)
         {
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
 
@@ -441,17 +528,17 @@ namespace MmorpgPrototype
             buyButton.onClick.AddListener(shop.BuyPotion);
 
             var weaponButton = CreateRoundButton(parent, "Upgrade Weapon Button", "WEAPON", new Vector2(0f, 1f), new Vector2(372f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.2f, 0.15f), 17);
-            weaponButton.onClick.AddListener(shop.UpgradeWeapon);
+            weaponButton.onClick.AddListener(blacksmith.UpgradeWeapon);
 
             var armorButton = CreateRoundButton(parent, "Upgrade Armor Button", "ARMOR", new Vector2(0f, 1f), new Vector2(512f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.28f, 0.48f), 17);
-            armorButton.onClick.AddListener(shop.UpgradeArmor);
+            armorButton.onClick.AddListener(blacksmith.UpgradeArmor);
 
             var gear = player.GetComponent<PlayerEquipment>();
             var equipButton = CreateRoundButton(parent, "Auto Equip Button", "EQUIPAR", new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
             equipButton.onClick.AddListener(gear.EquipBestFromInventory);
 
             var talkButton = CreateRoundButton(parent, "Talk Button", "HABLAR", new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
-            talkButton.onClick.AddListener(shop.Talk);
+            talkButton.onClick.AddListener(() => TalkToNearest(player.transform, shop, blacksmith));
 
             var petService = player.GetComponent<PetService>();
             var petButton = CreateRoundButton(parent, "Pet Button", "MASCOTA", new Vector2(0f, 1f), new Vector2(92f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.4f, 0.14f), 17);
@@ -460,6 +547,24 @@ namespace MmorpgPrototype
             var mountService = player.GetComponent<MountService>();
             var mountButton = CreateRoundButton(parent, "Mount Button", "MONTURA", new Vector2(0f, 1f), new Vector2(232f, -396f), new Vector2(128f, 42f), new Color(0.32f, 0.36f, 0.2f), 17);
             mountButton.onClick.AddListener(mountService.ToggleMount);
+
+            var storageButton = CreateRoundButton(parent, "Storage Button", "ALMACEN", new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
+            storageButton.onClick.AddListener(storage.ToggleStorage);
+        }
+
+        private static void TalkToNearest(Transform player, ShopNpc shop, BlacksmithNpc blacksmith)
+        {
+            var shopDistance = Vector3.Distance(player.position, shop.transform.position);
+            var blacksmithDistance = Vector3.Distance(player.position, blacksmith.transform.position);
+
+            if (blacksmithDistance < shopDistance)
+            {
+                blacksmith.Talk();
+            }
+            else
+            {
+                shop.Talk();
+            }
         }
 
         private static void CreateNetworkPanel(Transform parent, GameObject player)

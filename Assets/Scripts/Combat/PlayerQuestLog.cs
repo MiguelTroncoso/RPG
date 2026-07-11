@@ -40,9 +40,22 @@ namespace MmorpgPrototype
             }
         }
 
-        public void OnEnemyDefeated(bool isWorldEvent)
+        public void OnEnemyDefeated(EnemyTier tier, bool isWorldEvent)
         {
-            Progress(isWorldEvent ? QuestObjectiveType.DefeatWorldEvent : QuestObjectiveType.KillEnemies, string.Empty, 1);
+            if (isWorldEvent)
+            {
+                Progress(QuestObjectiveType.DefeatWorldEvent, string.Empty, 1);
+                return;
+            }
+
+            // El TargetId del objetivo filtra por tier ("Elite", "Boss");
+            // vacio = cualquier enemigo.
+            Progress(QuestObjectiveType.KillEnemies, tier.ToString(), 1);
+        }
+
+        public void OnItemUpgraded()
+        {
+            Progress(QuestObjectiveType.UpgradeItem, string.Empty, 1);
         }
 
         public void OnItemAdded(string itemId, int amount)

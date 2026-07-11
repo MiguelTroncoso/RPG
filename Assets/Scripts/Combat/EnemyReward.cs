@@ -10,6 +10,7 @@ namespace MmorpgPrototype
         public int GoldMax = 9;
         public string GuaranteedDrop = string.Empty;
         public LootTableConfig Loot;
+        public EnemyTier Tier = EnemyTier.Normal;
         public bool IsWorldEvent;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
@@ -47,7 +48,7 @@ namespace MmorpgPrototype
 
             Progression.AddExperience(Experience);
             Progression.AddGold(gold);
-            QuestLog?.OnEnemyDefeated(IsWorldEvent);
+            QuestLog?.OnEnemyDefeated(Tier, IsWorldEvent);
 
             if (!string.IsNullOrEmpty(drop))
             {

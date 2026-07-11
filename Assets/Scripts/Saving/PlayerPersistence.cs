@@ -23,6 +23,7 @@ namespace MmorpgPrototype
         public PlayerQuestLog QuestLog;
         public PetService Pets;
         public MountService Mounts;
+        public StorageService Storage;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -118,6 +119,7 @@ namespace MmorpgPrototype
             Gear?.RestoreEntries(data.Equipment);
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
             QuestLog?.Restore(data.Quests);
+            Storage?.RestoreEntries(data.Storage);
 
             if (Mounts != null && !string.IsNullOrEmpty(data.SelectedMountId))
             {
@@ -160,7 +162,8 @@ namespace MmorpgPrototype
                 Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>(),
                 Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData(),
                 ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
-                SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty
+                SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty,
+                Storage = Storage != null ? Storage.ExportEntries() : new List<SavedItemEntry>()
             };
         }
 

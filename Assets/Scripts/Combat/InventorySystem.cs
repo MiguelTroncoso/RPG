@@ -137,6 +137,37 @@ namespace MmorpgPrototype
             Hud?.RefreshInventory();
         }
 
+        public List<SavedItemEntry> TakeAllOfCategory(ItemCategory category)
+        {
+            var totals = new Dictionary<string, int>();
+
+            for (var i = items.Count - 1; i >= 0; i--)
+            {
+                var definition = Database != null ? Database.Get(items[i].ItemId) : null;
+                if (definition == null || definition.Category != category)
+                {
+                    continue;
+                }
+
+                totals.TryGetValue(items[i].ItemId, out var current);
+                totals[items[i].ItemId] = current + items[i].Quantity;
+                items.RemoveAt(i);
+            }
+
+            var entries = new List<SavedItemEntry>(totals.Count);
+            foreach (var entry in totals)
+            {
+                entries.Add(new SavedItemEntry { Name = entry.Key, Count = entry.Value });
+            }
+
+            if (entries.Count > 0)
+            {
+                Hud?.RefreshInventory();
+            }
+
+            return entries;
+        }
+
         public string DisplayNameOf(string itemId)
         {
             return Database != null ? Database.DisplayNameOf(itemId) : itemId;

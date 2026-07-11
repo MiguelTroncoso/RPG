@@ -8,7 +8,8 @@ namespace MmorpgPrototype
         TalkToNpc,
         KillEnemies,
         CollectItems,
-        DefeatWorldEvent
+        DefeatWorldEvent,
+        UpgradeItem
     }
 
     [Serializable]
