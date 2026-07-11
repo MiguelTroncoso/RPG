@@ -240,6 +240,18 @@ El progreso ya no se pierde al cerrar el juego:
 
 Limitaciones actuales: el progreso de la mision activa y la posicion del jugador no se guardan todavia; la mision reinicia en cada sesion.
 
+## Fase 5.8: Progresion 1-105 Con Tabla Configurable
+
+La subida de nivel deja de usar la formula fija `nivel x 100`:
+
+- Curva de experiencia configurable en un asset `ExpCurveConfig` (exp base, exponente, puntos de atributo por nivel, nivel maximo).
+- Tabla `LevelProgressionTable` con las filas 1..105 generada desde la curva, nunca escrita a mano.
+- Menu de editor `MMORPG > Progression > Generate Level Table` para crear/regenerar los assets en `Assets/Resources/Game/`.
+- Si los assets no existen, el juego genera la tabla en runtime con los valores por defecto (no se rompe nada).
+- La resolucion de EXP y multi-nivel es una funcion pura (`ExperienceResolver`), portable al servidor.
+- Puntos de atributo por cada nivel ganado, visibles en el HUD y guardados en la partida (el gasto de puntos llega con la ventana de stats).
+- Al llegar al nivel 105 el HUD muestra EXP MAX y la experiencia sobrante se descarta.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

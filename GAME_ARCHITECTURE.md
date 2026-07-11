@@ -600,26 +600,24 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 | Etapa | Contenido | Resultado verificable |
 |---|---|---|
 | **A. Datos base** | Enums, `StatBlock`, `StatSheet`, `RarityConfig`, `ItemDefinition` + jerarquía, `ItemDatabase`, `LevelProgressionTable` + `ExpCurveConfig` | SOs de ejemplo creados; validador de IDs pasa |
-| **B. Progresión** | `ExperienceSystem` conectado a la EXP existente (`PlayerProgression`), cap 105, multi-level-up, puntos de atributo | Matar enemigos sube nivel según tabla; HUD reacciona por eventos |
+| **B. Progresión** ✅ | `ExperienceResolver` puro conectado a `PlayerProgression`, `LevelProgressionTable` + `ExpCurveConfig`, cap 105, multi-level-up, puntos de atributo | Matar enemigos sube nivel según tabla; HUD reacciona por eventos |
 | **C. Inventario + equipo** | `ItemInstance`, `InventoryManager`, `EquipmentManager`, migración de `InventorySystem` | 1 espada, 1 casco, 1 pechera, 1 accesorio equipables con requisitos |
 | **D. Combate refactor** | `DamageCalculator` puro, interfaces, loot por `LootTable` (SO) | Daño idéntico o mejor que el actual; crit/miss visibles |
 | **E. Mejora +0..+15** | `UpgradeConfig`, `UpgradeResolver` puro, `UpgradeService`, migrar `EquipmentUpgradeSystem` | Mejorar espada con éxito/fallo según tabla configurable |
 | **F. Misiones** | `QuestDefinition`, objetivos Talk/Kill/Collect, `QuestLog`, `RewardService` | Las 3 misiones (hablar, matar, recolectar) completables con recompensas |
-| **G. Guardado** | `ISaveStorage`, `JsonFileStorage`, `SaveManager`, `ISaveable` en B–F. **MVP primero:** nombre/clase/sexo/nivel/oro/inventario | Cerrar y abrir conserva todo (objetivo inmediato del handoff) |
+| **G. Guardado** ✅ MVP | `ISaveStorage`, `JsonFileStorage`, `SaveManager`, `ISaveable` en B–F. **MVP hecho:** nombre/clase/sexo/nivel/oro/inventario/mejoras/puntos | Cerrar y abrir conserva todo (objetivo inmediato del handoff) |
 | **H. Mascota + montura** | `PetDefinition`/`MountDefinition` + servicios, 1 de cada | Mascota sigue y da bono; montura acelera |
 | **I. Herramienta editor** | `ItemVariantGeneratorWindow` + generadores de tablas | Generar set de espadas 1–105 en un clic |
 | **J. Zona 1** | `ZoneDefinition`, cadena de misiones 1–10, NPCs, jefe | Campaña 1–10 jugable de punta a punta |
 | **K. Red** | Sincronizar identidad completa (sexo incluido); intenciones para acciones críticas | Remotos se ven correctos; base para autoridad de servidor |
 
-### Primera tarea concreta recomendada
+### Próxima tarea concreta recomendada
 
-**Etapa G reducida (persistencia local MVP)** — es el siguiente objetivo ya
-identificado en `docs/claude-handoff.md` y no depende de las demás etapas:
-`ISaveStorage` + `JsonFileStorage` + guardar nombre, clase, sexo, nivel, oro
-e inventario en JSON local. Inmediatamente después, **Etapa A + B** (enums y
-contenedores de stats, `LevelProgressionTable` generada desde curva
-configurable, `ExperienceSystem` con cap 105), porque todo lo demás (items,
-enemigos, misiones, recompensas) referencia stats y niveles.
+Con G (MVP) y B hechas, sigue la **Etapa A restante + C**: jerarquía
+`ItemDefinition` con rarezas e `ItemDatabase`, e inventario/equipamiento
+basados en `ItemInstance` con slots y requisitos, migrando el
+`InventorySystem` actual de strings a instancias. Es el prerrequisito de
+combate refactor (D), mejora +0..+15 (E) y misiones (F).
 
 ---
 

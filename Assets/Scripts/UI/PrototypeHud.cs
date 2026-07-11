@@ -148,7 +148,11 @@ namespace MmorpgPrototype
                 return;
             }
 
-            ProgressionText.text = $"Nivel {progression.Level}  EXP {progression.Experience}/{progression.NextLevelExperience}  Oro {progression.Gold}";
+            var expLabel = progression.IsMaxLevel
+                ? "EXP MAX"
+                : $"EXP {progression.Experience}/{progression.NextLevelExperience}";
+            var pointsLabel = progression.AttributePoints > 0 ? $"  Puntos {progression.AttributePoints}" : string.Empty;
+            ProgressionText.text = $"Nivel {progression.Level}  {expLabel}  Oro {progression.Gold}{pointsLabel}";
         }
 
         public void RefreshInventory()

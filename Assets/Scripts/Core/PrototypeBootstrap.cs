@@ -127,7 +127,8 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerCharacterIdentity>();
             player.AddComponent<PlayerAvatarVisual>();
             player.AddComponent<PlayerClassController>();
-            player.AddComponent<PlayerProgression>();
+            var progression = player.AddComponent<PlayerProgression>();
+            progression.Table = LoadLevelTable();
             player.AddComponent<InventorySystem>();
             player.AddComponent<PlayerQuestLog>();
             player.AddComponent<EquipmentUpgradeSystem>();
@@ -136,6 +137,23 @@ namespace MmorpgPrototype
             player.AddComponent<MmorpgNetworkClient>();
 
             return player;
+        }
+
+        private static LevelProgressionTable LoadLevelTable()
+        {
+            var table = Resources.Load<LevelProgressionTable>("Game/LevelProgressionTable");
+            if (table != null && table.HasRows)
+            {
+                return table;
+            }
+
+            // Fallback runtime si el asset no se genero todavia
+            // (MMORPG > Progression > Generate Level Table).
+            var config = Resources.Load<ExpCurveConfig>("Game/ExpCurveConfig");
+            var effectiveConfig = config != null ? config : ScriptableObject.CreateInstance<ExpCurveConfig>();
+            var runtimeTable = ScriptableObject.CreateInstance<LevelProgressionTable>();
+            runtimeTable.GenerateFrom(effectiveConfig);
+            return runtimeTable;
         }
 
         private static void CreateCamera(Transform target)

@@ -109,7 +109,7 @@ namespace MmorpgPrototype
 
             Identity?.ApplySelection(data.CharacterName, gender);
             ClassController?.ApplyClass(classType);
-            Progression?.RestoreState(data.Level, data.Experience, data.Gold);
+            Progression?.RestoreState(data.Level, data.Experience, data.Gold, data.AttributePoints);
             Inventory?.RestoreEntries(data.Items);
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
 
@@ -137,6 +137,7 @@ namespace MmorpgPrototype
                 Level = Progression.Level,
                 Experience = Progression.Experience,
                 Gold = Progression.Gold,
+                AttributePoints = Progression.AttributePoints,
                 WeaponLevel = Equipment != null ? Equipment.WeaponLevel : 0,
                 ArmorLevel = Equipment != null ? Equipment.ArmorLevel : 0,
                 Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>()
