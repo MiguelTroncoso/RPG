@@ -313,11 +313,23 @@ repetible para instalar el prototipo en Android.
 - Fallback runtime `DefaultArmorVisualSets` para proyectos sin assets generados. [Implementado]
 - Diagnostico con dispositivo, DPI y FPS objetivo. [Implementado]
 - Configuracion batch Android: bundle, ARM64, SDK 26/35 y landscape. [Implementado]
-- APK debug bloqueada por falta de `PlaybackEngines/AndroidPlayer`. [Bloqueado externamente]
+- APK debug generada en ARM64 despues de instalar Android Build Support. [Implementado]
 
-Criterio de exito: con Android Build Support instalado, `MMORPG > Android >
-Build Debug APK` genera una APK instalable y la ventana TEST permite anotar
-resolucion, safe area, FPS y audio del dispositivo.
+Criterio de exito: `MMORPG > Android > Build Debug APK` genera una APK
+instalable y la ventana TEST permite anotar resolucion, safe area, FPS y audio
+del dispositivo.
+
+## Fase 5.40: Instalacion Y Prueba En Dispositivo
+
+Objetivo: validar la experiencia tactil y audiovisual en un telefono Android.
+
+- APK debug `valle-reliquias-debug.apk` generada y validada por `aapt2`. [Implementado]
+- Identificador, version, SDK minimo/target y permiso de Internet verificados. [Implementado]
+- Conexion ADB y ejecucion de la APK en telefono fisico. [Pendiente de dispositivo]
+- Registro de datos TEST: resolucion, safe area, DPI, FPS y volumenes. [Pendiente de dispositivo]
+
+Criterio de exito: instalar, abrir y jugar en un telefono; revisar MENU, TEST,
+joystick, botones de combate, audio y orientacion landscape.
 
 ## Fase 6: Lanzamiento Inicial
 

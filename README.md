@@ -542,13 +542,24 @@ armadura no queden acoplados a la logica de stats.
   para reemplazarse por assets ScriptableObject sin cambiar el avatar.
 - El flujo `MMORPG > Android > Apply Android Settings` configura identificador,
   ARM64, SDK minimo 26, target SDK 35, landscape y 60 FPS en dispositivo.
-- La build debug fue intentada en entorno aislado y queda bloqueada porque esta
-  instalacion no tiene `PlaybackEngines/AndroidPlayer`; Unity muestra el
-  mensaje exacto para instalar Android Build Support desde Hub.
+- Android Build Support ya esta instalado y la build debug se genero
+  correctamente en ARM64.
 - El diagnostico movil ahora incluye modelo del dispositivo, DPI y FPS objetivo.
 
-La prueba fisica queda pendiente de instalar el modulo Android y conectar un
-dispositivo; no se marco como completada artificialmente.
+La prueba fisica queda pendiente de conectar un dispositivo Android por ADB.
+
+## Fase 5.40: APK Android Debug
+
+- APK generada: `Builds/Android/valle-reliquias-debug.apk`.
+- Paquete: `com.migueltroncoso.valledelasreliquias`.
+- Version: `0.1.0`, codigo 1.
+- Validada con `minSdk 26`, `targetSdk 35`, ARM64 y permiso de Internet.
+- El SDK de Unity incluye `platform-tools/adb`; no hay telefono conectado
+  todavia para completar la instalacion y la prueba TEST.
+
+Proxima accion: conectar el telefono con depuracion USB activada y ejecutar
+`adb install -r Builds/Android/valle-reliquias-debug.apk` usando el adb del
+SDK de Unity si el comando global no existe.
 
 ## Clases Iniciales
 
