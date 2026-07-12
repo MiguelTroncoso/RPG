@@ -39,6 +39,7 @@ namespace MmorpgPrototype
         private float nextPositionSend;
         private float nextHelloCheck;
         private bool isConnecting;
+        private string playerKey = string.Empty;
 
         private bool IsConnected => socket != null && socket.State == WebSocketState.Open;
 
@@ -386,6 +387,7 @@ namespace MmorpgPrototype
             lastLevel = level;
             await SendJsonAsync(new HelloPayload
             {
+                playerKey = PlayerKey(),
                 name = PlayerName,
                 className = className,
                 gender = genderName,
@@ -396,6 +398,21 @@ namespace MmorpgPrototype
         private string CurrentGenderName()
         {
             return Identity != null ? Identity.Gender.ToString() : CharacterGender.Masculino.ToString();
+        }
+
+        private string PlayerKey()
+        {
+            if (!string.IsNullOrEmpty(playerKey))
+            {
+                return playerKey;
+            }
+
+            var stableName = !string.IsNullOrWhiteSpace(PlayerName) ? PlayerName.Trim().ToLowerInvariant() : "hero";
+            var device = string.IsNullOrWhiteSpace(SystemInfo.deviceUniqueIdentifier)
+                ? Application.productName
+                : SystemInfo.deviceUniqueIdentifier;
+            playerKey = Hash128.Compute($"{Application.companyName}:{Application.productName}:{device}:{stableName}").ToString();
+            return playerKey;
         }
 
         private async Task SendJsonAsync(object payload)

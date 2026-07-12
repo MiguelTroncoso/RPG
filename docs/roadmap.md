@@ -146,6 +146,27 @@ Objetivo: eliminar los textos hardcodeados mas visibles que quedaban en creacion
 
 Criterio de exito: crear/continuar personaje y usar habilidades no depende de literales en codigo.
 
+## Fase 5.26: Zona 4 - Cumbres De Cristal
+
+Objetivo: sumar una cuarta region jugable sin tocar sistemas.
+
+- `DefaultZones.CreateZone4` con terreno, normales, elites y jefe. [Implementado]
+- Enemigos y objetivos filtrados por ids propios. [Implementado]
+- Cadena de misiones extendida a 16. [Implementado]
+
+Criterio de exito: la region 31-40 aparece al norte y se progresa por datos.
+
+## Fase 5.27: Persistencia Basica De Servidor
+
+Objetivo: que el servidor no pierda el estado online basico al reconectar.
+
+- `playerKey` estable en `hello`. [Implementado]
+- Guardado JSON atomico en `Server/data/players.json`. [Implementado]
+- Restauracion de identidad/nivel/posicion/rotacion. [Implementado]
+- Ultima mejora validada persistida como dato online. [Implementado]
+
+Criterio de exito: reiniciar el servidor conserva el estado online basico.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

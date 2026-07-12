@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.25 y como ejecutar).
+3. README.md (historial de fases 1 a 5.27 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.25 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.27 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -45,11 +45,12 @@ Estado actual (fases 1-5.25 completadas; hoja de ruta A-K completa):
   (LocalizationTable + DefaultLocalization, fallback mezclado con asset).
   Creacion de personaje y PlayerSkills ya usan claves i18n; quedan textos
   secundarios de red/eventos/botones para una pasada final.
-- Zonas 1, 2 y 3 (ZoneDefinition + DefaultZones, spawner 100% data-driven
+- Zonas 1, 2, 3 y 4 (ZoneDefinition + DefaultZones, spawner 100% data-driven
   por zona, una instancia por zona): Bosque de los Susurros (11-20) y
-  Colinas Cenicientas (21-30) al norte, cada una con terreno propio,
-  enemigos normales, elites y jefe de zona. Los objetivos de matar filtran
-  por tier o por id de enemigo. Cadena de 13 misiones. Zona 1: Herrero
+  Colinas Cenicientas (21-30) y Cumbres de Cristal (31-40) al norte, cada
+  una con terreno propio, enemigos normales, elites y jefe de zona. Los
+  objetivos de matar filtran por tier o por id de enemigo. Cadena de 16
+  misiones. Zona 1: Herrero
   (las mejoras WEAPON/ARMOR se hacen cerca de el), Almacen (boton ALMACEN
   deposita/retira materiales, persistido), area de elites al este y jefe de
   zona (Coloso de las Reliquias) al noroeste con respawn propio. Cadena de
@@ -61,7 +62,8 @@ Estado actual (fases 1-5.25 completadas; hoja de ruta A-K completa):
   mensajes "action" con valor; el servidor (Server/src/server.js) valida
   plausibilidad (nivel creciente <=105, mejora +1..+15) y ritmo (800ms),
   difunde las validas como actividad y devuelve actionRejected al emisor
-  si no pasan.
+  si no pasan. Persistencia basica por playerKey en Server/data/players.json:
+  nombre, clase, sexo, nivel, posicion, rotacion y ultima mejora validada.
 - Guardado local JSON (esquema v9) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
@@ -106,9 +108,9 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Zona 4 en adelante (solo datos con ZoneDefinition).
-- Persistencia de estado en el servidor (hoy el hello fija el nivel base).
 - Importar/controlar animaciones reales del pack KayKit si se agregan FBX/clips.
+- Expandir persistencia de servidor a inventario/equipo/misiones.
+- Zona 5 en adelante (solo datos con ZoneDefinition).
 - Pasada final de i18n para red/eventos/botones utilitarios.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok

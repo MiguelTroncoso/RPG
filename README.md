@@ -420,6 +420,21 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Las etiquetas de genero del jugador local y remoto salen de `Localization`.
 - Textos iniciales del HUD/ayuda tambien pasan por claves.
 
+## Fase 5.26: Zona 4 - Cumbres De Cristal
+
+- Cuarta region (niveles 31-40) al norte de las Colinas Cenicientas, construida solo con `ZoneDefinition`.
+- Nuevos enemigos: Centinelas de cristal, Custodios prismales (elites) y el Oraculo Fragmentado como jefe de zona.
+- Cadena de misiones extendida de 13 a 16: limpiar centinelas, derrotar custodios y apagar al Oraculo.
+- Cero sistemas nuevos: el spawner, objetivos filtrados por id, elites y jefe reutilizan los moldes existentes.
+
+## Fase 5.27: Persistencia Basica De Servidor
+
+- El cliente envia `playerKey` en `hello` para identificar de forma estable al personaje online.
+- El servidor guarda estado online en `Server/data/players.json` con escritura atomica.
+- Se persisten nombre, clase, sexo, nivel, posicion, rotacion y ultima mejora validada.
+- Al reconectar, el servidor restaura lo guardado y conserva el mayor nivel entre estado local y estado del servidor.
+- `Server/data/players.json` queda fuera de git; inventario/equipo completo/misiones siguen en el guardado local Unity.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

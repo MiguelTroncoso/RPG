@@ -1,9 +1,16 @@
 import { WebSocket, WebSocketServer } from "ws";
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const port = Number(process.env.PORT ?? 7777);
 const tickRateMs = 100;
 const players = new Map();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dataDir = path.resolve(__dirname, "../data");
+const playerStorePath = path.join(dataDir, "players.json");
+const persistedPlayers = loadPersistedPlayers();
 
 const server = new WebSocketServer({ port });
 
@@ -15,7 +22,10 @@ server.on("connection", (socket, request) => {
     className: "Guerrero",
     gender: "Masculino",
     level: 1,
+    playerKey: "",
     lastActionAt: 0,
+    lastPersistAt: 0,
+    lastUpgradeLevel: 0,
     x: 0,
     y: 1,
     z: 0,
@@ -57,10 +67,25 @@ function handleMessage(player, raw) {
 
   switch (message.type) {
     case "hello":
-      player.name = sanitizeText(message.name, 24) || player.name;
-      player.className = sanitizeText(message.className, 24) || player.className;
-      player.gender = sanitizeGender(message.gender) ?? player.gender;
-      player.level = sanitizeLevel(message.level) ?? player.level;
+      {
+        const incomingName = sanitizeText(message.name, 24);
+        const incomingClass = sanitizeClass(message.className) ?? player.className;
+        const incomingGender = sanitizeGender(message.gender) ?? player.gender;
+        const incomingLevel = sanitizeLevel(message.level);
+        const playerKey = sanitizeKey(message.playerKey) || keyFromName(incomingName || player.name);
+        const saved = persistedPlayers[playerKey];
+
+        player.playerKey = playerKey;
+        if (saved) {
+          applyPersistedPlayer(player, saved);
+        }
+
+        player.name = incomingName || player.name;
+        player.className = incomingClass;
+        player.gender = incomingGender;
+        player.level = Math.max(player.level, incomingLevel ?? player.level);
+        persistPlayer(player);
+      }
       broadcast({ type: "playerUpdated", player: publicPlayer(player) });
       break;
 
@@ -69,6 +94,7 @@ function handleMessage(player, raw) {
       player.y = toNumber(message.y, player.y);
       player.z = toNumber(message.z, player.z);
       player.yaw = toNumber(message.yaw, player.yaw);
+      persistPlayerThrottled(player);
       break;
 
     case "chat":
@@ -130,6 +156,7 @@ function disconnect(player) {
   }
 
   players.delete(player.id);
+  persistPlayer(player);
   broadcast({ type: "playerLeft", id: player.id });
   console.log(`[leave] ${player.id}`);
 }
@@ -173,9 +200,87 @@ function publicPlayer(player) {
   };
 }
 
+function applyPersistedPlayer(player, saved) {
+  player.name = sanitizeText(saved.name, 24) || player.name;
+  player.className = sanitizeClass(saved.className) ?? player.className;
+  player.gender = sanitizeGender(saved.gender) ?? player.gender;
+  player.level = sanitizeLevel(saved.level) ?? player.level;
+  player.x = toNumber(saved.x, player.x);
+  player.y = toNumber(saved.y, player.y);
+  player.z = toNumber(saved.z, player.z);
+  player.yaw = toNumber(saved.yaw, player.yaw);
+  player.lastUpgradeLevel = Number.isInteger(saved.lastUpgradeLevel) ? saved.lastUpgradeLevel : 0;
+}
+
+function persistPlayerThrottled(player) {
+  const now = Date.now();
+  if (now - player.lastPersistAt < 1000) {
+    return;
+  }
+
+  persistPlayer(player);
+}
+
+function persistPlayer(player) {
+  if (!player.playerKey) {
+    return;
+  }
+
+  player.lastPersistAt = Date.now();
+  persistedPlayers[player.playerKey] = {
+    playerKey: player.playerKey,
+    name: player.name,
+    className: player.className,
+    gender: player.gender,
+    level: player.level,
+    x: player.x,
+    y: player.y,
+    z: player.z,
+    yaw: player.yaw,
+    lastUpgradeLevel: player.lastUpgradeLevel ?? 0,
+    updatedAt: new Date(player.lastPersistAt).toISOString()
+  };
+  savePersistedPlayers();
+}
+
+function loadPersistedPlayers() {
+  try {
+    if (!fs.existsSync(playerStorePath)) {
+      return {};
+    }
+
+    const parsed = JSON.parse(fs.readFileSync(playerStorePath, "utf8"));
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (error) {
+    console.warn(`[persistence] could not load ${playerStorePath}: ${error.message}`);
+    return {};
+  }
+}
+
+function savePersistedPlayers() {
+  fs.mkdirSync(dataDir, { recursive: true });
+  const tempPath = `${playerStorePath}.tmp`;
+  fs.writeFileSync(tempPath, JSON.stringify(persistedPlayers, null, 2));
+  fs.renameSync(tempPath, playerStorePath);
+}
+
 function sanitizeGender(value) {
   const gender = sanitizeText(value, 12);
   return gender === "Masculino" || gender === "Femenino" ? gender : null;
+}
+
+function sanitizeClass(value) {
+  const className = sanitizeText(value, 24);
+  return ["Guerrero", "Ninja", "Chaman", "Umbra"].includes(className) ? className : null;
+}
+
+function sanitizeKey(value) {
+  return sanitizeText(value, 80).replace(/[^a-zA-Z0-9_-]/g, "");
+}
+
+function keyFromName(name) {
+  const safeName = sanitizeText(name, 24).toLowerCase().replace(/[^a-z0-9_-]/g, "_");
+  return safeName || crypto.randomUUID();
 }
 
 function sanitizeLevel(value) {
@@ -196,12 +301,15 @@ function validateAction(player, action, value) {
         return "invalid_level";
       }
       player.level = value;
+      persistPlayer(player);
       return null;
 
     case "upgrade":
       if (!Number.isInteger(value) || value < 1 || value > 15) {
         return "invalid_upgrade";
       }
+      player.lastUpgradeLevel = Math.max(player.lastUpgradeLevel ?? 0, value);
+      persistPlayer(player);
       return null;
 
     default:

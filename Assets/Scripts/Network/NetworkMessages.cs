@@ -65,6 +65,7 @@ namespace MmorpgPrototype
     public sealed class HelloPayload
     {
         public string type = "hello";
+        public string playerKey;
         public string name;
         public string className;
         public string gender;
@@ -118,4 +119,3 @@ namespace MmorpgPrototype
         public string text;
     }
 }
-

@@ -24,6 +24,9 @@ namespace MmorpgPrototype
         public const string AshWanderers = "ash_wanderers";
         public const string AshEliteHunt = "ash_elite_hunt";
         public const string AshBossHunt = "ash_boss_hunt";
+        public const string CrystalSentinels = "crystal_sentinels";
+        public const string CrystalEliteHunt = "crystal_elite_hunt";
+        public const string CrystalBossHunt = "crystal_boss_hunt";
 
         public static List<QuestDefinition> CreateAll()
         {
@@ -153,12 +156,42 @@ namespace MmorpgPrototype
 
                 Quest(AshBossHunt, 13, "El corazon de ceniza",
                     "El Corazon de Ceniza arde en el este de las colinas. Apagalo para siempre.",
-                    "Las colinas se enfrian. Tres regiones liberadas: el valle entero te lo agradece.",
+                    "Las colinas se enfrian. En lo alto brillan cumbres que no reflejan el sol.",
                     new[]
                     {
                         Objective(QuestObjectiveType.KillEnemies, DefaultZones.AshBossId, 1, "Derrota al Corazon de Ceniza")
                     },
                     Reward(3000, 1500, Item(DefaultGameItems.ValleyMedal, 1)),
+                    CrystalSentinels),
+
+                Quest(CrystalSentinels, 14, "Cumbres de cristal",
+                    "Mas alla de las cenizas se alzan cristales que caminan como guardianes. Rompe su avanzada.",
+                    "Los centinelas caen en fragmentos, pero cada pedazo susurra una misma voz.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.CrystalCreatureId, 9, "Derrota Centinelas de cristal")
+                    },
+                    Reward(4200, 1800, Item(DefaultGameItems.MinorPotion, 3)),
+                    CrystalEliteHunt),
+
+                Quest(CrystalEliteHunt, 15, "Custodios prismales",
+                    "Los Custodios prismales protegen el sendero alto de las cumbres. Derrota a dos.",
+                    "El sendero esta abierto. El Oraculo Fragmentado espera entre ecos de luz.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.CrystalEliteId, 2, "Derrota Custodios prismales")
+                    },
+                    Reward(5200, 2300, Item(DefaultGameItems.ProtectionRune, 1)),
+                    CrystalBossHunt),
+
+                Quest(CrystalBossHunt, 16, "El Oraculo Fragmentado",
+                    "El Oraculo Fragmentado intenta recomponer la corrupcion en las cumbres. Detenlo.",
+                    "Las cumbres dejan de cantar. El camino hacia regiones mas peligrosas queda abierto.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.CrystalBossId, 1, "Derrota al Oraculo Fragmentado")
+                    },
+                    Reward(7000, 3200, Item(DefaultGameItems.ValleyMedal, 1)),
                     string.Empty)
             };
         }
