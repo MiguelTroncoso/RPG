@@ -16,6 +16,7 @@ namespace MmorpgPrototype
         public int Defense;
         public float CritChance = 0.05f;
         public float Accuracy = 0.92f;
+        public float AttackWindup = 0.28f;
 
         public CombatStats DefenderStats => CombatStats.Defender(Evasion, Defense);
 
@@ -23,6 +24,8 @@ namespace MmorpgPrototype
         private Health health;
         private Renderer bodyRenderer;
         private float nextAttackTime;
+        private bool isWindingUp;
+        private float windupEndsAt;
 
         private void Awake()
         {
@@ -61,6 +64,27 @@ namespace MmorpgPrototype
             direction.y = 0f;
             var distance = direction.magnitude;
 
+            if (isWindingUp)
+            {
+                controller.SimpleMove(Vector3.zero);
+                FaceTarget(direction);
+
+                if (distance > AttackRange * 1.35f)
+                {
+                    isWindingUp = false;
+                    nextAttackTime = Time.time + AttackCooldown * 0.35f;
+                    return;
+                }
+
+                if (Time.time >= windupEndsAt)
+                {
+                    isWindingUp = false;
+                    ResolveAttack();
+                }
+
+                return;
+            }
+
             if (distance > AggroRange)
             {
                 controller.SimpleMove(Vector3.zero);
@@ -71,22 +95,20 @@ namespace MmorpgPrototype
             {
                 var move = direction.normalized;
                 controller.SimpleMove(move * MoveSpeed);
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(move, Vector3.up), 10f * Time.deltaTime);
+                FaceTarget(direction);
                 return;
             }
 
             controller.SimpleMove(Vector3.zero);
-            TryAttackPlayer();
+            StartAttackWindup();
         }
 
-        private void TryAttackPlayer()
+        private void StartAttackWindup()
         {
             if (Time.time < nextAttackTime)
             {
                 return;
             }
-
-            nextAttackTime = Time.time + AttackCooldown;
 
             var playerHealth = Target.GetComponent<Health>();
             if (playerHealth == null || playerHealth.IsDead)
@@ -94,10 +116,28 @@ namespace MmorpgPrototype
                 return;
             }
 
+            isWindingUp = true;
+            windupEndsAt = Time.time + AttackWindup;
+            nextAttackTime = windupEndsAt + AttackCooldown;
+            DamagePopup.Spawn(transform.position + Vector3.up * 2.35f, "!", new Color(1f, 0.58f, 0.18f), 1.35f);
+            PrototypePulseAndDestroy.Spawn(Target.position + Vector3.up * 1.05f, new Color(1f, 0.28f, 0.16f));
+        }
+
+        private void ResolveAttack()
+        {
+            var playerHealth = Target.GetComponent<Health>();
+            if (playerHealth == null || playerHealth.IsDead)
+            {
+                return;
+            }
+
+            var playerStats = Target.GetComponent<PlayerStatSheet>();
             var playerDefinition = Target.GetComponent<PlayerClassController>()?.Definition;
-            var defender = playerDefinition != null
-                ? CombatStats.Defender(playerDefinition.Evasion, playerDefinition.Defense)
-                : CombatStats.Defender(0f, 0);
+            var defender = playerStats != null
+                ? CombatStats.Defender(playerStats.Evasion, playerStats.Defense)
+                : playerDefinition != null
+                    ? CombatStats.Defender(playerDefinition.Evasion, playerDefinition.Defense)
+                    : CombatStats.Defender(0f, 0);
 
             var attacker = new CombatStats(AttackDamage, CritChance, 1.5f, Accuracy, Evasion, Defense);
             var result = DamageCalculator.Resolve(attacker, defender, Random.value, Random.value, Random.value);
@@ -110,7 +150,19 @@ namespace MmorpgPrototype
 
             playerHealth.TakeDamage(result.Amount);
             var text = result.IsCritical ? $"{result.Amount}!" : result.Amount.ToString();
-            DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, text, new Color(1f, 0.28f, 0.22f));
+            DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, text, new Color(1f, 0.28f, 0.22f), result.IsCritical ? 1.25f : 1f);
+        }
+
+        private void FaceTarget(Vector3 direction)
+        {
+            direction.y = 0f;
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                return;
+            }
+
+            var lookRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 10f * Time.deltaTime);
         }
 
         private void HandleDeath(Health _)
@@ -126,4 +178,3 @@ namespace MmorpgPrototype
         }
     }
 }
-

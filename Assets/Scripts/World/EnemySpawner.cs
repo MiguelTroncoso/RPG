@@ -171,6 +171,11 @@ namespace MmorpgPrototype
             var enemyHealth = enemy.AddComponent<Health>();
             enemyHealth.ResetHealth(health);
 
+            var flash = enemy.AddComponent<HitFlashOnDamage>();
+            flash.FlashColor = tier == EnemyTier.Boss
+                ? new Color(1f, 0.72f, 0.28f)
+                : new Color(1f, 0.36f, 0.28f);
+
             var ai = enemy.AddComponent<EnemyAI>();
             ai.Target = Target;
             ai.MoveSpeed = moveSpeed;
@@ -178,6 +183,8 @@ namespace MmorpgPrototype
             ai.Defense = defense;
             ai.Evasion = tier == EnemyTier.Normal ? 0.03f : 0.05f;
             ai.AggroRange = tier == EnemyTier.Normal ? 9f : 10f;
+            ai.AttackCooldown = tier == EnemyTier.Boss ? 1.55f : tier == EnemyTier.Elite ? 1.35f : 1.65f;
+            ai.AttackWindup = tier == EnemyTier.Boss ? 0.48f : tier == EnemyTier.Elite ? 0.36f : 0.28f;
 
             var reward = enemy.AddComponent<EnemyReward>();
             reward.Progression = Progression;

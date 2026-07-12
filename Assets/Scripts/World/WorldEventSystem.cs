@@ -52,6 +52,7 @@ namespace MmorpgPrototype
             var health = activeMonolith.AddComponent<Health>();
             health.ResetHealth(260);
             health.Died += HandleMonolithDestroyed;
+            activeMonolith.AddComponent<HitFlashOnDamage>();
 
             var ai = activeMonolith.AddComponent<EnemyAI>();
             ai.Target = Target;

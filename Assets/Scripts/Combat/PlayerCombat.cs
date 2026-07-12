@@ -166,7 +166,7 @@ namespace MmorpgPrototype
             health.TakeDamage(result.Amount);
             var popupText = result.IsCritical ? $"{result.Amount}!" : result.Amount.ToString();
             var popupColor = result.IsCritical ? new Color(1f, 0.55f, 0.12f) : color;
-            DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, popupText, popupColor);
+            DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, popupText, popupColor, result.IsCritical ? 1.25f : 1f);
             PrototypePulseAndDestroy.Spawn(enemy.transform.position + Vector3.up * 1.1f, popupColor);
             return result;
         }

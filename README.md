@@ -466,6 +466,15 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - `docs/previews/world-progression.svg`: mapa conceptual de progresion 1-105.
 - `docs/previews/avatar-and-ui-preview.svg`: preview de clases, avatar procedural, puente de animaciones e i18n.
 
+## Fase 5.32: Balance Inicial Y Feedback De Combate
+
+- Enemigos normales, elites y jefes ahora tienen ritmo distinto: cooldowns y windup por tier.
+- Los ataques enemigos avisan antes de impactar con popup `!` y pulso rojo cerca del jugador.
+- Si el jugador sale del rango durante el windup, el golpe se cancela y el enemigo reintenta luego.
+- El calculo defensivo contra el jugador usa `PlayerStatSheet` cuando existe, no solo la clase base.
+- Jugador, enemigos y monolito tienen flash breve al recibir dano.
+- Los criticos usan popup mas grande para leerse mejor en combate.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

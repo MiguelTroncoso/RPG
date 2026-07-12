@@ -10,6 +10,7 @@ namespace MmorpgPrototype
 
         public event Action<Health> Changed;
         public event Action<Health> Died;
+        public event Action<Health, int> Damaged;
 
         public int MaxHealth => maxHealth;
         public int CurrentHealth => currentHealth;
@@ -36,6 +37,7 @@ namespace MmorpgPrototype
             }
 
             currentHealth = Mathf.Max(0, currentHealth - amount);
+            Damaged?.Invoke(this, amount);
             Changed?.Invoke(this);
 
             if (currentHealth == 0)
@@ -56,4 +58,3 @@ namespace MmorpgPrototype
         }
     }
 }
-

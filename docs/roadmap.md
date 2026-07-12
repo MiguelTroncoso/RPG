@@ -206,6 +206,18 @@ Objetivo: dejar imagenes ligeras para revisar direccion visual y progresion.
 
 Criterio de exito: se puede inspeccionar el avance visual sin entrar a Play.
 
+## Fase 5.32: Balance Inicial Y Feedback De Combate
+
+Objetivo: que el combate sea mas legible y menos brusco antes de balance fino.
+
+- Cooldown/windup por tier de enemigo. [Implementado]
+- Aviso visual antes de ataques enemigos. [Implementado]
+- Cancelacion de golpe si el jugador sale de rango. [Implementado]
+- Flash de dano en jugador/enemigos/monolito. [Implementado]
+- Defensa del jugador desde `PlayerStatSheet`. [Implementado]
+
+Criterio de exito: el jugador entiende cuando viene un golpe y recibe feedback claro al pegar/recibir dano.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

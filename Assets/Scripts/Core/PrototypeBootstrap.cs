@@ -184,6 +184,8 @@ namespace MmorpgPrototype
 
             var health = player.AddComponent<Health>();
             health.ResetHealth(160);
+            var playerFlash = player.AddComponent<HitFlashOnDamage>();
+            playerFlash.FlashColor = new Color(1f, 0.42f, 0.32f);
 
             player.AddComponent<PlayerController>();
 

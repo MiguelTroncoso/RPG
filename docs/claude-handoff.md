@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.31 y como ejecutar).
+3. README.md (historial de fases 1 a 5.32 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.31 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.32 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -33,7 +33,9 @@ Estado actual (fases 1-5.31 completadas; hoja de ruta A-K completa):
   PlayerEquipment. Mejora +0..+15 con riesgo (UpgradeConfig +
   UpgradeResolver puro + runa de proteccion + tope por rareza).
 - Combate: DamageCalculator puro (rolls inyectados, critico/evasion/defensa,
-  varianza ±15%). Botin por LootTableConfig (pesos configurables).
+  varianza +/-15%). Botin por LootTableConfig (pesos configurables). Enemigos
+  tienen windup/cooldown por tier, aviso visual antes de golpear, cancelacion
+  si el jugador sale de rango, popup critico mas grande y flash de dano.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -116,6 +118,7 @@ Proximos objetivos sugeridos:
 - Importar clips/modelos reales del pack KayKit si se agregan FBX/clips.
 - Expandir persistencia de servidor a inventario/equipo/misiones.
 - Balancear en Play zonas 41-105 y recompensas.
+- Agregar telemetria simple de tiempo-para-matar y muertes por zona.
 - Generar o importar arte/sonido real para zonas finales.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok

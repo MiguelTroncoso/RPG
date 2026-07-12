@@ -9,15 +9,15 @@ namespace MmorpgPrototype
         private float lifetime = 0.8f;
         private float age;
 
-        public static void Spawn(Vector3 position, string text, Color color)
+        public static void Spawn(Vector3 position, string text, Color color, float sizeMultiplier = 1f)
         {
             var popup = new GameObject("Damage Popup");
             popup.transform.position = position;
 
             var textMesh = popup.AddComponent<TextMesh>();
             textMesh.text = text;
-            textMesh.fontSize = 54;
-            textMesh.characterSize = 0.035f;
+            textMesh.fontSize = Mathf.RoundToInt(54 * Mathf.Max(0.7f, sizeMultiplier));
+            textMesh.characterSize = 0.035f * Mathf.Max(0.7f, sizeMultiplier);
             textMesh.anchor = TextAnchor.MiddleCenter;
             textMesh.alignment = TextAlignment.Center;
             textMesh.color = color;
@@ -48,4 +48,3 @@ namespace MmorpgPrototype
         }
     }
 }
-
