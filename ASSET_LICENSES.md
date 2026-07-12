@@ -48,3 +48,13 @@ Attribution is not required by the license, but crediting KayKit is recommended.
 - Author: Kenney.
 - License: Creative Commons Zero 1.0 Universal (CC0).
 - Imported subset: `Assets/Resources/Audio/Kenney/ambient_preview.ogg`.
+
+## Quaternius - Animated Woman
+
+- Source: https://poly.pizza/m/9kF7eTDbhO
+- Author: Quaternius.
+- License: CC0 / Public Domain.
+- Imported asset: `Assets/Resources/ThirdParty/Quaternius/Characters/AnimatedWoman.fbx`.
+- The original glTF asset was converted to FBX locally for Unity import; the
+  model keeps its embedded texture and animation data.
+- Local license copy: `Assets/ThirdParty/Quaternius/License.txt`.

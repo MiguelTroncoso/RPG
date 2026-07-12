@@ -1,0 +1,4 @@
+Animated Woman by Quaternius
+Source: https://poly.pizza/m/9kF7eTDbhO
+License: CC0 / Public Domain
+Downloaded as a glTF model and converted to FBX for Unity import.

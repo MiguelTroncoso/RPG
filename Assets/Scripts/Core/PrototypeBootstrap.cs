@@ -200,6 +200,7 @@ namespace MmorpgPrototype
 
             player.AddComponent<PlayerCharacterIdentity>();
             player.AddComponent<PlayerAvatarVisual>();
+            player.AddComponent<EquipmentVisualController>();
             player.AddComponent<PlayerStatSheet>();
             player.AddComponent<PlayerClassController>();
             var progression = player.AddComponent<PlayerProgression>();
@@ -533,6 +534,10 @@ namespace MmorpgPrototype
             gear.UpgradeSystem = equipment;
             gear.Upgrades = upgradeConfig;
             gear.Hud = hud;
+            var equipmentVisuals = player.GetComponent<EquipmentVisualController>();
+            equipmentVisuals.Avatar = player.GetComponent<PlayerAvatarVisual>();
+            equipmentVisuals.Equipment = gear;
+            equipmentVisuals.Initialize();
             skills.Hud = hud;
             var persistence = player.GetComponent<PlayerPersistence>();
             persistence.Identity = player.GetComponent<PlayerCharacterIdentity>();
@@ -622,6 +627,54 @@ namespace MmorpgPrototype
             var menuWindow = CreatePlayerMenuWindow(parent, player);
             var menuButton = CreateRoundButton(parent, "Menu Button", Localization.Tr("ui.menu"), new Vector2(0f, 1f), new Vector2(792f, -396f), new Vector2(128f, 42f), new Color(0.34f, 0.3f, 0.48f), 17);
             menuButton.onClick.AddListener(menuWindow.Toggle);
+
+            var mobileWindow = CreateMobileTestWindow(parent, player);
+            var mobileButton = CreateRoundButton(parent, "Mobile Test Button", Localization.Tr("ui.mobile_test"), new Vector2(0f, 1f), new Vector2(932f, -396f), new Vector2(128f, 42f), new Color(0.16f, 0.5f, 0.46f), 17);
+            mobileButton.onClick.AddListener(mobileWindow.Toggle);
+        }
+
+        private static MobileTestWindowController CreateMobileTestWindow(Transform parent, GameObject player)
+        {
+            var window = CreateUiObject("Mobile Test Window", parent);
+            var windowRect = window.GetComponent<RectTransform>();
+            SetRect(windowRect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(700f, 390f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(700f, 390f);
+
+            var background = window.AddComponent<Image>();
+            background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
+            background.raycastTarget = true;
+
+            var title = CreateText(window.transform, "Title", Localization.Tr("ui.mobile_test_title"), 30, TextAnchor.MiddleCenter);
+            title.fontStyle = FontStyle.Bold;
+            SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(650f, 44f), new Vector2(0f, -18f));
+
+            var controller = window.AddComponent<MobileTestWindowController>();
+            controller.Panel = window;
+            controller.Diagnostics = parent.GetComponentInParent<MobileRuntimeDiagnostics>();
+            controller.Audio = player.GetComponent<CombatFeedbackAudio>();
+            controller.BodyText = CreateText(window.transform, "Body", string.Empty, 19, TextAnchor.UpperLeft);
+            controller.BodyText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            controller.BodyText.verticalOverflow = VerticalWrapMode.Overflow;
+            controller.BodyText.supportRichText = false;
+            SetRect(controller.BodyText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(620f, 112f), new Vector2(0f, -86f));
+
+            var musicButton = CreateRoundButton(window.transform, "Toggle Test Music", Localization.Tr("ui.mobile_music"), new Vector2(0.5f, 0.5f), new Vector2(-212f, 34f), new Vector2(180f, 46f), new Color(0.22f, 0.38f, 0.58f), 17);
+            musicButton.onClick.AddListener(controller.ToggleMusic);
+            var sfxDown = CreateRoundButton(window.transform, "Sfx Down", Localization.Tr("ui.mobile_sfx_down"), new Vector2(0.5f, 0.5f), new Vector2(-38f, 34f), new Vector2(150f, 46f), new Color(0.45f, 0.28f, 0.2f), 17);
+            sfxDown.onClick.AddListener(() => controller.AdjustSfx(-0.05f));
+            var sfxUp = CreateRoundButton(window.transform, "Sfx Up", Localization.Tr("ui.mobile_sfx_up"), new Vector2(0.5f, 0.5f), new Vector2(122f, 34f), new Vector2(150f, 46f), new Color(0.2f, 0.5f, 0.34f), 17);
+            sfxUp.onClick.AddListener(() => controller.AdjustSfx(0.05f));
+
+            var musicDown = CreateRoundButton(window.transform, "Music Down", Localization.Tr("ui.mobile_music_down"), new Vector2(0.5f, 0.5f), new Vector2(-112f, -30f), new Vector2(150f, 46f), new Color(0.45f, 0.28f, 0.2f), 17);
+            musicDown.onClick.AddListener(() => controller.AdjustMusic(-0.02f));
+            var musicUp = CreateRoundButton(window.transform, "Music Up", Localization.Tr("ui.mobile_music_up"), new Vector2(0.5f, 0.5f), new Vector2(48f, -30f), new Vector2(150f, 46f), new Color(0.2f, 0.5f, 0.34f), 17);
+            musicUp.onClick.AddListener(() => controller.AdjustMusic(0.02f));
+
+            var closeButton = CreateRoundButton(window.transform, "Close Mobile Test", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(170f, 42f), new Color(0.32f, 0.32f, 0.36f), 17);
+            closeButton.onClick.AddListener(controller.Toggle);
+
+            window.SetActive(false);
+            return controller;
         }
 
         private static StatsWindowController CreateStatsWindow(Transform parent, GameObject player)

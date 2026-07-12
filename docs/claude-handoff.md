@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.37 y como ejecutar).
+3. README.md (historial de fases 1 a 5.38 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.37 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.38 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -53,6 +53,16 @@ Estado actual (fases 1-5.37 completadas; hoja de ruta A-K completa):
   registra resolucion, orientacion, safe area y volumenes.
 - Audio final de prototipo: SFX y musica de Kenney CC0 se cargan desde
   `Resources/Audio/Kenney`; los tonos procedural son fallback.
+- Prueba movil: el boton `TEST` abre `MobileTestWindowController` y muestra
+  resolucion/orientacion/safe area junto con controles para musica y SFX.
+- Modelos femeninos: `AnimatedWoman.fbx` de Quaternius (CC0) se usa para
+  Guerrero/Chaman/Umbra femeninos; `RogueHooded.fbx` queda para Ninja.
+  `ClassDefinition.ModelResourceFor` permite reemplazar cada recurso por una
+  variante dedicada sin modificar la seleccion de personaje.
+- Equipo visual: `EquipmentItemDefinition.VisualId` describe la apariencia,
+  `PlayerEquipment.Changed` notifica cambios y `EquipmentVisualController`
+  reconstruye casco/pechera/amuleto/espada. `ApplyBonuses` sigue siendo el
+  unico punto de recomputo de estadisticas.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -133,10 +143,10 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Probar MENU, modelos y audio en Android real y resoluciones portrait/landscape.
+- Probar una build Android real y anotar resolucion, safe area y audio.
+- Crear conjuntos de armadura modulares especificos por clase/sexo.
 - Jugar sesiones de prueba en zonas 41-105 y ajustar recompensas usando DATOS.
 - Pulir comercio, uso tactil de items y estados de carga/conexion.
-- Crear variantes de armadura como assets equipables y no solo visuales.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

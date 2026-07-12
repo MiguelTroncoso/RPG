@@ -289,6 +289,21 @@ instrumentacion para probar el prototipo en Android.
 Criterio de exito: una sesion en Android deja en el log la configuracion de
 pantalla/audio y el juego no depende de tonos generados si los OGG estan presentes.
 
+## Fase 5.38: Prueba Movil, Modelos Femeninos Y Equipo Visual
+
+Objetivo: comprobar el prototipo en un dispositivo y hacer que el equipo sea
+visible, equipable y compatible con la progresion existente.
+
+- Ventana TEST con diagnostico de pantalla, safe area y volumenes ajustables. [Implementado]
+- FBX CC0 femenino de Quaternius para Guerrero, Chaman y Umbra, con fallback procedural. [Implementado]
+- Variante femenina RogueHooded para Ninja. [Implementado]
+- `VisualId` en definiciones de equipo y refresco por evento al cambiar piezas. [Implementado]
+- Visuales iniciales para espada, casco, pechera y amuleto. [Implementado]
+
+Criterio de exito: equipar una pieza cambia sus bonos y deja una diferencia
+visible en el avatar; la ventana TEST permite registrar una prueba movil
+repetible antes de ajustar escala o audio con datos reales.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

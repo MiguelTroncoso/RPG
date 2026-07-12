@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.37 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.38 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -79,20 +79,24 @@ simple y autocontenido.
 ## Estado conocido / limitaciones
 
 - El avatar visual usa FBX KayKit CC0 y controladores Mecanim generados para
-  `Idle`/`Run`/`Attack`; la Ninja femenina usa RogueHooded y las cuatro clases
-  reciben una capa visual de armadura por clase/sexo. Conserva fallback procedural.
+  `Idle`/`Run`/`Attack`; la Ninja femenina usa RogueHooded y Guerrero/Chaman/Umbra
+  femeninos usan AnimatedWoman de Quaternius. Las cuatro clases reciben una
+  capa visual de armadura por clase/sexo y conservan fallback procedural.
 - Textos pendientes de migrar a i18n: algunos mensajes secundarios de red,
   eventos de mundo y botones utilitarios.
 - Los modelos 3D y clips del pack KayKit Adventurers ya estan importados (ver
   `ASSET_LICENSES.md`). El generador de controllers mantiene el puente
   `Speed`/`Attack`; si falta un asset se usa fallback procedural.
 - `MobileRuntimeDiagnostics` registra resolucion/orientacion/safe area y
-  volumenes de audio para pruebas en dispositivo.
+  volumenes de audio; la ventana TEST permite cambiar musica y SFX durante
+  una prueba en dispositivo.
+- `EquipmentVisualController` escucha `PlayerEquipment.Changed` y aplica
+  `EquipmentItemDefinition.VisualId` al avatar sin duplicar el calculo de stats.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
-- Siguientes candidatos: importar clips/modelos reales de personaje, jugar
-  sesiones de prueba en zonas 41-105 y ajustar con el panel DATOS, importar
-  modelos/animaciones reales, generar assets reales para las zonas finales, o
+- Siguientes candidatos: probar una build Android real y anotar resolucion,
+  safe area y audio; crear conjuntos de armadura modulares especificos por
+  clase/sexo; jugar sesiones de prueba en zonas 41-105 y ajustar con DATOS;
   pulir comercio y uso tactil de items.

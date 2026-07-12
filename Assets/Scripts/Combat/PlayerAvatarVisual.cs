@@ -5,9 +5,12 @@ namespace MmorpgPrototype
     public sealed class PlayerAvatarVisual : MonoBehaviour
     {
         private GameObject visualRoot;
+        private GameObject armorRoot;
         private Renderer baseRenderer;
         private CharacterClassType currentClass;
         private CharacterGender currentGender;
+        private ClassDefinition currentDefinition;
+        private PlayerEquipment currentEquipment;
         private bool hasVisual;
 
         private void Awake()
@@ -28,11 +31,13 @@ namespace MmorpgPrototype
 
             if (hasVisual && currentClass == definition.Type && currentGender == gender)
             {
+                RefreshEquipmentVisuals(currentEquipment);
                 return;
             }
 
             currentClass = definition.Type;
             currentGender = gender;
+            currentDefinition = definition;
             hasVisual = true;
 
             if (visualRoot != null)
@@ -144,36 +149,91 @@ namespace MmorpgPrototype
             return true;
         }
 
+        public void RefreshEquipmentVisuals(PlayerEquipment equipment)
+        {
+            currentEquipment = equipment;
+            if (!hasVisual || visualRoot == null || currentDefinition == null)
+            {
+                return;
+            }
+
+            BuildArmorOverlay(currentDefinition, currentGender);
+        }
+
         private void BuildArmorOverlay(ClassDefinition definition, CharacterGender gender)
         {
+            if (armorRoot != null)
+            {
+                Destroy(armorRoot);
+            }
+
+            armorRoot = new GameObject("Equipment Armor Visual");
+            armorRoot.transform.SetParent(visualRoot.transform, false);
+
             var armorColor = Color.Lerp(definition.BodyColor, Color.black, gender == CharacterGender.Femenino ? 0.08f : 0.22f);
             var trimColor = definition.SkillColor;
-            CreatePart("Armor Chest", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.39f), new Vector3(0.56f, 0.24f, 0.1f), armorColor);
-            CreatePart("Armor Belt", PrimitiveType.Cube, new Vector3(0f, -0.17f, -0.36f), new Vector3(0.6f, 0.1f, 0.08f), trimColor);
+            CreatePart(armorRoot.transform, "Armor Chest", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.39f), new Vector3(0.56f, 0.24f, 0.1f), armorColor);
+            CreatePart(armorRoot.transform, "Armor Belt", PrimitiveType.Cube, new Vector3(0f, -0.17f, -0.36f), new Vector3(0.6f, 0.1f, 0.08f), trimColor);
 
             if (gender == CharacterGender.Femenino)
             {
-                CreatePart("Armor Skirt", PrimitiveType.Cube, new Vector3(0f, -0.38f, 0f), new Vector3(0.58f, 0.22f, 0.42f), armorColor);
-                CreatePart("Armor Shoulder Left", PrimitiveType.Sphere, new Vector3(-0.47f, 0.48f, 0f), new Vector3(0.18f, 0.14f, 0.22f), trimColor);
-                CreatePart("Armor Shoulder Right", PrimitiveType.Sphere, new Vector3(0.47f, 0.48f, 0f), new Vector3(0.18f, 0.14f, 0.22f), trimColor);
+                CreatePart(armorRoot.transform, "Armor Skirt", PrimitiveType.Cube, new Vector3(0f, -0.38f, 0f), new Vector3(0.58f, 0.22f, 0.42f), armorColor);
+                CreatePart(armorRoot.transform, "Armor Shoulder Left", PrimitiveType.Sphere, new Vector3(-0.47f, 0.48f, 0f), new Vector3(0.18f, 0.14f, 0.22f), trimColor);
+                CreatePart(armorRoot.transform, "Armor Shoulder Right", PrimitiveType.Sphere, new Vector3(0.47f, 0.48f, 0f), new Vector3(0.18f, 0.14f, 0.22f), trimColor);
             }
             else
             {
-                CreatePart("Armor Shoulder Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.3f, 0.16f, 0.32f), trimColor);
-                CreatePart("Armor Shoulder Right", PrimitiveType.Cube, new Vector3(0.5f, 0.5f, 0f), new Vector3(0.3f, 0.16f, 0.32f), trimColor);
+                CreatePart(armorRoot.transform, "Armor Shoulder Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.3f, 0.16f, 0.32f), trimColor);
+                CreatePart(armorRoot.transform, "Armor Shoulder Right", PrimitiveType.Cube, new Vector3(0.5f, 0.5f, 0f), new Vector3(0.3f, 0.16f, 0.32f), trimColor);
             }
 
             switch (definition.Type)
             {
                 case CharacterClassType.Ninja:
-                    CreatePart("Armor Sash", PrimitiveType.Cube, new Vector3(0f, -0.04f, -0.45f), new Vector3(0.64f, 0.08f, 0.06f), new Color(0.08f, 0.08f, 0.12f));
+                    CreatePart(armorRoot.transform, "Armor Sash", PrimitiveType.Cube, new Vector3(0f, -0.04f, -0.45f), new Vector3(0.64f, 0.08f, 0.06f), new Color(0.08f, 0.08f, 0.12f));
                     break;
                 case CharacterClassType.Chaman:
-                    CreatePart("Armor Spirit Charm", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.46f), new Vector3(0.12f, 0.12f, 0.12f), trimColor);
+                    CreatePart(armorRoot.transform, "Armor Spirit Charm", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.46f), new Vector3(0.12f, 0.12f, 0.12f), trimColor);
                     break;
                 case CharacterClassType.Umbra:
-                    CreatePart("Armor Void Plate", PrimitiveType.Cube, new Vector3(0f, 0.45f, -0.42f), new Vector3(0.18f, 0.28f, 0.08f), trimColor);
+                    CreatePart(armorRoot.transform, "Armor Void Plate", PrimitiveType.Cube, new Vector3(0f, 0.45f, -0.42f), new Vector3(0.18f, 0.28f, 0.08f), trimColor);
                     break;
+            }
+
+            BuildEquippedVisuals(trimColor);
+        }
+
+        private void BuildEquippedVisuals(Color trimColor)
+        {
+            if (currentEquipment == null)
+            {
+                return;
+            }
+
+            var helmet = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Helmet));
+            if (helmet != null && helmet.VisualId == "leather_helmet")
+            {
+                CreatePart(armorRoot.transform, "Equipped Leather Helmet", PrimitiveType.Sphere, new Vector3(0f, 1.08f, 0f), new Vector3(0.48f, 0.18f, 0.48f), new Color(0.3f, 0.16f, 0.08f));
+                CreatePart(armorRoot.transform, "Equipped Helmet Strap", PrimitiveType.Cube, new Vector3(0f, 0.9f, -0.28f), new Vector3(0.38f, 0.08f, 0.05f), new Color(0.18f, 0.08f, 0.04f));
+            }
+
+            var chest = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Chest));
+            if (chest != null && chest.VisualId == "guard_chest")
+            {
+                CreatePart(armorRoot.transform, "Equipped Guard Plate", PrimitiveType.Cube, new Vector3(0f, 0.2f, -0.45f), new Vector3(0.62f, 0.32f, 0.08f), new Color(0.48f, 0.56f, 0.68f));
+                CreatePart(armorRoot.transform, "Equipped Guard Emblem", PrimitiveType.Cube, new Vector3(0f, 0.22f, -0.5f), new Vector3(0.12f, 0.18f, 0.04f), trimColor);
+            }
+
+            var necklace = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Necklace));
+            if (necklace != null && necklace.VisualId == "valley_amulet")
+            {
+                CreatePart(armorRoot.transform, "Equipped Valley Amulet", PrimitiveType.Sphere, new Vector3(0f, 0.36f, -0.52f), new Vector3(0.16f, 0.16f, 0.08f), new Color(0.98f, 0.76f, 0.24f));
+            }
+
+            var weapon = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Weapon));
+            if (weapon != null && weapon.VisualId == "sword")
+            {
+                CreatePart(armorRoot.transform, "Equipped Sword Guard", PrimitiveType.Cube, new Vector3(0.44f, 0.08f, -0.3f), new Vector3(0.24f, 0.07f, 0.06f), new Color(0.92f, 0.72f, 0.22f));
             }
         }
 
@@ -224,9 +284,19 @@ namespace MmorpgPrototype
 
         private GameObject CreatePart(string partName, PrimitiveType primitive, Vector3 localPosition, Vector3 localScale, Color color, Quaternion localRotation)
         {
+            return CreatePart(visualRoot.transform, partName, primitive, localPosition, localScale, color, localRotation);
+        }
+
+        private GameObject CreatePart(Transform parent, string partName, PrimitiveType primitive, Vector3 localPosition, Vector3 localScale, Color color)
+        {
+            return CreatePart(parent, partName, primitive, localPosition, localScale, color, Quaternion.identity);
+        }
+
+        private GameObject CreatePart(Transform parent, string partName, PrimitiveType primitive, Vector3 localPosition, Vector3 localScale, Color color, Quaternion localRotation)
+        {
             var part = GameObject.CreatePrimitive(primitive);
             part.name = partName;
-            part.transform.SetParent(visualRoot.transform, false);
+            part.transform.SetParent(parent, false);
             part.transform.localPosition = localPosition;
             part.transform.localRotation = localRotation;
             part.transform.localScale = localScale;

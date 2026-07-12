@@ -44,13 +44,13 @@ namespace MmorpgPrototype
                 Basic(ProtectionRune, "Runa de proteccion", "Evita que un objeto baje de nivel o se destruya al fallar una mejora.", ItemCategory.Material, Rarity.Rare, sellPrice: 40, buyPrice: 120),
 
                 Equipment(RecruitSword, "Espada de recluta", "Una hoja simple pero confiable.", Rarity.Common,
-                    EquipSlot.Weapon, requiredLevel: 1, damage: 6, health: 0, speed: 0f, buyPrice: 60, sellPrice: 18),
+                    EquipSlot.Weapon, requiredLevel: 1, damage: 6, health: 0, speed: 0f, buyPrice: 60, sellPrice: 18, visualId: "sword"),
                 Equipment(LeatherHelmet, "Casco de cuero", "Proteccion basica para la cabeza.", Rarity.Common,
-                    EquipSlot.Helmet, requiredLevel: 2, damage: 0, health: 20, speed: 0f, buyPrice: 70, sellPrice: 20),
+                    EquipSlot.Helmet, requiredLevel: 2, damage: 0, health: 20, speed: 0f, buyPrice: 70, sellPrice: 20, visualId: "leather_helmet"),
                 Equipment(GuardChestplate, "Pechera del guardia", "Armadura ligera de la guardia del valle.", Rarity.Uncommon,
-                    EquipSlot.Chest, requiredLevel: 3, damage: 0, health: 40, speed: 0f, buyPrice: 140, sellPrice: 45),
+                    EquipSlot.Chest, requiredLevel: 3, damage: 0, health: 40, speed: 0f, buyPrice: 140, sellPrice: 45, visualId: "guard_chest"),
                 Equipment(ValleyAmulet, "Amuleto del valle", "Reliquia menor que vibra con energia antigua.", Rarity.Rare,
-                    EquipSlot.Necklace, requiredLevel: 4, damage: 4, health: 25, speed: 0.3f, buyPrice: 260, sellPrice: 90)
+                    EquipSlot.Necklace, requiredLevel: 4, damage: 4, health: 25, speed: 0.3f, buyPrice: 260, sellPrice: 90, visualId: "valley_amulet")
             };
         }
 
@@ -95,7 +95,7 @@ namespace MmorpgPrototype
         }
 
         private static ItemDefinition Equipment(string id, string displayName, string description, Rarity rarity,
-            EquipSlot slot, int requiredLevel, int damage, int health, float speed, int buyPrice, int sellPrice)
+            EquipSlot slot, int requiredLevel, int damage, int health, float speed, int buyPrice, int sellPrice, string visualId = null)
         {
             var item = ScriptableObject.CreateInstance<EquipmentItemDefinition>();
             item.name = id;
@@ -108,6 +108,7 @@ namespace MmorpgPrototype
             item.DamageBonus = damage;
             item.MaxHealthBonus = health;
             item.MoveSpeedBonus = speed;
+            item.VisualId = visualId;
             item.BuyPrice = buyPrice;
             item.SellPrice = sellPrice;
             return item;

@@ -15,6 +15,10 @@ namespace MmorpgPrototype
         [Min(0)] public int MaxHealthBonus;
         [Min(0f)] public float MoveSpeedBonus;
 
+        // Identificador visual consumido por EquipmentVisualController. Vacio
+        // permite que una pieza aporte estadisticas sin imponer una apariencia.
+        public string VisualId;
+
         private void OnEnable()
         {
             Category = ItemCategory.Equipment;

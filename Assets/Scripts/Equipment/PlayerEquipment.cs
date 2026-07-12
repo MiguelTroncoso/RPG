@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace MmorpgPrototype
         private readonly Dictionary<EquipSlot, ItemInstance> equipped = new Dictionary<EquipSlot, ItemInstance>();
 
         public IReadOnlyDictionary<EquipSlot, ItemInstance> Equipped => equipped;
+        public event Action Changed;
 
         public int TotalDamageBonus
         {
@@ -134,6 +136,7 @@ namespace MmorpgPrototype
             equipped[definition.Slot] = instance;
             UpgradeSystem?.ApplyBonuses();
             Hud?.RefreshEquipment();
+            Changed?.Invoke();
             return EquipResult.Success;
         }
 
@@ -152,6 +155,7 @@ namespace MmorpgPrototype
 
             UpgradeSystem?.ApplyBonuses();
             Hud?.RefreshEquipment();
+            Changed?.Invoke();
             return true;
         }
 
@@ -166,6 +170,7 @@ namespace MmorpgPrototype
             Inventory?.AddInstance(instance);
             UpgradeSystem?.ApplyBonuses();
             Hud?.RefreshEquipment();
+            Changed?.Invoke();
             return true;
         }
 
@@ -316,6 +321,7 @@ namespace MmorpgPrototype
 
             UpgradeSystem?.ApplyBonuses();
             Hud?.RefreshEquipment();
+            Changed?.Invoke();
         }
 
         private bool IsBetterThanEquipped(EquipmentItemDefinition candidate)
@@ -368,7 +374,7 @@ namespace MmorpgPrototype
             }
         }
 
-        private EquipmentItemDefinition DefinitionOf(ItemInstance instance)
+        public EquipmentItemDefinition GetDefinition(ItemInstance instance)
         {
             if (instance == null || Database == null)
             {
@@ -376,6 +382,11 @@ namespace MmorpgPrototype
             }
 
             return Database.Get(instance.ItemId) as EquipmentItemDefinition;
+        }
+
+        private EquipmentItemDefinition DefinitionOf(ItemInstance instance)
+        {
+            return GetDefinition(instance);
         }
     }
 }

@@ -516,6 +516,25 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - La musica usa un clip importado de Kenney y mantiene ambiente procedural solo cuando el asset no esta disponible.
 - La seleccion de audio esta documentada en `ASSET_LICENSES.md`.
 
+## Fase 5.38: Prueba Movil, Modelos Femeninos Y Equipo Visual
+
+- El boton `TEST` abre una ventana de diagnostico con resolucion, orientacion,
+  safe area y controles de musica/SFX para probar Android sin tocar el codigo.
+- Guerrero, Chaman y Umbra femeninos usan el FBX CC0 `AnimatedWoman.fbx` de
+  Quaternius; Ninja mantiene `RogueHooded.fbx`. Las clases se diferencian por
+  color, armadura y arma, con fallback procedural si falta un asset.
+- `EquipmentItemDefinition.VisualId` conecta piezas equipables con su
+  apariencia. Casco, pechera, amuleto y espada ya muestran componentes
+  visuales al equiparse.
+- `PlayerEquipment.Changed` y `EquipmentVisualController` actualizan la
+  apariencia despues de equipar, desequipar, destruir o restaurar una pieza.
+- Los bonos siguen calculandose exclusivamente en
+  `EquipmentUpgradeSystem.ApplyBonuses`.
+
+La siguiente mejora visual recomendada es crear conjuntos de armadura
+modulares propios para cada clase y sexo, conservando esta misma interfaz de
+`VisualId` para que el contenido no quede acoplado a la logica de stats.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

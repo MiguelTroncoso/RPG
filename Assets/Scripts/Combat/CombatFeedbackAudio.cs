@@ -57,6 +57,43 @@ namespace MmorpgPrototype
         public void PlayLevelUp() => Play(levelUpClip, 1f);
         public void PlaySkill() => Play(skillClip, 1.08f);
 
+        public void ToggleMusic()
+        {
+            MusicEnabled = !MusicEnabled;
+            if (musicSource == null)
+            {
+                return;
+            }
+
+            if (MusicEnabled)
+            {
+                musicSource.clip = musicClip;
+                musicSource.Play();
+            }
+            else
+            {
+                musicSource.Stop();
+            }
+        }
+
+        public void SetSfxVolume(float volume)
+        {
+            SfxVolume = Mathf.Clamp01(volume);
+            if (source != null)
+            {
+                source.volume = SfxVolume;
+            }
+        }
+
+        public void SetMusicVolume(float volume)
+        {
+            MusicVolume = Mathf.Clamp01(volume);
+            if (musicSource != null)
+            {
+                musicSource.volume = MusicVolume;
+            }
+        }
+
         private void Play(AudioClip clip, float pitch)
         {
             if (source == null || clip == null)
