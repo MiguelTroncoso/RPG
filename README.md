@@ -531,9 +531,24 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Los bonos siguen calculandose exclusivamente en
   `EquipmentUpgradeSystem.ApplyBonuses`.
 
-La siguiente mejora visual recomendada es crear conjuntos de armadura
-modulares propios para cada clase y sexo, conservando esta misma interfaz de
-`VisualId` para que el contenido no quede acoplado a la logica de stats.
+La interfaz `VisualId` queda preparada para que los futuros conjuntos de
+armadura no queden acoplados a la logica de stats.
+
+## Fase 5.39: Sets Modulares Y Preparacion Android
+
+- `ArmorVisualSetDefinition` define ocho perfiles clase/sexo con estilo,
+  colores, silueta y piezas distintivas para Guerrero, Ninja, Chaman y Umbra.
+- `DefaultArmorVisualSets` mantiene un fallback runtime reutilizable, listo
+  para reemplazarse por assets ScriptableObject sin cambiar el avatar.
+- El flujo `MMORPG > Android > Apply Android Settings` configura identificador,
+  ARM64, SDK minimo 26, target SDK 35, landscape y 60 FPS en dispositivo.
+- La build debug fue intentada en entorno aislado y queda bloqueada porque esta
+  instalacion no tiene `PlaybackEngines/AndroidPlayer`; Unity muestra el
+  mensaje exacto para instalar Android Build Support desde Hub.
+- El diagnostico movil ahora incluye modelo del dispositivo, DPI y FPS objetivo.
+
+La prueba fisica queda pendiente de instalar el modulo Android y conectar un
+dispositivo; no se marco como completada artificialmente.
 
 ## Clases Iniciales
 

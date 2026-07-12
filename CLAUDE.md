@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.38 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.39 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -92,11 +92,17 @@ simple y autocontenido.
   una prueba en dispositivo.
 - `EquipmentVisualController` escucha `PlayerEquipment.Changed` y aplica
   `EquipmentItemDefinition.VisualId` al avatar sin duplicar el calculo de stats.
+- `DefaultArmorVisualSets` aporta ocho perfiles de armadura clase/sexo con
+  estilos Knight, Assassin, Spirit y Void. El runtime fallback puede migrarse
+  a assets ScriptableObject sin cambiar el contrato del avatar.
+- `AndroidBuildTools` configura ARM64, SDK minimo 26, target SDK 35,
+  identificador de paquete y landscape. La build no puede ejecutarse hasta
+  instalar Android Build Support en Unity Hub.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
-- Siguientes candidatos: probar una build Android real y anotar resolucion,
-  safe area y audio; crear conjuntos de armadura modulares especificos por
-  clase/sexo; jugar sesiones de prueba en zonas 41-105 y ajustar con DATOS;
-  pulir comercio y uso tactil de items.
+- Siguientes candidatos: instalar Android Build Support, generar la APK debug
+  y anotar resolucion, safe area, FPS y audio; convertir los perfiles de
+  armadura en assets editables; jugar sesiones de prueba en zonas 41-105 y
+  ajustar con DATOS; pulir comercio y uso tactil de items.

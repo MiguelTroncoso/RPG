@@ -304,6 +304,21 @@ Criterio de exito: equipar una pieza cambia sus bonos y deja una diferencia
 visible en el avatar; la ventana TEST permite registrar una prueba movil
 repetible antes de ajustar escala o audio con datos reales.
 
+## Fase 5.39: Sets Modulares Y Preparacion Android
+
+Objetivo: separar la identidad visual de cada clase/sexo y dejar una ruta
+repetible para instalar el prototipo en Android.
+
+- Ocho perfiles `ArmorVisualSetDefinition` con estilo y silueta. [Implementado]
+- Fallback runtime `DefaultArmorVisualSets` para proyectos sin assets generados. [Implementado]
+- Diagnostico con dispositivo, DPI y FPS objetivo. [Implementado]
+- Configuracion batch Android: bundle, ARM64, SDK 26/35 y landscape. [Implementado]
+- APK debug bloqueada por falta de `PlaybackEngines/AndroidPlayer`. [Bloqueado externamente]
+
+Criterio de exito: con Android Build Support instalado, `MMORPG > Android >
+Build Debug APK` genera una APK instalable y la ventana TEST permite anotar
+resolucion, safe area, FPS y audio del dispositivo.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.
