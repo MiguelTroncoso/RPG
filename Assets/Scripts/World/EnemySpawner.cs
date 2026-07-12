@@ -14,6 +14,7 @@ namespace MmorpgPrototype
         public PrototypeHud Hud;
         public LootTableConfig Loot;
         public ZoneDefinition Zone;
+        public CombatTelemetry Telemetry;
         public float RespawnDelay = 4.5f;
 
         private readonly List<GameObject> normals = new List<GameObject>();
@@ -197,7 +198,9 @@ namespace MmorpgPrototype
             reward.GoldMax = goldMax;
             reward.Tier = tier;
             reward.EnemyId = enemyId ?? string.Empty;
+            reward.ZoneId = Zone != null ? Zone.DisplayName : string.Empty;
             reward.GuaranteedDrop = guaranteedDrop ?? string.Empty;
+            reward.Telemetry = Telemetry;
 
             return enemy;
         }

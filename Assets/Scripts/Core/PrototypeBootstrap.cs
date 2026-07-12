@@ -35,6 +35,10 @@ namespace MmorpgPrototype
             var blacksmith = CreateBlacksmithNpc(player);
             var storage = CreateStorageNpc(player);
             var hud = CreateHudAndControls(player, shop, blacksmith, storage);
+            var telemetry = player.GetComponent<CombatTelemetry>();
+            telemetry.Hud = hud;
+            telemetry.Network = player.GetComponent<MmorpgNetworkClient>();
+            telemetry.Initialize(player.GetComponent<Health>(), zones);
             shop.Hud = hud;
             blacksmith.Hud = hud;
             storage.Hud = hud;
@@ -211,6 +215,7 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerSkills>();
             player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
+            player.AddComponent<CombatTelemetry>();
 
             return player;
         }
@@ -296,6 +301,7 @@ namespace MmorpgPrototype
             spawner.Hud = hud;
             spawner.Loot = LoadLootTable();
             spawner.Zone = zone;
+            spawner.Telemetry = player.GetComponent<CombatTelemetry>();
         }
 
         private static System.Collections.Generic.List<QuestDefinition> LoadQuestLine()
@@ -433,6 +439,7 @@ namespace MmorpgPrototype
             worldEvent.Inventory = player.GetComponent<InventorySystem>();
             worldEvent.QuestLog = player.GetComponent<PlayerQuestLog>();
             worldEvent.Hud = hud;
+            worldEvent.Telemetry = player.GetComponent<CombatTelemetry>();
         }
 
         private static PrototypeHud CreateHudAndControls(GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage)
@@ -671,6 +678,7 @@ namespace MmorpgPrototype
             network.ClassController = player.GetComponent<PlayerClassController>();
             network.Identity = player.GetComponent<PlayerCharacterIdentity>();
             network.Progression = player.GetComponent<PlayerProgression>();
+            network.Persistence = player.GetComponent<PlayerPersistence>();
             player.GetComponent<PlayerProgression>().Network = network;
 
             network.NetworkStatusText = CreateText(parent, "Network Status", Localization.Tr("net.status_offline"), 20, TextAnchor.MiddleRight);

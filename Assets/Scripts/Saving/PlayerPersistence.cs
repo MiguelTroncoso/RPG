@@ -99,6 +99,12 @@ namespace MmorpgPrototype
             }
         }
 
+        public string ExportJson()
+        {
+            var data = Capture();
+            return data != null ? JsonUtility.ToJson(data) : string.Empty;
+        }
+
         public void ApplyLoadedData(PlayerSaveData data)
         {
             if (data == null)
@@ -140,6 +146,7 @@ namespace MmorpgPrototype
 
             HasActiveCharacter = true;
             autoSaveTimer = 0f;
+            SaveNow();
         }
 
         // El CharacterController pisa los cambios directos de transform:

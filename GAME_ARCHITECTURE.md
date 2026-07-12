@@ -619,11 +619,12 @@ tambien estan implementadas (zonas 2-3, guardado de posicion, i18n parcial,
 ventana de stats, autoridad inicial del servidor, animacion procedural del
 avatar, `StatSheet` con modificadores por origen, y creacion/habilidades con
 claves i18n, Zona 4, persistencia basica de servidor, puente para Animator real,
-i18n visible secundaria, zonas 5-10 hasta nivel 105, y balance/feedback inicial
-de combate). Siguientes candidatos, en orden sugerido: importar clips/modelos
-reales de personaje, persistencia de servidor para inventario/equipo/misiones,
-balancear zonas 41-105 en Play con telemetria simple, arte/sonido real para
-zonas finales, y pulido de UI mobile/inventario.
+i18n visible secundaria, zonas 5-10 hasta nivel 105, balance/feedback inicial
+de combate, telemetria por zona y snapshot completo de guardado en servidor).
+Siguientes candidatos, en orden sugerido: importar clips/modelos reales de
+personaje, balancear zonas 41-105 en Play con telemetria real, crear pantalla
+debug de telemetria, arte/sonido real para zonas finales, y pulido de UI
+mobile/inventario.
 
 ---
 

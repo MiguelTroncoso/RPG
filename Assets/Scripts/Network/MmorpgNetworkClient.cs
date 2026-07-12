@@ -17,10 +17,13 @@ namespace MmorpgPrototype
         public PlayerClassController ClassController;
         public PlayerCharacterIdentity Identity;
         public PlayerProgression Progression;
+        public PlayerPersistence Persistence;
         public Text NetworkStatusText;
         public Text ChatLogText;
         public InputField UrlInput;
         public InputField ChatInput;
+        public bool AcceptServerSaveOnConnect = true;
+        public float SaveSyncIntervalSeconds = 15f;
 
         private readonly Queue<string> incoming = new Queue<string>();
         private readonly object incomingLock = new object();
@@ -38,8 +41,11 @@ namespace MmorpgPrototype
         private int lastLevel = -1;
         private float nextPositionSend;
         private float nextHelloCheck;
+        private float nextSaveSync;
         private bool isConnecting;
         private string playerKey = string.Empty;
+        private string lastSentSaveJson = string.Empty;
+        private bool receivedServerSave;
 
         private bool IsConnected => socket != null && socket.State == WebSocketState.Open;
 
@@ -54,6 +60,7 @@ namespace MmorpgPrototype
             ProcessIncoming();
             SendPositionTick();
             SendClassChangeTick();
+            SendSaveStateTick();
         }
 
         private void OnDestroy()
@@ -226,6 +233,9 @@ namespace MmorpgPrototype
                     case "chat":
                         HandleChat(JsonUtility.FromJson<NetworkChatMessage>(json));
                         break;
+                    case "savedState":
+                        HandleSavedState(JsonUtility.FromJson<SavedStateMessage>(json));
+                        break;
                     case "activity":
                         HandleActivity(JsonUtility.FromJson<ActivityMessage>(json));
                         break;
@@ -288,6 +298,41 @@ namespace MmorpgPrototype
             }
         }
 
+        private void HandleSavedState(SavedStateMessage message)
+        {
+            if (message == null || string.IsNullOrWhiteSpace(message.stateJson) || Persistence == null)
+            {
+                return;
+            }
+
+            receivedServerSave = true;
+
+            try
+            {
+                var data = JsonUtility.FromJson<PlayerSaveData>(message.stateJson);
+                if (data == null || string.IsNullOrWhiteSpace(data.CharacterName))
+                {
+                    return;
+                }
+
+                if (!AcceptServerSaveOnConnect || !ShouldApplyServerSave(data))
+                {
+                    AppendChat(Localization.Tr("net.chat_server"), "Guardado remoto disponible; se mantiene el progreso local.");
+                    SendSaveStateNow();
+                    return;
+                }
+
+                Persistence.ApplyLoadedData(data);
+                PlayerName = data.CharacterName;
+                lastSentSaveJson = message.stateJson;
+                AppendChat(Localization.Tr("net.chat_server"), $"Guardado remoto aplicado ({data.CharacterName} Nv{data.Level}).");
+            }
+            catch (Exception error)
+            {
+                AppendChat(Localization.Tr("net.chat_server"), $"Guardado remoto invalido: {error.Message}");
+            }
+        }
+
         private void HandleActivity(ActivityMessage message)
         {
             if (message == null || string.IsNullOrEmpty(message.detail) || message.id == localId)
@@ -317,6 +362,20 @@ namespace MmorpgPrototype
             }
 
             _ = SendJsonAsync(new ActionPayload { action = action, detail = detail, value = value });
+        }
+
+        public void SendTelemetry(string summaryJson)
+        {
+            if (!IsConnected || string.IsNullOrWhiteSpace(summaryJson))
+            {
+                return;
+            }
+
+            _ = SendJsonAsync(new TelemetryPayload
+            {
+                playerKey = PlayerKey(),
+                summaryJson = summaryJson
+            });
         }
 
         private void ApplyRemotePlayer(RemotePlayerState state)
@@ -373,6 +432,38 @@ namespace MmorpgPrototype
             _ = SendHelloAsync();
         }
 
+        private void SendSaveStateTick()
+        {
+            if (!IsConnected || Persistence == null || !Persistence.HasActiveCharacter || Time.unscaledTime < nextSaveSync)
+            {
+                return;
+            }
+
+            nextSaveSync = Time.unscaledTime + Mathf.Max(5f, SaveSyncIntervalSeconds);
+            SendSaveStateNow();
+        }
+
+        public void SendSaveStateNow()
+        {
+            if (!IsConnected || Persistence == null || !Persistence.HasActiveCharacter)
+            {
+                return;
+            }
+
+            var stateJson = Persistence.ExportJson();
+            if (string.IsNullOrWhiteSpace(stateJson) || stateJson == lastSentSaveJson)
+            {
+                return;
+            }
+
+            lastSentSaveJson = stateJson;
+            _ = SendJsonAsync(new SaveStatePayload
+            {
+                playerKey = PlayerKey(),
+                stateJson = stateJson
+            });
+        }
+
         private async Task SendHelloAsync()
         {
             var className = ClassController != null && ClassController.Definition != null
@@ -393,6 +484,31 @@ namespace MmorpgPrototype
                 gender = genderName,
                 level = level
             });
+
+            if (receivedServerSave)
+            {
+                SendSaveStateNow();
+            }
+        }
+
+        private bool ShouldApplyServerSave(PlayerSaveData data)
+        {
+            if (Progression == null || !Persistence.HasActiveCharacter)
+            {
+                return true;
+            }
+
+            if (data.Level != Progression.Level)
+            {
+                return data.Level > Progression.Level;
+            }
+
+            if (data.Experience != Progression.Experience)
+            {
+                return data.Experience > Progression.Experience;
+            }
+
+            return data.Gold >= Progression.Gold;
         }
 
         private string CurrentGenderName()

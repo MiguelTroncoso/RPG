@@ -12,11 +12,13 @@ namespace MmorpgPrototype
         public LootTableConfig Loot;
         public EnemyTier Tier = EnemyTier.Normal;
         public string EnemyId = string.Empty;
+        public string ZoneId = string.Empty;
         public bool IsWorldEvent;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
         public PlayerQuestLog QuestLog;
         public PrototypeHud Hud;
+        public CombatTelemetry Telemetry;
 
         private Health health;
         private bool granted;
@@ -29,11 +31,18 @@ namespace MmorpgPrototype
         private void OnEnable()
         {
             health.Died += Grant;
+            health.Damaged += TrackDamage;
         }
 
         private void OnDisable()
         {
             health.Died -= Grant;
+            health.Damaged -= TrackDamage;
+        }
+
+        private void TrackDamage(Health source, int amount)
+        {
+            Telemetry?.RecordEnemyDamaged(source, Tier, EnemyId, ZoneId, amount);
         }
 
         private void Grant(Health _)
@@ -50,6 +59,7 @@ namespace MmorpgPrototype
             Progression.AddExperience(Experience);
             Progression.AddGold(gold);
             QuestLog?.OnEnemyDefeated(Tier, EnemyId, IsWorldEvent);
+            Telemetry?.RecordEnemyDefeated(health, Tier, EnemyId, ZoneId);
 
             if (!string.IsNullOrEmpty(drop))
             {

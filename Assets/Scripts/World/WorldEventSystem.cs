@@ -9,6 +9,7 @@ namespace MmorpgPrototype
         public InventorySystem Inventory;
         public PlayerQuestLog QuestLog;
         public PrototypeHud Hud;
+        public CombatTelemetry Telemetry;
         public float RespawnDelay = 55f;
 
         private readonly Vector3 spawnPosition = new Vector3(0f, 1f, -12f);
@@ -71,6 +72,9 @@ namespace MmorpgPrototype
             reward.GoldMax = 55;
             reward.GuaranteedDrop = DefaultGameItems.AncientFragment;
             reward.IsWorldEvent = true;
+            reward.EnemyId = "world_event_monolith";
+            reward.ZoneId = "World Event";
+            reward.Telemetry = Telemetry;
 
             CreateFloatingLabel(activeMonolith.transform, Localization.Tr("event.monolith_label"));
             Hud?.SetStatus(Localization.Tr("event.monolith_spawned"), 4f);

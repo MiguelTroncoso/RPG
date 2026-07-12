@@ -218,6 +218,20 @@ Objetivo: que el combate sea mas legible y menos brusco antes de balance fino.
 
 Criterio de exito: el jugador entiende cuando viene un golpe y recibe feedback claro al pegar/recibir dano.
 
+## Fase 5.33: Telemetria Y Persistencia Servidor Completa
+
+Objetivo: empezar a medir balance real y permitir que el servidor conserve el
+progreso completo del personaje.
+
+- Telemetria local por zona: kills, muertes, dano dado/recibido y tiempo para matar. [Implementado]
+- Export JSON de telemetria en `Application.persistentDataPath/telemetry`. [Implementado]
+- Envio opcional de telemetria al servidor cuando el cliente esta online. [Implementado]
+- Mensaje `saveState` con snapshot completo `PlayerSaveData`. [Implementado]
+- Mensaje `savedState` para recuperar snapshot remoto al reconectar. [Implementado]
+- Resolucion simple de conflicto: aplicar remoto si esta mas avanzado; si no, re-subir local. [Implementado]
+
+Criterio de exito: despues de jugar online, `Server/data/players.json` conserva inventario/equipo/misiones/posicion y tambien un resumen de telemetria.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

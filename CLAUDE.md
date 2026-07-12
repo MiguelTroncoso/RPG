@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.32 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.33 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -30,9 +30,10 @@ por el servidor, textos del sistema con claves i18n en tabla `es`, Zona 3
 data-only, pipeline de modelos 3D con fallback procedural, animacion procedural
 idle/walk/attack para avatar y fallback, `StatSheet` con modificadores por
 origen, creacion de personaje/habilidades migradas a i18n, Zona 4 data-only,
-y persistencia basica de servidor por `playerKey`, puente para Animator real,
+y persistencia de servidor por `playerKey`, puente para Animator real,
 i18n visible secundaria, zonas 5-10 hasta nivel 105, previews SVG y primera
-pasada de balance/feedback de combate). Detalle en
+pasada de balance/feedback de combate, telemetria de combate y snapshot completo
+de guardado en servidor). Detalle en
 `docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
@@ -83,9 +84,10 @@ simple y autocontenido.
 - Los modelos 3D del avatar se activan al copiar los FBX de KayKit
   Adventurers (ver `ASSET_LICENSES.md`); mientras tanto hay fallback procedural.
   El puente alimenta `Speed` y `Attack` si el modelo trae un Animator compatible.
-- Persistencia del servidor cubre identidad, nivel, posicion, rotacion y ultima
-  mejora validada; inventario/equipo completo/misiones siguen en JSON local.
-- Siguientes candidatos: importar clips/modelos reales de personaje, expandir
-  persistencia del servidor a inventario/equipo/misiones, balancear zonas
-  41-105 en Play con telemetria simple, generar assets reales para las zonas
-  finales, o pulir UI mobile/inventario.
+- Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
+  `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
+- Telemetria de combate local y opcionalmente online: kills, muertes, dano y
+  tiempo promedio para matar por zona.
+- Siguientes candidatos: importar clips/modelos reales de personaje, balancear
+  zonas 41-105 con datos reales de telemetria, generar assets reales para las
+  zonas finales, o pulir UI mobile/inventario.

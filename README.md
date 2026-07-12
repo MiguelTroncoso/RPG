@@ -475,6 +475,15 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Jugador, enemigos y monolito tienen flash breve al recibir dano.
 - Los criticos usan popup mas grande para leerse mejor en combate.
 
+## Fase 5.33: Telemetria Y Persistencia Servidor Completa
+
+- `CombatTelemetry` mide kills, muertes, dano dado/recibido y tiempo promedio para matar por zona.
+- La telemetria se guarda localmente en `Application.persistentDataPath/telemetry/combat-telemetry.json`.
+- Si el cliente esta online, envia snapshots de telemetria al servidor con el mensaje `telemetry`.
+- El cliente envia `saveState` con el JSON completo de `PlayerSaveData`: identidad, clase, sexo, nivel, EXP, oro, atributos, inventario, equipo, misiones, mascotas, montura, almacen y posicion.
+- El servidor guarda el snapshot completo en `Server/data/players.json` por `playerKey` y lo devuelve al reconectar como `savedState`.
+- Si el guardado remoto esta mas avanzado, el cliente lo aplica; si el local esta mejor, conserva el local y lo vuelve a empujar al servidor.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

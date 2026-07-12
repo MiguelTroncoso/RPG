@@ -48,6 +48,14 @@ namespace MmorpgPrototype
     }
 
     [Serializable]
+    public sealed class SavedStateMessage
+    {
+        public string type;
+        public string stateJson;
+        public string updatedAt;
+    }
+
+    [Serializable]
     public sealed class RemotePlayerState
     {
         public string id;
@@ -117,5 +125,21 @@ namespace MmorpgPrototype
     {
         public string type = "chat";
         public string text;
+    }
+
+    [Serializable]
+    public sealed class SaveStatePayload
+    {
+        public string type = "saveState";
+        public string playerKey;
+        public string stateJson;
+    }
+
+    [Serializable]
+    public sealed class TelemetryPayload
+    {
+        public string type = "telemetry";
+        public string playerKey;
+        public string summaryJson;
     }
 }

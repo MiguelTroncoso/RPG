@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.32 y como ejecutar).
+3. README.md (historial de fases 1 a 5.33 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.32 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.33 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -36,6 +36,9 @@ Estado actual (fases 1-5.32 completadas; hoja de ruta A-K completa):
   varianza +/-15%). Botin por LootTableConfig (pesos configurables). Enemigos
   tienen windup/cooldown por tier, aviso visual antes de golpear, cancelacion
   si el jugador sale de rango, popup critico mas grande y flash de dano.
+- Telemetria: CombatTelemetry mide kills, muertes, dano dado/recibido y tiempo
+  promedio para matar por zona; guarda JSON local en persistentDataPath y envia
+  snapshots al servidor si el cliente esta online.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -65,8 +68,9 @@ Estado actual (fases 1-5.32 completadas; hoja de ruta A-K completa):
   mensajes "action" con valor; el servidor (Server/src/server.js) valida
   plausibilidad (nivel creciente <=105, mejora +1..+15) y ritmo (800ms),
   difunde las validas como actividad y devuelve actionRejected al emisor
-  si no pasan. Persistencia basica por playerKey en Server/data/players.json:
-  nombre, clase, sexo, nivel, posicion, rotacion y ultima mejora validada.
+  si no pasan. Persistencia por playerKey en Server/data/players.json:
+  presencia basica, snapshot completo `PlayerSaveData` via `saveState`/
+  `savedState` y ultimo resumen de telemetria recibido.
 - Guardado local JSON (esquema v9) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
@@ -116,9 +120,8 @@ este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
 - Importar clips/modelos reales del pack KayKit si se agregan FBX/clips.
-- Expandir persistencia de servidor a inventario/equipo/misiones.
-- Balancear en Play zonas 41-105 y recompensas.
-- Agregar telemetria simple de tiempo-para-matar y muertes por zona.
+- Balancear en Play zonas 41-105 y recompensas usando el JSON de telemetria.
+- Crear una pantalla/debug panel para revisar telemetria dentro del juego.
 - Generar o importar arte/sonido real para zonas finales.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok

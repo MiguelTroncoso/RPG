@@ -85,6 +85,7 @@ function handleMessage(player, raw) {
         player.gender = incomingGender;
         player.level = Math.max(player.level, incomingLevel ?? player.level);
         persistPlayer(player);
+        sendSavedState(player, saved);
       }
       broadcast({ type: "playerUpdated", player: publicPlayer(player) });
       break;
@@ -141,6 +142,44 @@ function handleMessage(player, raw) {
           detail,
           serverTime: Date.now()
         });
+      }
+      break;
+
+    case "saveState":
+      {
+        const incomingKey = sanitizeKey(message.playerKey) || player.playerKey;
+        if (!incomingKey || (player.playerKey && incomingKey !== player.playerKey)) {
+          send(player.socket, { type: "error", message: "Invalid playerKey for saveState" });
+          break;
+        }
+
+        const parsed = parseJsonPayload(message.stateJson, 65536);
+        if (!parsed) {
+          send(player.socket, { type: "error", message: "Invalid saveState payload" });
+          break;
+        }
+
+        player.playerKey = incomingKey;
+        applySaveDataToPlayer(player, parsed);
+        persistPlayer(player, JSON.stringify(parsed));
+      }
+      break;
+
+    case "telemetry":
+      {
+        const incomingKey = sanitizeKey(message.playerKey) || player.playerKey;
+        if (!incomingKey || (player.playerKey && incomingKey !== player.playerKey)) {
+          break;
+        }
+
+        const parsed = parseJsonPayload(message.summaryJson, 65536);
+        if (!parsed) {
+          break;
+        }
+
+        player.playerKey = incomingKey;
+        player.lastTelemetry = parsed;
+        persistPlayer(player);
       }
       break;
 
@@ -210,6 +249,7 @@ function applyPersistedPlayer(player, saved) {
   player.z = toNumber(saved.z, player.z);
   player.yaw = toNumber(saved.yaw, player.yaw);
   player.lastUpgradeLevel = Number.isInteger(saved.lastUpgradeLevel) ? saved.lastUpgradeLevel : 0;
+  player.lastTelemetry = saved.lastTelemetry && typeof saved.lastTelemetry === "object" ? saved.lastTelemetry : null;
 }
 
 function persistPlayerThrottled(player) {
@@ -221,11 +261,12 @@ function persistPlayerThrottled(player) {
   persistPlayer(player);
 }
 
-function persistPlayer(player) {
+function persistPlayer(player, stateJson = null) {
   if (!player.playerKey) {
     return;
   }
 
+  const previous = persistedPlayers[player.playerKey] ?? {};
   player.lastPersistAt = Date.now();
   persistedPlayers[player.playerKey] = {
     playerKey: player.playerKey,
@@ -238,9 +279,23 @@ function persistPlayer(player) {
     z: player.z,
     yaw: player.yaw,
     lastUpgradeLevel: player.lastUpgradeLevel ?? 0,
+    stateJson: stateJson ?? previous.stateJson ?? "",
+    lastTelemetry: player.lastTelemetry ?? previous.lastTelemetry ?? null,
     updatedAt: new Date(player.lastPersistAt).toISOString()
   };
   savePersistedPlayers();
+}
+
+function sendSavedState(player, saved) {
+  if (!saved || typeof saved.stateJson !== "string" || saved.stateJson.length === 0) {
+    return;
+  }
+
+  send(player.socket, {
+    type: "savedState",
+    stateJson: saved.stateJson,
+    updatedAt: saved.updatedAt ?? ""
+  });
 }
 
 function loadPersistedPlayers() {
@@ -281,6 +336,35 @@ function sanitizeKey(value) {
 function keyFromName(name) {
   const safeName = sanitizeText(name, 24).toLowerCase().replace(/[^a-z0-9_-]/g, "_");
   return safeName || crypto.randomUUID();
+}
+
+function applySaveDataToPlayer(player, data) {
+  player.name = sanitizeText(data.CharacterName ?? data.name, 24) || player.name;
+  player.className = sanitizeClass(data.ClassName ?? data.className) ?? player.className;
+  player.gender = sanitizeGender(data.GenderName ?? data.gender) ?? player.gender;
+  player.level = sanitizeLevel(data.Level ?? data.level) ?? player.level;
+  player.x = toNumber(data.PosX ?? data.x, player.x);
+  player.y = toNumber(data.PosY ?? data.y, player.y);
+  player.z = toNumber(data.PosZ ?? data.z, player.z);
+  player.yaw = toNumber(data.Yaw ?? data.yaw, player.yaw);
+  player.lastUpgradeLevel = Math.max(
+    Number.isInteger(data.WeaponLevel) ? data.WeaponLevel : 0,
+    Number.isInteger(data.ArmorLevel) ? data.ArmorLevel : 0,
+    player.lastUpgradeLevel ?? 0
+  );
+}
+
+function parseJsonPayload(value, maxBytes) {
+  if (typeof value !== "string" || Buffer.byteLength(value, "utf8") > maxBytes) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 
 function sanitizeLevel(value) {
