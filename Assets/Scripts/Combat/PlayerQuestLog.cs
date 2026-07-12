@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace MmorpgPrototype
@@ -98,6 +99,29 @@ namespace MmorpgPrototype
             }
 
             return Localization.Tr("quest.summary", activeQuest.Title, string.Join(" | ", parts));
+        }
+
+        public string DetailedSummary()
+        {
+            if (activeQuest == null)
+            {
+                return completedIds.Count > 0
+                    ? Localization.Tr("quest.all_done")
+                    : Localization.Tr("quest.none");
+            }
+
+            var builder = new StringBuilder();
+            builder.AppendLine(Localization.Tr("menu.quest_title", activeQuest.Title));
+            for (var i = 0; i < activeQuest.Objectives.Length; i++)
+            {
+                var objective = activeQuest.Objectives[i];
+                var current = counters != null && i < counters.Length ? counters[i] : 0;
+                builder.AppendLine(Localization.Tr("menu.quest_objective", objective.Label, current, objective.RequiredCount));
+            }
+
+            var reward = activeQuest.Reward;
+            builder.Append(Localization.Tr("menu.quest_reward", reward != null ? reward.Experience : 0, reward != null ? reward.Gold : 0));
+            return builder.ToString();
         }
 
         public QuestSaveData Export()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace MmorpgPrototype
@@ -265,6 +266,23 @@ namespace MmorpgPrototype
             }
 
             return Localization.Tr("inv.summary", string.Join(" | ", parts));
+        }
+
+        public string DetailedSummary()
+        {
+            if (items.Count == 0)
+            {
+                return Localization.Tr("inv.empty");
+            }
+
+            var builder = new StringBuilder();
+            builder.AppendLine(Localization.Tr("menu.inventory_count", items.Count));
+            foreach (var entry in ExportEntries())
+            {
+                builder.AppendLine(Localization.Tr("menu.item_line", DisplayNameOf(entry.Name), entry.Count));
+            }
+
+            return builder.ToString().TrimEnd();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace MmorpgPrototype
@@ -243,6 +244,32 @@ namespace MmorpgPrototype
             return string.Join(", ", parts) + extra;
         }
 
+        public string DetailedSummary()
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine(Localization.Tr("menu.equipment_stats", TotalDamageBonus, TotalMaxHealthBonus, TotalMoveSpeedBonus));
+
+            var slots = new[]
+            {
+                EquipSlot.Weapon, EquipSlot.Helmet, EquipSlot.Chest, EquipSlot.Gloves,
+                EquipSlot.Pants, EquipSlot.Boots, EquipSlot.Cape, EquipSlot.Necklace,
+                EquipSlot.RingLeft, EquipSlot.RingRight, EquipSlot.Bracelet, EquipSlot.Belt, EquipSlot.Talisman
+            };
+
+            foreach (var slot in slots)
+            {
+                var instance = GetEquipped(slot);
+                var definition = DefinitionOf(instance);
+                var itemName = definition != null
+                    ? definition.DisplayName
+                    : Localization.Tr("menu.empty_slot");
+                var upgrade = instance != null && instance.UpgradeLevel > 0 ? $" +{instance.UpgradeLevel}" : string.Empty;
+                builder.AppendLine(Localization.Tr("menu.slot_line", SlotLabel(slot), itemName, upgrade));
+            }
+
+            return builder.ToString().TrimEnd();
+        }
+
         public List<SavedEquipmentEntry> ExportEntries()
         {
             var entries = new List<SavedEquipmentEntry>(equipped.Count);
@@ -317,6 +344,27 @@ namespace MmorpgPrototype
                     return Localization.Tr("equip.wrong_class", definition.DisplayName);
                 default:
                     return Localization.Tr("equip.cannot", definition.DisplayName);
+            }
+        }
+
+        private static string SlotLabel(EquipSlot slot)
+        {
+            switch (slot)
+            {
+                case EquipSlot.Weapon: return Localization.Tr("slot.weapon");
+                case EquipSlot.Helmet: return Localization.Tr("slot.helmet");
+                case EquipSlot.Chest: return Localization.Tr("slot.chest");
+                case EquipSlot.Gloves: return Localization.Tr("slot.gloves");
+                case EquipSlot.Pants: return Localization.Tr("slot.pants");
+                case EquipSlot.Boots: return Localization.Tr("slot.boots");
+                case EquipSlot.Cape: return Localization.Tr("slot.cape");
+                case EquipSlot.Necklace: return Localization.Tr("slot.necklace");
+                case EquipSlot.RingLeft: return Localization.Tr("slot.ring_left");
+                case EquipSlot.RingRight: return Localization.Tr("slot.ring_right");
+                case EquipSlot.Bracelet: return Localization.Tr("slot.bracelet");
+                case EquipSlot.Belt: return Localization.Tr("slot.belt");
+                case EquipSlot.Talisman: return Localization.Tr("slot.talisman");
+                default: return slot.ToString();
             }
         }
 

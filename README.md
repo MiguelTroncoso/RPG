@@ -492,6 +492,13 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Las zonas 5-10 recibieron una primera calibracion de vida, dano, EXP y oro para evitar saltos excesivos entre rangos.
 - Los estados `RAPIDO`, `LENTO` y `OK` son orientativos hasta reunir sesiones reales de juego.
 
+## Fase 5.35: Menu Mobile De Personaje
+
+- El boton `MENU` abre pestañas separadas para Inventario, Equipo y Mision.
+- Inventario muestra todos los objetos y cantidades; Equipo muestra slots, mejoras y bonos principales.
+- Mision muestra objetivos con progreso y recompensa de la mision activa.
+- El contenido se actualiza por eventos del HUD cuando cambia el estado del jugador.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,7 @@ namespace MmorpgPrototype
         public Text QuestText;
         public Text EquipmentText;
         public Text FeedText;
+        public event Action SummaryChanged;
 
         private readonly List<string> feedLines = new List<string>();
         private Health playerHealth;
@@ -164,6 +166,8 @@ namespace MmorpgPrototype
             {
                 InventoryText.text = inventory != null ? inventory.Summary() : Localization.Tr("inv.empty");
             }
+
+            SummaryChanged?.Invoke();
         }
 
         public void RefreshQuest()
@@ -172,6 +176,8 @@ namespace MmorpgPrototype
             {
                 QuestText.text = questLog != null ? questLog.Summary() : Localization.Tr("quest.none");
             }
+
+            SummaryChanged?.Invoke();
         }
 
         public void RefreshEquipment()
@@ -180,6 +186,8 @@ namespace MmorpgPrototype
             {
                 EquipmentText.text = equipment != null ? equipment.Summary() : Localization.Tr("hud.equipment", "-");
             }
+
+            SummaryChanged?.Invoke();
         }
 
         public void RefreshSkillCooldowns(float skillOneRemaining, float skillTwoRemaining)

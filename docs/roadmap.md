@@ -250,6 +250,18 @@ comparar cada zona con los objetivos TTK normal 3-8 s, elite 8-18 s y jefe
 Criterio de exito: abrir DATOS durante Play muestra las diez zonas y permite
 identificar rapidamente una zona demasiado rapida, lenta o sin muestras.
 
+## Fase 5.35: Menu Mobile De Personaje
+
+Objetivo: hacer legibles inventario, equipo y misiones en una pantalla tactil.
+
+- Boton MENU con pestañas Inventario, Equipo y Mision. [Implementado]
+- Detalle de objetos, cantidades, slots equipados, mejoras y bonos. [Implementado]
+- Detalle de objetivos y recompensas de la mision activa. [Implementado]
+- Actualizacion por eventos al recoger, consumir, equipar, mejorar o avanzar. [Implementado]
+
+Criterio de exito: durante Play el jugador puede abrir MENU y revisar su estado
+sin depender de las lineas compactas del HUD.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.
