@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace MmorpgPrototype
@@ -14,6 +15,7 @@ namespace MmorpgPrototype
         public Health PlayerHealth;
         public PrototypeHud Hud;
         public MmorpgNetworkClient Network;
+        public event Action Changed;
 
         private readonly Dictionary<string, ZoneTelemetrySummary> zones = new Dictionary<string, ZoneTelemetrySummary>();
         private readonly Dictionary<Health, EnemyCombatSample> activeCombats = new Dictionary<Health, EnemyCombatSample>();
@@ -142,7 +144,21 @@ namespace MmorpgPrototype
 
             if (enemyHealth != null && activeCombats.TryGetValue(enemyHealth, out var sample))
             {
-                summary.TotalTimeToKill += Mathf.Max(0f, Time.unscaledTime - sample.StartedAt);
+                var timeToKill = Mathf.Max(0f, Time.unscaledTime - sample.StartedAt);
+                summary.TotalTimeToKill += timeToKill;
+                switch (sample.Tier)
+                {
+                    case EnemyTier.Elite:
+                        summary.EliteTotalTimeToKill += timeToKill;
+                        break;
+                    case EnemyTier.Boss:
+                        summary.BossTotalTimeToKill += timeToKill;
+                        break;
+                    default:
+                        summary.NormalTotalTimeToKill += timeToKill;
+                        break;
+                }
+
                 activeCombats.Remove(enemyHealth);
             }
 
@@ -152,6 +168,46 @@ namespace MmorpgPrototype
         public string ToJson(bool pretty)
         {
             return JsonUtility.ToJson(BuildSnapshot(), pretty);
+        }
+
+        public string BuildDisplayText()
+        {
+            var snapshot = BuildSnapshot();
+            var builder = new StringBuilder();
+            builder.AppendLine(Localization.Tr("telemetry.summary", snapshot.TotalKills, snapshot.TotalDeaths, snapshot.TotalDamageDealt, snapshot.TotalDamageTaken));
+            var targetZone = zoneDefinitions.Count > 0 ? zoneDefinitions[0] : null;
+            builder.AppendLine(Localization.Tr("telemetry.targets",
+                targetZone != null ? targetZone.NormalTtkMin : 3f,
+                targetZone != null ? targetZone.NormalTtkMax : 8f,
+                targetZone != null ? targetZone.EliteTtkMin : 8f,
+                targetZone != null ? targetZone.EliteTtkMax : 18f,
+                targetZone != null ? targetZone.BossTtkMin : 30f,
+                targetZone != null ? targetZone.BossTtkMax : 75f));
+
+            if (zoneDefinitions.Count > 0)
+            {
+                foreach (var zone in zoneDefinitions)
+                {
+                    if (zone == null)
+                    {
+                        continue;
+                    }
+
+                    var summary = zones.TryGetValue(ZoneKey(zone.DisplayName), out var stored) ? stored : null;
+                    builder.AppendLine(BuildZoneLine(zone, summary));
+                }
+            }
+            else
+            {
+                foreach (var summary in snapshot.Zones)
+                {
+                    builder.AppendLine($"{summary.ZoneId}: {summary.Kills} kills");
+                }
+            }
+
+            builder.AppendLine();
+            builder.Append(Localization.Tr("telemetry.path", telemetryPath));
+            return builder.ToString();
         }
 
         public void SaveNow()
@@ -199,6 +255,9 @@ namespace MmorpgPrototype
             {
                 var copy = entry.Copy();
                 copy.AverageTimeToKill = copy.Kills > 0 ? copy.TotalTimeToKill / copy.Kills : 0f;
+                copy.NormalAverageTimeToKill = copy.NormalKills > 0 ? copy.NormalTotalTimeToKill / copy.NormalKills : 0f;
+                copy.EliteAverageTimeToKill = copy.EliteKills > 0 ? copy.EliteTotalTimeToKill / copy.EliteKills : 0f;
+                copy.BossAverageTimeToKill = copy.BossKills > 0 ? copy.BossTotalTimeToKill / copy.BossKills : 0f;
                 snapshot.Zones.Add(copy);
                 snapshot.TotalKills += copy.Kills;
                 snapshot.TotalDeaths += copy.Deaths;
@@ -263,6 +322,7 @@ namespace MmorpgPrototype
         private void MarkDirty()
         {
             dirty = true;
+            Changed?.Invoke();
 
             if (nextSave <= 0f)
             {
@@ -286,6 +346,35 @@ namespace MmorpgPrototype
             {
                 SaveNow();
             }
+        }
+
+        private static string BuildZoneLine(ZoneDefinition zone, ZoneTelemetrySummary summary)
+        {
+            if (summary == null || summary.Kills == 0)
+            {
+                return Localization.Tr("telemetry.zone_no_data", zone.DisplayName, zone.MinLevel, zone.MaxLevel);
+            }
+
+            var normal = FormatTier(summary.NormalKills, summary.NormalAverageTimeToKill, zone.NormalTtkMin, zone.NormalTtkMax);
+            var elite = FormatTier(summary.EliteKills, summary.EliteAverageTimeToKill, zone.EliteTtkMin, zone.EliteTtkMax);
+            var boss = FormatTier(summary.BossKills, summary.BossAverageTimeToKill, zone.BossTtkMin, zone.BossTtkMax);
+            return Localization.Tr("telemetry.zone_line", zone.DisplayName, zone.MinLevel, zone.MaxLevel,
+                summary.Deaths, normal, elite, boss);
+        }
+
+        private static string FormatTier(int kills, float averageTimeToKill, float targetMin, float targetMax)
+        {
+            if (kills == 0)
+            {
+                return Localization.Tr("telemetry.no_kills");
+            }
+
+            var status = averageTimeToKill < targetMin
+                ? Localization.Tr("telemetry.fast")
+                : averageTimeToKill > targetMax
+                    ? Localization.Tr("telemetry.slow")
+                    : Localization.Tr("telemetry.ok");
+            return Localization.Tr("telemetry.tier", kills, averageTimeToKill, status);
         }
 
         private struct EnemyCombatSample
@@ -321,6 +410,12 @@ namespace MmorpgPrototype
         public int DamageTaken;
         public float TotalTimeToKill;
         public float AverageTimeToKill;
+        public float NormalTotalTimeToKill;
+        public float EliteTotalTimeToKill;
+        public float BossTotalTimeToKill;
+        public float NormalAverageTimeToKill;
+        public float EliteAverageTimeToKill;
+        public float BossAverageTimeToKill;
 
         public ZoneTelemetrySummary Copy()
         {
@@ -335,7 +430,13 @@ namespace MmorpgPrototype
                 DamageDealt = DamageDealt,
                 DamageTaken = DamageTaken,
                 TotalTimeToKill = TotalTimeToKill,
-                AverageTimeToKill = AverageTimeToKill
+                AverageTimeToKill = AverageTimeToKill,
+                NormalTotalTimeToKill = NormalTotalTimeToKill,
+                EliteTotalTimeToKill = EliteTotalTimeToKill,
+                BossTotalTimeToKill = BossTotalTimeToKill,
+                NormalAverageTimeToKill = NormalAverageTimeToKill,
+                EliteAverageTimeToKill = EliteAverageTimeToKill,
+                BossAverageTimeToKill = BossAverageTimeToKill
             };
         }
     }

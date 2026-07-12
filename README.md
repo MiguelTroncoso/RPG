@@ -484,6 +484,14 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - El servidor guarda el snapshot completo en `Server/data/players.json` por `playerKey` y lo devuelve al reconectar como `savedState`.
 - Si el guardado remoto esta mas avanzado, el cliente lo aplica; si el local esta mejor, conserva el local y lo vuelve a empujar al servidor.
 
+## Fase 5.34: Panel De Telemetria Y Balance 41-105
+
+- El boton `DATOS` abre un panel dentro del juego con kills, muertes, dano dado/recibido y ruta del JSON local.
+- La telemetria separa el tiempo medio para derrotar enemigos normales, elites y jefes por zona.
+- `ZoneDefinition` expone objetivos TTK configurables: normal 3-8 s, elite 8-18 s y jefe 30-75 s.
+- Las zonas 5-10 recibieron una primera calibracion de vida, dano, EXP y oro para evitar saltos excesivos entre rangos.
+- Los estados `RAPIDO`, `LENTO` y `OK` son orientativos hasta reunir sesiones reales de juego.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

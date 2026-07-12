@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.33 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.34 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -88,6 +88,6 @@ simple y autocontenido.
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
-- Siguientes candidatos: importar clips/modelos reales de personaje, balancear
-  zonas 41-105 con datos reales de telemetria, generar assets reales para las
-  zonas finales, o pulir UI mobile/inventario.
+- Siguientes candidatos: importar clips/modelos reales de personaje, jugar
+  sesiones de prueba en zonas 41-105 y ajustar con el panel DATOS, generar
+  assets reales para las zonas finales, o pulir UI mobile/inventario.

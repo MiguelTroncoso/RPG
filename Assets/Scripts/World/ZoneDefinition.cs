@@ -60,5 +60,13 @@ namespace MmorpgPrototype
         [Min(0)] public int BossGoldMax = 160;
         public string BossGuaranteedDrop = DefaultGameItems.ValleyAmulet;
         [Min(1f)] public float BossRespawnSeconds = 90f;
+
+        [Header("Objetivos de balance: tiempo para derrotar")]
+        [Min(0.1f)] public float NormalTtkMin = 3f;
+        [Min(0.1f)] public float NormalTtkMax = 8f;
+        [Min(0.1f)] public float EliteTtkMin = 8f;
+        [Min(0.1f)] public float EliteTtkMax = 18f;
+        [Min(0.1f)] public float BossTtkMin = 30f;
+        [Min(0.1f)] public float BossTtkMax = 75f;
     }
 }

@@ -245,9 +245,9 @@ namespace MmorpgPrototype
                 FrostCreatureId, "Lobo de escarcha", new Color(0.72f, 0.88f, 1f),
                 FrostEliteId, "Vigia del hielo",
                 FrostBossId, "Matriarca Invernal",
-                2100, 78, 18, 760, 80, 120,
-                5200, 135, 34, 1900, 260, 380,
-                15000, 190, 45, 7600, 1800, 2400,
+                1600, 70, 18, 680, 70, 110,
+                4200, 120, 34, 1600, 230, 340,
+                12500, 180, 45, 6500, 1500, 2200,
                 DefaultGameItems.ValleyAmulet);
         }
 
@@ -258,9 +258,9 @@ namespace MmorpgPrototype
                 SunkenCreatureId, "Ahogado antiguo", new Color(0.18f, 0.58f, 0.62f),
                 SunkenEliteId, "Sirviente abisal",
                 SunkenBossId, "Reina de las Mareas Rotas",
-                3600, 108, 28, 1200, 120, 180,
-                8500, 180, 48, 3200, 420, 620,
-                26000, 260, 62, 12500, 3000, 4000,
+                2400, 92, 28, 980, 105, 165,
+                6200, 150, 48, 2400, 360, 560,
+                19000, 225, 62, 9500, 2500, 3600,
                 DefaultGameItems.ProtectionRune);
         }
 
@@ -271,9 +271,9 @@ namespace MmorpgPrototype
                 ObsidianCreatureId, "Forjado de obsidiana", new Color(0.42f, 0.12f, 0.1f),
                 ObsidianEliteId, "Martillo viviente",
                 ObsidianBossId, "Senor del Yunque Negro",
-                5600, 145, 42, 1900, 180, 260,
-                13000, 245, 70, 5000, 720, 980,
-                42000, 360, 88, 21000, 5200, 6800,
+                3400, 120, 42, 1400, 155, 235,
+                9000, 195, 70, 3500, 620, 900,
+                28000, 300, 88, 14000, 4600, 6200,
                 DefaultGameItems.ValleyMedal);
         }
 
@@ -284,9 +284,9 @@ namespace MmorpgPrototype
                 AstralCreatureId, "Semilla estelar", new Color(0.42f, 0.52f, 0.95f),
                 AstralEliteId, "Guardia zodiacal",
                 AstralBossId, "Arbol de Constelaciones",
-                8200, 190, 58, 3000, 280, 400,
-                19000, 310, 92, 8200, 1100, 1450,
-                68000, 470, 118, 33000, 8200, 10800,
+                4700, 155, 58, 2000, 250, 370,
+                12500, 250, 92, 5000, 980, 1350,
+                42000, 390, 118, 21000, 7000, 9800,
                 DefaultGameItems.ProtectionRune);
         }
 
@@ -297,9 +297,9 @@ namespace MmorpgPrototype
                 EclipseCreatureId, "Devoto del eclipse", new Color(0.46f, 0.34f, 0.68f),
                 EclipseEliteId, "Profeta sin sombra",
                 EclipseBossId, "Sol Negro",
-                12000, 250, 78, 4700, 420, 620,
-                28000, 410, 124, 12500, 1750, 2300,
-                98000, 620, 155, 52000, 12500, 16000,
+                6500, 195, 78, 2900, 360, 560,
+                18000, 320, 124, 7200, 1500, 2100,
+                65000, 500, 155, 32000, 10500, 14500,
                 DefaultGameItems.ValleyAmulet);
         }
 
@@ -310,9 +310,9 @@ namespace MmorpgPrototype
                 ThroneCreatureId, "Heraldo del vacio", new Color(0.28f, 0.12f, 0.36f),
                 ThroneEliteId, "Caballero sin nombre",
                 ThroneBossId, "Rey Sin Alba",
-                18000, 330, 105, 7600, 700, 950,
-                44000, 560, 165, 21000, 2900, 3800,
-                160000, 850, 220, 90000, 22000, 30000,
+                9000, 250, 105, 4300, 600, 850,
+                26000, 420, 165, 10500, 2500, 3600,
+                100000, 680, 220, 52000, 18000, 26000,
                 DefaultGameItems.ProtectionRune,
                 15);
         }
@@ -377,6 +377,12 @@ namespace MmorpgPrototype
             zone.BossGoldMax = bossGoldMax;
             zone.BossGuaranteedDrop = guaranteedDrop;
             zone.BossRespawnSeconds = 210f;
+            zone.NormalTtkMin = 3f;
+            zone.NormalTtkMax = 8f;
+            zone.EliteTtkMin = 8f;
+            zone.EliteTtkMax = 18f;
+            zone.BossTtkMin = 30f;
+            zone.BossTtkMax = 75f;
 
             return zone;
         }

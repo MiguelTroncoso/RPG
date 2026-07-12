@@ -610,6 +610,10 @@ namespace MmorpgPrototype
             var statsWindow = CreateStatsWindow(parent, player);
             var statsButton = CreateRoundButton(parent, "Stats Button", Localization.Tr("ui.stats"), new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
             statsButton.onClick.AddListener(statsWindow.Toggle);
+
+            var telemetryWindow = CreateTelemetryWindow(parent, player);
+            var telemetryButton = CreateRoundButton(parent, "Telemetry Button", Localization.Tr("ui.telemetry"), new Vector2(0f, 1f), new Vector2(652f, -396f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
+            telemetryButton.onClick.AddListener(telemetryWindow.Toggle);
         }
 
         private static StatsWindowController CreateStatsWindow(Transform parent, GameObject player)
@@ -650,6 +654,42 @@ namespace MmorpgPrototype
             agilityButton.onClick.AddListener(controller.SpendAgility);
 
             var closeButton = CreateRoundButton(window.transform, "Close Stats", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(160f, 44f), new Color(0.32f, 0.32f, 0.36f), 19);
+            closeButton.onClick.AddListener(controller.Toggle);
+
+            window.SetActive(false);
+            return controller;
+        }
+
+        private static TelemetryWindowController CreateTelemetryWindow(Transform parent, GameObject player)
+        {
+            var window = CreateUiObject("Telemetry Window", parent);
+            var windowRect = window.GetComponent<RectTransform>();
+            SetRect(windowRect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(860f, 560f), Vector2.zero);
+
+            var background = window.AddComponent<Image>();
+            background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
+            background.raycastTarget = true;
+
+            var title = CreateText(window.transform, "Title", Localization.Tr("ui.telemetry_title"), 30, TextAnchor.MiddleCenter);
+            title.fontStyle = FontStyle.Bold;
+            SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(820f, 44f), new Vector2(0f, -16f));
+
+            var controller = window.AddComponent<TelemetryWindowController>();
+            controller.Panel = window;
+            controller.Telemetry = player.GetComponent<CombatTelemetry>();
+            controller.BodyText = CreateText(window.transform, "Body", string.Empty, 17, TextAnchor.UpperLeft);
+            controller.BodyText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            controller.BodyText.verticalOverflow = VerticalWrapMode.Overflow;
+            controller.BodyText.supportRichText = false;
+            SetRect(controller.BodyText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(790f, 410f), new Vector2(0f, -70f));
+
+            var refreshButton = CreateRoundButton(window.transform, "Refresh Telemetry", Localization.Tr("ui.telemetry_refresh"), new Vector2(0.5f, 0f), new Vector2(-245f, 42f), new Vector2(190f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
+            refreshButton.onClick.AddListener(controller.Refresh);
+
+            var saveButton = CreateRoundButton(window.transform, "Save Telemetry", Localization.Tr("ui.telemetry_save"), new Vector2(0.5f, 0f), new Vector2(0f, 42f), new Vector2(190f, 42f), new Color(0.28f, 0.38f, 0.2f), 17);
+            saveButton.onClick.AddListener(controller.SaveNow);
+
+            var closeButton = CreateRoundButton(window.transform, "Close Telemetry", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(245f, 42f), new Vector2(160f, 42f), new Color(0.32f, 0.32f, 0.36f), 17);
             closeButton.onClick.AddListener(controller.Toggle);
 
             window.SetActive(false);

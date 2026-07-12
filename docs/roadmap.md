@@ -232,6 +232,24 @@ progreso completo del personaje.
 
 Criterio de exito: despues de jugar online, `Server/data/players.json` conserva inventario/equipo/misiones/posicion y tambien un resumen de telemetria.
 
+## Fase 5.34: Panel De Telemetria Y Balance 41-105
+
+Objetivo: revisar el ritmo de combate dentro del juego y dejar una primera
+calibracion medible para las zonas finales.
+
+- Panel DATOS dentro del HUD con kills, muertes, dano y archivo local. [Implementado]
+- Tiempo medio para derrotar separado por normales, elites y jefes. [Implementado]
+- Objetivos TTK configurables en `ZoneDefinition` con estados RAPIDO/LENTO/OK. [Implementado]
+- Primera calibracion de vida, dano, EXP y oro para zonas 5-10. [Implementado]
+
+Nota de balance: esta calibracion es un punto de partida antes de contar con
+sesiones reales. El siguiente ajuste debe usar el panel despues de jugar y
+comparar cada zona con los objetivos TTK normal 3-8 s, elite 8-18 s y jefe
+30-75 s.
+
+Criterio de exito: abrir DATOS durante Play muestra las diez zonas y permite
+identificar rapidamente una zona demasiado rapida, lenta o sin muestras.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.
