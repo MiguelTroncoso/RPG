@@ -174,6 +174,8 @@ namespace MmorpgPrototype
         private void PlaySkillMotion()
         {
             GetComponent<AvatarMotionAnimator>()?.PlayAttack();
+            GetComponent<CombatFeedbackAudio>()?.PlaySkill();
+            CombatFeedbackVfx.SpawnSkill(transform.position + Vector3.up * 0.85f, classController.Definition.SkillColor);
         }
     }
 }

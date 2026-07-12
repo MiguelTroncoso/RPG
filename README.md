@@ -393,7 +393,7 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 
 - Cada clase define su modelo real (`CharacterModelResource`): Guerrero=Knight, Ninja=Rogue, Chaman=Mage, Umbra=Barbarian del pack CC0 KayKit Adventurers.
 - `PlayerAvatarVisual` carga el modelo desde Resources si existe; si no, usa el avatar procedural de siempre. Jugadores remotos incluidos, sin tocar mas codigo.
-- Para activarlo: descargar la version gratuita de https://kaylousberg.itch.io/kaykit-adventurers y copiar `Knight.fbx`, `Rogue.fbx`, `Mage.fbx` y `Barbarian.fbx` (con su textura) a `Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/`. Ver `ASSET_LICENSES.md`.
+- Los cuatro FBX y sus texturas ya estan importados en `Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/`. Ver `ASSET_LICENSES.md`.
 - Si los modelos traen `Animator` y parametros `Speed`/`Attack`, el puente de animacion puede alimentarlos.
 
 ## Fase 5.23: Animacion Procedural Del Avatar
@@ -441,7 +441,7 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
   - Parametros `Speed` (float) y `Attack` (trigger).
   - Estados simples `Idle`, `Run` y `Attack` en la Base Layer, aunque no existan parametros.
 - El fallback procedural sigue funcionando si no hay modelo/Animator real.
-- No se importaron clips nuevos: el repositorio todavia no trae modelos/animaciones de personaje, solo armas KayKit. La conexion ya queda lista para cuando agreguemos esos assets.
+- El generador `MMORPG > Characters > Generate KayKit Controllers` crea controladores desde los clips incluidos en cada FBX. Los controladores se guardan en Resources y se conectan automaticamente por clase.
 
 ## Fase 5.29: Pasada Final i18n Visible
 
@@ -498,6 +498,15 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Inventario muestra todos los objetos y cantidades; Equipo muestra slots, mejoras y bonos principales.
 - Mision muestra objetivos con progreso y recompensa de la mision activa.
 - El contenido se actualiza por eventos del HUD cuando cambia el estado del jugador.
+
+## Fase 5.36: Resolucion, Modelos Y Feedback Audiovisual
+
+- `ResponsivePanelScaler` mantiene ventanas modales dentro del safe area en resoluciones pequenas, portrait y landscape.
+- Los modelos KayKit CC0 Knight, Rogue, Mage y Barbarian ya estan importados con sus texturas.
+- `MMORPG > Characters > Generate KayKit Controllers` genera controladores `Idle`, `Run` y `Attack` desde los clips del FBX.
+- Audio procedural ligero para ataque, golpe, critico, dano, habilidad y subida de nivel.
+- Particulas de impacto, habilidades y nivel con material compartido y bajo costo.
+- La prueba visual en dispositivo Android real sigue siendo necesaria antes de cerrar la UX movil.
 
 ## Clases Iniciales
 

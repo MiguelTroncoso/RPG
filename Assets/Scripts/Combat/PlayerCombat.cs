@@ -13,6 +13,7 @@ namespace MmorpgPrototype
 
         private float nextAttackTime;
         private PlayerStatSheet statSheet;
+        private CombatFeedbackAudio feedback;
 
         private PlayerStatSheet Stats => statSheet != null ? statSheet : statSheet = GetComponent<PlayerStatSheet>();
 
@@ -21,6 +22,7 @@ namespace MmorpgPrototype
         private void Awake()
         {
             statSheet = GetComponent<PlayerStatSheet>();
+            feedback = GetComponent<CombatFeedbackAudio>();
         }
 
         private void Update()
@@ -39,6 +41,7 @@ namespace MmorpgPrototype
             }
 
             nextAttackTime = Time.time + AttackCooldown;
+            feedback?.PlayAttack();
             GetComponent<AvatarMotionAnimator>()?.PlayAttack();
             var enemy = FindNearestEnemy(AttackRange);
 
@@ -159,15 +162,18 @@ namespace MmorpgPrototype
 
             if (result.IsMiss)
             {
+                feedback?.PlayMiss();
                 DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, Localization.Tr("combat.miss_popup"), new Color(0.72f, 0.76f, 0.8f));
                 return result;
             }
 
             health.TakeDamage(result.Amount);
+            feedback?.PlayHit(result.IsCritical);
             var popupText = result.IsCritical ? $"{result.Amount}!" : result.Amount.ToString();
             var popupColor = result.IsCritical ? new Color(1f, 0.55f, 0.12f) : color;
             DamagePopup.Spawn(enemy.transform.position + Vector3.up * 2.15f, popupText, popupColor, result.IsCritical ? 1.25f : 1f);
             PrototypePulseAndDestroy.Spawn(enemy.transform.position + Vector3.up * 1.1f, popupColor);
+            CombatFeedbackVfx.SpawnHit(enemy.transform.position + Vector3.up * 1.1f, popupColor, result.IsCritical);
             return result;
         }
 

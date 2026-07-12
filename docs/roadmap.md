@@ -262,6 +262,20 @@ Objetivo: hacer legibles inventario, equipo y misiones en una pantalla tactil.
 Criterio de exito: durante Play el jugador puede abrir MENU y revisar su estado
 sin depender de las lineas compactas del HUD.
 
+## Fase 5.36: Resolucion, Modelos Y Feedback Audiovisual
+
+Objetivo: hacer que la interfaz modal sobreviva a pantallas moviles y que el
+combate tenga una primera respuesta audiovisual clara.
+
+- Escalado responsive de ventanas en portrait, landscape y safe area. [Implementado]
+- Personajes KayKit CC0 importados para las cuatro clases. [Implementado]
+- Cuatro controladores Mecanim generados desde 76 clips por personaje. [Implementado]
+- Audio procedural ligero para ataque, golpe, critico, dano, habilidad y nivel. [Implementado]
+- Particulas de impacto, habilidad y subida de nivel con material cacheado. [Implementado]
+
+Criterio de exito: probar MENU en varias resoluciones no recorta la ventana y
+el combate comunica sus acciones con modelo, animacion, sonido y VFX.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

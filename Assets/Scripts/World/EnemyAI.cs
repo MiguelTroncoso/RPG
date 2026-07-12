@@ -149,8 +149,10 @@ namespace MmorpgPrototype
             }
 
             playerHealth.TakeDamage(result.Amount);
+            Target.GetComponent<CombatFeedbackAudio>()?.PlayPlayerDamage();
             var text = result.IsCritical ? $"{result.Amount}!" : result.Amount.ToString();
             DamagePopup.Spawn(Target.position + Vector3.up * 2.15f, text, new Color(1f, 0.28f, 0.22f), result.IsCritical ? 1.25f : 1f);
+            CombatFeedbackVfx.SpawnHit(Target.position + Vector3.up * 1.05f, new Color(1f, 0.28f, 0.22f), result.IsCritical);
         }
 
         private void FaceTarget(Vector3 direction)

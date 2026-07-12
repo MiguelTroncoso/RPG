@@ -55,6 +55,9 @@ namespace MmorpgPrototype
                     Hud?.AddFeed(Localization.Tr("feed.attribute_points", result.AttributePointsGained));
                 }
 
+                GetComponent<CombatFeedbackAudio>()?.PlayLevelUp();
+                CombatFeedbackVfx.SpawnLevelUp(transform.position + Vector3.up * 0.6f, new Color(1f, 0.82f, 0.22f));
+
                 Network?.SendAction("level_up", Localization.Tr("net.level_up", Level), Level);
             }
 

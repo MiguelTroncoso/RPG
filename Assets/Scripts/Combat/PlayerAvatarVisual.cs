@@ -112,7 +112,31 @@ namespace MmorpgPrototype
                 Destroy(modelCollider);
             }
 
-            BindMotionAnimator(model.GetComponentInChildren<Animator>());
+            var modelAnimator = model.GetComponentInChildren<Animator>();
+            if (modelAnimator == null)
+            {
+                modelAnimator = model.AddComponent<Animator>();
+            }
+
+            if (modelAnimator.avatar == null)
+            {
+                foreach (var importedAvatar in Resources.LoadAll<Avatar>(definition.CharacterModelResource))
+                {
+                    if (importedAvatar != null)
+                    {
+                        modelAnimator.avatar = importedAvatar;
+                        break;
+                    }
+                }
+            }
+
+            var controller = Resources.Load<RuntimeAnimatorController>(definition.AnimatorControllerResource);
+            if (controller != null)
+            {
+                modelAnimator.runtimeAnimatorController = controller;
+            }
+
+            BindMotionAnimator(modelAnimator);
 
             return true;
         }

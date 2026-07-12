@@ -216,6 +216,7 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerPersistence>();
             player.AddComponent<MmorpgNetworkClient>();
             player.AddComponent<CombatTelemetry>();
+            player.AddComponent<CombatFeedbackAudio>();
 
             return player;
         }
@@ -625,6 +626,7 @@ namespace MmorpgPrototype
             var window = CreateUiObject("Stats Window", parent);
             var windowRect = window.GetComponent<RectTransform>();
             SetRect(windowRect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 320f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(560f, 320f);
 
             var background = window.AddComponent<Image>();
             background.color = new Color(0.04f, 0.055f, 0.07f, 0.94f);
@@ -669,6 +671,7 @@ namespace MmorpgPrototype
             var window = CreateUiObject("Telemetry Window", parent);
             var windowRect = window.GetComponent<RectTransform>();
             SetRect(windowRect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(860f, 560f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(860f, 560f);
 
             var background = window.AddComponent<Image>();
             background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
@@ -705,6 +708,7 @@ namespace MmorpgPrototype
             var window = CreateUiObject("Player Menu Window", parent);
             var windowRect = window.GetComponent<RectTransform>();
             SetRect(windowRect, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(860f, 560f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(860f, 560f);
 
             var background = window.AddComponent<Image>();
             background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
