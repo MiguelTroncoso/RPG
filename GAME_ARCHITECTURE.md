@@ -618,10 +618,11 @@ Continúa la numeración de fases del prototipo (la 1–5.6 ya está hecha; ver
 tambien estan implementadas (zonas 2-3, guardado de posicion, i18n parcial,
 ventana de stats, autoridad inicial del servidor, animacion procedural del
 avatar, `StatSheet` con modificadores por origen, y creacion/habilidades con
-claves i18n, Zona 4 y persistencia basica de servidor). Siguientes candidatos,
-en orden sugerido: importacion/control de animaciones reales, persistencia de
-servidor para inventario/equipo/misiones, Zona 5 reutilizando `ZoneDefinition`,
-y pasada final de textos secundarios i18n.
+claves i18n, Zona 4, persistencia basica de servidor, puente para Animator real,
+i18n visible secundaria, y zonas 5-10 hasta nivel 105). Siguientes candidatos,
+en orden sugerido: importar clips/modelos reales de personaje, persistencia de
+servidor para inventario/equipo/misiones, balancear zonas 41-105 en Play, y
+arte/sonido real para zonas finales.
 
 ---
 

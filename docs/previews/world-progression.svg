@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860">
+  <rect width="1280" height="860" fill="#111820"/>
+  <text x="54" y="64" fill="#f2f6ff" font-family="Arial, sans-serif" font-size="34" font-weight="700">Mapa de progresion 1-105</text>
+  <text x="54" y="100" fill="#9fb2c8" font-family="Arial, sans-serif" font-size="18">Vista conceptual de zonas data-driven creadas con ZoneDefinition</text>
+
+  <g font-family="Arial, sans-serif" font-size="17">
+    <rect x="70" y="145" width="1140" height="56" rx="10" fill="#2f6644"/><text x="96" y="181" fill="#ffffff">1-10  Valle de las Reliquias</text><text x="750" y="181" fill="#dcefe4">inicio, mercader, herrero, almacen, monolito</text>
+    <rect x="70" y="210" width="1140" height="56" rx="10" fill="#214f31"/><text x="96" y="246" fill="#ffffff">11-20  Bosque de los Susurros</text><text x="750" y="246" fill="#dcefe4">Espinosos, Sombras, Anciano de Espinas</text>
+    <rect x="70" y="275" width="1140" height="56" rx="10" fill="#6d5950"/><text x="96" y="311" fill="#ffffff">21-30  Colinas Cenicientas</text><text x="750" y="311" fill="#f0ded8">Cenicientos, Devoradores, Corazon de Ceniza</text>
+    <rect x="70" y="340" width="1140" height="56" rx="10" fill="#3a6575"/><text x="96" y="376" fill="#ffffff">31-40  Cumbres de Cristal</text><text x="750" y="376" fill="#dff7ff">Centinelas, Custodios, Oraculo Fragmentado</text>
+    <rect x="70" y="405" width="1140" height="56" rx="10" fill="#87a4b8"/><text x="96" y="441" fill="#071018">41-50  Paso Glacial</text><text x="750" y="441" fill="#071018">Lobos de escarcha, Vigias, Matriarca Invernal</text>
+    <rect x="70" y="470" width="1140" height="56" rx="10" fill="#1c7782"/><text x="96" y="506" fill="#ffffff">51-60  Ruinas Sumergidas</text><text x="750" y="506" fill="#ddfbff">Ahogados, Sirvientes abisales, Reina de las Mareas</text>
+    <rect x="70" y="535" width="1140" height="56" rx="10" fill="#631d1a"/><text x="96" y="571" fill="#ffffff">61-70  Forja Obsidiana</text><text x="750" y="571" fill="#ffd9d4">Forjados, Martillos vivientes, Senor del Yunque</text>
+    <rect x="70" y="600" width="1140" height="56" rx="10" fill="#343694"/><text x="96" y="636" fill="#ffffff">71-80  Jardin Astral</text><text x="750" y="636" fill="#e3e4ff">Semillas estelares, Guardias zodiacales, Arbol</text>
+    <rect x="70" y="665" width="1140" height="56" rx="10" fill="#27212d"/><text x="96" y="701" fill="#ffffff">81-90  Santuario del Eclipse</text><text x="750" y="701" fill="#e8ddff">Devotos, Profetas sin sombra, Sol Negro</text>
+    <rect x="70" y="730" width="1140" height="56" rx="10" fill="#150c1f"/><text x="96" y="766" fill="#ffffff">91-105  Trono del Vacio</text><text x="750" y="766" fill="#efe1ff">Heraldos, Caballeros sin nombre, Rey Sin Alba</text>
+  </g>
+
+  <path d="M640 122 L640 812" stroke="#ffffff" stroke-width="3" stroke-opacity="0.16" stroke-dasharray="9 10"/>
+  <circle cx="640" cy="173" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="238" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="303" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="368" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="433" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="498" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="563" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="628" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="693" r="7" fill="#ffffff"/>
+  <circle cx="640" cy="758" r="7" fill="#ffffff"/>
+</svg>

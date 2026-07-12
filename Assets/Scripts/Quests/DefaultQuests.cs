@@ -27,6 +27,24 @@ namespace MmorpgPrototype
         public const string CrystalSentinels = "crystal_sentinels";
         public const string CrystalEliteHunt = "crystal_elite_hunt";
         public const string CrystalBossHunt = "crystal_boss_hunt";
+        public const string FrostFront = "frost_front";
+        public const string FrostEliteHunt = "frost_elite_hunt";
+        public const string FrostBossHunt = "frost_boss_hunt";
+        public const string SunkenDead = "sunken_dead";
+        public const string SunkenEliteHunt = "sunken_elite_hunt";
+        public const string SunkenBossHunt = "sunken_boss_hunt";
+        public const string ObsidianForged = "obsidian_forged";
+        public const string ObsidianEliteHunt = "obsidian_elite_hunt";
+        public const string ObsidianBossHunt = "obsidian_boss_hunt";
+        public const string AstralSeeds = "astral_seeds";
+        public const string AstralEliteHunt = "astral_elite_hunt";
+        public const string AstralBossHunt = "astral_boss_hunt";
+        public const string EclipseDevotees = "eclipse_devotees";
+        public const string EclipseEliteHunt = "eclipse_elite_hunt";
+        public const string EclipseBossHunt = "eclipse_boss_hunt";
+        public const string ThroneHeralds = "throne_heralds";
+        public const string ThroneEliteHunt = "throne_elite_hunt";
+        public const string ThroneBossHunt = "throne_boss_hunt";
 
         public static List<QuestDefinition> CreateAll()
         {
@@ -186,12 +204,192 @@ namespace MmorpgPrototype
 
                 Quest(CrystalBossHunt, 16, "El Oraculo Fragmentado",
                     "El Oraculo Fragmentado intenta recomponer la corrupcion en las cumbres. Detenlo.",
-                    "Las cumbres dejan de cantar. El camino hacia regiones mas peligrosas queda abierto.",
+                    "Las cumbres dejan de cantar. El paso glacial se abre hacia el norte.",
                     new[]
                     {
                         Objective(QuestObjectiveType.KillEnemies, DefaultZones.CrystalBossId, 1, "Derrota al Oraculo Fragmentado")
                     },
                     Reward(7000, 3200, Item(DefaultGameItems.ValleyMedal, 1)),
+                    FrostFront),
+
+                Quest(FrostFront, 17, "Frontera glacial",
+                    "El Paso Glacial corta el avance con bestias de escarcha. Reduce su manada.",
+                    "La nieve deja de moverse. Aun quedan vigias marcando el camino.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.FrostCreatureId, 10, "Derrota Lobos de escarcha")
+                    },
+                    Reward(9000, 4200, Item(DefaultGameItems.MinorPotion, 3)),
+                    FrostEliteHunt),
+
+                Quest(FrostEliteHunt, 18, "Vigias del hielo",
+                    "Los Vigias del hielo custodian los puentes helados. Derrota a tres.",
+                    "Los puentes ya no tienen ojos. La Matriarca Invernal ruge desde la cima.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.FrostEliteId, 3, "Derrota Vigias del hielo")
+                    },
+                    Reward(11000, 5200, Item(DefaultGameItems.ProtectionRune, 1)),
+                    FrostBossHunt),
+
+                Quest(FrostBossHunt, 19, "La Matriarca Invernal",
+                    "La Matriarca Invernal quiere cubrir el valle bajo hielo eterno. Derribala.",
+                    "El frio retrocede y revela unas ruinas bajo aguas oscuras.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.FrostBossId, 1, "Derrota a la Matriarca Invernal")
+                    },
+                    Reward(16000, 7200, Item(DefaultGameItems.ValleyMedal, 1)),
+                    SunkenDead),
+
+                Quest(SunkenDead, 20, "Ruinas sumergidas",
+                    "En las Ruinas Sumergidas caminan ahogados antiguos. Despeja la entrada.",
+                    "Los viejos cuerpos se hunden otra vez, pero algo abisal responde.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.SunkenCreatureId, 10, "Derrota Ahogados antiguos")
+                    },
+                    Reward(19000, 8500, Item(DefaultGameItems.MinorPotion, 4)),
+                    SunkenEliteHunt),
+
+                Quest(SunkenEliteHunt, 21, "Sirvientes abisales",
+                    "Los Sirvientes abisales recogen voces en las ruinas. Rompe su ritual.",
+                    "El ritual se apaga. La Reina de las Mareas Rotas se muestra.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.SunkenEliteId, 3, "Derrota Sirvientes abisales")
+                    },
+                    Reward(23000, 10000, Item(DefaultGameItems.ProtectionRune, 1)),
+                    SunkenBossHunt),
+
+                Quest(SunkenBossHunt, 22, "Mareas rotas",
+                    "La Reina de las Mareas Rotas levanta el agua contra la tierra. Detenla.",
+                    "El agua cae. Bajo las ruinas despierta una forja de obsidiana.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.SunkenBossId, 1, "Derrota a la Reina de las Mareas Rotas")
+                    },
+                    Reward(32000, 14000, Item(DefaultGameItems.ValleyMedal, 1)),
+                    ObsidianForged),
+
+                Quest(ObsidianForged, 23, "Forjados de obsidiana",
+                    "La Forja Obsidiana produce soldados sin descanso. Destruye sus forjados.",
+                    "La cadena de produccion se rompe. Ahora su martillo busca dueno.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ObsidianCreatureId, 11, "Derrota Forjados de obsidiana")
+                    },
+                    Reward(38000, 16500, Item(DefaultGameItems.MinorPotion, 4)),
+                    ObsidianEliteHunt),
+
+                Quest(ObsidianEliteHunt, 24, "Martillos vivientes",
+                    "Los Martillos vivientes alimentan la forja con golpes de guerra. Caza tres.",
+                    "La forja tiembla. El Senor del Yunque Negro sale a defenderla.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ObsidianEliteId, 3, "Derrota Martillos vivientes")
+                    },
+                    Reward(45000, 19000, Item(DefaultGameItems.ProtectionRune, 1)),
+                    ObsidianBossHunt),
+
+                Quest(ObsidianBossHunt, 25, "El Yunque Negro",
+                    "El Senor del Yunque Negro quiere rehacer la corrupcion como metal. Derrotalo.",
+                    "La forja se enfria y una luz imposible revela el Jardin Astral.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ObsidianBossId, 1, "Derrota al Senor del Yunque Negro")
+                    },
+                    Reward(62000, 26000, Item(DefaultGameItems.ValleyMedal, 1)),
+                    AstralSeeds),
+
+                Quest(AstralSeeds, 26, "Jardin astral",
+                    "Semillas estelares caen como meteoros vivos. Limpia el Jardin Astral.",
+                    "Las semillas dejan de brotar. Los guardias zodiacales aun sostienen el cielo.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.AstralCreatureId, 11, "Derrota Semillas estelares")
+                    },
+                    Reward(72000, 30000, Item(DefaultGameItems.MinorPotion, 5)),
+                    AstralEliteHunt),
+
+                Quest(AstralEliteHunt, 27, "Guardias zodiacales",
+                    "Los Guardias zodiacales protegen el centro del jardin. Derrota a tres.",
+                    "Las constelaciones tiemblan. El Arbol de Constelaciones pierde sus raices.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.AstralEliteId, 3, "Derrota Guardias zodiacales")
+                    },
+                    Reward(85000, 36000, Item(DefaultGameItems.ProtectionRune, 1)),
+                    AstralBossHunt),
+
+                Quest(AstralBossHunt, 28, "Raices de estrellas",
+                    "El Arbol de Constelaciones guia la corrupcion desde el cielo. Talo sus raices.",
+                    "El cielo se abre y aparece un santuario cubierto por eclipse.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.AstralBossId, 1, "Derrota al Arbol de Constelaciones")
+                    },
+                    Reward(120000, 52000, Item(DefaultGameItems.ValleyMedal, 1)),
+                    EclipseDevotees),
+
+                Quest(EclipseDevotees, 29, "Santuario del eclipse",
+                    "Devotos del eclipse rezan para apagar el dia. Rompe sus filas.",
+                    "Las plegarias callan. Los profetas sin sombra siguen mirando.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.EclipseCreatureId, 12, "Derrota Devotos del eclipse")
+                    },
+                    Reward(140000, 62000, Item(DefaultGameItems.MinorPotion, 5)),
+                    EclipseEliteHunt),
+
+                Quest(EclipseEliteHunt, 30, "Profetas sin sombra",
+                    "Los Profetas sin sombra predicen tu derrota. Demuestra que se equivocan.",
+                    "La profecia se rompe. El Sol Negro desciende sobre el santuario.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.EclipseEliteId, 3, "Derrota Profetas sin sombra")
+                    },
+                    Reward(160000, 72000, Item(DefaultGameItems.ProtectionRune, 1)),
+                    EclipseBossHunt),
+
+                Quest(EclipseBossHunt, 31, "Sol Negro",
+                    "El Sol Negro absorbe la luz de las zonas liberadas. Apagalo.",
+                    "La luz vuelve, pero revela el Trono del Vacio al final del camino.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.EclipseBossId, 1, "Derrota al Sol Negro")
+                    },
+                    Reward(220000, 95000, Item(DefaultGameItems.ValleyMedal, 1)),
+                    ThroneHeralds),
+
+                Quest(ThroneHeralds, 32, "Heraldos del vacio",
+                    "Los Heraldos del vacio anuncian al ultimo rey. Silencia su marcha.",
+                    "El anuncio termina. Los caballeros sin nombre guardan la puerta.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ThroneCreatureId, 14, "Derrota Heraldos del vacio")
+                    },
+                    Reward(280000, 120000, Item(DefaultGameItems.MinorPotion, 6)),
+                    ThroneEliteHunt),
+
+                Quest(ThroneEliteHunt, 33, "Caballeros sin nombre",
+                    "Los Caballeros sin nombre no recuerdan por que luchan. Libera a cuatro.",
+                    "La puerta del trono se abre. Solo queda el Rey Sin Alba.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ThroneEliteId, 4, "Derrota Caballeros sin nombre")
+                    },
+                    Reward(340000, 150000, Item(DefaultGameItems.ProtectionRune, 2)),
+                    ThroneBossHunt),
+
+                Quest(ThroneBossHunt, 34, "El Rey Sin Alba",
+                    "El Rey Sin Alba espera en el Trono del Vacio. Derrotalo y cierra esta era.",
+                    "El trono cae en silencio. El mundo queda listo para la siguiente gran historia.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ThroneBossId, 1, "Derrota al Rey Sin Alba")
+                    },
+                    Reward(500000, 220000, Item(DefaultGameItems.ValleyMedal, 2), Item(DefaultGameItems.ProtectionRune, 2)),
                     string.Empty)
             };
         }

@@ -6,6 +6,9 @@ namespace MmorpgPrototype
     {
         private static readonly int SpeedHash = Animator.StringToHash("Speed");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
+        private static readonly int IdleStateHash = Animator.StringToHash("Base Layer.Idle");
+        private static readonly int RunStateHash = Animator.StringToHash("Base Layer.Run");
+        private static readonly int AttackStateHash = Animator.StringToHash("Base Layer.Attack");
 
         private Transform visualRoot;
         private Transform leftArm;
@@ -17,6 +20,10 @@ namespace MmorpgPrototype
         private float moveAmount;
         private bool hasSpeedParameter;
         private bool hasAttackParameter;
+        private bool hasIdleState;
+        private bool hasRunState;
+        private bool hasAttackState;
+        private bool modelIsMoving;
 
         private void Awake()
         {
@@ -40,6 +47,10 @@ namespace MmorpgPrototype
             if (modelAnimator != null && modelAnimator.runtimeAnimatorController != null && hasAttackParameter)
             {
                 modelAnimator.SetTrigger(AttackHash);
+            }
+            else if (modelAnimator != null && modelAnimator.runtimeAnimatorController != null && hasAttackState)
+            {
+                modelAnimator.CrossFade(AttackStateHash, 0.05f);
             }
         }
 
@@ -85,23 +96,56 @@ namespace MmorpgPrototype
 
         private void AnimateModel(float movement)
         {
-            if (modelAnimator == null || modelAnimator.runtimeAnimatorController == null || !hasSpeedParameter)
+            if (modelAnimator == null || modelAnimator.runtimeAnimatorController == null)
             {
                 return;
             }
 
-            modelAnimator.SetFloat(SpeedHash, movement);
+            if (hasSpeedParameter)
+            {
+                modelAnimator.SetFloat(SpeedHash, movement);
+                return;
+            }
+
+            if (Time.time < attackUntil && hasAttackState)
+            {
+                return;
+            }
+
+            var shouldMove = movement > 0.08f;
+            if (shouldMove == modelIsMoving)
+            {
+                return;
+            }
+
+            modelIsMoving = shouldMove;
+            if (modelIsMoving && hasRunState)
+            {
+                modelAnimator.CrossFade(RunStateHash, 0.12f);
+            }
+            else if (!modelIsMoving && hasIdleState)
+            {
+                modelAnimator.CrossFade(IdleStateHash, 0.12f);
+            }
         }
 
         private void CacheAnimatorParameters()
         {
             hasSpeedParameter = false;
             hasAttackParameter = false;
+            hasIdleState = false;
+            hasRunState = false;
+            hasAttackState = false;
+            modelIsMoving = false;
 
             if (modelAnimator == null || modelAnimator.runtimeAnimatorController == null)
             {
                 return;
             }
+
+            hasIdleState = modelAnimator.HasState(0, IdleStateHash);
+            hasRunState = modelAnimator.HasState(0, RunStateHash);
+            hasAttackState = modelAnimator.HasState(0, AttackStateHash);
 
             foreach (var parameter in modelAnimator.parameters)
             {

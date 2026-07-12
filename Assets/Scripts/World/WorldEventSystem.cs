@@ -31,7 +31,7 @@ namespace MmorpgPrototype
         private void SpawnMonolith()
         {
             activeMonolith = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            activeMonolith.name = "Monolito Corrupto";
+            activeMonolith.name = Localization.Tr("event.monolith_name");
             activeMonolith.transform.position = spawnPosition;
             activeMonolith.transform.localScale = new Vector3(1.2f, 2.2f, 1.2f);
 
@@ -71,15 +71,15 @@ namespace MmorpgPrototype
             reward.GuaranteedDrop = DefaultGameItems.AncientFragment;
             reward.IsWorldEvent = true;
 
-            CreateFloatingLabel(activeMonolith.transform, "Monolito Corrupto\nEvento de mapa");
-            Hud?.SetStatus("Evento: aparecio el Monolito Corrupto al sur.", 4f);
+            CreateFloatingLabel(activeMonolith.transform, Localization.Tr("event.monolith_label"));
+            Hud?.SetStatus(Localization.Tr("event.monolith_spawned"), 4f);
         }
 
         private void HandleMonolithDestroyed(Health _)
         {
             nextSpawnTime = Time.time + RespawnDelay;
             activeMonolith = null;
-            Hud?.SetStatus("Evento completado: el monolito reaparecera despues.", 4f);
+            Hud?.SetStatus(Localization.Tr("event.monolith_completed"), 4f);
         }
 
         private static void CreateFloatingLabel(Transform parent, string text)
@@ -98,4 +98,3 @@ namespace MmorpgPrototype
         }
     }
 }
-

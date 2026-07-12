@@ -31,7 +31,7 @@ namespace MmorpgPrototype
         private ClientWebSocket socket;
         private CancellationTokenSource cancellation;
         private string localId = string.Empty;
-        private string pendingStatus = "Offline";
+        private string pendingStatus = Localization.Tr("net.status_offline");
         private string lastClassName = string.Empty;
         private string lastGenderName = string.Empty;
         private string lastPlayerName = string.Empty;
@@ -93,7 +93,7 @@ namespace MmorpgPrototype
                 socket = null;
             }
 
-            SetStatus("Offline");
+            SetStatus(Localization.Tr("net.status_offline"));
         }
 
         public void SendChatFromInput()
@@ -116,7 +116,7 @@ namespace MmorpgPrototype
         private async Task ConnectAsync()
         {
             isConnecting = true;
-            SetStatus("Conectando...");
+            SetStatus(Localization.Tr("net.status_connecting"));
 
             try
             {
@@ -130,13 +130,13 @@ namespace MmorpgPrototype
                     : ServerUrl;
 
                 await socket.ConnectAsync(new Uri(url), cancellation.Token);
-                SetStatus($"Online: {url}");
+                SetStatus(Localization.Tr("net.status_online", url));
                 await SendHelloAsync();
                 _ = ReceiveLoopAsync(cancellation.Token);
             }
             catch (Exception error)
             {
-                SetStatus($"Sin conexion: {error.Message}");
+                SetStatus(Localization.Tr("net.status_no_connection", error.Message));
                 socket?.Dispose();
                 socket = null;
             }
@@ -163,7 +163,7 @@ namespace MmorpgPrototype
 
                         if (result.MessageType == WebSocketMessageType.Close)
                         {
-                            SetStatus("Servidor desconectado.");
+                            SetStatus(Localization.Tr("net.status_server_disconnected"));
                             return;
                         }
 
@@ -182,7 +182,7 @@ namespace MmorpgPrototype
             }
             catch (Exception error)
             {
-                SetStatus($"Conexion cerrada: {error.Message}");
+                SetStatus(Localization.Tr("net.status_connection_closed", error.Message));
             }
         }
 
@@ -242,7 +242,7 @@ namespace MmorpgPrototype
         private void HandleWelcome(WelcomeMessage message)
         {
             localId = message.id;
-            AppendChat("Sistema", "Conectado al servidor local.");
+            AppendChat(Localization.Tr("net.chat_system"), Localization.Tr("net.connected"));
         }
 
         private void HandleSnapshot(SnapshotMessage message)
@@ -295,14 +295,14 @@ namespace MmorpgPrototype
                 return;
             }
 
-            AppendChat("Valle", $"{message.name} {message.detail}");
+            AppendChat(Localization.Tr("net.chat_valley"), $"{message.name} {message.detail}");
         }
 
         private void HandleActionRejected(ActionRejectedMessage message)
         {
             if (message != null)
             {
-                AppendChat("Servidor", Localization.Tr("net.rejected", message.action, message.reason));
+                AppendChat(Localization.Tr("net.chat_server"), Localization.Tr("net.rejected", message.action, message.reason));
             }
         }
 
@@ -419,7 +419,7 @@ namespace MmorpgPrototype
         {
             if (!IsConnected)
             {
-                SetStatus("Offline: inicia el server y presiona ONLINE.");
+                SetStatus(Localization.Tr("net.status_offline_hint"));
                 return;
             }
 
@@ -434,7 +434,7 @@ namespace MmorpgPrototype
             }
             catch (Exception error)
             {
-                SetStatus($"Envio fallido: {error.Message}");
+                SetStatus(Localization.Tr("net.status_send_failed", error.Message));
             }
             finally
             {

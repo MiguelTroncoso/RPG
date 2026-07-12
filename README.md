@@ -435,6 +435,37 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Al reconectar, el servidor restaura lo guardado y conserva el mayor nivel entre estado local y estado del servidor.
 - `Server/data/players.json` queda fuera de git; inventario/equipo completo/misiones siguen en el guardado local Unity.
 
+## Fase 5.28: Puente Para Animaciones Reales
+
+- `AvatarMotionAnimator` ahora soporta dos estilos de Animator real:
+  - Parametros `Speed` (float) y `Attack` (trigger).
+  - Estados simples `Idle`, `Run` y `Attack` en la Base Layer, aunque no existan parametros.
+- El fallback procedural sigue funcionando si no hay modelo/Animator real.
+- No se importaron clips nuevos: el repositorio todavia no trae modelos/animaciones de personaje, solo armas KayKit. La conexion ya queda lista para cuando agreguemos esos assets.
+
+## Fase 5.29: Pasada Final i18n Visible
+
+- Estados de red, chat, botones utilitarios, labels de NPCs, carteles de zona, splash y evento del monolito usan claves i18n.
+- Los botones principales (`POTION`, `WEAPON`, `MASCOTA`, `ONLINE`, etc.) ya no estan como literales sueltos en el bootstrap.
+- Quedan como contenido de datos los nombres/dialogos de zonas, enemigos y misiones.
+
+## Fase 5.30: Zonas 5-10 Hasta Nivel 105
+
+- Se agregaron zonas data-driven para cubrir toda la progresion actual:
+  - 41-50 Paso Glacial.
+  - 51-60 Ruinas Sumergidas.
+  - 61-70 Forja Obsidiana.
+  - 71-80 Jardin Astral.
+  - 81-90 Santuario del Eclipse.
+  - 91-105 Trono del Vacio.
+- Cada zona trae enemigos normales, elites, jefe, recompensas y balance base.
+- La cadena principal de misiones crece de 16 a 34 y termina con el Rey Sin Alba.
+
+## Fase 5.31: Previews Visuales
+
+- `docs/previews/world-progression.svg`: mapa conceptual de progresion 1-105.
+- `docs/previews/avatar-and-ui-preview.svg`: preview de clases, avatar procedural, puente de animaciones e i18n.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

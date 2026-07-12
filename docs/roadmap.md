@@ -167,6 +167,45 @@ Objetivo: que el servidor no pierda el estado online basico al reconectar.
 
 Criterio de exito: reiniciar el servidor conserva el estado online basico.
 
+## Fase 5.28: Puente Para Animaciones Reales
+
+Objetivo: aceptar clips reales cuando lleguen assets de personaje.
+
+- Parametros `Speed`/`Attack`. [Implementado]
+- Estados `Idle`/`Run`/`Attack` sin parametros. [Implementado]
+- Fallback procedural intacto. [Implementado]
+
+Criterio de exito: un Animator Controller simple puede manejar el avatar real sin tocar gameplay.
+
+## Fase 5.29: Pasada Final i18n Visible
+
+Objetivo: sacar literales visibles secundarios del codigo de UI/red/eventos.
+
+- Red/chat/errores via claves. [Implementado]
+- Botones utilitarios y labels de mundo via claves. [Implementado]
+- Evento del monolito via claves. [Implementado]
+
+Criterio de exito: los textos visibles centrales pasan por Localization.Tr.
+
+## Fase 5.30: Zonas 5-10 Hasta Nivel 105
+
+Objetivo: cubrir el rango completo 1-105 con zonas y misiones data-driven.
+
+- Paso Glacial, Ruinas Sumergidas, Forja Obsidiana, Jardin Astral, Santuario del Eclipse y Trono del Vacio. [Implementado]
+- Cadena de misiones extendida a 34. [Implementado]
+- Enemigos normales, elites y jefes por zona. [Implementado]
+
+Criterio de exito: la progresion de contenido llega hasta el nivel maximo.
+
+## Fase 5.31: Previews Visuales
+
+Objetivo: dejar imagenes ligeras para revisar direccion visual y progresion.
+
+- Mapa de progresion 1-105 en SVG. [Implementado]
+- Preview de clases/avatar/UI en SVG. [Implementado]
+
+Criterio de exito: se puede inspeccionar el avance visual sin entrar a Play.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

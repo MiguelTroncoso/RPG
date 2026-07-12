@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760">
+  <rect width="1280" height="760" fill="#10151d"/>
+  <text x="54" y="62" fill="#f2f6ff" font-family="Arial, sans-serif" font-size="34" font-weight="700">Preview visual del prototipo</text>
+  <text x="54" y="96" fill="#9fb2c8" font-family="Arial, sans-serif" font-size="18">Avatares por clase, motion procedural y puente para Animator real</text>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="54" y="140" width="1172" height="360" rx="16" fill="#172231" stroke="#30445e"/>
+
+    <g transform="translate(135,185)">
+      <rect x="-46" y="186" width="150" height="42" rx="8" fill="#1e3c78"/>
+      <text x="29" y="214" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">Guerrero</text>
+      <ellipse cx="29" cy="98" rx="28" ry="54" fill="#2f6fee"/>
+      <circle cx="29" cy="36" r="26" fill="#86a9ff"/>
+      <rect x="-25" y="86" width="25" height="14" fill="#ffb83f"/>
+      <rect x="58" y="58" width="14" height="92" rx="5" fill="#eaf4ff" transform="rotate(-28 65 104)"/>
+    </g>
+
+    <g transform="translate(390,185)">
+      <rect x="-46" y="186" width="150" height="42" rx="8" fill="#222631"/>
+      <text x="29" y="214" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">Ninja</text>
+      <ellipse cx="29" cy="98" rx="25" ry="50" fill="#242733"/>
+      <circle cx="29" cy="36" r="24" fill="#5d6476"/>
+      <rect x="5" y="30" width="48" height="9" fill="#b9d5ff"/>
+      <rect x="-12" y="110" width="8" height="64" rx="3" fill="#dbe8ef" transform="rotate(24 -8 142)"/>
+      <rect x="60" y="110" width="8" height="64" rx="3" fill="#dbe8ef" transform="rotate(-24 64 142)"/>
+    </g>
+
+    <g transform="translate(645,185)">
+      <rect x="-46" y="186" width="150" height="42" rx="8" fill="#1e6174"/>
+      <text x="29" y="214" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">Chaman</text>
+      <ellipse cx="29" cy="98" rx="27" ry="52" fill="#36a0d8"/>
+      <circle cx="29" cy="36" r="25" fill="#b5eeff"/>
+      <circle cx="29" cy="-8" r="11" fill="#31f2d8"/>
+      <rect x="72" y="55" width="10" height="122" rx="4" fill="#b68a3d" transform="rotate(-10 77 116)"/>
+      <circle cx="86" cy="49" r="15" fill="#31f2d8"/>
+    </g>
+
+    <g transform="translate(900,185)">
+      <rect x="-46" y="186" width="150" height="42" rx="8" fill="#4e2574"/>
+      <text x="29" y="214" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">Umbra</text>
+      <ellipse cx="29" cy="98" rx="30" ry="56" fill="#552284"/>
+      <circle cx="29" cy="36" r="25" fill="#b186d8"/>
+      <rect x="19" y="-4" width="20" height="42" fill="#c760ff" transform="rotate(45 29 17)"/>
+      <circle cx="29" cy="110" r="15" fill="#c760ff"/>
+    </g>
+
+    <rect x="54" y="536" width="1172" height="132" rx="16" fill="#172231" stroke="#30445e"/>
+    <text x="88" y="580" fill="#ffffff" font-size="22" font-weight="700">Estado actual</text>
+    <text x="88" y="616" fill="#c8d7ea" font-size="18">Idle/walk/attack procedural funcionando en fallback. Si llega un Animator real con Speed/Attack o estados Idle/Run/Attack, el puente lo usa.</text>
+    <text x="88" y="648" fill="#c8d7ea" font-size="18">UI y mensajes principales pasan por i18n. Zonas 1-105 ya tienen rangos, enemigos, elites, jefes y misiones encadenadas.</text>
+  </g>
+</svg>

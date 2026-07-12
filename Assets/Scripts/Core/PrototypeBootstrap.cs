@@ -101,7 +101,7 @@ namespace MmorpgPrototype
             material.color = new Color(0.35f, 0.26f, 0.16f);
             post.GetComponent<Renderer>().sharedMaterial = material;
 
-            CreateWorldLabel(sign.transform, $"{zone.DisplayName}\nZona {zone.MinLevel}-{zone.MaxLevel}", new Color(1f, 0.9f, 0.6f), 2.6f);
+            CreateWorldLabel(sign.transform, Localization.Tr("world.zone_sign", zone.DisplayName, zone.MinLevel, zone.MaxLevel), new Color(1f, 0.9f, 0.6f), 2.6f);
         }
 
         private static void ConfigureRuntime()
@@ -378,7 +378,7 @@ namespace MmorpgPrototype
             shop.Inventory = player.GetComponent<InventorySystem>();
             shop.QuestLog = player.GetComponent<PlayerQuestLog>();
 
-            CreateWorldLabel(npc.transform, "Mercader\ncompra pociones", new Color(1f, 0.92f, 0.55f), 1.55f);
+            CreateWorldLabel(npc.transform, Localization.Tr("world.shop_label"), new Color(1f, 0.92f, 0.55f), 1.55f);
             return shop;
         }
 
@@ -398,7 +398,7 @@ namespace MmorpgPrototype
             blacksmith.Equipment = player.GetComponent<EquipmentUpgradeSystem>();
             blacksmith.QuestLog = player.GetComponent<PlayerQuestLog>();
 
-            CreateWorldLabel(npc.transform, "Herrero\nmejora tu equipo", new Color(0.8f, 0.85f, 0.95f), 1.55f);
+            CreateWorldLabel(npc.transform, Localization.Tr("world.smith_label"), new Color(0.8f, 0.85f, 0.95f), 1.55f);
             return blacksmith;
         }
 
@@ -418,7 +418,7 @@ namespace MmorpgPrototype
             storage.Player = player.transform;
             storage.Storage = storageService;
 
-            CreateWorldLabel(npc.transform, "Almacen\nguarda materiales", new Color(0.95f, 0.85f, 0.6f), 1.35f);
+            CreateWorldLabel(npc.transform, Localization.Tr("world.storage_label"), new Color(0.95f, 0.85f, 0.6f), 1.35f);
             return storage;
         }
 
@@ -479,7 +479,7 @@ namespace MmorpgPrototype
             var movementJoystick = CreateJoystick(uiRoot);
             player.GetComponent<PlayerController>().MovementJoystick = movementJoystick;
 
-            var attackButton = CreateRoundButton(uiRoot, "Attack Button", "ATK", new Vector2(1f, 0f), new Vector2(-170f, 170f), new Vector2(148f, 148f), new Color(0.88f, 0.28f, 0.16f));
+            var attackButton = CreateRoundButton(uiRoot, "Attack Button", Localization.Tr("ui.attack"), new Vector2(1f, 0f), new Vector2(-170f, 170f), new Vector2(148f, 148f), new Color(0.88f, 0.28f, 0.16f));
             attackButton.onClick.AddListener(player.GetComponent<PlayerCombat>().TryAttack);
 
             var skills = player.GetComponent<PlayerSkills>();
@@ -568,38 +568,38 @@ namespace MmorpgPrototype
         {
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
 
-            var potionButton = CreateRoundButton(parent, "Use Potion Button", "POTION", new Vector2(0f, 1f), new Vector2(92f, -348f), new Vector2(128f, 42f), new Color(0.15f, 0.52f, 0.36f), 17);
+            var potionButton = CreateRoundButton(parent, "Use Potion Button", Localization.Tr("ui.potion"), new Vector2(0f, 1f), new Vector2(92f, -348f), new Vector2(128f, 42f), new Color(0.15f, 0.52f, 0.36f), 17);
             potionButton.onClick.AddListener(equipment.TryUsePotion);
 
-            var buyButton = CreateRoundButton(parent, "Buy Potion Button", "BUY 25", new Vector2(0f, 1f), new Vector2(232f, -348f), new Vector2(128f, 42f), new Color(0.47f, 0.34f, 0.11f), 17);
+            var buyButton = CreateRoundButton(parent, "Buy Potion Button", Localization.Tr("ui.buy_potion"), new Vector2(0f, 1f), new Vector2(232f, -348f), new Vector2(128f, 42f), new Color(0.47f, 0.34f, 0.11f), 17);
             buyButton.onClick.AddListener(shop.BuyPotion);
 
-            var weaponButton = CreateRoundButton(parent, "Upgrade Weapon Button", "WEAPON", new Vector2(0f, 1f), new Vector2(372f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.2f, 0.15f), 17);
+            var weaponButton = CreateRoundButton(parent, "Upgrade Weapon Button", Localization.Tr("ui.weapon"), new Vector2(0f, 1f), new Vector2(372f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.2f, 0.15f), 17);
             weaponButton.onClick.AddListener(blacksmith.UpgradeWeapon);
 
-            var armorButton = CreateRoundButton(parent, "Upgrade Armor Button", "ARMOR", new Vector2(0f, 1f), new Vector2(512f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.28f, 0.48f), 17);
+            var armorButton = CreateRoundButton(parent, "Upgrade Armor Button", Localization.Tr("ui.armor"), new Vector2(0f, 1f), new Vector2(512f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.28f, 0.48f), 17);
             armorButton.onClick.AddListener(blacksmith.UpgradeArmor);
 
             var gear = player.GetComponent<PlayerEquipment>();
-            var equipButton = CreateRoundButton(parent, "Auto Equip Button", "EQUIPAR", new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
+            var equipButton = CreateRoundButton(parent, "Auto Equip Button", Localization.Tr("ui.equip"), new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
             equipButton.onClick.AddListener(gear.EquipBestFromInventory);
 
-            var talkButton = CreateRoundButton(parent, "Talk Button", "HABLAR", new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
+            var talkButton = CreateRoundButton(parent, "Talk Button", Localization.Tr("ui.talk"), new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
             talkButton.onClick.AddListener(() => TalkToNearest(player.transform, shop, blacksmith));
 
             var petService = player.GetComponent<PetService>();
-            var petButton = CreateRoundButton(parent, "Pet Button", "MASCOTA", new Vector2(0f, 1f), new Vector2(92f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.4f, 0.14f), 17);
+            var petButton = CreateRoundButton(parent, "Pet Button", Localization.Tr("ui.pet"), new Vector2(0f, 1f), new Vector2(92f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.4f, 0.14f), 17);
             petButton.onClick.AddListener(petService.ToggleDefault);
 
             var mountService = player.GetComponent<MountService>();
-            var mountButton = CreateRoundButton(parent, "Mount Button", "MONTURA", new Vector2(0f, 1f), new Vector2(232f, -396f), new Vector2(128f, 42f), new Color(0.32f, 0.36f, 0.2f), 17);
+            var mountButton = CreateRoundButton(parent, "Mount Button", Localization.Tr("ui.mount"), new Vector2(0f, 1f), new Vector2(232f, -396f), new Vector2(128f, 42f), new Color(0.32f, 0.36f, 0.2f), 17);
             mountButton.onClick.AddListener(mountService.ToggleMount);
 
-            var storageButton = CreateRoundButton(parent, "Storage Button", "ALMACEN", new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
+            var storageButton = CreateRoundButton(parent, "Storage Button", Localization.Tr("ui.storage"), new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
             storageButton.onClick.AddListener(storage.ToggleStorage);
 
             var statsWindow = CreateStatsWindow(parent, player);
-            var statsButton = CreateRoundButton(parent, "Stats Button", "STATS", new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
+            var statsButton = CreateRoundButton(parent, "Stats Button", Localization.Tr("ui.stats"), new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
             statsButton.onClick.AddListener(statsWindow.Toggle);
         }
 
@@ -613,7 +613,7 @@ namespace MmorpgPrototype
             background.color = new Color(0.04f, 0.055f, 0.07f, 0.94f);
             background.raycastTarget = true;
 
-            var title = CreateText(window.transform, "Title", "Atributos", 30, TextAnchor.MiddleCenter);
+            var title = CreateText(window.transform, "Title", Localization.Tr("ui.stats_title"), 30, TextAnchor.MiddleCenter);
             title.fontStyle = FontStyle.Bold;
             SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(520f, 44f), new Vector2(0f, -14f));
 
@@ -640,7 +640,7 @@ namespace MmorpgPrototype
             var agilityButton = CreateRoundButton(window.transform, "Add Agility", "+", new Vector2(1f, 1f), new Vector2(-52f, -206f), new Vector2(52f, 36f), new Color(0.2f, 0.36f, 0.62f), 24);
             agilityButton.onClick.AddListener(controller.SpendAgility);
 
-            var closeButton = CreateRoundButton(window.transform, "Close Stats", "CERRAR", new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(160f, 44f), new Color(0.32f, 0.32f, 0.36f), 19);
+            var closeButton = CreateRoundButton(window.transform, "Close Stats", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(160f, 44f), new Color(0.32f, 0.32f, 0.36f), 19);
             closeButton.onClick.AddListener(controller.Toggle);
 
             window.SetActive(false);
@@ -671,12 +671,12 @@ namespace MmorpgPrototype
             network.Progression = player.GetComponent<PlayerProgression>();
             player.GetComponent<PlayerProgression>().Network = network;
 
-            network.NetworkStatusText = CreateText(parent, "Network Status", "Offline", 20, TextAnchor.MiddleRight);
+            network.NetworkStatusText = CreateText(parent, "Network Status", Localization.Tr("net.status_offline"), 20, TextAnchor.MiddleRight);
             SetRect(network.NetworkStatusText.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(520f, 28f), new Vector2(-24f, -96f));
 
-            network.UrlInput = CreateInputField(parent, "Server Url Input", "ws://localhost:7777", "server url", new Vector2(1f, 1f), new Vector2(-244f, -138f), new Vector2(360f, 42f));
+            network.UrlInput = CreateInputField(parent, "Server Url Input", "ws://localhost:7777", Localization.Tr("net.url_placeholder"), new Vector2(1f, 1f), new Vector2(-244f, -138f), new Vector2(360f, 42f));
 
-            var connectButton = CreateRoundButton(parent, "Online Button", "ONLINE", new Vector2(1f, 1f), new Vector2(-70f, -138f), new Vector2(118f, 42f), new Color(0.08f, 0.48f, 0.34f), 18);
+            var connectButton = CreateRoundButton(parent, "Online Button", Localization.Tr("ui.online"), new Vector2(1f, 1f), new Vector2(-70f, -138f), new Vector2(118f, 42f), new Color(0.08f, 0.48f, 0.34f), 18);
             connectButton.onClick.AddListener(network.Connect);
 
             var chatBackground = CreateUiObject("Chat Background", parent);
@@ -685,12 +685,12 @@ namespace MmorpgPrototype
             chatImage.raycastTarget = false;
             SetRect(chatBackground.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(620f, 164f), new Vector2(0f, 88f));
 
-            network.ChatLogText = CreateText(parent, "Chat Log", "Chat online local.", 18, TextAnchor.LowerLeft);
+            network.ChatLogText = CreateText(parent, "Chat Log", Localization.Tr("ui.chat_title"), 18, TextAnchor.LowerLeft);
             SetRect(network.ChatLogText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(590f, 94f), new Vector2(-5f, 126f));
 
-            network.ChatInput = CreateInputField(parent, "Chat Input", string.Empty, "mensaje...", new Vector2(0.5f, 0f), new Vector2(-66f, 52f), new Vector2(460f, 42f));
+            network.ChatInput = CreateInputField(parent, "Chat Input", string.Empty, Localization.Tr("net.chat_placeholder"), new Vector2(0.5f, 0f), new Vector2(-66f, 52f), new Vector2(460f, 42f));
 
-            var sendButton = CreateRoundButton(parent, "Send Chat Button", "SEND", new Vector2(0.5f, 0f), new Vector2(232f, 52f), new Vector2(112f, 42f), new Color(0.18f, 0.32f, 0.62f), 18);
+            var sendButton = CreateRoundButton(parent, "Send Chat Button", Localization.Tr("ui.send"), new Vector2(0.5f, 0f), new Vector2(232f, 52f), new Vector2(112f, 42f), new Color(0.18f, 0.32f, 0.62f), 18);
             sendButton.onClick.AddListener(network.SendChatFromInput);
         }
 
@@ -709,7 +709,7 @@ namespace MmorpgPrototype
             {
                 var classType = classes[i];
                 var definition = ClassDefinition.Create(classType);
-                var button = CreateRoundButton(parent, $"{definition.DisplayName} Button", definition.DisplayName, new Vector2(0.5f, 1f), new Vector2(-270f + i * 180f, -38f), new Vector2(160f, 48f), definition.BodyColor, 21);
+                var button = CreateRoundButton(parent, $"{definition.DisplayName} Button", ClassDisplayName(classType), new Vector2(0.5f, 1f), new Vector2(-270f + i * 180f, -38f), new Vector2(160f, 48f), definition.BodyColor, 21);
                 button.onClick.AddListener(() => classController.ApplyClass(classType));
             }
         }
@@ -807,11 +807,11 @@ namespace MmorpgPrototype
             var group = splashObject.AddComponent<CanvasGroup>();
             group.blocksRaycasts = false;
 
-            var title = CreateText(splashObject.transform, "Title", "Valle de las Reliquias", 54, TextAnchor.MiddleCenter);
+            var title = CreateText(splashObject.transform, "Title", Localization.Tr("ui.game_title"), 54, TextAnchor.MiddleCenter);
             title.fontStyle = FontStyle.Bold;
             SetRect(title.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(880f, 84f), new Vector2(0f, 34f));
 
-            var subtitle = CreateText(splashObject.transform, "Subtitle", "Prototipo Android 0.1", 24, TextAnchor.MiddleCenter);
+            var subtitle = CreateText(splashObject.transform, "Subtitle", Localization.Tr("ui.version_subtitle"), 24, TextAnchor.MiddleCenter);
             subtitle.color = new Color(0.78f, 0.88f, 1f);
             SetRect(subtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(640f, 42f), new Vector2(0f, -34f));
 

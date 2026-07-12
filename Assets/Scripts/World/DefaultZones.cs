@@ -12,6 +12,12 @@ namespace MmorpgPrototype
         public const string Zone2 = "forest_zone2";
         public const string Zone3 = "ashes_zone3";
         public const string Zone4 = "crystal_zone4";
+        public const string Zone5 = "frost_zone5";
+        public const string Zone6 = "sunken_zone6";
+        public const string Zone7 = "obsidian_zone7";
+        public const string Zone8 = "astral_zone8";
+        public const string Zone9 = "eclipse_zone9";
+        public const string Zone10 = "throne_zone10";
 
         public const string ValleyEliteId = "valley_elite";
         public const string ValleyBossId = "valley_boss";
@@ -23,10 +29,32 @@ namespace MmorpgPrototype
         public const string CrystalCreatureId = "crystal_creature";
         public const string CrystalEliteId = "crystal_elite";
         public const string CrystalBossId = "crystal_boss";
+        public const string FrostCreatureId = "frost_creature";
+        public const string FrostEliteId = "frost_elite";
+        public const string FrostBossId = "frost_boss";
+        public const string SunkenCreatureId = "sunken_creature";
+        public const string SunkenEliteId = "sunken_elite";
+        public const string SunkenBossId = "sunken_boss";
+        public const string ObsidianCreatureId = "obsidian_creature";
+        public const string ObsidianEliteId = "obsidian_elite";
+        public const string ObsidianBossId = "obsidian_boss";
+        public const string AstralCreatureId = "astral_creature";
+        public const string AstralEliteId = "astral_elite";
+        public const string AstralBossId = "astral_boss";
+        public const string EclipseCreatureId = "eclipse_creature";
+        public const string EclipseEliteId = "eclipse_elite";
+        public const string EclipseBossId = "eclipse_boss";
+        public const string ThroneCreatureId = "throne_creature";
+        public const string ThroneEliteId = "throne_elite";
+        public const string ThroneBossId = "throne_boss";
 
         public static List<ZoneDefinition> CreateAll()
         {
-            return new List<ZoneDefinition> { CreateZone1(), CreateZone2(), CreateZone3(), CreateZone4() };
+            return new List<ZoneDefinition>
+            {
+                CreateZone1(), CreateZone2(), CreateZone3(), CreateZone4(), CreateZone5(),
+                CreateZone6(), CreateZone7(), CreateZone8(), CreateZone9(), CreateZone10()
+            };
         }
 
         public static ZoneDefinition CreateZone1()
@@ -206,6 +234,149 @@ namespace MmorpgPrototype
             zone.BossGoldMax = 1400;
             zone.BossGuaranteedDrop = DefaultGameItems.ProtectionRune;
             zone.BossRespawnSeconds = 180f;
+
+            return zone;
+        }
+
+        public static ZoneDefinition CreateZone5()
+        {
+            return CreateAdvancedZone(
+                Zone5, "Paso Glacial", 41, 50, 280f, new Color(0.58f, 0.72f, 0.82f),
+                FrostCreatureId, "Lobo de escarcha", new Color(0.72f, 0.88f, 1f),
+                FrostEliteId, "Vigia del hielo",
+                FrostBossId, "Matriarca Invernal",
+                2100, 78, 18, 760, 80, 120,
+                5200, 135, 34, 1900, 260, 380,
+                15000, 190, 45, 7600, 1800, 2400,
+                DefaultGameItems.ValleyAmulet);
+        }
+
+        public static ZoneDefinition CreateZone6()
+        {
+            return CreateAdvancedZone(
+                Zone6, "Ruinas Sumergidas", 51, 60, 350f, new Color(0.12f, 0.38f, 0.44f),
+                SunkenCreatureId, "Ahogado antiguo", new Color(0.18f, 0.58f, 0.62f),
+                SunkenEliteId, "Sirviente abisal",
+                SunkenBossId, "Reina de las Mareas Rotas",
+                3600, 108, 28, 1200, 120, 180,
+                8500, 180, 48, 3200, 420, 620,
+                26000, 260, 62, 12500, 3000, 4000,
+                DefaultGameItems.ProtectionRune);
+        }
+
+        public static ZoneDefinition CreateZone7()
+        {
+            return CreateAdvancedZone(
+                Zone7, "Forja Obsidiana", 61, 70, 420f, new Color(0.22f, 0.08f, 0.08f),
+                ObsidianCreatureId, "Forjado de obsidiana", new Color(0.42f, 0.12f, 0.1f),
+                ObsidianEliteId, "Martillo viviente",
+                ObsidianBossId, "Senor del Yunque Negro",
+                5600, 145, 42, 1900, 180, 260,
+                13000, 245, 70, 5000, 720, 980,
+                42000, 360, 88, 21000, 5200, 6800,
+                DefaultGameItems.ValleyMedal);
+        }
+
+        public static ZoneDefinition CreateZone8()
+        {
+            return CreateAdvancedZone(
+                Zone8, "Jardin Astral", 71, 80, 490f, new Color(0.16f, 0.16f, 0.42f),
+                AstralCreatureId, "Semilla estelar", new Color(0.42f, 0.52f, 0.95f),
+                AstralEliteId, "Guardia zodiacal",
+                AstralBossId, "Arbol de Constelaciones",
+                8200, 190, 58, 3000, 280, 400,
+                19000, 310, 92, 8200, 1100, 1450,
+                68000, 470, 118, 33000, 8200, 10800,
+                DefaultGameItems.ProtectionRune);
+        }
+
+        public static ZoneDefinition CreateZone9()
+        {
+            return CreateAdvancedZone(
+                Zone9, "Santuario del Eclipse", 81, 90, 560f, new Color(0.12f, 0.1f, 0.16f),
+                EclipseCreatureId, "Devoto del eclipse", new Color(0.46f, 0.34f, 0.68f),
+                EclipseEliteId, "Profeta sin sombra",
+                EclipseBossId, "Sol Negro",
+                12000, 250, 78, 4700, 420, 620,
+                28000, 410, 124, 12500, 1750, 2300,
+                98000, 620, 155, 52000, 12500, 16000,
+                DefaultGameItems.ValleyAmulet);
+        }
+
+        public static ZoneDefinition CreateZone10()
+        {
+            return CreateAdvancedZone(
+                Zone10, "Trono del Vacio", 91, 105, 630f, new Color(0.08f, 0.06f, 0.12f),
+                ThroneCreatureId, "Heraldo del vacio", new Color(0.28f, 0.12f, 0.36f),
+                ThroneEliteId, "Caballero sin nombre",
+                ThroneBossId, "Rey Sin Alba",
+                18000, 330, 105, 7600, 700, 950,
+                44000, 560, 165, 21000, 2900, 3800,
+                160000, 850, 220, 90000, 22000, 30000,
+                DefaultGameItems.ProtectionRune,
+                15);
+        }
+
+        private static ZoneDefinition CreateAdvancedZone(
+            string zoneId, string displayName, int minLevel, int maxLevel, float zCenter, Color groundColor,
+            string normalId, string normalName, Color normalColor,
+            string eliteId, string eliteName,
+            string bossId, string bossName,
+            int normalHealth, int normalDamage, int normalDefense, int normalExp, int normalGoldMin, int normalGoldMax,
+            int eliteHealth, int eliteDamage, int eliteDefense, int eliteExp, int eliteGoldMin, int eliteGoldMax,
+            int bossHealth, int bossDamage, int bossDefense, int bossExp, int bossGoldMin, int bossGoldMax,
+            string guaranteedDrop,
+            int extraLevels = 10)
+        {
+            var zone = ScriptableObject.CreateInstance<ZoneDefinition>();
+            zone.name = zoneId;
+            zone.ZoneId = zoneId;
+            zone.DisplayName = displayName;
+            zone.MinLevel = minLevel;
+            zone.MaxLevel = maxLevel;
+            zone.HasOwnGround = true;
+            zone.GroundCenter = new Vector3(0f, 0f, zCenter);
+            zone.GroundColor = groundColor;
+            zone.SignPosition = new Vector3(0f, 0f, zCenter - 32f);
+
+            zone.NormalEnemyId = normalId;
+            zone.NormalName = normalName;
+            zone.NormalColor = normalColor;
+            zone.NormalCount = extraLevels > 10 ? 9 : 7;
+            zone.NormalAreaCenter = new Vector3(0f, 1f, zCenter - 8f);
+            zone.NormalAreaRadius = 13f;
+            zone.NormalHealth = normalHealth;
+            zone.NormalDamage = normalDamage;
+            zone.NormalDefense = normalDefense;
+            zone.NormalExp = normalExp;
+            zone.NormalGoldMin = normalGoldMin;
+            zone.NormalGoldMax = normalGoldMax;
+            zone.NormalMoveSpeed = 2.75f;
+
+            zone.EliteEnemyId = eliteId;
+            zone.EliteName = eliteName;
+            zone.EliteCount = extraLevels > 10 ? 3 : 2;
+            zone.EliteAreaCenter = new Vector3(16f, 1f, zCenter + 12f);
+            zone.EliteAreaRadius = 7f;
+            zone.EliteHealth = eliteHealth;
+            zone.EliteDamage = eliteDamage;
+            zone.EliteDefense = eliteDefense;
+            zone.EliteExp = eliteExp;
+            zone.EliteGoldMin = eliteGoldMin;
+            zone.EliteGoldMax = eliteGoldMax;
+            zone.EliteRespawnSeconds = 45f;
+
+            zone.BossEnemyId = bossId;
+            zone.BossName = bossName;
+            zone.BossPosition = new Vector3(-18f, 1f, zCenter + 16f);
+            zone.BossHealth = bossHealth;
+            zone.BossDamage = bossDamage;
+            zone.BossDefense = bossDefense;
+            zone.BossExp = bossExp;
+            zone.BossGoldMin = bossGoldMin;
+            zone.BossGoldMax = bossGoldMax;
+            zone.BossGuaranteedDrop = guaranteedDrop;
+            zone.BossRespawnSeconds = 210f;
 
             return zone;
         }

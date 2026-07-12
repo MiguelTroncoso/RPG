@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.27 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.31 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -30,7 +30,8 @@ por el servidor, textos del sistema con claves i18n en tabla `es`, Zona 3
 data-only, pipeline de modelos 3D con fallback procedural, animacion procedural
 idle/walk/attack para avatar y fallback, `StatSheet` con modificadores por
 origen, creacion de personaje/habilidades migradas a i18n, Zona 4 data-only,
-y persistencia basica de servidor por `playerKey`). Detalle en
+y persistencia basica de servidor por `playerKey`, puente para Animator real,
+i18n visible secundaria, zonas 5-10 hasta nivel 105 y previews SVG). Detalle en
 `docs/roadmap.md` y `docs/claude-handoff.md`. La escena se genera en runtime
 desde `Assets/Scripts/Core/PrototypeBootstrap.cs`; mantener el estilo C#
 simple y autocontenido.
@@ -83,6 +84,6 @@ simple y autocontenido.
   El puente alimenta `Speed` y `Attack` si el modelo trae un Animator compatible.
 - Persistencia del servidor cubre identidad, nivel, posicion, rotacion y ultima
   mejora validada; inventario/equipo completo/misiones siguen en JSON local.
-- Siguientes candidatos: importar/controlar animaciones reales del pack KayKit,
-  expandir persistencia del servidor a inventario/equipo/misiones, Zona 5, o
-  terminar los textos secundarios restantes de i18n.
+- Siguientes candidatos: importar clips/modelos reales de personaje, expandir
+  persistencia del servidor a inventario/equipo/misiones, balancear zonas
+  41-105 en Play, o generar assets reales para las zonas finales.
