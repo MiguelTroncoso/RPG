@@ -49,8 +49,9 @@ namespace MmorpgPrototype
                 : new Vector3(1.02f, 1.04f, 1.02f);
 
             // Modelo real si el asset existe en Resources; procedural si no.
-            if (TryBuildCharacterModel(definition))
+            if (TryBuildCharacterModel(definition, gender))
             {
+                BuildArmorOverlay(definition, gender);
                 return;
             }
 
@@ -83,17 +84,19 @@ namespace MmorpgPrototype
                     break;
             }
 
+            BuildArmorOverlay(definition, gender);
             BindMotionAnimator();
         }
 
-        private bool TryBuildCharacterModel(ClassDefinition definition)
+        private bool TryBuildCharacterModel(ClassDefinition definition, CharacterGender gender)
         {
-            if (string.IsNullOrEmpty(definition.CharacterModelResource))
+            var modelResource = definition.ModelResourceFor(gender);
+            if (string.IsNullOrEmpty(modelResource))
             {
                 return false;
             }
 
-            var prefab = Resources.Load<GameObject>(definition.CharacterModelResource);
+            var prefab = Resources.Load<GameObject>(modelResource);
             if (prefab == null)
             {
                 return false;
@@ -120,7 +123,7 @@ namespace MmorpgPrototype
 
             if (modelAnimator.avatar == null)
             {
-                foreach (var importedAvatar in Resources.LoadAll<Avatar>(definition.CharacterModelResource))
+                foreach (var importedAvatar in Resources.LoadAll<Avatar>(modelResource))
                 {
                     if (importedAvatar != null)
                     {
@@ -130,7 +133,7 @@ namespace MmorpgPrototype
                 }
             }
 
-            var controller = Resources.Load<RuntimeAnimatorController>(definition.AnimatorControllerResource);
+            var controller = Resources.Load<RuntimeAnimatorController>(definition.AnimatorResourceFor(gender));
             if (controller != null)
             {
                 modelAnimator.runtimeAnimatorController = controller;
@@ -139,6 +142,39 @@ namespace MmorpgPrototype
             BindMotionAnimator(modelAnimator);
 
             return true;
+        }
+
+        private void BuildArmorOverlay(ClassDefinition definition, CharacterGender gender)
+        {
+            var armorColor = Color.Lerp(definition.BodyColor, Color.black, gender == CharacterGender.Femenino ? 0.08f : 0.22f);
+            var trimColor = definition.SkillColor;
+            CreatePart("Armor Chest", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.39f), new Vector3(0.56f, 0.24f, 0.1f), armorColor);
+            CreatePart("Armor Belt", PrimitiveType.Cube, new Vector3(0f, -0.17f, -0.36f), new Vector3(0.6f, 0.1f, 0.08f), trimColor);
+
+            if (gender == CharacterGender.Femenino)
+            {
+                CreatePart("Armor Skirt", PrimitiveType.Cube, new Vector3(0f, -0.38f, 0f), new Vector3(0.58f, 0.22f, 0.42f), armorColor);
+                CreatePart("Armor Shoulder Left", PrimitiveType.Sphere, new Vector3(-0.47f, 0.48f, 0f), new Vector3(0.18f, 0.14f, 0.22f), trimColor);
+                CreatePart("Armor Shoulder Right", PrimitiveType.Sphere, new Vector3(0.47f, 0.48f, 0f), new Vector3(0.18f, 0.14f, 0.22f), trimColor);
+            }
+            else
+            {
+                CreatePart("Armor Shoulder Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.3f, 0.16f, 0.32f), trimColor);
+                CreatePart("Armor Shoulder Right", PrimitiveType.Cube, new Vector3(0.5f, 0.5f, 0f), new Vector3(0.3f, 0.16f, 0.32f), trimColor);
+            }
+
+            switch (definition.Type)
+            {
+                case CharacterClassType.Ninja:
+                    CreatePart("Armor Sash", PrimitiveType.Cube, new Vector3(0f, -0.04f, -0.45f), new Vector3(0.64f, 0.08f, 0.06f), new Color(0.08f, 0.08f, 0.12f));
+                    break;
+                case CharacterClassType.Chaman:
+                    CreatePart("Armor Spirit Charm", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.46f), new Vector3(0.12f, 0.12f, 0.12f), trimColor);
+                    break;
+                case CharacterClassType.Umbra:
+                    CreatePart("Armor Void Plate", PrimitiveType.Cube, new Vector3(0f, 0.45f, -0.42f), new Vector3(0.18f, 0.28f, 0.08f), trimColor);
+                    break;
+            }
         }
 
         private void BindMotionAnimator(Animator modelAnimator = null)

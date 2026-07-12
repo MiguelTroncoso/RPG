@@ -276,6 +276,19 @@ combate tenga una primera respuesta audiovisual clara.
 Criterio de exito: probar MENU en varias resoluciones no recorta la ventana y
 el combate comunica sus acciones con modelo, animacion, sonido y VFX.
 
+## Fase 5.37: Variantes Femeninas, Audio Final Y Diagnostico Movil
+
+Objetivo: cerrar la primera pasada de identidad visual por sexo/clase y tener
+instrumentacion para probar el prototipo en Android.
+
+- RogueHooded para la Ninja femenina y capa de armadura visual por clase/sexo. [Implementado]
+- Clips CC0 de Kenney para SFX de combate, habilidades y nivel. [Implementado]
+- Clip musical importado con fallback procedural. [Implementado]
+- Diagnostico runtime de resolucion, orientacion, safe area y volumen. [Implementado]
+
+Criterio de exito: una sesion en Android deja en el log la configuracion de
+pantalla/audio y el juego no depende de tonos generados si los OGG estan presentes.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

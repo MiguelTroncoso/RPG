@@ -8,6 +8,8 @@ namespace MmorpgPrototype
     public sealed class CombatFeedbackAudio : MonoBehaviour
     {
         public bool MusicEnabled = true;
+        public float SfxVolume = 0.32f;
+        public float MusicVolume = 0.06f;
 
         private AudioSource source;
         private AudioSource musicSource;
@@ -25,22 +27,22 @@ namespace MmorpgPrototype
             source = gameObject.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.spatialBlend = 0f;
-            source.volume = 0.32f;
+            source.volume = SfxVolume;
 
             musicSource = gameObject.AddComponent<AudioSource>();
             musicSource.playOnAwake = false;
             musicSource.loop = true;
             musicSource.spatialBlend = 0f;
-            musicSource.volume = 0.06f;
+            musicSource.volume = MusicVolume;
 
-            attackClip = CreateTone("attack", 190f, 0.09f, 0.12f);
-            hitClip = CreateTone("hit", 340f, 0.11f, 0.16f);
-            criticalClip = CreateTone("critical", 680f, 0.18f, 0.2f);
-            missClip = CreateTone("miss", 130f, 0.08f, 0.1f);
-            damageClip = CreateTone("damage", 110f, 0.16f, 0.18f);
-            levelUpClip = CreateTone("level_up", 520f, 0.3f, 0.2f);
-            skillClip = CreateTone("skill", 430f, 0.16f, 0.16f);
-            musicClip = CreateMusicLoop();
+            attackClip = LoadOrCreate("Audio/Kenney/knifeSlice", "attack", 190f, 0.09f, 0.12f);
+            hitClip = LoadOrCreate("Audio/Kenney/metalPot1", "hit", 340f, 0.11f, 0.16f);
+            criticalClip = LoadOrCreate("Audio/Kenney/metalPot2", "critical", 680f, 0.18f, 0.2f);
+            missClip = LoadOrCreate("Audio/Kenney/dropLeather", "miss", 130f, 0.08f, 0.1f);
+            damageClip = LoadOrCreate("Audio/Kenney/dropLeather", "damage", 110f, 0.16f, 0.18f);
+            levelUpClip = LoadOrCreate("Audio/Kenney/handleCoins", "level_up", 520f, 0.3f, 0.2f);
+            skillClip = LoadOrCreate("Audio/Kenney/bookOpen", "skill", 430f, 0.16f, 0.16f);
+            musicClip = Resources.Load<AudioClip>("Audio/Kenney/ambient_preview") ?? CreateMusicLoop();
             if (MusicEnabled)
             {
                 musicSource.clip = musicClip;
@@ -82,6 +84,11 @@ namespace MmorpgPrototype
             var clip = AudioClip.Create($"Prototype SFX {name}", sampleCount, 1, sampleRate, false);
             clip.SetData(samples, 0);
             return clip;
+        }
+
+        private static AudioClip LoadOrCreate(string resourcePath, string name, float frequency, float duration, float volume)
+        {
+            return Resources.Load<AudioClip>(resourcePath) ?? CreateTone(name, frequency, duration, volume);
         }
 
         private static AudioClip CreateMusicLoop()

@@ -460,6 +460,9 @@ namespace MmorpgPrototype
             StretchToParent(safeAreaRoot.GetComponent<RectTransform>());
             safeAreaRoot.AddComponent<SafeAreaFitter>();
             var uiRoot = safeAreaRoot.transform;
+            var mobileDiagnostics = canvasObject.AddComponent<MobileRuntimeDiagnostics>();
+            mobileDiagnostics.SafeAreaRoot = safeAreaRoot.GetComponent<RectTransform>();
+            mobileDiagnostics.Audio = player.GetComponent<CombatFeedbackAudio>();
 
             CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(940f, 332f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.58f));
             CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(438f, 330f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));

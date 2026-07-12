@@ -508,6 +508,14 @@ Segunda region jugable, construida 100% con los moldes de la Zona 1:
 - Particulas de impacto, habilidades y nivel con material compartido y bajo costo.
 - La prueba visual en dispositivo Android real sigue siendo necesaria antes de cerrar la UX movil.
 
+## Fase 5.37: Variantes Femeninas, Audio Final Y Diagnostico Movil
+
+- La Ninja femenina usa la variante real `RogueHooded.fbx`; las demas clases conservan su modelo KayKit y reciben silueta/armadura visual diferenciada por clase y sexo.
+- `MobileRuntimeDiagnostics` registra resolucion, orientacion, safe area y volumen SFX/musica al probar en Android.
+- Los SFX cargan primero clips CC0 de Kenney (`knifeSlice`, `metalPot`, `bookOpen`, `handleCoins`); los tonos procedurales quedan como fallback.
+- La musica usa un clip importado de Kenney y mantiene ambiente procedural solo cuando el asset no esta disponible.
+- La seleccion de audio esta documentada en `ASSET_LICENSES.md`.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

@@ -13,6 +13,7 @@ namespace MmorpgPrototype
         // Modelo 3D real (KayKit Adventurers, CC0). Si el asset no esta en
         // Resources, el avatar cae al visual procedural.
         public string CharacterModelResource;
+        public string FemaleCharacterModelResource;
         public string AnimatorControllerResource;
         public Color BodyColor;
         public Color SkillColor;
@@ -40,6 +41,7 @@ namespace MmorpgPrototype
                         SkillTwoName = "Sombra",
                         WeaponResource = "ThirdParty/KayKit/Adventurers/Weapons/dagger",
                         CharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/Rogue",
+                        FemaleCharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/RogueHooded",
                         AnimatorControllerResource = "ThirdParty/KayKit/Adventurers/Controllers/Rogue",
                         BodyColor = new Color(0.18f, 0.18f, 0.24f),
                         SkillColor = new Color(0.75f, 0.84f, 1f),
@@ -127,6 +129,18 @@ namespace MmorpgPrototype
                         Defense = 3
                     };
             }
+        }
+
+        public string ModelResourceFor(CharacterGender gender)
+        {
+            return gender == CharacterGender.Femenino && !string.IsNullOrEmpty(FemaleCharacterModelResource)
+                ? FemaleCharacterModelResource
+                : CharacterModelResource;
+        }
+
+        public string AnimatorResourceFor(CharacterGender gender)
+        {
+            return AnimatorControllerResource;
         }
     }
 }
