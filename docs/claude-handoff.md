@@ -88,8 +88,9 @@ Estado actual (fases 1-5.51 entregadas en primera pasada; refinamientos 5.44,
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
-  y `EXPLORAR` interactua con entrada, elite y jefe. Arte final y recompensas
-  de POI quedan pendientes.
+  y `EXPLORAR` interactua con entrada, elite, jefe y campamento. Los reclamos
+  tienen un id estable por zona/tipo y se persisten por personaje; el arte
+  final y la validacion autoritativa online quedan pendientes.
 - Feedback: `AvatarMotionAnimator` mueve mobs con modelos, el windup tiene
   telegraph y la muerte escala el visual antes de destruirlo.
 - Rendimiento: `EnemySpawner` solo mantiene activos los enemigos dentro de
@@ -132,11 +133,12 @@ Estado actual (fases 1-5.51 entregadas en primera pasada; refinamientos 5.44,
   si no pasan. Persistencia por playerKey en Server/data/players.json:
   presencia basica, snapshot completo `PlayerSaveData` via `saveState`/
   `savedState` y ultimo resumen de telemetria recibido.
-- Guardado local JSON (esquema v9) via ISaveStorage/JsonFileStorage con
+- Guardado local JSON (esquema v10) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
   activa y progreso, mascota activa, montura, almacen y posicion del
-  jugador. PlayerPrefs solo para settings.
+  jugador y reclamos persistidos de puntos de interes. PlayerPrefs solo para
+  settings.
 - Patron de datos establecido: cada config es un ScriptableObject con un
   generador en el menu de editor (MMORPG > ...) y un fallback runtime en el
   bootstrap si el asset no existe. Generadores: Items, Upgrade Config, Loot
@@ -185,10 +187,12 @@ Proximos objetivos sugeridos:
   `EXPLORAR` y safe zone en el telefono.
 - Fase 5.48: abrir TEST y registrar FPS, memoria, carga, TTK, enemigos y POI
   activos en las diez zonas.
+- Fase 5.48: reinstalar la APK y medir TEST, TTK, memoria, minimapa y safe zone
+  en telefono real en las diez zonas.
 - Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y conectarlas
-  al pipeline de animacion existente.
-- Fase 5.49: persistir reclamos de POI por personaje y ajustar recompensas con
-  telemetria real.
+  al pipeline de animacion existente, conservando las identidades de familia.
+- Fase 5.49: mover la validacion definitiva de recompensas al servidor y
+  ajustar valores con telemetria real.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

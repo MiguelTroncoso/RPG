@@ -48,8 +48,8 @@ namespace MmorpgPrototype
 
             BuildLandmark(parent, "Elite Landmark", zone.EliteAreaCenter, new Color(0.72f, 0.32f, 1f), 2.2f);
             BuildLandmark(parent, "Boss Landmark", zone.BossPosition, new Color(1f, 0.36f, 0.12f), 2.8f);
-            CreatePointOfInterest(parent, "Elite Landmark", zone.EliteAreaCenter, Localization.Tr("poi.elite", zone.DisplayName), ZonePointOfInterestType.Elite, RewardFor(zone, ZonePointOfInterestType.Elite));
-            CreatePointOfInterest(parent, "Boss Landmark", zone.BossPosition, Localization.Tr("poi.boss", zone.DisplayName), ZonePointOfInterestType.Boss, RewardFor(zone, ZonePointOfInterestType.Boss));
+            CreatePointOfInterest(parent, "Elite Landmark", zone.EliteAreaCenter, Localization.Tr("poi.elite", zone.DisplayName), ZonePointOfInterestType.Elite, RewardFor(zone, ZonePointOfInterestType.Elite), ClaimIdFor(zone, ZonePointOfInterestType.Elite));
+            CreatePointOfInterest(parent, "Boss Landmark", zone.BossPosition, Localization.Tr("poi.boss", zone.DisplayName), ZonePointOfInterestType.Boss, RewardFor(zone, ZonePointOfInterestType.Boss), ClaimIdFor(zone, ZonePointOfInterestType.Boss));
 
             var center = zone.GroundCenter;
             var edge = 29f;
@@ -90,7 +90,12 @@ namespace MmorpgPrototype
             CreatePart(parent, "Safe Commerce Zone", PrimitiveType.Cylinder, center, new Vector3(zone.SafeZoneRadius * 2f, 0.018f, zone.SafeZoneRadius * 2f), Color.Lerp(zone.GroundColor, markerColor, 0.42f));
             CreatePart(parent, "Safe Zone Marker L", PrimitiveType.Cube, center + new Vector3(-zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
             CreatePart(parent, "Safe Zone Marker R", PrimitiveType.Cube, center + new Vector3(zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
-            CreatePointOfInterest(parent, "Safe Commerce Zone", zone.SafeZoneCenter, Localization.Tr("poi.safe", zone.DisplayName), ZonePointOfInterestType.SafeCommerce, RewardFor(zone, ZonePointOfInterestType.SafeCommerce));
+            CreatePointOfInterest(parent, "Safe Commerce Zone", zone.SafeZoneCenter, Localization.Tr("poi.safe", zone.DisplayName), ZonePointOfInterestType.SafeCommerce, RewardFor(zone, ZonePointOfInterestType.SafeCommerce), ClaimIdFor(zone, ZonePointOfInterestType.SafeCommerce));
+        }
+
+        private static string ClaimIdFor(ZoneDefinition zone, ZonePointOfInterestType type)
+        {
+            return $"{zone.ZoneId}.{type.ToString().ToLowerInvariant()}";
         }
 
         private static RewardBundle RewardFor(ZoneDefinition zone, ZonePointOfInterestType type)
@@ -113,7 +118,7 @@ namespace MmorpgPrototype
             }
         }
 
-        private static void CreatePointOfInterest(Transform parent, string name, Vector3 position, string message, ZonePointOfInterestType type, RewardBundle reward)
+        private static void CreatePointOfInterest(Transform parent, string name, Vector3 position, string message, ZonePointOfInterestType type, RewardBundle reward, string claimId)
         {
             var pointObject = new GameObject($"{name} POI");
             pointObject.transform.SetParent(parent, true);
@@ -124,6 +129,7 @@ namespace MmorpgPrototype
             point.InteractDistance = 8f;
             point.Type = type;
             point.Reward = reward;
+            point.ClaimId = claimId;
 
             var labelObject = new GameObject("POI Label");
             labelObject.transform.SetParent(pointObject.transform, false);
@@ -241,7 +247,7 @@ namespace MmorpgPrototype
             CreatePart(parent, "Entry Pillar L", PrimitiveType.Cube, position + new Vector3(-2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
             CreatePart(parent, "Entry Pillar R", PrimitiveType.Cube, position + new Vector3(2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
             CreatePart(parent, "Entry Arch", PrimitiveType.Cube, position + Vector3.up * 2.35f, new Vector3(4.7f, 0.28f, 0.34f), Color.Lerp(zone.GroundColor, Color.white, 0.2f));
-            CreatePointOfInterest(parent, "Zone Entry", position, Localization.Tr("poi.entry", zone.DisplayName), ZonePointOfInterestType.Entry, RewardFor(zone, ZonePointOfInterestType.Entry));
+            CreatePointOfInterest(parent, "Zone Entry", position, Localization.Tr("poi.entry", zone.DisplayName), ZonePointOfInterestType.Entry, RewardFor(zone, ZonePointOfInterestType.Entry), ClaimIdFor(zone, ZonePointOfInterestType.Entry));
         }
 
         private static GameObject CreatePart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)

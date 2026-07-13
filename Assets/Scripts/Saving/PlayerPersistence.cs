@@ -32,6 +32,7 @@ namespace MmorpgPrototype
 
         private ISaveStorage storage;
         private float autoSaveTimer;
+        private readonly HashSet<string> claimedPointOfInterestIds = new HashSet<string>();
 
         private void Awake()
         {
@@ -129,6 +130,18 @@ namespace MmorpgPrototype
             QuestLog?.Restore(data.Quests);
             Storage?.RestoreEntries(data.Storage);
 
+            claimedPointOfInterestIds.Clear();
+            if (data.ClaimedPointOfInterestIds != null)
+            {
+                foreach (var pointOfInterestId in data.ClaimedPointOfInterestIds)
+                {
+                    if (!string.IsNullOrWhiteSpace(pointOfInterestId))
+                    {
+                        claimedPointOfInterestIds.Add(pointOfInterestId);
+                    }
+                }
+            }
+
             if (Mounts != null && !string.IsNullOrEmpty(data.SelectedMountId))
             {
                 Mounts.SelectMount(data.SelectedMountId);
@@ -182,6 +195,26 @@ namespace MmorpgPrototype
         public void DeleteSave()
         {
             storage?.Delete(SlotName);
+            claimedPointOfInterestIds.Clear();
+            HasActiveCharacter = false;
+        }
+
+        public bool HasClaimedPointOfInterest(string claimId)
+        {
+            return !string.IsNullOrWhiteSpace(claimId) && claimedPointOfInterestIds.Contains(claimId);
+        }
+
+        public void MarkPointOfInterestClaimed(string claimId)
+        {
+            if (string.IsNullOrWhiteSpace(claimId))
+            {
+                return;
+            }
+
+            if (claimedPointOfInterestIds.Add(claimId))
+            {
+                SaveNow();
+            }
         }
 
         private PlayerSaveData Capture()
@@ -215,7 +248,8 @@ namespace MmorpgPrototype
                 PosX = transform.position.x,
                 PosY = transform.position.y,
                 PosZ = transform.position.z,
-                Yaw = transform.eulerAngles.y
+                Yaw = transform.eulerAngles.y,
+                ClaimedPointOfInterestIds = new List<string>(claimedPointOfInterestIds)
             };
         }
 

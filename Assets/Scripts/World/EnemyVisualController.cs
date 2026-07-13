@@ -32,31 +32,31 @@ namespace MmorpgPrototype
             if (builtRealModel)
             {
                 ApplyZoneVariant(id, baseColor, accent, tier);
-                BuildTierAdornment(tier, accent);
+                BuildTierAdornment(tier, accent, id);
             }
             else if (id.Contains("forest") || id.Contains("valley"))
             {
                 BuildBeast(baseColor, accent);
                 ApplyZoneVariant(id, baseColor, accent, tier);
-                BuildTierAdornment(tier, accent);
+                BuildTierAdornment(tier, accent, id);
             }
             else if (id.Contains("crystal") || id.Contains("frost") || id.Contains("obsidian"))
             {
                 BuildGuardian(baseColor, accent);
                 ApplyZoneVariant(id, baseColor, accent, tier);
-                BuildTierAdornment(tier, accent);
+                BuildTierAdornment(tier, accent, id);
             }
             else if (id.Contains("sunken") || id.Contains("astral"))
             {
                 BuildSpirit(baseColor, accent);
                 ApplyZoneVariant(id, baseColor, accent, tier);
-                BuildTierAdornment(tier, accent);
+                BuildTierAdornment(tier, accent, id);
             }
             else
             {
                 BuildShadow(baseColor, accent);
                 ApplyZoneVariant(id, baseColor, accent, tier);
-                BuildTierAdornment(tier, accent);
+                BuildTierAdornment(tier, accent, id);
             }
 
             BuildStatusDisplay(displayName, tier, accent);
@@ -321,7 +321,7 @@ namespace MmorpgPrototype
             }
         }
 
-        private void BuildTierAdornment(EnemyTier tier, Color accent)
+        private void BuildTierAdornment(EnemyTier tier, Color accent, string enemyId)
         {
             if (tier == EnemyTier.Normal)
             {
@@ -330,11 +330,60 @@ namespace MmorpgPrototype
 
             CreatePart("Tier Crest", PrimitiveType.Cylinder, new Vector3(0f, 1.05f, 0f), tier == EnemyTier.Boss ? new Vector3(0.36f, 0.08f, 0.36f) : new Vector3(0.28f, 0.06f, 0.28f), accent);
 
+            BuildFamilyTierAdornment(enemyId, tier, accent);
+
             if (tier == EnemyTier.Boss)
             {
                 CreatePart("Boss Core", PrimitiveType.Sphere, new Vector3(0f, 1.34f, 0f), new Vector3(0.2f, 0.2f, 0.2f), Color.Lerp(accent, Color.white, 0.3f));
                 CreatePart("Boss Horn L", PrimitiveType.Cylinder, new Vector3(-0.3f, 0.98f, 0f), new Vector3(0.1f, 0.3f, 0.1f), accent, Quaternion.Euler(0f, 0f, -28f));
                 CreatePart("Boss Horn R", PrimitiveType.Cylinder, new Vector3(0.3f, 0.98f, 0f), new Vector3(0.1f, 0.3f, 0.1f), accent, Quaternion.Euler(0f, 0f, 28f));
+            }
+        }
+
+        private void BuildFamilyTierAdornment(string enemyId, EnemyTier tier, Color accent)
+        {
+            var family = enemyId ?? string.Empty;
+            if (family.Contains("forest"))
+            {
+                CreatePart("Forest Tier Thorn L", PrimitiveType.Cylinder, new Vector3(-0.34f, 0.72f, 0.08f), new Vector3(0.07f, tier == EnemyTier.Boss ? 0.42f : 0.26f, 0.07f), new Color(0.16f, 0.72f, 0.24f), Quaternion.Euler(0f, 0f, -28f));
+                CreatePart("Forest Tier Thorn R", PrimitiveType.Cylinder, new Vector3(0.34f, 0.72f, 0.08f), new Vector3(0.07f, tier == EnemyTier.Boss ? 0.42f : 0.26f, 0.07f), new Color(0.16f, 0.72f, 0.24f), Quaternion.Euler(0f, 0f, 28f));
+                return;
+            }
+
+            if (family.Contains("ash") || family.Contains("eclipse"))
+            {
+                CreatePart("Ember Tier Ring", PrimitiveType.Cylinder, new Vector3(0f, 0.64f, 0f), new Vector3(tier == EnemyTier.Boss ? 0.62f : 0.46f, 0.025f, tier == EnemyTier.Boss ? 0.62f : 0.46f), new Color(1f, 0.24f, 0.06f), Quaternion.Euler(90f, 0f, 0f));
+                return;
+            }
+
+            if (family.Contains("crystal") || family.Contains("frost"))
+            {
+                CreatePart("Prism Tier L", PrimitiveType.Cube, new Vector3(-0.44f, 0.54f, -0.12f), new Vector3(0.16f, tier == EnemyTier.Boss ? 0.62f : 0.36f, 0.16f), Color.Lerp(accent, Color.white, 0.3f), Quaternion.Euler(0f, 0f, -18f));
+                CreatePart("Prism Tier R", PrimitiveType.Cube, new Vector3(0.44f, 0.54f, -0.12f), new Vector3(0.16f, tier == EnemyTier.Boss ? 0.62f : 0.36f, 0.16f), Color.Lerp(accent, Color.white, 0.3f), Quaternion.Euler(0f, 0f, 18f));
+                return;
+            }
+
+            if (family.Contains("sunken"))
+            {
+                CreatePart("Abyss Tier Fin", PrimitiveType.Cube, new Vector3(0f, 0.72f, 0.32f), new Vector3(0.12f, tier == EnemyTier.Boss ? 0.64f : 0.38f, 0.08f), new Color(0.12f, 0.84f, 0.8f), Quaternion.Euler(22f, 0f, 0f));
+                return;
+            }
+
+            if (family.Contains("obsidian"))
+            {
+                CreatePart("Forge Tier Guard", PrimitiveType.Cube, new Vector3(0f, 0.48f, -0.4f), new Vector3(tier == EnemyTier.Boss ? 0.78f : 0.56f, 0.18f, 0.08f), new Color(1f, 0.3f, 0.08f));
+                return;
+            }
+
+            if (family.Contains("astral"))
+            {
+                CreatePart("Astral Tier Halo", PrimitiveType.Cylinder, new Vector3(0f, 1.28f, 0f), new Vector3(tier == EnemyTier.Boss ? 0.62f : 0.42f, 0.025f, tier == EnemyTier.Boss ? 0.62f : 0.42f), Color.Lerp(accent, Color.white, 0.34f), Quaternion.Euler(90f, 0f, 0f));
+                return;
+            }
+
+            if (family.Contains("throne"))
+            {
+                CreatePart("Void Tier Mantle", PrimitiveType.Cube, new Vector3(0f, 0.38f, 0.38f), new Vector3(tier == EnemyTier.Boss ? 0.94f : 0.7f, 0.38f, 0.1f), Color.Lerp(accent, Color.black, 0.3f), Quaternion.Euler(12f, 0f, 0f));
             }
         }
 

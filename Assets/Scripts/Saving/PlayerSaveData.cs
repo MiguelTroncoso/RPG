@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 9;
+        public int SchemaVersion = 10;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -30,6 +30,7 @@ namespace MmorpgPrototype
         public float PosY;
         public float PosZ;
         public float Yaw;
+        public List<string> ClaimedPointOfInterestIds = new List<string>();
     }
 
     [Serializable]

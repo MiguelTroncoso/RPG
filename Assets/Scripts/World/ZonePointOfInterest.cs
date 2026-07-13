@@ -17,6 +17,7 @@ namespace MmorpgPrototype
         public float InteractDistance = 8f;
         public ZonePointOfInterestType Type;
         public RewardBundle Reward;
+        public string ClaimId;
 
         private bool rewardClaimed;
 
@@ -72,7 +73,8 @@ namespace MmorpgPrototype
                 return;
             }
 
-            if (rewardClaimed)
+            var persistence = actor.GetComponent<PlayerPersistence>();
+            if (rewardClaimed || (persistence != null && persistence.HasClaimedPointOfInterest(ClaimId)))
             {
                 hud?.SetStatus(Localization.Tr("poi.already_explored", DisplayName), 2.5f);
                 return;
@@ -82,6 +84,7 @@ namespace MmorpgPrototype
             var inventory = actor.GetComponent<InventorySystem>();
             RewardService.Grant(Reward, progression, inventory, hud, DisplayName);
             rewardClaimed = true;
+            persistence?.MarkPointOfInterestClaimed(ClaimId);
             hud?.SetStatus(InteractionMessage, 4f);
             hud?.AddFeed(Localization.Tr("poi.interacted", DisplayName));
 

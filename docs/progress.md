@@ -6,10 +6,10 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-12
 
-- Avance global estimado hacia el MMORPG publicable: **53%**.
+- Avance global estimado hacia el MMORPG publicable: **56%**.
 - Prototipo jugable offline: **97%**.
 - Vertical slice de una zona pulida: **88%**.
-- Online persistente y preparado para produccion: **25%**.
+- Online persistente y preparado para produccion: **28%**.
 - Arte final, contenido completo 1-105 y lanzamiento: **30%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
@@ -43,6 +43,10 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   minimapa 2D liviano con jugador, mobs cercanos y puntos de interes.
 - Fase 5.48: ventana TEST instrumentada con FPS real, memoria, tiempo de sesion
   y conteo de objetos activos para la prueba Android.
+- Fase 5.45: segunda capa de identidad visual por familia y tier para mobs de
+  las zonas 1-10, compatible con modelos KayKit y fallback procedural.
+- Fase 5.49: reclamos de `EXPLORAR` persistidos por personaje en `PlayerSaveData`
+  esquema 10 y enviados dentro del snapshot online.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -52,15 +56,18 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    en las diez zonas del telefono real.
 2. Ajustar cantidad de mobs, VFX, decoracion y radio del minimapa con esos
    datos.
-3. Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y probar
-   sus animaciones sin perder el fallback procedural.
-4. Fase 5.49: persistir reclamos de POI por personaje y ajustar recompensas
-   con telemetria real.
+3. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
+   minimapa con datos reales.
+4. Fase 5.45: reemplazar progresivamente las variantes de familia por mobs 3D
+   finales con licencia y animaciones especificas.
+5. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
+   revisar duplicados/concurrencia con telemetria real.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-12 | 5.45+5.49 | Identidad por familia/tier y POI persistentes por personaje | 56% |
 | 2026-07-12 | 5.48 | Instrumentacion de rendimiento para prueba Android | 53% |
 | 2026-07-12 | 5.51 | Regeneracion progresiva y minimapa 2D de mobs/POI | 52% |
 | 2026-07-12 | 5.42+5.44 | Hotfix multitactil, menu refinado y camara tactil | 49% |

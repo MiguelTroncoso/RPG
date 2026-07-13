@@ -108,10 +108,12 @@ simple y autocontenido.
   telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
+- Guardado local en esquema v10 incluye reclamos de puntos de interes por
+  personaje; `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar
-  Stats/Datos, recompensas de POI y safe zone en telefono; convertir los
-  perfiles de armadura y mobs restantes en assets editables; jugar sesiones de
-  prueba en zonas 41-105 y ajustar con DATOS; pulir comercio y uso tactil de
-  items.
+  Stats/Datos, regeneracion, minimapa, recompensas de POI y safe zone en
+  telefono; reemplazar las variantes de familia por mobs finales editables;
+  jugar sesiones de prueba en zonas 41-105 y ajustar con DATOS; pulir comercio
+  y uso tactil de items.

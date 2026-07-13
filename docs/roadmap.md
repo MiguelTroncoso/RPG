@@ -416,8 +416,10 @@ criaturas con identidad artistica, animaciones y materiales propios.
   migra a un prefab/modelo real.
 - Preparar idle, persecucion, ataque, impacto, muerte y variantes de color.
   [En progreso: ataque/muerte y fallback listos]
+- Añadir una identidad visual de familia para elite/jefe en las zonas 1-10,
+  compatible con modelos KayKit y fallback procedural. [Implementado]
 - Migrar la criatura distintiva y sus materiales finales a las zonas 2-10.
-  [Pendiente]
+  [Pendiente: arte final]
 
 Criterio de exito: la Zona 1 tiene mobs reconocibles y consistentes sin
 romper rendimiento ni reglas data-driven.
@@ -481,9 +483,11 @@ duplicar reglas de combate.
 - Entrada, camino, landmarks y limites visuales para zonas 1-10. [Implementado]
 - Obstaculos solidos y cuatro puntos de interes por zona. [Implementado]
 - Arte final de terreno y puntos de interes interactivos con recompensas.
-  [En progreso: POI interactivos y recompensas de sesion implementados]
-- Persistir el reclamo de cada POI por personaje cuando exista el guardado
-  definitivo online. [Pendiente]
+  [En progreso: POI interactivos y recompensas persistentes implementados]
+- Persistir el reclamo de cada POI por personaje en `PlayerSaveData` esquema 10
+  y transportarlo en `saveState`. [Implementado]
+- Validar recompensas con autoridad definitiva del servidor y telemetria real.
+  [Pendiente]
 - Ruta de prueba nivel 1-105 con telemetria, TTK y recompensas. [Pendiente]
 
 Criterio de exito: cada zona se reconoce, se recorre con orientacion clara y

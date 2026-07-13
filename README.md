@@ -627,10 +627,15 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
   espiritus y Barbarian para jefes/forja/vacio.
 - Si falta un modelo, `EnemyVisualController` conserva las siluetas
   procedurales, por lo que el spawner y el combate no dependen del arte.
-- La Zona 1 ya usa una criatura procedural propia de tipo bestia de reliquia
-  para normal, elite y jefe, con collar, hombreras, placa y cuernos por tier.
-- La sustitucion por modelos importados finales para las zonas 2-10 y sus
-  materiales propios queda pendiente para la siguiente pasada artistica.
+- La Zona 1 usa una criatura procedural propia de tipo bestia de reliquia para
+  normal, elite y jefe, con collar, hombreras, placa y cuernos por tier.
+- Las diez familias de zona ya tienen una segunda capa de identidad para
+  elite/jefe: espinas del bosque, anillos de brasa, prismas de hielo/cristal,
+  aletas abisales, guardas de forja, halos astrales y mantos del vacio.
+- Estos adornos se aplican tanto al fallback procedural como a los modelos
+  KayKit cargados, sin cambiar spawner, IA, combate ni loot.
+- La sustitucion por modelos importados finales y materiales propios para cada
+  zona queda pendiente de la siguiente pasada artistica.
 
 ## Fase 5.46: Ambientacion De Todas Las Zonas
 
@@ -674,13 +679,19 @@ la siguiente prueba de balance.
   marcadores de limite desde nivel 1 hasta 105.
 - Los cuatro obstaculos de cada zona tienen colision real y quedan fuera del
   camino principal; `EXPLORAR` muestra el estado del landmark mas cercano.
-- `EXPLORAR` entrega una recompensa de EXP/oro una vez por punto y sesion para
-  la entrada, los landmarks de elite y el jefe; el campamento seguro informa
-  su estado sin recompensa de combate.
+- `EXPLORAR` entrega una recompensa de EXP/oro una vez por punto y personaje
+  para la entrada, los landmarks de elite y el jefe; el campamento seguro
+  informa su estado sin recompensa de combate.
+- Los reclamos se guardan en `PlayerSaveData` esquema 10 y viajan dentro del
+  snapshot `saveState`, por lo que cerrar/reabrir o reconectar no duplica la
+  recompensa del mismo personaje.
 - Los datos de vida, dano, EXP y oro siguen siendo los de `ZoneDefinition`;
   la recompensa exploratoria usa `RewardService` y no altera el combate.
 - `ZoneBalanceResolver` registra TTK estimado, dano base esperado y si cada
   tier cae dentro de su objetivo; falta cerrar el ajuste con telemetria real.
+
+La validacion de reclamos en telefono y la autoridad definitiva del servidor
+para recompensas siguen pendientes para una fase online posterior.
 
 ## Fase 5.50: Zona Segura De Comercio
 
