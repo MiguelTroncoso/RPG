@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.55 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.56 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v11 (incluye posición, reclamos de POI, cosmeticos y evento diario),
@@ -127,6 +127,10 @@ simple y autocontenido.
   stats desde `StatSheet`; `DailyEventSystem` activa la Caceria de Reliquias
   una vez por fecha local y desbloquea Alas de brasa al completarla. Compras,
   propiedad y recompensas siguen pendientes de autoridad server-authoritative.
+- Fase 5.56: `VisualMaterialUtility` centraliza materiales con respuesta de luz,
+  emision selectiva, niebla lineal y acentos de suelo por zona; la pasada se
+  aplica a personajes, mobs, jefes, NPC, compañeros, monturas y VFX. Falta
+  ajustar contraste/FPS/memoria con un telefono real.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar

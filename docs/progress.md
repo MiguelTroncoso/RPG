@@ -6,7 +6,7 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **73%**.
+- Avance global estimado hacia el MMORPG publicable: **75%**.
 - Prototipo jugable offline: **98%**.
 - Vertical slice de una zona pulida: **94%**.
 - Online persistente y preparado para produccion: **35%**.
@@ -73,6 +73,12 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.55: evento automatico diario Caceria de Reliquias con progreso,
   recompensa de EXP/oro y desbloqueo dificil de Alas de brasa; queda local por
   ahora y preparado para autoridad del servidor.
+- Fase 5.56: pasada visual 3D transversal con materiales compartidos, acabado
+  metalico controlado, runas emisivas, niebla de profundidad, iluminacion
+  calida y acentos de terreno para las diez zonas.
+- Fase 5.56: el mismo acabado visual se aplica a avatar, armaduras, mobs,
+  jefes, NPC, mascotas, monturas, monolito y VFX de combate sin agregar
+  paquetes externos.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -99,12 +105,15 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 10. Probar en Android la tienda, atuendo, alas, evento diario y persistencia;
     calibrar precios y recompensas con telemetria real.
 11. Migrar propiedad, compras, eventos diarios y drops raros a validacion
-    server-authoritative antes de abrir pruebas publicas.
+   server-authoritative antes de abrir pruebas publicas.
+12. Validar la pasada visual en telefono: niebla, brillo de runas, lectura de
+   jefes, FPS y memoria; ajustar los valores de materiales segun el dispositivo.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.56 | Pasada visual 3D de materiales, luz, niebla y zonas | 75% |
 | 2026-07-13 | 5.55 | Atuendos, alas, stats de compañeros, tienda MVP y evento diario | 73% |
 | 2026-07-13 | 5.54 | Conexion automatica, URL configurable y servidor Node parametrizable | 70% |
 | 2026-07-13 | 5.53 | Acceso mobile, seleccion de personaje y perfiles de servidor | 65% |

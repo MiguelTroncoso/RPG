@@ -698,7 +698,7 @@ namespace MmorpgPrototype
             part.name = name;
             part.transform.localScale = size;
             RemoveCollider(part);
-            part.GetComponent<Renderer>().sharedMaterial = MaterialFor(color);
+            part.GetComponent<Renderer>().sharedMaterial = VisualMaterialUtility.Create(color, VisualMaterialUtility.ShouldGlow(name), 0.06f, 0.28f);
             return part;
         }
 
@@ -753,7 +753,7 @@ namespace MmorpgPrototype
             }
 
             var shader = Shader.Find("Standard") ?? Shader.Find("Universal Render Pipeline/Lit");
-            var material = new Material(shader) { color = color };
+            var material = VisualMaterialUtility.Create(color, false, 0.06f, 0.28f);
             Materials[key] = material;
             return material;
         }

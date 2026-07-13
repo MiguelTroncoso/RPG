@@ -160,8 +160,7 @@ namespace MmorpgPrototype
                 Destroy(collider);
             }
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = pet.BodyColor;
+            var material = VisualMaterialUtility.Create(pet.BodyColor, false, 0.05f, 0.28f);
             petVisual.GetComponent<Renderer>().sharedMaterial = material;
 
             var controller = petVisual.AddComponent<PetController>();

@@ -67,7 +67,7 @@ namespace MmorpgPrototype
             }
 
             var shader = Shader.Find("Particles/Standard Unlit") ?? Shader.Find("Standard");
-            material = new Material(shader) { color = color };
+            material = VisualMaterialUtility.Create(color, true, 0f, 0.1f);
             Materials[colorKey] = material;
             return material;
         }

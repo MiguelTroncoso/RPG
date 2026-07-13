@@ -34,6 +34,7 @@ namespace MmorpgPrototype
             BuildEntryMarker(root.transform, zone);
             BuildObstacleField(root.transform, zone);
             BuildSafeZone(root.transform, zone);
+            BuildGroundAccents(root.transform, zone, random);
         }
 
         private static void BuildNavigation(Transform parent, ZoneDefinition zone)
@@ -91,6 +92,37 @@ namespace MmorpgPrototype
             CreatePart(parent, "Safe Zone Marker L", PrimitiveType.Cube, center + new Vector3(-zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
             CreatePart(parent, "Safe Zone Marker R", PrimitiveType.Cube, center + new Vector3(zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
             CreatePointOfInterest(parent, "Safe Commerce Zone", zone.SafeZoneCenter, Localization.Tr("poi.safe", zone.DisplayName), ZonePointOfInterestType.SafeCommerce, RewardFor(zone, ZonePointOfInterestType.SafeCommerce), ClaimIdFor(zone, ZonePointOfInterestType.SafeCommerce));
+        }
+
+        private static void BuildGroundAccents(Transform parent, ZoneDefinition zone, System.Random random)
+        {
+            var accent = AccentFor(zone);
+            var center = zone.GroundCenter;
+            var count = Application.platform == RuntimePlatform.Android ? 5 : 8;
+            for (var i = 0; i < count; i++)
+            {
+                var angle = (float)(Math.PI * 2d * i / count) + (float)random.NextDouble() * 0.5f;
+                var radius = 5f + (float)random.NextDouble() * 20f;
+                var position = center + new Vector3(Mathf.Cos(angle) * radius, 0.025f, Mathf.Sin(angle) * radius);
+                var size = 0.45f + (float)random.NextDouble() * 0.45f;
+                CreatePart(parent, "Zone Accent Rune", PrimitiveType.Cylinder, position, new Vector3(size, 0.025f, size), Color.Lerp(zone.GroundColor, accent, 0.6f), Quaternion.Euler(0f, i * 21f, 0f));
+
+                if (i % 2 == 0)
+                {
+                    CreatePart(parent, "Zone Accent Shard", PrimitiveType.Cube, position + Vector3.up * 0.22f, new Vector3(0.08f, 0.42f, 0.08f), accent, Quaternion.Euler(0f, i * 33f, 24f));
+                }
+            }
+        }
+
+        private static Color AccentFor(ZoneDefinition zone)
+        {
+            var id = (zone != null ? zone.ZoneId : string.Empty).ToLowerInvariant();
+            if (id.Contains("forest") || id.Contains("valley")) return new Color(0.32f, 0.82f, 0.42f);
+            if (id.Contains("ash") || id.Contains("obsidian")) return new Color(1f, 0.3f, 0.08f);
+            if (id.Contains("crystal") || id.Contains("frost")) return new Color(0.35f, 0.82f, 1f);
+            if (id.Contains("sunken")) return new Color(0.12f, 0.82f, 0.76f);
+            if (id.Contains("astral")) return new Color(0.7f, 0.42f, 1f);
+            return new Color(0.5f, 0.28f, 0.86f);
         }
 
         private static string ClaimIdFor(ZoneDefinition zone, ZonePointOfInterestType type)
@@ -279,7 +311,7 @@ namespace MmorpgPrototype
                 UnityEngine.Object.Destroy(collider);
             }
 
-            part.GetComponent<Renderer>().sharedMaterial = MaterialFor(color);
+            part.GetComponent<Renderer>().sharedMaterial = VisualMaterialUtility.Create(color, VisualMaterialUtility.ShouldGlow(name), 0.04f, 0.22f);
             return part;
         }
 
@@ -292,7 +324,7 @@ namespace MmorpgPrototype
             }
 
             var shader = Shader.Find("Standard") ?? Shader.Find("Universal Render Pipeline/Lit");
-            var material = new Material(shader) { color = color };
+            var material = VisualMaterialUtility.Create(color, false, 0.04f, 0.22f);
             Materials[key] = material;
             return material;
         }

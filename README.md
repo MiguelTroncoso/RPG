@@ -802,6 +802,20 @@ SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=10
 - APK validada despues de esta fase en:
   `Builds/Android/valle-reliquias-debug.apk`.
 
+## Fase 5.56: Pasada Visual 3D
+
+- Se centralizaron los materiales 3D en `VisualMaterialUtility` para controlar
+  color, brillo, metal y emision sin crear un material diferente por objeto.
+- El mundo usa iluminacion mas calida y niebla lineal para dar profundidad;
+  la camara mantiene HDR desactivado para cuidar Android.
+- Las runas, cristales, nucleos, anillos, perlas y monolitos ahora tienen
+  acentos emisivos; los mobs, jefes, avatares, NPC, mascotas y monturas reciben
+  una respuesta de luz mas coherente.
+- Cada zona recibe acentos de suelo y fragmentos con una paleta propia para
+  diferenciar mejor las bandas del nivel 1 al 105.
+- La validacion visual final en el telefono queda pendiente para ajustar
+  contraste, brillo, FPS y memoria por dispositivo.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

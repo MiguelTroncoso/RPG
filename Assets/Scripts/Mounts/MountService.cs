@@ -162,8 +162,7 @@ namespace MmorpgPrototype
                 Destroy(collider);
             }
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = mount.BodyColor;
+            var material = VisualMaterialUtility.Create(mount.BodyColor, false, 0.08f, 0.3f);
             mountVisual.GetComponent<Renderer>().sharedMaterial = material;
         }
 

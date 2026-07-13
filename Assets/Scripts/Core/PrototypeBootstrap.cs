@@ -90,8 +90,7 @@ namespace MmorpgPrototype
             ground.transform.position = zone.GroundCenter;
             ground.transform.localScale = new Vector3(7f, 1f, 7f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = zone.GroundColor;
+            var material = VisualMaterialUtility.Create(zone.GroundColor, false, 0.02f, 0.16f);
             ground.GetComponent<Renderer>().sharedMaterial = material;
         }
 
@@ -111,8 +110,7 @@ namespace MmorpgPrototype
             post.transform.localPosition = new Vector3(0f, 1.1f, 0f);
             post.transform.localScale = new Vector3(0.25f, 2.2f, 0.25f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.35f, 0.26f, 0.16f);
+            var material = VisualMaterialUtility.Create(new Color(0.35f, 0.26f, 0.16f), false, 0.04f, 0.2f);
             post.GetComponent<Renderer>().sharedMaterial = material;
 
             CreateWorldLabel(sign.transform, Localization.Tr("world.zone_sign", zone.DisplayName, zone.MinLevel, zone.MaxLevel), new Color(1f, 0.9f, 0.6f), 2.6f);
@@ -154,11 +152,17 @@ namespace MmorpgPrototype
                 var lightObject = new GameObject("Directional Light");
                 var light = lightObject.AddComponent<Light>();
                 light.type = LightType.Directional;
-                light.intensity = 1.15f;
+                light.intensity = 1.2f;
+                light.color = new Color(1f, 0.92f, 0.8f);
                 light.transform.rotation = Quaternion.Euler(48f, -35f, 0f);
             }
 
-            RenderSettings.ambientLight = new Color(0.42f, 0.46f, 0.52f);
+            RenderSettings.ambientLight = new Color(0.34f, 0.4f, 0.5f);
+            RenderSettings.fog = true;
+            RenderSettings.fogMode = FogMode.Linear;
+            RenderSettings.fogColor = new Color(0.09f, 0.12f, 0.16f);
+            RenderSettings.fogStartDistance = 52f;
+            RenderSettings.fogEndDistance = 170f;
         }
 
         private static void CreateGround()
@@ -167,8 +171,7 @@ namespace MmorpgPrototype
             ground.name = "Training Field";
             ground.transform.localScale = new Vector3(7f, 1f, 7f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.22f, 0.34f, 0.24f);
+            var material = VisualMaterialUtility.Create(new Color(0.22f, 0.34f, 0.24f), false, 0.02f, 0.12f);
             ground.GetComponent<Renderer>().sharedMaterial = material;
 
             var collision = new GameObject("Training Field Collision");
@@ -183,8 +186,7 @@ namespace MmorpgPrototype
                 marker.transform.position = new Vector3(Random.Range(-28f, 28f), 0.18f, Random.Range(-28f, 28f));
                 marker.transform.localScale = new Vector3(Random.Range(0.7f, 1.6f), 0.35f, Random.Range(0.7f, 1.6f));
 
-                var stoneMaterial = new Material(Shader.Find("Standard"));
-                stoneMaterial.color = new Color(0.28f, 0.28f, 0.3f);
+                var stoneMaterial = VisualMaterialUtility.Create(new Color(0.28f, 0.28f, 0.3f), false, 0.08f, 0.28f);
                 marker.GetComponent<Renderer>().sharedMaterial = stoneMaterial;
             }
         }
@@ -196,8 +198,7 @@ namespace MmorpgPrototype
             player.tag = "Player";
             player.transform.position = new Vector3(0f, 1f, 0f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.18f, 0.42f, 0.9f);
+            var material = VisualMaterialUtility.Create(new Color(0.18f, 0.42f, 0.9f), false, 0.12f, 0.32f);
             player.GetComponent<Renderer>().sharedMaterial = material;
 
             var capsule = player.GetComponent<CapsuleCollider>();
@@ -311,8 +312,9 @@ namespace MmorpgPrototype
             camera.nearClipPlane = 0.1f;
             camera.farClipPlane = 200f;
             camera.fieldOfView = 55f;
+            camera.allowHDR = false;
             camera.clearFlags = CameraClearFlags.SolidColor;
-            camera.backgroundColor = new Color(0.08f, 0.11f, 0.14f);
+            camera.backgroundColor = new Color(0.09f, 0.12f, 0.16f);
 
             var listener = cameraObject.AddComponent<AudioListener>();
             listener.enabled = true;
@@ -419,8 +421,7 @@ namespace MmorpgPrototype
             npc.transform.position = new Vector3(-3.2f, 1f, -2.5f);
             npc.transform.localScale = new Vector3(0.7f, 1.05f, 0.7f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.93f, 0.7f, 0.28f);
+            var material = VisualMaterialUtility.Create(new Color(0.93f, 0.7f, 0.28f), false, 0.16f, 0.34f);
             npc.GetComponent<Renderer>().sharedMaterial = material;
 
             var shop = npc.AddComponent<ShopNpc>();
@@ -440,8 +441,7 @@ namespace MmorpgPrototype
             npc.transform.position = new Vector3(3.6f, 1f, -3.4f);
             npc.transform.localScale = new Vector3(0.75f, 1.05f, 0.75f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.5f, 0.5f, 0.56f);
+            var material = VisualMaterialUtility.Create(new Color(0.5f, 0.5f, 0.56f), false, 0.2f, 0.38f);
             npc.GetComponent<Renderer>().sharedMaterial = material;
 
             var blacksmith = npc.AddComponent<BlacksmithNpc>();
@@ -460,8 +460,7 @@ namespace MmorpgPrototype
             npc.transform.position = new Vector3(0.4f, 0.7f, -4.8f);
             npc.transform.localScale = new Vector3(1.2f, 1.4f, 1.2f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.55f, 0.42f, 0.22f);
+            var material = VisualMaterialUtility.Create(new Color(0.55f, 0.42f, 0.22f), false, 0.08f, 0.24f);
             npc.GetComponent<Renderer>().sharedMaterial = material;
 
             var storageService = player.GetComponent<StorageService>();

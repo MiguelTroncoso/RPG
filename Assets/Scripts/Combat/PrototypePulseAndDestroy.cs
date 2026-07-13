@@ -21,8 +21,7 @@ namespace MmorpgPrototype
                 Destroy(collider);
             }
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = color;
+            var material = VisualMaterialUtility.Create(color, true, 0.02f, 0.18f);
             pulse.GetComponent<Renderer>().sharedMaterial = material;
             pulse.AddComponent<PrototypePulseAndDestroy>();
         }
@@ -45,4 +44,3 @@ namespace MmorpgPrototype
         }
     }
 }
-

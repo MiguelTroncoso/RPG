@@ -621,6 +621,30 @@ Criterio de exito: el jugador puede comprar o desbloquear un cosmetico, verlo
 en su avatar, recibir sus stats, cerrar la app y conservarlo; el evento diario
 se completa una vez y entrega su recompensa sin duplicarse.
 
+## Fase 5.56: Pasada Visual 3D Transversal
+
+Objetivo: subir la calidad percibida del mundo actual sin introducir assets
+externos ni aumentar de forma peligrosa el coste en Android.
+
+- Utilidad compartida de materiales con smoothness, metallic y soporte de
+  emision; reduce duplicados y mantiene una identidad visual coherente.
+  [Implementado]
+- Iluminacion direccional mas calida, ambiente controlado, niebla lineal y
+  camara sin HDR para priorizar legibilidad y rendimiento mobile. [Implementado]
+- Runas, cristales, nucleos, halos, perlas, estrellas y monolitos con acentos
+  emisivos; mobs, avatares, NPC, mascotas y monturas usan respuesta de luz
+  consistente. [Implementado]
+- Acentos de suelo y fragmentos por zona para que las bandas 1-105 tengan una
+  lectura visual propia aun usando el mismo molde de terreno. [Implementado]
+- Validar brillo, contraste, FPS, memoria y lectura de jefes en el telefono
+  real; ajustar por perfil de calidad si es necesario. [Pendiente de dispositivo]
+- Sustituir progresivamente geometria procedural por arte 3D final propio,
+  manteniendo estos contratos de visuales. [Pendiente artistico]
+
+Criterio de exito: al comparar la APK anterior con la nueva, el mundo, los
+personajes y los enemigos se distinguen mejor por materiales, silueta, luz y
+acentos de zona sin perder jugabilidad en Android.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

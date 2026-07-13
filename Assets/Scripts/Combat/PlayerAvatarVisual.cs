@@ -352,9 +352,7 @@ namespace MmorpgPrototype
             var renderer = part.GetComponent<Renderer>();
             if (renderer != null)
             {
-                var material = new Material(Shader.Find("Standard"));
-                material.color = color;
-                renderer.sharedMaterial = material;
+                renderer.sharedMaterial = VisualMaterialUtility.Create(color, VisualMaterialUtility.ShouldGlow(partName), 0.08f, 0.3f);
             }
 
             return part;

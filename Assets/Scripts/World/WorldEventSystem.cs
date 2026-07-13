@@ -36,8 +36,7 @@ namespace MmorpgPrototype
             activeMonolith.transform.position = spawnPosition;
             activeMonolith.transform.localScale = new Vector3(1.2f, 2.2f, 1.2f);
 
-            var material = new Material(Shader.Find("Standard"));
-            material.color = new Color(0.38f, 0.08f, 0.52f);
+            var material = VisualMaterialUtility.Create(new Color(0.38f, 0.08f, 0.52f), true, 0.12f, 0.42f);
             activeMonolith.GetComponent<Renderer>().sharedMaterial = material;
 
             var collider = activeMonolith.GetComponent<Collider>();
