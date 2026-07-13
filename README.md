@@ -576,6 +576,19 @@ SDK de Unity si el comando global no existe.
 La build corregida queda en `Builds/Android/valle-reliquias-debug.apk` y debe
 reinstalarse antes de repetir la prueba tactil.
 
+## Fase 5.42: Entrada Multitactil Y Combate Movil
+
+- En Android el ataque tactil queda reservado al boton `ATK`; el toque del
+  joystick ya no se interpreta como clic de mouse ni dispara ataques por error.
+- El joystick conserva el `pointerId` del dedo que lo activo y no se limpia
+  cuando entra o sale un segundo dedo sobre otro control.
+- La APK debe reinstalarse y probarse con movimiento sostenido mas ataque,
+  ataque repetido y cambio de objetivo.
+
+Proximas fases recomendadas: renovar los mobs con siluetas y animaciones
+distintas por familia, reorganizar la interfaz para separar combate/chat/
+inventario en movil y despues pulir terreno, lectura visual y balance.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

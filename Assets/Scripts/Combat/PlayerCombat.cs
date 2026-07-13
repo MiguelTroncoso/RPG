@@ -27,7 +27,15 @@ namespace MmorpgPrototype
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            // On Android, the first touch can also appear as mouse button 0.
+            // The attack button owns touch input so the movement joystick does
+            // not trigger an attack when a second finger is placed on it.
+            var desktopPointerAttack = Application.isEditor
+                || Application.platform == RuntimePlatform.WindowsPlayer
+                || Application.platform == RuntimePlatform.OSXPlayer
+                || Application.platform == RuntimePlatform.LinuxPlayer;
+
+            if (Input.GetKeyDown(KeyCode.Space) || (desktopPointerAttack && Input.GetMouseButtonDown(0)))
             {
                 TryAttack();
             }

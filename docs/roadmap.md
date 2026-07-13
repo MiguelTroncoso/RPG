@@ -345,6 +345,48 @@ ampliando contenido.
 Criterio de exito: el jugador aparece sobre el suelo, permanece estable, el
 joystick mueve al personaje y la ventana de seleccion cabe dentro del safe area.
 
+## Fase 5.42: Entrada Multitactil Y Combate Movil
+
+Objetivo: hacer que mover y atacar al mismo tiempo sea estable en Android.
+
+- El ataque de mouse queda limitado a editor/PC; el boton movil es la unica
+  fuente tactil de ataque. [Implementado]
+- `VirtualJoystick` conserva el dedo activo mediante `pointerId`. [Implementado]
+- Repetir prueba en dispositivo con joystick + `ATK`, habilidades y botones
+  de menu sin perder el movimiento. [Pendiente]
+
+Criterio de exito: dos dedos pueden mover y atacar sin ataques espontaneos,
+perdida del joystick ni bloqueo del personaje.
+
+## Fase 5.43: Mobs Y Lectura De Combate
+
+Objetivo: reemplazar los enemigos placeholder y hacer que cada familia tenga
+una lectura visual y de combate reconocible.
+
+- Modelos o siluetas CC0 documentadas para lobos, guardianes, elites y jefes.
+- Animaciones o fallback procedural de idle, persecucion, ataque, impacto y
+  muerte.
+- Barras de vida, nombre, tier y telemetria visual con jerarquia clara.
+- Variantes por zona sin cambiar la logica data-driven del spawner.
+
+Criterio de exito: el jugador distingue amenaza, distancia, tier y estado del
+enemigo sin depender del texto de la consola.
+
+## Fase 5.44: Interfaz De Juego Mobile
+
+Objetivo: convertir el HUD de prototipo en una interfaz comoda para sesiones
+largas en pantalla tactil.
+
+- Separar lectura de personaje, objetivo, chat, combate e inventario.
+- Reducir paneles superpuestos y reservar safe area para joystick y acciones.
+- Reemplazar botones de desarrollo por iconos/ventanas contextuales donde
+  corresponda, conservando accesibilidad y textos i18n.
+- Revisar seleccion de personaje, menu, stats, equipo, mision y chat en
+  landscape Android.
+
+Criterio de exito: combate y exploracion permanecen legibles sin tapar el
+  avatar ni los enemigos cercanos.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

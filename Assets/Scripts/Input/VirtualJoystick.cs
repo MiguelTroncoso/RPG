@@ -10,18 +10,49 @@ namespace MmorpgPrototype
 
         public Vector2 Value { get; private set; }
 
+        private const int NoPointer = int.MinValue;
+        private int activePointerId = NoPointer;
+
         public void OnPointerDown(PointerEventData eventData)
         {
+            if (activePointerId != NoPointer && activePointerId != eventData.pointerId)
+            {
+                return;
+            }
+
+            activePointerId = eventData.pointerId;
             UpdateDrag(eventData);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (eventData.pointerId != activePointerId)
+            {
+                return;
+            }
+
             UpdateDrag(eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (eventData.pointerId != activePointerId)
+            {
+                return;
+            }
+
+            activePointerId = NoPointer;
+            Value = Vector2.zero;
+
+            if (Knob != null)
+            {
+                Knob.anchoredPosition = Vector2.zero;
+            }
+        }
+
+        private void OnDisable()
+        {
+            activePointerId = NoPointer;
             Value = Vector2.zero;
 
             if (Knob != null)
@@ -48,4 +79,3 @@ namespace MmorpgPrototype
         }
     }
 }
-
