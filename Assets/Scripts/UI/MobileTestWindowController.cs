@@ -10,6 +10,17 @@ namespace MmorpgPrototype
         public MobileRuntimeDiagnostics Diagnostics;
         public CombatFeedbackAudio Audio;
 
+        private float nextRefresh;
+
+        private void Update()
+        {
+            if (Panel != null && Panel.activeSelf && Time.unscaledTime >= nextRefresh)
+            {
+                nextRefresh = Time.unscaledTime + 0.5f;
+                Refresh();
+            }
+        }
+
         public void Toggle()
         {
             if (Panel == null)

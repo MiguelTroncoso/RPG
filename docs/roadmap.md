@@ -459,13 +459,16 @@ mas sistemas.
   [Implementado]
 - Reducir sombras, luces, antialiasing y reflejos en Android. [Implementado]
 - Reutilizar materiales de mobs y decoracion. [Implementado]
-- Medir FPS, memoria y tiempos de carga por cada zona 1-10. [Pendiente]
+- Instrumentar la ventana TEST con FPS medido, promedio/minimo, memoria,
+  tiempo de sesion, enemigos y POI activos. [Implementado]
+- Medir FPS, memoria y tiempos de carga por cada zona 1-10 en telefono real.
+  [Pendiente de dispositivo]
 - Ajustar cantidad de decoracion, enemigos, VFX y distancia de lectura con
   datos del telefono. [Pendiente]
 - Revisar TTK, recompensas y escalado de jefes con la telemetria.
   [Pendiente]
-- Prueba fisica de HUD, mobs, multitactil, audio y safe area.
-  [Pendiente]
+- Prueba fisica de HUD, mobs, multitactil, audio, safe area y ventana TEST.
+  [Pendiente de dispositivo]
 
 Criterio de exito: una sesion de nivel 1 a 105 es legible, estable y medible.
 

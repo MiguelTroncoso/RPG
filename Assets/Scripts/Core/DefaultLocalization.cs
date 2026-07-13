@@ -207,6 +207,8 @@ namespace MmorpgPrototype
                 { "ui.mobile_music_up", "MUS +" },
                 { "mobile.audio", "Musica {0} | SFX {1} | Volumen musica {2}" },
                 { "mobile.unavailable", "Diagnostico no disponible" },
+                { "mobile.device", "Dispositivo {0} | DPI {1:0.#} | objetivo {2} FPS" },
+                { "mobile.performance", "Sesion {0:0.#}s | FPS actual {1:0.#} promedio {2:0.#} minimo {3:0.#} | memoria {4:0.#} MB | enemigos {5} | POI {6}" },
                 { "telemetry.summary", "Kills {0} | Muertes {1} | Dano dado {2} | Dano recibido {3}" },
                 { "telemetry.targets", "Objetivo TTK: normal {0:0.#}-{1:0.#}s | elite {2:0.#}-{3:0.#}s | jefe {4:0.#}-{5:0.#}s" },
                 { "telemetry.zone_no_data", "{0} ({1}-{2}) | sin datos de combate" },

@@ -103,8 +103,9 @@ simple y autocontenido.
   los guardados corrigen posiciones bajo el mapa, la UI Android usa una
   referencia landscape mas legible, el ataque tactil conserva el joystick
   durante el movimiento, la camara acepta arrastre en zona libre, el jugador
-  regenera salud fuera de combate y existe un minimapa 2D; falta confirmar
-  regeneracion, radar y balance en telefono real.
+  regenera salud fuera de combate, existe un minimapa 2D y TEST mide FPS real,
+  memoria y objetos activos; falta confirmar regeneracion, radar y balance en
+  telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y

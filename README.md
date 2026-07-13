@@ -660,6 +660,8 @@ La APK de estas cuatro mejoras debe reinstalarse para revisar el salto visual.
   para mantener una base de 60 FPS sin eliminar ninguna zona del mundo.
 - Los materiales de mobs y decoracion se reutilizan por color para reducir
   instanciaciones durante la carga.
+- La ventana `TEST` ahora muestra FPS actual/promedio/minimo, memoria asignada,
+  tiempo de sesion, enemigos activos y puntos de interes activos.
 
 La validacion de FPS, memoria, TTK y recompensas en telefono real queda como
 la siguiente prueba de balance.

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace MmorpgPrototype
 {
@@ -10,9 +11,25 @@ namespace MmorpgPrototype
         public bool ApplyRuntimeTuning = true;
 
         public string LastSummary { get; private set; } = string.Empty;
+        public float CurrentFps { get; private set; }
+        public float AverageFps { get; private set; }
+        public float MinimumFps { get; private set; }
+        public int ActiveEnemyCount { get; private set; }
+        public int ActivePointOfInterestCount { get; private set; }
 
         private Rect lastSafeArea;
         private Vector2Int lastScreenSize;
+        private float sampleElapsed;
+        private float frameSum;
+        private float frameMinimum = float.MaxValue;
+        private int frameCount;
+        private float nextWorldSample;
+        private float sessionStartedAt;
+
+        private void Awake()
+        {
+            sessionStartedAt = Time.realtimeSinceStartup;
+        }
 
         private void Start()
         {
@@ -27,13 +44,54 @@ namespace MmorpgPrototype
 
         private void Update()
         {
+            SampleFrame(Time.unscaledDeltaTime);
+
+            if (Time.unscaledTime >= nextWorldSample)
+            {
+                nextWorldSample = Time.unscaledTime + 0.5f;
+                SampleWorldObjects();
+            }
+
             if (lastSafeArea != Screen.safeArea || lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height)
             {
                 Report();
             }
         }
 
-        private void Report()
+        private void SampleFrame(float delta)
+        {
+            if (delta <= 0.0001f)
+            {
+                return;
+            }
+
+            CurrentFps = 1f / delta;
+            frameSum += CurrentFps;
+            frameMinimum = Mathf.Min(frameMinimum, CurrentFps);
+            frameCount++;
+            sampleElapsed += delta;
+
+            if (sampleElapsed < 0.5f || frameCount <= 0)
+            {
+                return;
+            }
+
+            AverageFps = frameSum / frameCount;
+            MinimumFps = frameMinimum;
+            frameSum = 0f;
+            frameMinimum = float.MaxValue;
+            frameCount = 0;
+            sampleElapsed = 0f;
+            Report(false);
+        }
+
+        private void SampleWorldObjects()
+        {
+            ActiveEnemyCount = FindObjectsByType<EnemyAI>().Length;
+            ActivePointOfInterestCount = FindObjectsByType<ZonePointOfInterest>().Length;
+        }
+
+        private void Report(bool log = true)
         {
             lastSafeArea = Screen.safeArea;
             lastScreenSize = new Vector2Int(Screen.width, Screen.height);
@@ -41,10 +99,18 @@ namespace MmorpgPrototype
             var audioLabel = Audio != null
                 ? $"audio sfx {Audio.SfxVolume:0.00} music {Audio.MusicVolume:0.00}"
                 : "audio unavailable";
-            var deviceLabel = $"device {SystemInfo.deviceModel} dpi {Screen.dpi:0.#} fps {Application.targetFrameRate}";
-            LastSummary = $"{Screen.width}x{Screen.height} {orientation} safe {Screen.safeArea} {deviceLabel} {audioLabel}";
+            var deviceLabel = Localization.Tr("mobile.device", SystemInfo.deviceModel, Screen.dpi, Application.targetFrameRate);
+            var performanceLabel = Localization.Tr("mobile.performance",
+                Time.realtimeSinceStartup - sessionStartedAt,
+                CurrentFps,
+                AverageFps,
+                MinimumFps,
+                Profiler.GetTotalAllocatedMemoryLong() / (1024f * 1024f),
+                ActiveEnemyCount,
+                ActivePointOfInterestCount);
+            LastSummary = $"{Screen.width}x{Screen.height} {orientation} safe {Screen.safeArea}\n{deviceLabel}\n{performanceLabel}\n{audioLabel}";
 
-            if (LogChanges)
+            if (LogChanges && log)
             {
                 Debug.Log($"MobileRuntimeDiagnostics: {LastSummary}");
             }

@@ -183,7 +183,8 @@ Proximos objetivos sugeridos:
 - Reinstalar la APK y probar regeneracion tras dano, minimapa, joystick +
   `ATK`, joystick + camara, giro vertical/horizontal, habilidades, Stats/Datos,
   `EXPLORAR` y safe zone en el telefono.
-- Fase 5.48: medir FPS, memoria, carga, TTK y legibilidad en las diez zonas.
+- Fase 5.48: abrir TEST y registrar FPS, memoria, carga, TTK, enemigos y POI
+  activos en las diez zonas.
 - Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y conectarlas
   al pipeline de animacion existente.
 - Fase 5.49: persistir reclamos de POI por personaje y ajustar recompensas con
