@@ -390,6 +390,8 @@ largas en pantalla tactil.
   [Implementado]
 - Exponer accesos directos a stats y datos desde el menu principal.
   [Implementado]
+- Mantener movimiento y ataque simultaneos en Android sin conflicto de
+  rotacion ni perdida del joystick. [Implementado: pendiente de prueba fisica]
 - Revisar seleccion de personaje, menu, stats, equipo, mision y chat en
   landscape Android. [Pendiente de prueba fisica]
 

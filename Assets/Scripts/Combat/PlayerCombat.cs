@@ -74,7 +74,11 @@ namespace MmorpgPrototype
                 return;
             }
 
-            FaceTarget(enemy.transform.position);
+            var movement = GetComponent<PlayerController>();
+            if (movement == null || !movement.IsReceivingMovementInput)
+            {
+                FaceTarget(enemy.transform.position);
+            }
 
             var result = DamageEnemy(enemy, TotalAttackDamage, new Color(1f, 0.9f, 0.28f));
             if (result.IsMiss)

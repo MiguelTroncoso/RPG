@@ -100,8 +100,9 @@ simple y autocontenido.
   validada; la version de QA no muestra la Development Console sobre los
   controles y falta instalarla en un telefono fisico.
 - QA movil: el campo tiene colision explicita, el jugador recupera caidas,
-  los guardados corrigen posiciones bajo el mapa y la UI Android usa una
-  referencia landscape mas legible.
+  los guardados corrigen posiciones bajo el mapa, la UI Android usa una
+  referencia landscape mas legible y el ataque tactil conserva el joystick
+  durante el movimiento; falta confirmar el multitactil en telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y

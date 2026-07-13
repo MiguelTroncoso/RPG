@@ -613,6 +613,9 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
   abandonar el flujo de combate para consultar progresion y telemetria.
 - La escala landscape, safe area, chat y zona de combate quedan separadas para
   reducir paneles superpuestos durante la exploracion.
+- El input multitactil conserva el movimiento mientras se pulsa `ATK`: el
+  ataque responde al `pointer down` y no fuerza la rotacion si el joystick esta
+  entregando una direccion.
 
 ## Fase 5.45: Primera Capa De Mobs 3D
 

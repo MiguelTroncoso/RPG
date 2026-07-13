@@ -524,7 +524,8 @@ namespace MmorpgPrototype
             player.GetComponent<PlayerController>().MovementJoystick = movementJoystick;
 
             var attackButton = CreateRoundButton(uiRoot, "Attack Button", Localization.Tr("ui.attack"), new Vector2(1f, 0f), new Vector2(-170f, 170f), new Vector2(148f, 148f), new Color(0.88f, 0.28f, 0.16f));
-            attackButton.onClick.AddListener(player.GetComponent<PlayerCombat>().TryAttack);
+            var attackInput = attackButton.gameObject.AddComponent<MobileActionButton>();
+            attackInput.Pressed.AddListener(player.GetComponent<PlayerCombat>().TryAttack);
 
             var skills = player.GetComponent<PlayerSkills>();
             var skillOneButton = CreateRoundButton(uiRoot, "Skill One Button", "Q", new Vector2(1f, 0f), new Vector2(-344f, 172f), new Vector2(130f, 92f), new Color(0.18f, 0.36f, 0.86f), 22);

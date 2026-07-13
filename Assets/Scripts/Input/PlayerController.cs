@@ -12,6 +12,8 @@ namespace MmorpgPrototype
         public float FallRecoveryY = -2f;
         public Vector3 SafeSpawnPosition = new Vector3(0f, 1f, 0f);
 
+        public bool IsReceivingMovementInput { get; private set; }
+
         private CharacterController controller;
         private float verticalVelocity;
 
@@ -29,6 +31,7 @@ namespace MmorpgPrototype
 
             var input = ReadMovementInput();
             var moveDirection = CameraRelativeDirection(input);
+            IsReceivingMovementInput = moveDirection.sqrMagnitude > 0.001f;
 
             if (controller.isGrounded && verticalVelocity < 0f)
             {
@@ -41,7 +44,7 @@ namespace MmorpgPrototype
             velocity.y = verticalVelocity;
             controller.Move(velocity * Time.deltaTime);
 
-            if (moveDirection.sqrMagnitude > 0.001f)
+            if (IsReceivingMovementInput)
             {
                 var targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, TurnSpeed * Time.deltaTime);
