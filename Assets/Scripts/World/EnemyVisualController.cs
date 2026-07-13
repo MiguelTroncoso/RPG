@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace MmorpgPrototype
@@ -11,6 +12,8 @@ namespace MmorpgPrototype
         private Transform healthFill;
         private Health health;
         private float healthBarWidth = 1.25f;
+        private Vector3 visualBaseScale;
+        private Coroutine deathRoutine;
 
         public void Initialize(string enemyId, string displayName, EnemyTier tier, Color baseColor, float scale, Health enemyHealth)
         {
@@ -18,29 +21,52 @@ namespace MmorpgPrototype
             visualRoot = new GameObject("Enemy Visual");
             visualRoot.transform.SetParent(transform, false);
             visualRoot.transform.localScale = Vector3.one * Mathf.Max(0.7f, scale);
+            visualBaseScale = visualRoot.transform.localScale;
 
             var id = (enemyId ?? string.Empty).ToLowerInvariant();
             var accent = AccentFor(tier, baseColor);
 
-            if (id.Contains("forest") || id.Contains("valley"))
+            if (TryBuildRealModel(id, tier))
+            {
+                BuildTierAdornment(tier, accent);
+            }
+            else if (id.Contains("forest") || id.Contains("valley"))
             {
                 BuildBeast(baseColor, accent);
+                BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("crystal") || id.Contains("frost") || id.Contains("obsidian"))
             {
                 BuildGuardian(baseColor, accent);
+                BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("sunken") || id.Contains("astral"))
             {
                 BuildSpirit(baseColor, accent);
+                BuildTierAdornment(tier, accent);
             }
             else
             {
                 BuildShadow(baseColor, accent);
+                BuildTierAdornment(tier, accent);
             }
 
-            BuildTierAdornment(tier, accent);
             BuildStatusDisplay(displayName, tier, accent);
+        }
+
+        public void PlayDeath()
+        {
+            if (deathRoutine != null)
+            {
+                StopCoroutine(deathRoutine);
+            }
+
+            if (statusRoot != null)
+            {
+                statusRoot.SetActive(false);
+            }
+
+            deathRoutine = StartCoroutine(DeathAnimation());
         }
 
         private void Update()
@@ -59,6 +85,109 @@ namespace MmorpgPrototype
             {
                 statusRoot.transform.LookAt(camera.transform);
             }
+        }
+
+        private IEnumerator DeathAnimation()
+        {
+            var elapsed = 0f;
+            const float duration = 1.2f;
+            while (elapsed < duration && visualRoot != null)
+            {
+                elapsed += Time.deltaTime;
+                var t = Mathf.Clamp01(elapsed / duration);
+                visualRoot.transform.localScale = Vector3.Lerp(visualBaseScale, Vector3.one * 0.08f, t);
+                visualRoot.transform.localRotation = Quaternion.Euler(0f, t * 18f, t * 12f);
+                yield return null;
+            }
+        }
+
+        private bool TryBuildRealModel(string enemyId, EnemyTier tier)
+        {
+            var modelResource = ModelResourceFor(enemyId, tier);
+            var prefab = Resources.Load<GameObject>(modelResource);
+            if (prefab == null)
+            {
+                return false;
+            }
+
+            var model = Instantiate(prefab, visualRoot.transform);
+            model.name = "Enemy 3D Model";
+            model.transform.localPosition = new Vector3(0f, -1f, 0f);
+            model.transform.localRotation = Quaternion.identity;
+            model.transform.localScale = Vector3.one;
+
+            foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
+            {
+                Destroy(modelCollider);
+            }
+
+            var modelAnimator = model.GetComponentInChildren<Animator>();
+            if (modelAnimator == null)
+            {
+                modelAnimator = model.AddComponent<Animator>();
+            }
+
+            if (modelAnimator.avatar == null)
+            {
+                foreach (var importedAvatar in Resources.LoadAll<Avatar>(modelResource))
+                {
+                    if (importedAvatar != null)
+                    {
+                        modelAnimator.avatar = importedAvatar;
+                        break;
+                    }
+                }
+            }
+
+            var controller = Resources.Load<RuntimeAnimatorController>(AnimatorResourceFor(enemyId, tier));
+            if (controller != null)
+            {
+                modelAnimator.runtimeAnimatorController = controller;
+            }
+
+            var motion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
+            motion.SetVisualRoot(model.transform, modelAnimator);
+            return true;
+        }
+
+        private static string ModelResourceFor(string enemyId, EnemyTier tier)
+        {
+            if (tier == EnemyTier.Boss || enemyId.Contains("obsidian") || enemyId.Contains("throne"))
+            {
+                return "ThirdParty/KayKit/Adventurers/Characters/Barbarian";
+            }
+
+            if (enemyId.Contains("crystal") || enemyId.Contains("frost"))
+            {
+                return "ThirdParty/KayKit/Adventurers/Characters/Knight";
+            }
+
+            if (enemyId.Contains("sunken") || enemyId.Contains("astral"))
+            {
+                return "ThirdParty/KayKit/Adventurers/Characters/Mage";
+            }
+
+            return "ThirdParty/KayKit/Adventurers/Characters/RogueHooded";
+        }
+
+        private static string AnimatorResourceFor(string enemyId, EnemyTier tier)
+        {
+            if (tier == EnemyTier.Boss || enemyId.Contains("obsidian") || enemyId.Contains("throne"))
+            {
+                return "ThirdParty/KayKit/Adventurers/Controllers/Barbarian";
+            }
+
+            if (enemyId.Contains("crystal") || enemyId.Contains("frost"))
+            {
+                return "ThirdParty/KayKit/Adventurers/Controllers/Knight";
+            }
+
+            if (enemyId.Contains("sunken") || enemyId.Contains("astral"))
+            {
+                return "ThirdParty/KayKit/Adventurers/Controllers/Mage";
+            }
+
+            return "ThirdParty/KayKit/Adventurers/Controllers/Rogue";
         }
 
         private void BuildBeast(Color bodyColor, Color accent)

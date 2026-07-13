@@ -383,11 +383,13 @@ Objetivo: convertir el HUD de prototipo en una interfaz comoda para sesiones
 largas en pantalla tactil.
 
 - Separar lectura de personaje, objetivo, chat, combate e inventario.
+  [Implementado]
 - Reducir paneles superpuestos y reservar safe area para joystick y acciones.
-- Reemplazar botones de desarrollo por iconos/ventanas contextuales donde
-  corresponda, conservando accesibilidad y textos i18n.
+  [Implementado]
+- Agrupar acciones secundarias bajo `MAS` y dejar `MENU` siempre accesible.
+  [Implementado]
 - Revisar seleccion de personaje, menu, stats, equipo, mision y chat en
-  landscape Android.
+  landscape Android. [Pendiente de prueba fisica]
 
 Criterio de exito: combate y exploracion permanecen legibles sin tapar el
 avatar ni los enemigos cercanos.
@@ -397,11 +399,15 @@ avatar ni los enemigos cercanos.
 Objetivo: reemplazar progresivamente las siluetas de la Fase 5.43 por
 criaturas con identidad artistica, animaciones y materiales propios.
 
+- Primera capa con modelos KayKit CC0 animados por familia de zona.
+  [Implementado]
 - Seleccionar o crear el mob normal de la Zona 1 y sus variantes elite/jefe.
+  [Pendiente]
 - Importar solo assets CC0, MIT o propios y registrarlos en `ASSET_LICENSES.md`.
 - Conservar `EnemyVisualController` como fallback mientras cada familia se
   migra a un prefab/modelo real.
 - Preparar idle, persecucion, ataque, impacto, muerte y variantes de color.
+  [En progreso: ataque/muerte y fallback listos]
 
 Criterio de exito: la Zona 1 tiene mobs reconocibles y consistentes sin
 romper rendimiento ni reglas data-driven.
@@ -410,12 +416,39 @@ romper rendimiento ni reglas data-driven.
 
 Objetivo: hacer que las zonas 1-4 se sientan distintas y guien al jugador.
 
-- Suelo, obstaculos, decoracion y puntos de interes por zona.
-- Iluminacion, paleta, niebla y lectura de caminos optimizadas para Android.
+- Suelo y decoracion procedural para las zonas 1-10, nivel 1-105. [Implementado]
+- Obstaculos, caminos, puntos de interes e iluminacion final por zona.
+  [Pendiente]
 - Señales visuales de nivel, elite, jefe y transicion entre zonas.
+  [Base implementada]
 
 Criterio de exito: se reconoce la zona sin leer el nombre y el jugador puede
 orientarse con el mundo.
+
+## Fase 5.47: Animacion Y Feedback De Combate
+
+Objetivo: que cada ataque tenga anticipacion, respuesta y cierre visual.
+
+- `AvatarMotionAnimator` conectado a mobs con modelos. [Implementado]
+- Telegraph visual al comenzar el windup enemigo. [Implementado]
+- Impactos, dano flotante y VFX existentes conservados. [Implementado]
+- Muerte visual antes de destruir y respawn. [Implementado]
+- Animaciones especificas de criatura y audio final por familia. [Pendiente]
+
+Criterio de exito: el jugador entiende cuando un enemigo prepara, ejecuta y
+termina un ataque sin depender de la consola.
+
+## Fase 5.48: Balance Y Rendimiento Android
+
+Objetivo: probar las diez zonas y estabilizar el rendimiento antes de sumar
+mas sistemas.
+
+- Medir FPS, memoria y tiempos de carga por cada zona 1-10.
+- Ajustar cantidad de decoracion, enemigos, VFX y distancia de lectura.
+- Revisar TTK, recompensas y escalado de jefes con la telemetria.
+- Prueba fisica de HUD, mobs, multitactil, audio y safe area.
+
+Criterio de exito: una sesion de nivel 1 a 105 es legible, estable y medible.
 
 ## Fase 6: Lanzamiento Inicial
 

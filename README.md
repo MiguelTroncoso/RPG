@@ -603,6 +603,45 @@ pulir terreno y ambientacion de las primeras zonas.
 
 La APK actual incluye esta fase y debe reinstalarse para verla en Android.
 
+## Fase 5.44: Interfaz De Juego Mobile
+
+- El HUD principal ahora prioriza vida, objetivo, estado, clase, progresion y
+  mision; inventario y equipo dejan de ocupar espacio permanente en pantalla.
+- Los botones secundarios se agrupan bajo `MAS` en Android y `MENU` permanece
+  visible para abrir inventario, equipo y misiones.
+- La escala landscape, safe area, chat y zona de combate quedan separadas para
+  reducir paneles superpuestos durante la exploracion.
+
+## Fase 5.45: Primera Capa De Mobs 3D
+
+- Los mobs intentan cargar modelos animados KayKit CC0 segun su familia de
+  zona: Rogue para bestias/sombras, Knight para hielo/cristal, Mage para
+  espiritus y Barbarian para jefes/forja/vacio.
+- Si falta un modelo, `EnemyVisualController` conserva las siluetas
+  procedurales, por lo que el spawner y el combate no dependen del arte.
+- La sustitucion por criaturas unicas (lobo, guardian, reina, rey, etc.) y
+  sus materiales propios queda pendiente para la siguiente pasada artistica.
+
+## Fase 5.46: Ambientacion De Todas Las Zonas
+
+- Se genero ambientacion determinista para las zonas 1 a 10, cubriendo nivel
+  1 a 105: arboles, cristales, ruinas, jardines astrales y obeliscos segun el
+  `ZoneId`.
+- El sistema usa decoracion mobile-friendly sin colision para no bloquear el
+  movimiento y mantiene el molde data-driven de `ZoneDefinition`.
+- La ambientacion final con assets de terreno, caminos, obstaculos y puntos de
+  interes queda pendiente; ya se puede recorrer visualmente toda la progresion.
+
+## Fase 5.47: Animacion Y Feedback De Combate
+
+- Los enemigos con modelo usan `AvatarMotionAnimator` para idle, movimiento y
+  ataque; los ataques enemigos disparan una animacion al comenzar el windup.
+- El windup muestra telegraph visual, los impactos conservan dano flotante y
+  VFX, y la muerte reduce visualmente el enemigo antes del respawn.
+- La logica de dano, loot, misiones y telemetria no cambia.
+
+La APK de estas cuatro mejoras debe reinstalarse para revisar el salto visual.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

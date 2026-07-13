@@ -175,6 +175,7 @@ namespace MmorpgPrototype
                 { "ui.stats", "STATS" },
                 { "ui.telemetry", "DATOS" },
                 { "ui.menu", "MENU" },
+                { "ui.more", "MAS" },
                 { "ui.menu_inventory", "Inventario" },
                 { "ui.menu_equipment", "Equipo" },
                 { "ui.menu_quest", "Mision" },

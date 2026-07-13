@@ -47,6 +47,7 @@ namespace MmorpgPrototype
             {
                 CreateZoneGround(zone);
                 CreateZoneSign(zone);
+                ZoneEnvironmentBuilder.Build(zone);
                 CreateEnemySpawner(player, hud, zone);
             }
 
@@ -474,28 +475,30 @@ namespace MmorpgPrototype
             mobileDiagnostics.SafeAreaRoot = safeAreaRoot.GetComponent<RectTransform>();
             mobileDiagnostics.Audio = player.GetComponent<CombatFeedbackAudio>();
 
-            CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(940f, 332f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.58f));
+            CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(820f, 250f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.52f));
             CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(438f, 330f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
-            CreatePanel(uiRoot, "Network Panel", new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(566f, 122f), new Vector2(-18f, -86f), new Color(0.025f, 0.032f, 0.04f, 0.50f));
-            CreatePanel(uiRoot, "Activity Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(500f, 132f), new Vector2(-24f, -118f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
+            CreatePanel(uiRoot, "Network Panel", new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(500f, 112f), new Vector2(-18f, -82f), new Color(0.025f, 0.032f, 0.04f, 0.46f));
+            CreatePanel(uiRoot, "Activity Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(460f, 116f), new Vector2(-24f, -118f), new Color(0.025f, 0.032f, 0.04f, 0.36f));
 
             var hud = canvasObject.AddComponent<PrototypeHud>();
-            hud.PlayerHealthFill = CreateBar(uiRoot, "Player Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(430f, 36f), new Vector2(28f, -28f), new Color(0.05f, 0.08f, 0.1f), new Color(0.1f, 0.8f, 0.32f), out var playerText);
+            hud.PlayerHealthFill = CreateBar(uiRoot, "Player Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(360f, 34f), new Vector2(28f, -28f), new Color(0.05f, 0.08f, 0.1f), new Color(0.1f, 0.8f, 0.32f), out var playerText);
             hud.PlayerHealthText = playerText;
-            hud.EnemyHealthFill = CreateBar(uiRoot, "Enemy Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(430f, 28f), new Vector2(28f, -76f), new Color(0.05f, 0.08f, 0.1f), new Color(0.95f, 0.24f, 0.18f), out var enemyText);
+            hud.EnemyHealthFill = CreateBar(uiRoot, "Enemy Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(360f, 28f), new Vector2(28f, -70f), new Color(0.05f, 0.08f, 0.1f), new Color(0.95f, 0.24f, 0.18f), out var enemyText);
             hud.EnemyHealthText = enemyText;
             hud.StatusText = CreateText(uiRoot, "Status", Localization.Tr("hud.initial_status"), 25, TextAnchor.MiddleLeft);
-            SetRect(hud.StatusText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 36f), new Vector2(28f, -118f));
+            SetRect(hud.StatusText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(700f, 32f), new Vector2(28f, -108f));
             hud.ClassText = CreateText(uiRoot, "Class Info", string.Empty, 23, TextAnchor.MiddleLeft);
-            SetRect(hud.ClassText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 34f), new Vector2(28f, -158f));
+            SetRect(hud.ClassText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(700f, 32f), new Vector2(28f, -144f));
             hud.ProgressionText = CreateText(uiRoot, "Progression Info", string.Empty, 23, TextAnchor.MiddleLeft);
-            SetRect(hud.ProgressionText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 34f), new Vector2(28f, -194f));
+            SetRect(hud.ProgressionText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(700f, 32f), new Vector2(28f, -180f));
             hud.QuestText = CreateText(uiRoot, "Quest Info", string.Empty, 21, TextAnchor.MiddleLeft);
-            SetRect(hud.QuestText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(840f, 32f), new Vector2(28f, -230f));
+            SetRect(hud.QuestText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 32f), new Vector2(28f, -216f));
             hud.InventoryText = CreateText(uiRoot, "Inventory Info", string.Empty, 21, TextAnchor.MiddleLeft);
             SetRect(hud.InventoryText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(900f, 32f), new Vector2(28f, -264f));
+            hud.InventoryText.gameObject.SetActive(false);
             hud.EquipmentText = CreateText(uiRoot, "Equipment Info", string.Empty, 21, TextAnchor.MiddleLeft);
             SetRect(hud.EquipmentText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(900f, 32f), new Vector2(28f, -298f));
+            hud.EquipmentText.gameObject.SetActive(false);
             hud.FeedText = CreateText(uiRoot, "Activity Feed", string.Empty, 18, TextAnchor.LowerRight);
             SetRect(hud.FeedText.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(460f, 104f), new Vector2(-44f, -116f));
 
@@ -584,8 +587,8 @@ namespace MmorpgPrototype
             CreateShopButtons(uiRoot, player, shop, blacksmith, storage);
             CreateNetworkPanel(uiRoot, player);
 
-            var help = CreateText(uiRoot, "Controls Help", Localization.Tr("hud.controls_help"), 20, TextAnchor.MiddleCenter);
-            SetRect(help.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1040f, 34f), new Vector2(0f, 28f));
+            var help = CreateText(uiRoot, "Controls Help", Localization.Tr("hud.controls_help"), 17, TextAnchor.MiddleCenter);
+            SetRect(help.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(900f, 28f), new Vector2(0f, 20f));
             CreateStartupSplash(uiRoot);
             CreateCharacterSelectionPanel(uiRoot, player, hud);
             return hud;
@@ -595,50 +598,62 @@ namespace MmorpgPrototype
         {
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
 
-            var potionButton = CreateRoundButton(parent, "Use Potion Button", Localization.Tr("ui.potion"), new Vector2(0f, 1f), new Vector2(92f, -348f), new Vector2(128f, 42f), new Color(0.15f, 0.52f, 0.36f), 17);
+            var secondaryActions = CreateUiObject("Secondary Actions", parent);
+            StretchToParent(secondaryActions.GetComponent<RectTransform>());
+            var actionParent = secondaryActions.transform;
+
+            var menuWindow = CreatePlayerMenuWindow(parent, player);
+            var menuButton = CreateRoundButton(parent, "Mobile Menu Button", Localization.Tr("ui.menu"), new Vector2(0f, 0f), new Vector2(322f, 348f), new Vector2(128f, 42f), new Color(0.34f, 0.3f, 0.48f), 17);
+            menuButton.onClick.AddListener(menuWindow.Toggle);
+
+            var moreButton = CreateRoundButton(parent, "More Actions Button", Localization.Tr("ui.more"), new Vector2(0f, 0f), new Vector2(462f, 348f), new Vector2(128f, 42f), new Color(0.2f, 0.38f, 0.42f), 17);
+            moreButton.onClick.AddListener(() => secondaryActions.SetActive(!secondaryActions.activeSelf));
+
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                secondaryActions.SetActive(false);
+            }
+
+            var potionButton = CreateRoundButton(actionParent, "Use Potion Button", Localization.Tr("ui.potion"), new Vector2(0f, 1f), new Vector2(92f, -348f), new Vector2(128f, 42f), new Color(0.15f, 0.52f, 0.36f), 17);
             potionButton.onClick.AddListener(equipment.TryUsePotion);
 
-            var buyButton = CreateRoundButton(parent, "Buy Potion Button", Localization.Tr("ui.buy_potion"), new Vector2(0f, 1f), new Vector2(232f, -348f), new Vector2(128f, 42f), new Color(0.47f, 0.34f, 0.11f), 17);
+            var buyButton = CreateRoundButton(actionParent, "Buy Potion Button", Localization.Tr("ui.buy_potion"), new Vector2(0f, 1f), new Vector2(232f, -348f), new Vector2(128f, 42f), new Color(0.47f, 0.34f, 0.11f), 17);
             buyButton.onClick.AddListener(shop.BuyPotion);
 
-            var weaponButton = CreateRoundButton(parent, "Upgrade Weapon Button", Localization.Tr("ui.weapon"), new Vector2(0f, 1f), new Vector2(372f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.2f, 0.15f), 17);
+            var weaponButton = CreateRoundButton(actionParent, "Upgrade Weapon Button", Localization.Tr("ui.weapon"), new Vector2(0f, 1f), new Vector2(372f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.2f, 0.15f), 17);
             weaponButton.onClick.AddListener(blacksmith.UpgradeWeapon);
 
-            var armorButton = CreateRoundButton(parent, "Upgrade Armor Button", Localization.Tr("ui.armor"), new Vector2(0f, 1f), new Vector2(512f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.28f, 0.48f), 17);
+            var armorButton = CreateRoundButton(actionParent, "Upgrade Armor Button", Localization.Tr("ui.armor"), new Vector2(0f, 1f), new Vector2(512f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.28f, 0.48f), 17);
             armorButton.onClick.AddListener(blacksmith.UpgradeArmor);
 
             var gear = player.GetComponent<PlayerEquipment>();
-            var equipButton = CreateRoundButton(parent, "Auto Equip Button", Localization.Tr("ui.equip"), new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
+            var equipButton = CreateRoundButton(actionParent, "Auto Equip Button", Localization.Tr("ui.equip"), new Vector2(0f, 1f), new Vector2(652f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.24f), 17);
             equipButton.onClick.AddListener(gear.EquipBestFromInventory);
 
-            var talkButton = CreateRoundButton(parent, "Talk Button", Localization.Tr("ui.talk"), new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
+            var talkButton = CreateRoundButton(actionParent, "Talk Button", Localization.Tr("ui.talk"), new Vector2(0f, 1f), new Vector2(792f, -348f), new Vector2(128f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
             talkButton.onClick.AddListener(() => TalkToNearest(player.transform, shop, blacksmith));
 
             var petService = player.GetComponent<PetService>();
-            var petButton = CreateRoundButton(parent, "Pet Button", Localization.Tr("ui.pet"), new Vector2(0f, 1f), new Vector2(92f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.4f, 0.14f), 17);
+            var petButton = CreateRoundButton(actionParent, "Pet Button", Localization.Tr("ui.pet"), new Vector2(0f, 1f), new Vector2(92f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.4f, 0.14f), 17);
             petButton.onClick.AddListener(petService.ToggleDefault);
 
             var mountService = player.GetComponent<MountService>();
-            var mountButton = CreateRoundButton(parent, "Mount Button", Localization.Tr("ui.mount"), new Vector2(0f, 1f), new Vector2(232f, -396f), new Vector2(128f, 42f), new Color(0.32f, 0.36f, 0.2f), 17);
+            var mountButton = CreateRoundButton(actionParent, "Mount Button", Localization.Tr("ui.mount"), new Vector2(0f, 1f), new Vector2(232f, -396f), new Vector2(128f, 42f), new Color(0.32f, 0.36f, 0.2f), 17);
             mountButton.onClick.AddListener(mountService.ToggleMount);
 
-            var storageButton = CreateRoundButton(parent, "Storage Button", Localization.Tr("ui.storage"), new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
+            var storageButton = CreateRoundButton(actionParent, "Storage Button", Localization.Tr("ui.storage"), new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
             storageButton.onClick.AddListener(storage.ToggleStorage);
 
             var statsWindow = CreateStatsWindow(parent, player);
-            var statsButton = CreateRoundButton(parent, "Stats Button", Localization.Tr("ui.stats"), new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
+            var statsButton = CreateRoundButton(actionParent, "Stats Button", Localization.Tr("ui.stats"), new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
             statsButton.onClick.AddListener(statsWindow.Toggle);
 
             var telemetryWindow = CreateTelemetryWindow(parent, player);
-            var telemetryButton = CreateRoundButton(parent, "Telemetry Button", Localization.Tr("ui.telemetry"), new Vector2(0f, 1f), new Vector2(652f, -396f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
+            var telemetryButton = CreateRoundButton(actionParent, "Telemetry Button", Localization.Tr("ui.telemetry"), new Vector2(0f, 1f), new Vector2(652f, -396f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
             telemetryButton.onClick.AddListener(telemetryWindow.Toggle);
 
-            var menuWindow = CreatePlayerMenuWindow(parent, player);
-            var menuButton = CreateRoundButton(parent, "Menu Button", Localization.Tr("ui.menu"), new Vector2(0f, 1f), new Vector2(792f, -396f), new Vector2(128f, 42f), new Color(0.34f, 0.3f, 0.48f), 17);
-            menuButton.onClick.AddListener(menuWindow.Toggle);
-
             var mobileWindow = CreateMobileTestWindow(parent, player);
-            var mobileButton = CreateRoundButton(parent, "Mobile Test Button", Localization.Tr("ui.mobile_test"), new Vector2(0f, 1f), new Vector2(932f, -396f), new Vector2(128f, 42f), new Color(0.16f, 0.5f, 0.46f), 17);
+            var mobileButton = CreateRoundButton(actionParent, "Mobile Test Button", Localization.Tr("ui.mobile_test"), new Vector2(0f, 1f), new Vector2(792f, -396f), new Vector2(128f, 42f), new Color(0.16f, 0.5f, 0.46f), 17);
             mobileButton.onClick.AddListener(mobileWindow.Toggle);
         }
 

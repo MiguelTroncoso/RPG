@@ -24,6 +24,11 @@ namespace MmorpgPrototype
             SpawnBurst("Level Up VFX", position, color, 20, 2.4f, 0.34f);
         }
 
+        public static void SpawnEnemyTelegraph(Vector3 position, Color color)
+        {
+            SpawnBurst("Enemy Telegraph VFX", position, color, 8, 0.55f, 0.32f);
+        }
+
         private static void SpawnBurst(string name, Vector3 position, Color color, short count, float speed, float lifetime)
         {
             var effect = new GameObject(name);

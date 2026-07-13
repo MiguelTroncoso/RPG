@@ -23,6 +23,7 @@ namespace MmorpgPrototype
         private CharacterController controller;
         private Health health;
         private Renderer bodyRenderer;
+        private AvatarMotionAnimator motionAnimator;
         private float nextAttackTime;
         private bool isWindingUp;
         private float windupEndsAt;
@@ -32,6 +33,7 @@ namespace MmorpgPrototype
             controller = GetComponent<CharacterController>();
             health = GetComponent<Health>();
             bodyRenderer = GetComponentInChildren<Renderer>();
+            motionAnimator = GetComponent<AvatarMotionAnimator>();
         }
 
         private void OnEnable()
@@ -119,8 +121,10 @@ namespace MmorpgPrototype
             isWindingUp = true;
             windupEndsAt = Time.time + AttackWindup;
             nextAttackTime = windupEndsAt + AttackCooldown;
+            motionAnimator?.PlayAttack();
             DamagePopup.Spawn(transform.position + Vector3.up * 2.35f, "!", new Color(1f, 0.58f, 0.18f), 1.35f);
             PrototypePulseAndDestroy.Spawn(Target.position + Vector3.up * 1.05f, new Color(1f, 0.28f, 0.16f));
+            CombatFeedbackVfx.SpawnEnemyTelegraph(transform.position + Vector3.up * 0.1f, new Color(1f, 0.42f, 0.12f));
         }
 
         private void ResolveAttack()
@@ -170,6 +174,7 @@ namespace MmorpgPrototype
         private void HandleDeath(Health _)
         {
             controller.enabled = false;
+            GetComponent<EnemyVisualController>()?.PlayDeath();
 
             if (bodyRenderer != null)
             {
