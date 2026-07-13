@@ -4,13 +4,13 @@ Este porcentaje es una estimacion de producto, no un conteo de scripts. Un
 MMORPG completo tambien necesita arte final, contenido, servidores, pruebas,
 economia, seguridad, operacion y publicacion.
 
-## Corte Diario: 2026-07-12
+## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **58%**.
+- Avance global estimado hacia el MMORPG publicable: **60%**.
 - Prototipo jugable offline: **97%**.
 - Vertical slice de una zona pulida: **88%**.
 - Online persistente y preparado para produccion: **28%**.
-- Arte final, contenido completo 1-105 y lanzamiento: **34%**.
+- Arte final, contenido completo 1-105 y lanzamiento: **36%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -49,6 +49,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   esquema 10 y enviados dentro del snapshot online.
 - Fase 5.45: primer set de 16 mobs 3D Quaternius CC0 importados para las zonas
   1-10, con controladores de idle, movimiento y ataque generados en Unity.
+- Fase 5.45: diez jefes con modelos distintos, silueta propia y paleta de zona
+  aplicada sin duplicar materiales; la base CC0 sigue siendo reemplazable.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -60,15 +62,18 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    datos.
 3. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
    minimapa con datos reales.
-4. Fase 5.45: crear modelos unicos para los diez jefes y materiales propios
-   por zona, manteniendo el set CC0 como fallback y base jugable.
-5. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
+4. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
+   telefono real; ajustar adornos y materiales si algun modelo pierde lectura.
+5. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
+   cuando la direccion artistica este cerrada.
+6. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
    revisar duplicados/concurrencia con telemetria real.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.45 | Diez jefes con modelo unico, silueta y paleta propia por zona | 60% |
 | 2026-07-13 | 5.45 | Primer set de 16 mobs 3D CC0 con animaciones por zona/tier | 58% |
 | 2026-07-12 | 5.45+5.49 | Identidad por familia/tier y POI persistentes por personaje | 56% |
 | 2026-07-12 | 5.48 | Instrumentacion de rendimiento para prueba Android | 53% |

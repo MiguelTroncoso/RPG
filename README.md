@@ -636,8 +636,14 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
 - Las diez familias de zona conservan sus adornos de identidad para elite/jefe:
   espinas del bosque, brasa, prismas, aletas abisales, forja, halos astrales y
   mantos del vacio.
-- La siguiente pasada queda reservada para modelos unicos de cada jefe,
-  materiales propios y pruebas visuales en Android; esta capa ya es jugable.
+- Los diez jefes de zona usan ahora un modelo Quaternius distinto: Orc Skull,
+  Yeti, Blue Demon, Dragon, Goleling Evolved, Fish, Dragon Evolved, Ghost Skull,
+  Demon y Orc, en orden de progresion 1-105.
+- Cada jefe recibe una silueta adicional propia (reliquia, raices, brasa,
+  cristales, hielo, abismo, forja, astral, eclipse o vacio) y un tinte de zona
+  aplicado con `MaterialPropertyBlock`, sin duplicar los materiales importados.
+- La proxima pasada queda reservada para validar escala/lectura de los jefes en
+  Android y reemplazar progresivamente el set CC0 por meshes finales propios.
 
 ## Fase 5.46: Ambientacion De Todas Las Zonas
 

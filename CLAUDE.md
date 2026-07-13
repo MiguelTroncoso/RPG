@@ -113,8 +113,8 @@ simple y autocontenido.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar
-  Stats/Datos, regeneracion, minimapa, recompensas de POI y safe zone en
-  telefono; crear modelos unicos para jefes y materiales propios sobre la base
-  Quaternius CC0 ya integrada;
-  jugar sesiones de prueba en zonas 41-105 y ajustar con DATOS; pulir comercio
-  y uso tactil de items.
+  Stats/Datos, regeneracion, minimapa, recompensas de POI, safe zone y lectura
+  de jefes en telefono; jugar sesiones de prueba en zonas 41-105 y ajustar con
+  DATOS; sustituir progresivamente la base Quaternius CC0 por meshes finales
+  propios cuando la direccion artistica este cerrada; pulir comercio y uso
+  tactil de items.

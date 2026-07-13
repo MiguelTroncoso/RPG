@@ -9,6 +9,8 @@ namespace MmorpgPrototype
     public sealed class EnemyVisualController : MonoBehaviour
     {
         private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
         private GameObject visualRoot;
         private GameObject statusRoot;
         private Transform healthFill;
@@ -28,7 +30,7 @@ namespace MmorpgPrototype
             var id = (enemyId ?? string.Empty).ToLowerInvariant();
             var accent = AccentFor(tier, baseColor);
 
-            var builtRealModel = TryBuildRealModel(id, tier);
+            var builtRealModel = TryBuildRealModel(id, tier, baseColor, accent);
             if (builtRealModel)
             {
                 ApplyZoneVariant(id, baseColor, accent, tier);
@@ -57,6 +59,11 @@ namespace MmorpgPrototype
                 BuildShadow(baseColor, accent);
                 ApplyZoneVariant(id, baseColor, accent, tier);
                 BuildTierAdornment(tier, accent, id);
+            }
+
+            if (tier == EnemyTier.Boss)
+            {
+                BuildBossIdentity(id, baseColor, accent);
             }
 
             BuildStatusDisplay(displayName, tier, accent);
@@ -109,7 +116,7 @@ namespace MmorpgPrototype
             }
         }
 
-        private bool TryBuildRealModel(string enemyId, EnemyTier tier)
+        private bool TryBuildRealModel(string enemyId, EnemyTier tier, Color baseColor, Color accent)
         {
             var modelResource = ModelResourceFor(enemyId, tier);
             var prefab = Resources.Load<GameObject>(modelResource);
@@ -123,6 +130,11 @@ namespace MmorpgPrototype
             model.transform.localPosition = ModelOffsetFor(modelResource);
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
+
+            if (tier == EnemyTier.Boss)
+            {
+                ApplyBossPalette(model, enemyId, baseColor);
+            }
 
             foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
             {
@@ -156,6 +168,75 @@ namespace MmorpgPrototype
             var motion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
             motion.SetVisualRoot(model.transform, modelAnimator);
             return true;
+        }
+
+        private static void ApplyBossPalette(GameObject model, string enemyId, Color fallback)
+        {
+            var palette = BossPaletteFor(enemyId, fallback);
+            var block = new MaterialPropertyBlock();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+            {
+                renderer.GetPropertyBlock(block);
+                var tint = Color.Lerp(Color.white, palette, 0.22f);
+                block.SetColor(BaseColorId, tint);
+                block.SetColor(LegacyColorId, tint);
+                renderer.SetPropertyBlock(block);
+            }
+        }
+
+        private static Color BossPaletteFor(string enemyId, Color fallback)
+        {
+            if (enemyId.Contains("valley"))
+            {
+                return new Color(0.76f, 0.5f, 0.18f);
+            }
+
+            if (enemyId.Contains("forest"))
+            {
+                return new Color(0.18f, 0.55f, 0.25f);
+            }
+
+            if (enemyId.Contains("ash"))
+            {
+                return new Color(0.75f, 0.25f, 0.1f);
+            }
+
+            if (enemyId.Contains("crystal"))
+            {
+                return new Color(0.28f, 0.75f, 0.95f);
+            }
+
+            if (enemyId.Contains("frost"))
+            {
+                return new Color(0.55f, 0.85f, 1f);
+            }
+
+            if (enemyId.Contains("sunken"))
+            {
+                return new Color(0.1f, 0.72f, 0.68f);
+            }
+
+            if (enemyId.Contains("obsidian"))
+            {
+                return new Color(0.95f, 0.18f, 0.06f);
+            }
+
+            if (enemyId.Contains("astral"))
+            {
+                return new Color(0.58f, 0.32f, 1f);
+            }
+
+            if (enemyId.Contains("eclipse"))
+            {
+                return new Color(0.42f, 0.08f, 0.65f);
+            }
+
+            if (enemyId.Contains("throne"))
+            {
+                return new Color(0.72f, 0.12f, 1f);
+            }
+
+            return fallback;
         }
 
         private static Vector3 ModelOffsetFor(string enemyId)
@@ -224,7 +305,7 @@ namespace MmorpgPrototype
 
             if (enemyId.Contains("frost"))
             {
-                return tier == EnemyTier.Boss ? MonsterResource("Dragon") : tier == EnemyTier.Elite ? MonsterResource("Yeti") : MonsterResource("Goleling_Evolved");
+                return tier == EnemyTier.Boss ? MonsterResource("Goleling_Evolved") : tier == EnemyTier.Elite ? MonsterResource("Yeti") : MonsterResource("Goleling_Evolved");
             }
 
             if (enemyId.Contains("sunken"))
@@ -239,17 +320,17 @@ namespace MmorpgPrototype
 
             if (enemyId.Contains("astral"))
             {
-                return tier == EnemyTier.Boss ? MonsterResource("Dragon_Evolved") : tier == EnemyTier.Elite ? MonsterResource("Ghost_Skull") : MonsterResource("Ghost");
+                return tier == EnemyTier.Boss ? MonsterResource("Ghost_Skull") : tier == EnemyTier.Elite ? MonsterResource("Ghost_Skull") : MonsterResource("Ghost");
             }
 
             if (enemyId.Contains("eclipse"))
             {
-                return tier == EnemyTier.Boss ? MonsterResource("Ghost_Skull") : tier == EnemyTier.Elite ? MonsterResource("BlueDemon") : MonsterResource("Ghost");
+                return tier == EnemyTier.Boss ? MonsterResource("Demon") : tier == EnemyTier.Elite ? MonsterResource("BlueDemon") : MonsterResource("Ghost");
             }
 
             if (enemyId.Contains("throne"))
             {
-                return tier == EnemyTier.Boss ? MonsterResource("Dragon_Evolved") : tier == EnemyTier.Elite ? MonsterResource("Orc_Skull") : MonsterResource("Dragon");
+                return tier == EnemyTier.Boss ? MonsterResource("Orc") : tier == EnemyTier.Elite ? MonsterResource("Orc_Skull") : MonsterResource("Dragon");
             }
 
             if (tier == EnemyTier.Boss)
@@ -422,6 +503,92 @@ namespace MmorpgPrototype
             {
                 CreatePart("Void Crown", PrimitiveType.Cylinder, new Vector3(0f, 1.18f, 0f), new Vector3(0.42f, 0.1f, 0.42f), new Color(0.76f, 0.22f, 1f));
                 CreatePart("Void Core", PrimitiveType.Sphere, new Vector3(0f, 0.25f, -0.4f), new Vector3(0.23f, 0.23f, 0.12f), Color.Lerp(accent, Color.black, 0.2f));
+            }
+        }
+
+        private void BuildBossIdentity(string enemyId, Color bodyColor, Color accent)
+        {
+            var palette = BossPaletteFor(enemyId, bodyColor);
+            var shadow = Color.Lerp(palette, Color.black, 0.34f);
+            var highlight = Color.Lerp(palette, Color.white, 0.38f);
+
+            if (enemyId.Contains("valley"))
+            {
+                CreatePart("Valley Relic Crown", PrimitiveType.Cylinder, new Vector3(0f, 1.42f, 0f), new Vector3(0.48f, 0.08f, 0.48f), palette);
+                CreatePart("Valley Relic Rune", PrimitiveType.Sphere, new Vector3(0f, 0.62f, -0.5f), new Vector3(0.2f, 0.2f, 0.1f), highlight);
+                CreatePart("Valley Relic Mantle", PrimitiveType.Cube, new Vector3(0f, 0.42f, 0.3f), new Vector3(0.9f, 0.16f, 0.12f), shadow, Quaternion.Euler(0f, 0f, 8f));
+                return;
+            }
+
+            if (enemyId.Contains("forest"))
+            {
+                CreatePart("Forest Root Mantle", PrimitiveType.Cube, new Vector3(0f, 0.36f, 0.35f), new Vector3(1.02f, 0.42f, 0.12f), shadow, Quaternion.Euler(12f, 0f, 0f));
+                CreatePart("Forest Antler L", PrimitiveType.Cylinder, new Vector3(-0.38f, 1.3f, 0f), new Vector3(0.1f, 0.56f, 0.1f), palette, Quaternion.Euler(0f, 0f, -28f));
+                CreatePart("Forest Antler R", PrimitiveType.Cylinder, new Vector3(0.38f, 1.3f, 0f), new Vector3(0.1f, 0.56f, 0.1f), palette, Quaternion.Euler(0f, 0f, 28f));
+                return;
+            }
+
+            if (enemyId.Contains("ash"))
+            {
+                CreatePart("Ash Ember Halo", PrimitiveType.Cylinder, new Vector3(0f, 0.78f, 0f), new Vector3(0.74f, 0.035f, 0.74f), palette, Quaternion.Euler(90f, 0f, 0f));
+                CreatePart("Ash Ember Core", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.48f), new Vector3(0.24f, 0.24f, 0.12f), highlight);
+                CreatePart("Ash Smoke Crest", PrimitiveType.Capsule, new Vector3(0.34f, 1.18f, 0.04f), new Vector3(0.14f, 0.36f, 0.14f), shadow, Quaternion.Euler(0f, 0f, 18f));
+                return;
+            }
+
+            if (enemyId.Contains("crystal"))
+            {
+                CreatePart("Crystal Crown L", PrimitiveType.Cube, new Vector3(-0.36f, 1.34f, 0f), new Vector3(0.16f, 0.62f, 0.16f), highlight, Quaternion.Euler(0f, 0f, -18f));
+                CreatePart("Crystal Crown Core", PrimitiveType.Cube, new Vector3(0f, 1.48f, 0f), new Vector3(0.18f, 0.7f, 0.18f), palette);
+                CreatePart("Crystal Crown R", PrimitiveType.Cube, new Vector3(0.36f, 1.34f, 0f), new Vector3(0.16f, 0.62f, 0.16f), highlight, Quaternion.Euler(0f, 0f, 18f));
+                return;
+            }
+
+            if (enemyId.Contains("frost"))
+            {
+                CreatePart("Frost Antler L", PrimitiveType.Cylinder, new Vector3(-0.36f, 1.3f, 0f), new Vector3(0.1f, 0.62f, 0.1f), highlight, Quaternion.Euler(0f, 0f, -24f));
+                CreatePart("Frost Antler R", PrimitiveType.Cylinder, new Vector3(0.36f, 1.3f, 0f), new Vector3(0.1f, 0.62f, 0.1f), highlight, Quaternion.Euler(0f, 0f, 24f));
+                CreatePart("Frost Plate", PrimitiveType.Cube, new Vector3(0f, 0.48f, -0.43f), new Vector3(0.72f, 0.3f, 0.1f), palette, Quaternion.Euler(-8f, 0f, 0f));
+                return;
+            }
+
+            if (enemyId.Contains("sunken"))
+            {
+                CreatePart("Sunken Abyss Pearl", PrimitiveType.Sphere, new Vector3(0f, 0.62f, -0.5f), new Vector3(0.26f, 0.26f, 0.14f), highlight);
+                CreatePart("Sunken Fin L", PrimitiveType.Cube, new Vector3(-0.42f, 0.36f, 0.18f), new Vector3(0.12f, 0.62f, 0.1f), palette, Quaternion.Euler(0f, 0f, -28f));
+                CreatePart("Sunken Fin R", PrimitiveType.Cube, new Vector3(0.42f, 0.36f, 0.18f), new Vector3(0.12f, 0.62f, 0.1f), palette, Quaternion.Euler(0f, 0f, 28f));
+                return;
+            }
+
+            if (enemyId.Contains("obsidian"))
+            {
+                CreatePart("Obsidian Forge Ring", PrimitiveType.Cylinder, new Vector3(0f, 0.7f, 0f), new Vector3(0.78f, 0.035f, 0.78f), palette, Quaternion.Euler(90f, 0f, 0f));
+                CreatePart("Obsidian Magma Core", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.5f), new Vector3(0.25f, 0.25f, 0.12f), highlight);
+                CreatePart("Obsidian Hammer", PrimitiveType.Cube, new Vector3(0.48f, 0.38f, 0f), new Vector3(0.18f, 0.7f, 0.18f), shadow, Quaternion.Euler(0f, 0f, -30f));
+                return;
+            }
+
+            if (enemyId.Contains("astral"))
+            {
+                CreatePart("Astral Star Orb", PrimitiveType.Sphere, new Vector3(0f, 1.5f, -0.04f), new Vector3(0.24f, 0.24f, 0.24f), highlight);
+                CreatePart("Astral Grand Ring", PrimitiveType.Cylinder, new Vector3(0f, 0.78f, 0f), new Vector3(0.88f, 0.035f, 0.88f), palette, Quaternion.Euler(90f, 0f, 0f));
+                CreatePart("Astral Satellite", PrimitiveType.Sphere, new Vector3(0.58f, 1.18f, 0f), new Vector3(0.12f, 0.12f, 0.12f), shadow);
+                return;
+            }
+
+            if (enemyId.Contains("eclipse"))
+            {
+                CreatePart("Eclipse Disc", PrimitiveType.Cylinder, new Vector3(0f, 1.22f, 0.02f), new Vector3(0.58f, 0.08f, 0.58f), shadow, Quaternion.Euler(90f, 0f, 0f));
+                CreatePart("Eclipse Halo", PrimitiveType.Cylinder, new Vector3(0f, 1.22f, 0f), new Vector3(0.78f, 0.035f, 0.78f), palette, Quaternion.Euler(90f, 0f, 0f));
+                CreatePart("Eclipse Core", PrimitiveType.Sphere, new Vector3(0f, 0.48f, -0.48f), new Vector3(0.24f, 0.24f, 0.12f), highlight);
+                return;
+            }
+
+            if (enemyId.Contains("throne"))
+            {
+                CreatePart("Throne Void Crown", PrimitiveType.Cylinder, new Vector3(0f, 1.48f, 0f), new Vector3(0.62f, 0.1f, 0.62f), palette);
+                CreatePart("Throne Mantle", PrimitiveType.Cube, new Vector3(0f, 0.46f, 0.36f), new Vector3(1.08f, 0.46f, 0.12f), shadow, Quaternion.Euler(10f, 0f, 0f));
+                CreatePart("Throne Void Core", PrimitiveType.Sphere, new Vector3(0f, 0.54f, -0.52f), new Vector3(0.28f, 0.28f, 0.14f), highlight);
             }
         }
 

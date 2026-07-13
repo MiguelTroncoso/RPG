@@ -83,7 +83,10 @@ Estado actual (fases 1-5.51 entregadas en primera pasada; refinamientos 5.44,
   la cabeza. La primera capa de modelos reales ya usa 16 FBX de Quaternius
   Ultimate Monsters CC0 en zonas 1-10, con controladores `Idle`, `Run` y
   `Attack` generados en Resources; el fallback procedural sigue activo si un
-  asset falta. Modelos unicos de jefes y materiales propios quedan pendientes.
+  asset falta. Los diez jefes usan modelos distintos del pack, una silueta
+  adicional propia por zona y una paleta aplicada con `MaterialPropertyBlock`;
+  el reemplazo por meshes finales propios queda para una etapa artistica
+  posterior.
 - Interfaz mobile: el HUD principal es mas compacto, inventario y equipo se
   consultan desde `MENU`, y las acciones secundarias se agrupan bajo `MAS`.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
@@ -190,8 +193,10 @@ Proximos objetivos sugeridos:
   activos en las diez zonas.
 - Fase 5.48: reinstalar la APK y medir TEST, TTK, memoria, minimapa y safe zone
   en telefono real en las diez zonas.
-- Fase 5.45: crear modelos unicos para los diez jefes y materiales propios por
-  zona sobre la primera capa Quaternius ya conectada al pipeline.
+- Fase 5.48: validar en telefono real la escala, lectura, FPS y memoria de los
+  diez jefes; ajustar adornos y materiales donde sea necesario.
+- Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
+  cuando la direccion artistica este cerrada.
 - Fase 5.49: mover la validacion definitiva de recompensas al servidor y
   ajustar valores con telemetria real.
 

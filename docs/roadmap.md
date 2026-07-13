@@ -420,7 +420,10 @@ criaturas con identidad artistica, animaciones y materiales propios.
 - Añadir una identidad visual de familia para elite/jefe en las zonas 1-10,
   compatible con modelos KayKit y fallback procedural. [Implementado]
 - Crear modelos unicos para los jefes y materiales propios por zona.
-  [Pendiente: siguiente pasada artistica]
+  [Implementado: diez modelos distintos del set Quaternius, silueta propia y
+  paleta por zona con `MaterialPropertyBlock`]
+- Validar en Android la escala, lectura y rendimiento de los diez jefes antes
+  de sustituir progresivamente el set CC0 por meshes finales propios. [Pendiente]
 
 Criterio de exito: la Zona 1 tiene mobs reconocibles y consistentes sin
 romper rendimiento ni reglas data-driven.
