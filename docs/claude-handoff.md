@@ -18,7 +18,8 @@ ANTES DE TOCAR NADA lee, en este orden:
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.50 entregadas en primera pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.50 entregadas en primera pasada; refinamientos 5.44,
+5.45 y 5.49 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -179,15 +180,13 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Reinstalar la APK de las fases 5.45-5.48 y probarla en el telefono.
-- Verificar que el campamento de nivel 1 sea completamente seguro y que el
-  Monolito Corrupto aparezca fuera de esa zona.
-- Fase 5.45: sustituir arquetipos KayKit por criaturas 3D unicas de cada
-  familia, empezando por la Zona 1.
-- Fase 5.48: medir rendimiento, balance y experiencia Android en las diez
-  zonas con el telefono real.
-- Fase 5.49: convertir landmarks en puntos de interes con recompensas y
-  ajustar obstaculos, TTK, EXP y oro.
+- Reinstalar la APK y probar Stats/Datos, `EXPLORAR`, multitactil y safe zone
+  en el telefono.
+- Fase 5.48: medir FPS, memoria, carga, TTK y legibilidad en las diez zonas.
+- Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y conectarlas
+  al pipeline de animacion existente.
+- Fase 5.49: persistir reclamos de POI por personaje y ajustar recompensas con
+  telemetria real.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

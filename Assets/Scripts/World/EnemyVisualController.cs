@@ -28,34 +28,34 @@ namespace MmorpgPrototype
             var id = (enemyId ?? string.Empty).ToLowerInvariant();
             var accent = AccentFor(tier, baseColor);
 
-            var builtRealModel = tier != EnemyTier.Normal && TryBuildRealModel(id, tier);
+            var builtRealModel = !id.Contains("valley") && tier != EnemyTier.Normal && TryBuildRealModel(id, tier);
             if (builtRealModel)
             {
-                ApplyZoneVariant(id, baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent, tier);
                 BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("forest") || id.Contains("valley"))
             {
                 BuildBeast(baseColor, accent);
-                ApplyZoneVariant(id, baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent, tier);
                 BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("crystal") || id.Contains("frost") || id.Contains("obsidian"))
             {
                 BuildGuardian(baseColor, accent);
-                ApplyZoneVariant(id, baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent, tier);
                 BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("sunken") || id.Contains("astral"))
             {
                 BuildSpirit(baseColor, accent);
-                ApplyZoneVariant(id, baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent, tier);
                 BuildTierAdornment(tier, accent);
             }
             else
             {
                 BuildShadow(baseColor, accent);
-                ApplyZoneVariant(id, baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent, tier);
                 BuildTierAdornment(tier, accent);
             }
 
@@ -248,11 +248,22 @@ namespace MmorpgPrototype
             CreatePart("Shadow Eye Line", PrimitiveType.Cube, new Vector3(0f, 0.9f, -0.36f), new Vector3(0.3f, 0.08f, 0.06f), accent);
         }
 
-        private void ApplyZoneVariant(string enemyId, Color bodyColor, Color accent)
+        private void ApplyZoneVariant(string enemyId, Color bodyColor, Color accent, EnemyTier tier)
         {
             if (enemyId.Contains("valley"))
             {
                 CreatePart("Relic Collar", PrimitiveType.Cylinder, new Vector3(0f, 0.58f, 0f), new Vector3(0.34f, 0.08f, 0.34f), new Color(0.76f, 0.5f, 0.18f));
+                if (tier == EnemyTier.Elite)
+                {
+                    CreatePart("Relic Shoulder L", PrimitiveType.Cube, new Vector3(-0.48f, 0.38f, 0f), new Vector3(0.24f, 0.24f, 0.44f), accent, Quaternion.Euler(0f, 0f, -18f));
+                    CreatePart("Relic Shoulder R", PrimitiveType.Cube, new Vector3(0.48f, 0.38f, 0f), new Vector3(0.24f, 0.24f, 0.44f), accent, Quaternion.Euler(0f, 0f, 18f));
+                }
+                else if (tier == EnemyTier.Boss)
+                {
+                    CreatePart("Relic Boss Plate", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.46f), new Vector3(0.58f, 0.36f, 0.1f), accent);
+                    CreatePart("Relic Boss Horn L", PrimitiveType.Cylinder, new Vector3(-0.34f, 0.52f, 0.62f), new Vector3(0.12f, 0.42f, 0.12f), new Color(0.9f, 0.7f, 0.28f), Quaternion.Euler(0f, 0f, -30f));
+                    CreatePart("Relic Boss Horn R", PrimitiveType.Cylinder, new Vector3(0.34f, 0.52f, 0.62f), new Vector3(0.12f, 0.42f, 0.12f), new Color(0.9f, 0.7f, 0.28f), Quaternion.Euler(0f, 0f, 30f));
+                }
                 return;
             }
 

@@ -620,7 +620,9 @@ namespace MmorpgPrototype
             StretchToParent(secondaryActions.GetComponent<RectTransform>());
             var actionParent = secondaryActions.transform;
 
-            var menuWindow = CreatePlayerMenuWindow(parent, player);
+            var statsWindow = CreateStatsWindow(parent, player);
+            var telemetryWindow = CreateTelemetryWindow(parent, player);
+            var menuWindow = CreatePlayerMenuWindow(parent, player, statsWindow, telemetryWindow);
             var menuButton = CreateRoundButton(parent, "Mobile Menu Button", Localization.Tr("ui.menu"), new Vector2(0f, 0f), new Vector2(322f, 348f), new Vector2(128f, 42f), new Color(0.34f, 0.3f, 0.48f), 17);
             menuButton.onClick.AddListener(menuWindow.Toggle);
 
@@ -662,11 +664,9 @@ namespace MmorpgPrototype
             var storageButton = CreateRoundButton(actionParent, "Storage Button", Localization.Tr("ui.storage"), new Vector2(0f, 1f), new Vector2(372f, -396f), new Vector2(128f, 42f), new Color(0.42f, 0.34f, 0.18f), 17);
             storageButton.onClick.AddListener(storage.ToggleStorage);
 
-            var statsWindow = CreateStatsWindow(parent, player);
             var statsButton = CreateRoundButton(actionParent, "Stats Button", Localization.Tr("ui.stats"), new Vector2(0f, 1f), new Vector2(512f, -396f), new Vector2(128f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
             statsButton.onClick.AddListener(statsWindow.Toggle);
 
-            var telemetryWindow = CreateTelemetryWindow(parent, player);
             var telemetryButton = CreateRoundButton(actionParent, "Telemetry Button", Localization.Tr("ui.telemetry"), new Vector2(0f, 1f), new Vector2(652f, -396f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
             telemetryButton.onClick.AddListener(telemetryWindow.Toggle);
 
@@ -804,7 +804,7 @@ namespace MmorpgPrototype
             return controller;
         }
 
-        private static PlayerMenuWindowController CreatePlayerMenuWindow(Transform parent, GameObject player)
+        private static PlayerMenuWindowController CreatePlayerMenuWindow(Transform parent, GameObject player, StatsWindowController statsWindow, TelemetryWindowController telemetryWindow)
         {
             var window = CreateUiObject("Player Menu Window", parent);
             var windowRect = window.GetComponent<RectTransform>();
@@ -821,6 +821,8 @@ namespace MmorpgPrototype
             controller.Inventory = player.GetComponent<InventorySystem>();
             controller.Equipment = player.GetComponent<PlayerEquipment>();
             controller.QuestLog = player.GetComponent<PlayerQuestLog>();
+            controller.StatsWindow = statsWindow;
+            controller.TelemetryWindow = telemetryWindow;
 
             controller.TitleText = CreateText(window.transform, "Title", Localization.Tr("ui.menu_inventory"), 30, TextAnchor.MiddleCenter);
             controller.TitleText.fontStyle = FontStyle.Bold;
@@ -833,11 +835,16 @@ namespace MmorpgPrototype
             var questButton = CreateRoundButton(window.transform, "Menu Quest Tab", Localization.Tr("ui.menu_quest"), new Vector2(0.5f, 1f), new Vector2(270f, -70f), new Vector2(240f, 42f), new Color(0.5f, 0.38f, 0.16f), 17);
             questButton.onClick.AddListener(controller.ShowQuest);
 
+            var statsButton = CreateRoundButton(window.transform, "Menu Stats Tab", Localization.Tr("ui.stats"), new Vector2(0.5f, 1f), new Vector2(-140f, -122f), new Vector2(240f, 42f), new Color(0.26f, 0.3f, 0.5f), 17);
+            statsButton.onClick.AddListener(controller.ShowStats);
+            var telemetryButton = CreateRoundButton(window.transform, "Menu Telemetry Tab", Localization.Tr("ui.telemetry"), new Vector2(0.5f, 1f), new Vector2(140f, -122f), new Vector2(240f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
+            telemetryButton.onClick.AddListener(controller.ShowTelemetry);
+
             controller.ContentText = CreateText(window.transform, "Content", string.Empty, 18, TextAnchor.UpperLeft);
             controller.ContentText.horizontalOverflow = HorizontalWrapMode.Wrap;
             controller.ContentText.verticalOverflow = VerticalWrapMode.Overflow;
             controller.ContentText.supportRichText = false;
-            SetRect(controller.ContentText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(790f, 390f), new Vector2(0f, -112f));
+            SetRect(controller.ContentText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(790f, 330f), new Vector2(0f, -168f));
 
             var closeButton = CreateRoundButton(window.transform, "Close Player Menu", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 42f), new Vector2(170f, 42f), new Color(0.32f, 0.32f, 0.36f), 17);
             closeButton.onClick.AddListener(controller.Toggle);

@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.50 entregadas en primera pasada (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.50 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -106,6 +106,8 @@ simple y autocontenido.
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
-- Siguientes candidatos: reinstalar la APK corregida y registrar TEST; convertir
-  los perfiles de armadura en assets editables; jugar sesiones de prueba en
-  zonas 41-105 y ajustar con DATOS; pulir comercio y uso tactil de items.
+- Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar
+  Stats/Datos, recompensas de POI y safe zone en telefono; convertir los
+  perfiles de armadura y mobs restantes en assets editables; jugar sesiones de
+  prueba en zonas 41-105 y ajustar con DATOS; pulir comercio y uso tactil de
+  items.

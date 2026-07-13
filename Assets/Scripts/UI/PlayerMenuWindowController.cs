@@ -19,6 +19,8 @@ namespace MmorpgPrototype
         public InventorySystem Inventory;
         public PlayerEquipment Equipment;
         public PlayerQuestLog QuestLog;
+        public StatsWindowController StatsWindow;
+        public TelemetryWindowController TelemetryWindow;
 
         private MenuTab activeTab = MenuTab.Inventory;
 
@@ -69,6 +71,18 @@ namespace MmorpgPrototype
         {
             activeTab = MenuTab.Quest;
             OpenAndRefresh();
+        }
+
+        public void ShowStats()
+        {
+            Panel?.SetActive(false);
+            StatsWindow?.Toggle();
+        }
+
+        public void ShowTelemetry()
+        {
+            Panel?.SetActive(false);
+            TelemetryWindow?.Toggle();
         }
 
         public void Refresh()

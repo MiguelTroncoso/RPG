@@ -609,6 +609,8 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
   mision; inventario y equipo dejan de ocupar espacio permanente en pantalla.
 - Los botones secundarios se agrupan bajo `MAS` en Android y `MENU` permanece
   visible para abrir inventario, equipo y misiones.
+- El menu ahora ofrece accesos directos a `STATS` y `DATOS`, sin obligar a
+  abandonar el flujo de combate para consultar progresion y telemetria.
 - La escala landscape, safe area, chat y zona de combate quedan separadas para
   reducir paneles superpuestos durante la exploracion.
 
@@ -619,8 +621,10 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
   espiritus y Barbarian para jefes/forja/vacio.
 - Si falta un modelo, `EnemyVisualController` conserva las siluetas
   procedurales, por lo que el spawner y el combate no dependen del arte.
-- La sustitucion por criaturas unicas (lobo, guardian, reina, rey, etc.) y
-  sus materiales propios queda pendiente para la siguiente pasada artistica.
+- La Zona 1 ya usa una criatura procedural propia de tipo bestia de reliquia
+  para normal, elite y jefe, con collar, hombreras, placa y cuernos por tier.
+- La sustitucion por modelos importados finales para las zonas 2-10 y sus
+  materiales propios queda pendiente para la siguiente pasada artistica.
 
 ## Fase 5.46: Ambientacion De Todas Las Zonas
 
@@ -662,8 +666,11 @@ la siguiente prueba de balance.
   marcadores de limite desde nivel 1 hasta 105.
 - Los cuatro obstaculos de cada zona tienen colision real y quedan fuera del
   camino principal; `EXPLORAR` muestra el estado del landmark mas cercano.
+- `EXPLORAR` entrega una recompensa de EXP/oro una vez por punto y sesion para
+  la entrada, los landmarks de elite y el jefe; el campamento seguro informa
+  su estado sin recompensa de combate.
 - Los datos de vida, dano, EXP y oro siguen siendo los de `ZoneDefinition`;
-  la identidad visual no cambia la economia ni el combate.
+  la recompensa exploratoria usa `RewardService` y no altera el combate.
 - `ZoneBalanceResolver` registra TTK estimado, dano base esperado y si cada
   tier cae dentro de su objetivo; falta cerrar el ajuste con telemetria real.
 

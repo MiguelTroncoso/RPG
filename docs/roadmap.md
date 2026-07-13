@@ -388,6 +388,8 @@ largas en pantalla tactil.
   [Implementado]
 - Agrupar acciones secundarias bajo `MAS` y dejar `MENU` siempre accesible.
   [Implementado]
+- Exponer accesos directos a stats y datos desde el menu principal.
+  [Implementado]
 - Revisar seleccion de personaje, menu, stats, equipo, mision y chat en
   landscape Android. [Pendiente de prueba fisica]
 
@@ -404,12 +406,14 @@ criaturas con identidad artistica, animaciones y materiales propios.
 - Variantes visuales propias por `EnemyId` normal: reliquia, espinas, ceniza,
   cristal, escarcha, abisal, magma, astral, eclipse y vacio. [Implementado]
 - Seleccionar o crear el mob normal de la Zona 1 y sus variantes elite/jefe.
-  [Pendiente]
+  [Implementado: bestia procedural de reliquia con piezas por tier]
 - Importar solo assets CC0, MIT o propios y registrarlos en `ASSET_LICENSES.md`.
 - Conservar `EnemyVisualController` como fallback mientras cada familia se
   migra a un prefab/modelo real.
 - Preparar idle, persecucion, ataque, impacto, muerte y variantes de color.
   [En progreso: ataque/muerte y fallback listos]
+- Migrar la criatura distintiva y sus materiales finales a las zonas 2-10.
+  [Pendiente]
 
 Criterio de exito: la Zona 1 tiene mobs reconocibles y consistentes sin
 romper rendimiento ni reglas data-driven.
@@ -470,7 +474,9 @@ duplicar reglas de combate.
 - Entrada, camino, landmarks y limites visuales para zonas 1-10. [Implementado]
 - Obstaculos solidos y cuatro puntos de interes por zona. [Implementado]
 - Arte final de terreno y puntos de interes interactivos con recompensas.
-  [Pendiente]
+  [En progreso: POI interactivos y recompensas de sesion implementados]
+- Persistir el reclamo de cada POI por personaje cuando exista el guardado
+  definitivo online. [Pendiente]
 - Ruta de prueba nivel 1-105 con telemetria, TTK y recompensas. [Pendiente]
 
 Criterio de exito: cada zona se reconoce, se recorre con orientacion clara y

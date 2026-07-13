@@ -2,11 +2,23 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
+    public enum ZonePointOfInterestType
+    {
+        Entry,
+        SafeCommerce,
+        Elite,
+        Boss
+    }
+
     public sealed class ZonePointOfInterest : MonoBehaviour
     {
         public string DisplayName;
         public string InteractionMessage;
         public float InteractDistance = 8f;
+        public ZonePointOfInterestType Type;
+        public RewardBundle Reward;
+
+        private bool rewardClaimed;
 
         public static void InteractNearest(Transform actor)
         {
@@ -60,8 +72,23 @@ namespace MmorpgPrototype
                 return;
             }
 
+            if (rewardClaimed)
+            {
+                hud?.SetStatus(Localization.Tr("poi.already_explored", DisplayName), 2.5f);
+                return;
+            }
+
+            var progression = actor.GetComponent<PlayerProgression>();
+            var inventory = actor.GetComponent<InventorySystem>();
+            RewardService.Grant(Reward, progression, inventory, hud, DisplayName);
+            rewardClaimed = true;
             hud?.SetStatus(InteractionMessage, 4f);
             hud?.AddFeed(Localization.Tr("poi.interacted", DisplayName));
+
+            if (Reward != null && (Reward.Experience > 0 || Reward.Gold > 0))
+            {
+                hud?.AddFeed(Localization.Tr("poi.reward", Reward.Experience, Reward.Gold));
+            }
         }
     }
 }

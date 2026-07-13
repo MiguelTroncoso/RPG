@@ -6,11 +6,11 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-12
 
-- Avance global estimado hacia el MMORPG publicable: **44%**.
-- Prototipo jugable offline: **92%**.
-- Vertical slice de una zona pulida: **74%**.
+- Avance global estimado hacia el MMORPG publicable: **47%**.
+- Prototipo jugable offline: **94%**.
+- Vertical slice de una zona pulida: **80%**.
 - Online persistente y preparado para produccion: **25%**.
-- Arte final, contenido completo 1-105 y lanzamiento: **24%**.
+- Arte final, contenido completo 1-105 y lanzamiento: **30%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -30,24 +30,31 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   por zona; Android limita tambien la cantidad de enemigos activos.
 - Fase 5.50: zona segura de comercio en la Zona 1, con bloqueo de spawns,
   persecucion y combate dentro del campamento.
+- Refinamiento 5.44: menu con accesos directos a Stats y Datos/telemetria.
+- Refinamiento 5.45: criatura propia de reliquia para normal, elite y jefe de
+  la Zona 1, conservando fallback para las demas zonas.
+- Refinamiento 5.49: POI de entrada, elite y jefe con recompensas de EXP/oro
+  una vez por sesion mediante `RewardService`.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
 
-1. Reinstalar APK y probar dos dedos en un telefono real.
-2. Fase 5.45: sustituir los arquetipos KayKit por criaturas 3D unicas de cada
-   familia, empezando por la Zona 1.
-3. Fase 5.48: medir rendimiento, balance y experiencia Android en las diez
+1. Reinstalar APK y probar dos dedos, menu Stats/Datos y `EXPLORAR` en un
+   telefono real.
+2. Fase 5.48: medir rendimiento, balance y experiencia Android en las diez
    zonas con el telefono real.
-4. Fase 5.49: convertir landmarks en puntos de interes con recompensas y
-   ajustar obstaculos, TTK, EXP y oro.
+3. Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y probar
+   sus animaciones sin perder el fallback procedural.
+4. Fase 5.49: persistir reclamos de POI por personaje y ajustar obstaculos,
+   TTK, EXP y oro con telemetria real.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
 | 2026-07-12 | 5.50 | Zona segura de comercio y bloqueo de combate | 44% |
+| 2026-07-12 | 5.44+5.45+5.49 | Menu Stats/Datos, criatura de Zona 1 y recompensas de POI | 47% |
 | 2026-07-12 | 5.49 | Obstaculos solidos, POI explorables y reporte de balance | 43% |
 | 2026-07-12 | 5.45-5.48 | Variantes por zona, rutas, landmarks y optimizacion Android | 40% |
 | 2026-07-12 | 5.44-5.47 | HUD, mobs 3D, zonas 1-10 y feedback de combate | 36% |
