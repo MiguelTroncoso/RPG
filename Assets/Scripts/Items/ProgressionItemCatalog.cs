@@ -83,6 +83,40 @@ namespace MmorpgPrototype
             return ids;
         }
 
+        public static int BandIndexFor(string zoneId)
+        {
+            for (var i = 0; i < Bands.Length; i++)
+            {
+                if (Bands[i].ZoneId == zoneId)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static int BandIndexForLevel(int level)
+        {
+            var safeLevel = Math.Max(1, Math.Min(105, level));
+            for (var i = 0; i < Bands.Length; i++)
+            {
+                if (safeLevel >= Bands[i].MinLevel && safeLevel <= Bands[i].MaxLevel)
+                {
+                    return i;
+                }
+            }
+
+            return Bands.Length - 1;
+        }
+
+        public static int ExpectedWeaponDamageForLevel(int level)
+        {
+            var index = BandIndexForLevel(level);
+            var band = Bands[index];
+            return Growth(8 + index * 3, band.MinLevel, 0.86f);
+        }
+
         public static List<ItemDefinition> CreateAll()
         {
             var items = new List<ItemDefinition>(Bands.Length * 10);

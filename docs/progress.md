@@ -6,7 +6,7 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **63%**.
+- Avance global estimado hacia el MMORPG publicable: **64%**.
 - Prototipo jugable offline: **98%**.
 - Vertical slice de una zona pulida: **91%**.
 - Online persistente y preparado para produccion: **28%**.
@@ -54,6 +54,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.52: progresion de loot 1-105 con 20 materiales, 70 piezas de set,
   10 reliquias de jefe, tablas por zona/tier y materiales de mejora asociados.
 - Los bosses entregan ahora la reliquia garantizada y un segundo drop adicional.
+- Fase 5.52: primera pasada de balance por banda; las probabilidades progresan
+  y `ZoneBalanceResolver` usa el arma esperada para calcular TTK.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -65,8 +67,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    datos.
 3. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
    minimapa con datos reales.
-4. Fase 5.52: balancear probabilidades, precios, oro, TTK y cantidades de
-   materiales/equipo con sesiones reales en las diez bandas.
+4. Fase 5.52: calibrar precios, oro, TTK y cantidades de materiales/equipo con
+   sesiones reales en las diez bandas.
 5. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
    telefono real; ajustar adornos y materiales si algun modelo pierde lectura.
 6. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
@@ -78,6 +80,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.52 | Primera pasada de balance de loot y TTK por banda | 64% |
 | 2026-07-13 | 5.52 | Progresion de loot 1-105 con materiales, sets y reliquias de jefe | 63% |
 | 2026-07-13 | 5.45 | Diez jefes con modelo unico, silueta y paleta propia por zona | 60% |
 | 2026-07-13 | 5.45 | Primer set de 16 mobs 3D CC0 con animaciones por zona/tier | 58% |

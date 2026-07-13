@@ -741,9 +741,14 @@ para recompensas siguen pendientes para una fase online posterior.
 - `ZoneLootProgression` separa tablas para normal, elite y jefe. Los normales
   dan materiales comunes, los elites refinamiento y piezas del set, y los
   jefes combinan su reliquia garantizada con un segundo drop adicional.
+- Las probabilidades suben por banda de forma progresiva: las zonas iniciales
+  conservan escasez y las avanzadas priorizan refinamiento y equipo sin llegar
+  a drop garantizado.
+- `ZoneBalanceResolver` calcula el TTK usando el arma esperada de la banda y
+  registra daño esperado, aporte del equipo y TTK normal/elite/jefe.
 - Los equipos antiguos siguen siendo validos para guardados y tutoriales. La
-  siguiente calibracion debe usar telemetria real para ajustar probabilidades,
-  economia, clases permitidas y bonus de conjunto.
+  siguiente calibracion debe usar sesiones reales para ajustar oro, precios,
+  probabilidades, clases permitidas y bonus de conjunto.
 
 ## Clases Iniciales
 

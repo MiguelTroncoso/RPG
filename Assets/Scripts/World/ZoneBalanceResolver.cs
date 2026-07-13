@@ -7,6 +7,8 @@ namespace MmorpgPrototype
     {
         public string ZoneId;
         public int ExpectedPlayerDamage;
+        public int ExpectedWeaponDamage;
+        public float WeaponContributionFactor;
         public float NormalTtk;
         public float EliteTtk;
         public float BossTtk;
@@ -21,7 +23,7 @@ namespace MmorpgPrototype
     // without mutating ScriptableObjects or hiding balance problems.
     public static class ZoneBalanceResolver
     {
-        private const float BasePlayerDamage = 26f;
+        private const float BasePlayerDamage = 24f;
         private const float BaseAttackInterval = 0.65f;
 
         public static ZoneBalanceReport Evaluate(ZoneDefinition zone)
@@ -31,11 +33,15 @@ namespace MmorpgPrototype
                 return new ZoneBalanceReport();
             }
 
-            var levelOffset = Mathf.Max(0, zone.MinLevel - 1) / 10f;
-            var expectedDamage = Mathf.Max(1, Mathf.RoundToInt(BasePlayerDamage * Mathf.Pow(1.075f, levelOffset)));
+            var bandIndex = Mathf.Max(0, ProgressionItemCatalog.BandIndexFor(zone.ZoneId));
+            var expectedWeaponDamage = ProgressionItemCatalog.ExpectedWeaponDamageForLevel(zone.MinLevel);
+            var weaponContribution = Mathf.Lerp(0.24f, 0.65f, bandIndex / 9f);
+            var expectedDamage = Mathf.Max(1, Mathf.RoundToInt(BasePlayerDamage + expectedWeaponDamage * weaponContribution));
             var report = new ZoneBalanceReport
             {
                 ZoneId = zone.ZoneId,
+                ExpectedWeaponDamage = expectedWeaponDamage,
+                WeaponContributionFactor = weaponContribution,
                 ExpectedPlayerDamage = expectedDamage,
                 NormalTtk = Ttk(zone.NormalHealth, expectedDamage),
                 EliteTtk = Ttk(zone.EliteHealth, expectedDamage),
@@ -58,7 +64,7 @@ namespace MmorpgPrototype
             foreach (var zone in zones)
             {
                 var report = Evaluate(zone);
-                Debug.Log($"ZoneBalance {report.ZoneId}: DMG {report.ExpectedPlayerDamage} | TTK N {report.NormalTtk:0.0}s E {report.EliteTtk:0.0}s B {report.BossTtk:0.0}s | targets {(report.IsWithinTargets ? "OK" : "REVIEW")}");
+                Debug.Log($"ZoneBalance {report.ZoneId}: weapon {report.ExpectedWeaponDamage} x{report.WeaponContributionFactor:0.00} | DMG {report.ExpectedPlayerDamage} | TTK N {report.NormalTtk:0.0}s E {report.EliteTtk:0.0}s B {report.BossTtk:0.0}s | targets {(report.IsWithinTargets ? "OK" : "REVIEW")}");
             }
         }
 

@@ -539,8 +539,10 @@ progresion reconocible desde el nivel 1 hasta el 105.
   garantizada y un segundo drop de su banda. [Implementado]
 - Mantener IDs estables para no romper inventario, guardados ni equipo legacy.
   [Implementado]
-- Balancear probabilidades, oro, precios, TTK, restricciones por clase y bonus
-  de conjunto con telemetria de telefono real. [Pendiente]
+- Primera pasada de probabilidades por banda y reporte TTK basado en el arma
+  esperada de cada zona. [Implementado]
+- Calibrar oro, precios, TTK real, restricciones por clase y bonus de conjunto
+  con telemetria de telefono real. [Pendiente de prueba fisica]
 
 Criterio de exito: un jugador puede avanzar por las diez bandas usando drops
 de la zona actual y mejorar el equipo con materiales de esa misma zona.

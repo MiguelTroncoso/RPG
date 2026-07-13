@@ -200,8 +200,9 @@ Proximos objetivos sugeridos:
   en telefono real en las diez zonas.
 - Fase 5.48: validar en telefono real la escala, lectura, FPS y memoria de los
   diez jefes; ajustar adornos y materiales donde sea necesario.
-- Fase 5.52: balancear probabilidades de loot, oro, precios, restricciones por
-  clase y bonus de conjunto con telemetria de las diez bandas.
+- Fase 5.52: calibrar oro, precios, TTK real, restricciones por clase y bonus
+  de conjunto con telemetria de las diez bandas. La primera pasada ya escala
+  probabilidades por banda y el reporte TTK considera el arma esperada.
 - Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
   cuando la direccion artistica este cerrada.
 - Fase 5.49: mover la validacion definitiva de recompensas al servidor y

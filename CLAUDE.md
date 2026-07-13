@@ -118,7 +118,7 @@ simple y autocontenido.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar
   Stats/Datos, regeneracion, minimapa, recompensas de POI, safe zone y lectura
   de jefes en telefono; jugar sesiones de prueba en zonas 41-105 y ajustar con
-  DATOS; balancear loot, precios, restricciones por clase y bonus de conjunto;
-  sustituir progresivamente la base Quaternius CC0 por meshes finales propios
-  cuando la direccion artistica este cerrada; pulir comercio y uso tactil de
-  items.
+  DATOS; calibrar loot, oro, precios, TTK, restricciones por clase y bonus de
+  conjunto con sesiones reales; sustituir progresivamente la base Quaternius
+  CC0 por meshes finales propios cuando la direccion artistica este cerrada;
+  pulir comercio y uso tactil de items.
