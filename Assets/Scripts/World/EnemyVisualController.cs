@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    // Mobile-friendly enemy presentation built from primitives until dedicated
-    // creature assets are imported. The family is selected from data ids.
+    // Mobile-friendly enemy presentation. Real Quaternius monsters are selected
+    // by zone/tier and procedural parts remain as a safe fallback.
     public sealed class EnemyVisualController : MonoBehaviour
     {
         private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
@@ -28,7 +28,7 @@ namespace MmorpgPrototype
             var id = (enemyId ?? string.Empty).ToLowerInvariant();
             var accent = AccentFor(tier, baseColor);
 
-            var builtRealModel = !id.Contains("valley") && tier != EnemyTier.Normal && TryBuildRealModel(id, tier);
+            var builtRealModel = TryBuildRealModel(id, tier);
             if (builtRealModel)
             {
                 ApplyZoneVariant(id, baseColor, accent, tier);
@@ -120,9 +120,9 @@ namespace MmorpgPrototype
 
             var model = Instantiate(prefab, visualRoot.transform);
             model.name = "Enemy 3D Model";
-            model.transform.localPosition = new Vector3(0f, -1f, 0f);
+            model.transform.localPosition = ModelOffsetFor(modelResource);
             model.transform.localRotation = Quaternion.identity;
-            model.transform.localScale = Vector3.one;
+            model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
 
             foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
             {
@@ -158,9 +158,101 @@ namespace MmorpgPrototype
             return true;
         }
 
+        private static Vector3 ModelOffsetFor(string enemyId)
+        {
+            // Quaternius monsters use a ground-centered root. The old KayKit
+            // characters need the legacy offset, so only those stay lowered.
+            return (enemyId ?? string.Empty).ToLowerInvariant().Contains("kaykit")
+                ? new Vector3(0f, -1f, 0f)
+                : Vector3.zero;
+        }
+
+        private static float ModelScaleFor(string enemyId, EnemyTier tier)
+        {
+            enemyId = (enemyId ?? string.Empty).ToLowerInvariant();
+            var scale = 0.85f;
+            if (enemyId.Contains("glub") || enemyId.Contains("goleling"))
+            {
+                scale = 1.05f;
+            }
+            else if (enemyId.Contains("dragon") || enemyId.Contains("orc") || enemyId.Contains("demon"))
+            {
+                scale = 0.78f;
+            }
+            else if (enemyId.Contains("fish") || enemyId.Contains("yeti"))
+            {
+                scale = 0.92f;
+            }
+            else if (enemyId.Contains("ghost"))
+            {
+                scale = 0.88f;
+            }
+
+            if (tier == EnemyTier.Elite)
+            {
+                scale *= 1.08f;
+            }
+            else if (tier == EnemyTier.Boss)
+            {
+                scale *= 1.16f;
+            }
+
+            return scale;
+        }
+
         private static string ModelResourceFor(string enemyId, EnemyTier tier)
         {
-            if (tier == EnemyTier.Boss || enemyId.Contains("obsidian") || enemyId.Contains("throne"))
+            if (enemyId.Contains("valley"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Orc_Skull") : tier == EnemyTier.Elite ? MonsterResource("Orc") : MonsterResource("MushroomKing");
+            }
+
+            if (enemyId.Contains("forest"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Yeti") : tier == EnemyTier.Elite ? MonsterResource("Orc") : MonsterResource("Tribal");
+            }
+
+            if (enemyId.Contains("ash"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("BlueDemon") : tier == EnemyTier.Elite ? MonsterResource("Demon") : MonsterResource("MushroomKing");
+            }
+
+            if (enemyId.Contains("crystal"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Dragon") : tier == EnemyTier.Elite ? MonsterResource("Goleling_Evolved") : MonsterResource("Goleling");
+            }
+
+            if (enemyId.Contains("frost"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Dragon") : tier == EnemyTier.Elite ? MonsterResource("Yeti") : MonsterResource("Goleling_Evolved");
+            }
+
+            if (enemyId.Contains("sunken"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Fish") : tier == EnemyTier.Elite ? MonsterResource("Glub_Evolved") : MonsterResource("Glub");
+            }
+
+            if (enemyId.Contains("obsidian"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Dragon_Evolved") : tier == EnemyTier.Elite ? MonsterResource("Demon") : MonsterResource("BlueDemon");
+            }
+
+            if (enemyId.Contains("astral"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Dragon_Evolved") : tier == EnemyTier.Elite ? MonsterResource("Ghost_Skull") : MonsterResource("Ghost");
+            }
+
+            if (enemyId.Contains("eclipse"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Ghost_Skull") : tier == EnemyTier.Elite ? MonsterResource("BlueDemon") : MonsterResource("Ghost");
+            }
+
+            if (enemyId.Contains("throne"))
+            {
+                return tier == EnemyTier.Boss ? MonsterResource("Dragon_Evolved") : tier == EnemyTier.Elite ? MonsterResource("Orc_Skull") : MonsterResource("Dragon");
+            }
+
+            if (tier == EnemyTier.Boss)
             {
                 return "ThirdParty/KayKit/Adventurers/Characters/Barbarian";
             }
@@ -178,8 +270,20 @@ namespace MmorpgPrototype
             return "ThirdParty/KayKit/Adventurers/Characters/RogueHooded";
         }
 
+        private static string MonsterResource(string modelName)
+        {
+            return $"ThirdParty/Quaternius/UltimateMonsters/FBX/{modelName}";
+        }
+
         private static string AnimatorResourceFor(string enemyId, EnemyTier tier)
         {
+            var modelResource = ModelResourceFor(enemyId, tier);
+            if (modelResource.StartsWith("ThirdParty/Quaternius/UltimateMonsters/FBX/"))
+            {
+                var modelName = modelResource.Substring(modelResource.LastIndexOf('/') + 1);
+                return $"ThirdParty/Quaternius/UltimateMonsters/Controllers/{modelName}";
+            }
+
             if (tier == EnemyTier.Boss || enemyId.Contains("obsidian") || enemyId.Contains("throne"))
             {
                 return "ThirdParty/KayKit/Adventurers/Controllers/Barbarian";

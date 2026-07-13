@@ -17,6 +17,18 @@
 
 Attribution is not required by the license, but crediting KayKit is recommended.
 
+## Quaternius - Ultimate Monsters
+
+- Source: https://quaternius.com/packs/ultimatemonsters.html
+- Author: Quaternius.
+- License: Creative Commons Zero 1.0 Universal (CC0).
+- Imported subset: `Assets/Resources/ThirdParty/Quaternius/UltimateMonsters/FBX/`.
+- Local license copy: `Assets/Resources/ThirdParty/Quaternius/UltimateMonsters/LICENSE.txt`.
+- Controllers generated in `Assets/Resources/ThirdParty/Quaternius/UltimateMonsters/Controllers/`.
+
+The imported models are used as zone/tier enemy visuals. Their gameplay
+colliders, health, damage, loot and AI remain owned by the project code.
+
 
 ## KayKit Character Pack: Adventurers - Personajes
 

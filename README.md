@@ -622,20 +622,22 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
 
 ## Fase 5.45: Primera Capa De Mobs 3D
 
-- Los mobs intentan cargar modelos animados KayKit CC0 segun su familia de
-  zona: Rogue para bestias/sombras, Knight para hielo/cristal, Mage para
-  espiritus y Barbarian para jefes/forja/vacio.
+- Los mobs de las zonas 1-10 ya cargan modelos reales animados de Quaternius
+  Ultimate Monsters segun zona y tier: bestias, orcos, demonios, gólems, yetis,
+  criaturas abisales, fantasmas y dragones.
+- El pack importado queda en
+  `Assets/Resources/ThirdParty/Quaternius/UltimateMonsters/` con licencia CC0
+  local y un controlador por modelo con estados `Idle`, `Run` y `Attack`.
 - Si falta un modelo, `EnemyVisualController` conserva las siluetas
   procedurales, por lo que el spawner y el combate no dependen del arte.
 - La Zona 1 usa una criatura procedural propia de tipo bestia de reliquia para
-  normal, elite y jefe, con collar, hombreras, placa y cuernos por tier.
-- Las diez familias de zona ya tienen una segunda capa de identidad para
-  elite/jefe: espinas del bosque, anillos de brasa, prismas de hielo/cristal,
-  aletas abisales, guardas de forja, halos astrales y mantos del vacio.
-- Estos adornos se aplican tanto al fallback procedural como a los modelos
-  KayKit cargados, sin cambiar spawner, IA, combate ni loot.
-- La sustitucion por modelos importados finales y materiales propios para cada
-  zona queda pendiente de la siguiente pasada artistica.
+  normal, elite y jefe cuando el asset real no se encuentre, con collar,
+  hombreras, placa y cuernos por tier.
+- Las diez familias de zona conservan sus adornos de identidad para elite/jefe:
+  espinas del bosque, brasa, prismas, aletas abisales, forja, halos astrales y
+  mantos del vacio.
+- La siguiente pasada queda reservada para modelos unicos de cada jefe,
+  materiales propios y pruebas visuales en Android; esta capa ya es jugable.
 
 ## Fase 5.46: Ambientacion De Todas Las Zonas
 

@@ -405,21 +405,22 @@ avatar ni los enemigos cercanos.
 Objetivo: reemplazar progresivamente las siluetas de la Fase 5.43 por
 criaturas con identidad artistica, animaciones y materiales propios.
 
-- Primera capa con modelos KayKit CC0 animados por familia de zona.
-  [Implementado]
+- Primera capa con modelos Quaternius Ultimate Monsters CC0 animados por zona
+  y tier. [Implementado: 16 FBX y controladores Idle/Run/Attack]
 - Variantes visuales propias por `EnemyId` normal: reliquia, espinas, ceniza,
   cristal, escarcha, abisal, magma, astral, eclipse y vacio. [Implementado]
 - Seleccionar o crear el mob normal de la Zona 1 y sus variantes elite/jefe.
   [Implementado: bestia procedural de reliquia con piezas por tier]
 - Importar solo assets CC0, MIT o propios y registrarlos en `ASSET_LICENSES.md`.
+  [Implementado: Quaternius CC0 con licencia local]
 - Conservar `EnemyVisualController` como fallback mientras cada familia se
   migra a un prefab/modelo real.
 - Preparar idle, persecucion, ataque, impacto, muerte y variantes de color.
-  [En progreso: ataque/muerte y fallback listos]
+  [Implementado: controlador por modelo, feedback y fallback]
 - Añadir una identidad visual de familia para elite/jefe en las zonas 1-10,
   compatible con modelos KayKit y fallback procedural. [Implementado]
-- Migrar la criatura distintiva y sus materiales finales a las zonas 2-10.
-  [Pendiente: arte final]
+- Crear modelos unicos para los jefes y materiales propios por zona.
+  [Pendiente: siguiente pasada artistica]
 
 Criterio de exito: la Zona 1 tiene mobs reconocibles y consistentes sin
 romper rendimiento ni reglas data-driven.
