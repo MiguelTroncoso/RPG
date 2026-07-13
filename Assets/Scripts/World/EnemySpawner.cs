@@ -27,6 +27,9 @@ namespace MmorpgPrototype
         private float nextBossSpawn;
         private int lastEliteCount;
         private bool zoneActive;
+        private LootTableConfig normalLoot;
+        private LootTableConfig eliteLoot;
+        private LootTableConfig bossLoot;
 
         private void Start()
         {
@@ -35,6 +38,9 @@ namespace MmorpgPrototype
                 return;
             }
 
+            normalLoot = ZoneLootProgression.CreateFor(Zone.ZoneId, EnemyTier.Normal, Loot);
+            eliteLoot = ZoneLootProgression.CreateFor(Zone.ZoneId, EnemyTier.Elite, Loot);
+            bossLoot = ZoneLootProgression.CreateFor(Zone.ZoneId, EnemyTier.Boss, Loot);
             RefreshZoneState(true);
         }
 
@@ -265,7 +271,7 @@ namespace MmorpgPrototype
             reward.Inventory = Inventory;
             reward.QuestLog = QuestLog;
             reward.Hud = Hud;
-            reward.Loot = Loot;
+            reward.Loot = LootFor(tier);
             reward.Experience = exp;
             reward.GoldMin = goldMin;
             reward.GoldMax = goldMax;
@@ -276,6 +282,16 @@ namespace MmorpgPrototype
             reward.Telemetry = Telemetry;
 
             return enemy;
+        }
+
+        private LootTableConfig LootFor(EnemyTier tier)
+        {
+            switch (tier)
+            {
+                case EnemyTier.Elite: return eliteLoot ?? Loot;
+                case EnemyTier.Boss: return bossLoot ?? Loot;
+                default: return normalLoot ?? Loot;
+            }
         }
 
         private static void CreateEnemyLabel(Transform parent, string text, Color color, float height)

@@ -34,6 +34,11 @@ Estado actual (fases 1-5.51 entregadas en primera pasada; refinamientos 5.44,
   en InventorySystem. Equipamiento por slots con requisitos en
   PlayerEquipment. Mejora +0..+15 con riesgo (UpgradeConfig +
   UpgradeResolver puro + runa de proteccion + tope por rareza).
+- Progresion de loot 1-105: `ProgressionItemCatalog` crea dos materiales y
+  siete piezas de equipo por cada una de las diez zonas, mas una reliquia
+  exclusiva por jefe. `ZoneLootProgression` separa drops normal/elite/jefe y
+  `EquipmentItemDefinition.UpgradeMaterialId` enlaza cada pieza con el nucleo
+  de refinamiento de su zona.
 - Combate: DamageCalculator puro (rolls inyectados, critico/evasion/defensa,
   varianza +/-15%). Botin por LootTableConfig (pesos configurables). Enemigos
   tienen windup/cooldown por tier, aviso visual antes de golpear, cancelacion
@@ -195,6 +200,8 @@ Proximos objetivos sugeridos:
   en telefono real en las diez zonas.
 - Fase 5.48: validar en telefono real la escala, lectura, FPS y memoria de los
   diez jefes; ajustar adornos y materiales donde sea necesario.
+- Fase 5.52: balancear probabilidades de loot, oro, precios, restricciones por
+  clase y bonus de conjunto con telemetria de las diez bandas.
 - Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
   cuando la direccion artistica este cerrada.
 - Fase 5.49: mover la validacion definitiva de recompensas al servidor y

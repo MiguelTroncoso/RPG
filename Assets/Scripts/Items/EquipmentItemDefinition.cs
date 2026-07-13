@@ -19,6 +19,13 @@ namespace MmorpgPrototype
         // permite que una pieza aporte estadisticas sin imponer una apariencia.
         public string VisualId;
 
+        // Material recomendado para mejorar esta pieza. Los equipos antiguos
+        // quedan compatibles porque el sistema usa sus materiales legacy si
+        // este campo esta vacio.
+        public string UpgradeMaterialId;
+        public int ProgressionTier;
+        public bool BossExclusive;
+
         private void OnEnable()
         {
             Category = ItemCategory.Equipment;

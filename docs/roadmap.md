@@ -526,6 +526,25 @@ encuentros sin llenar la pantalla de efectos.
 Criterio de exito: el jugador entiende cuando vuelve a estar fuera de combate
 y puede localizar amenazas cercanas sin abrir otro menu.
 
+## Fase 5.52: Progresion Real De Loot 1-105
+
+Objetivo: que explorar las diez zonas produzca materiales y equipo con una
+progresion reconocible desde el nivel 1 hasta el 105.
+
+- Catalogo determinista de diez bandas con 20 materiales propios, 70 piezas
+  de equipo y diez reliquias exclusivas de jefe. [Implementado]
+- Requisitos de nivel, rarezas, estadisticas, precios y materiales de mejora
+  escalados por zona. [Implementado]
+- Tablas diferenciadas para normal, elite y jefe; los bosses entregan reliquia
+  garantizada y un segundo drop de su banda. [Implementado]
+- Mantener IDs estables para no romper inventario, guardados ni equipo legacy.
+  [Implementado]
+- Balancear probabilidades, oro, precios, TTK, restricciones por clase y bonus
+  de conjunto con telemetria de telefono real. [Pendiente]
+
+Criterio de exito: un jugador puede avanzar por las diez bandas usando drops
+de la zona actual y mejorar el equipo con materiales de esa misma zona.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

@@ -6,11 +6,11 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **60%**.
-- Prototipo jugable offline: **97%**.
-- Vertical slice de una zona pulida: **88%**.
+- Avance global estimado hacia el MMORPG publicable: **63%**.
+- Prototipo jugable offline: **98%**.
+- Vertical slice de una zona pulida: **91%**.
 - Online persistente y preparado para produccion: **28%**.
-- Arte final, contenido completo 1-105 y lanzamiento: **36%**.
+- Arte final, contenido completo 1-105 y lanzamiento: **38%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -51,6 +51,9 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   1-10, con controladores de idle, movimiento y ataque generados en Unity.
 - Fase 5.45: diez jefes con modelos distintos, silueta propia y paleta de zona
   aplicada sin duplicar materiales; la base CC0 sigue siendo reemplazable.
+- Fase 5.52: progresion de loot 1-105 con 20 materiales, 70 piezas de set,
+  10 reliquias de jefe, tablas por zona/tier y materiales de mejora asociados.
+- Los bosses entregan ahora la reliquia garantizada y un segundo drop adicional.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -62,17 +65,20 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    datos.
 3. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
    minimapa con datos reales.
-4. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
+4. Fase 5.52: balancear probabilidades, precios, oro, TTK y cantidades de
+   materiales/equipo con sesiones reales en las diez bandas.
+5. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
    telefono real; ajustar adornos y materiales si algun modelo pierde lectura.
-5. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
+6. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
    cuando la direccion artistica este cerrada.
-6. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
+7. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
    revisar duplicados/concurrencia con telemetria real.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.52 | Progresion de loot 1-105 con materiales, sets y reliquias de jefe | 63% |
 | 2026-07-13 | 5.45 | Diez jefes con modelo unico, silueta y paleta propia por zona | 60% |
 | 2026-07-13 | 5.45 | Primer set de 16 mobs 3D CC0 con animaciones por zona/tier | 58% |
 | 2026-07-12 | 5.45+5.49 | Identidad por familia/tier y POI persistentes por personaje | 56% |

@@ -68,6 +68,11 @@ namespace MmorpgPrototype
 
             var config = EnsureConfig();
             var itemName = Inventory.DisplayNameOf(instance.ItemId);
+            var definition = gear.GetDefinition(instance);
+            if (definition != null && !string.IsNullOrWhiteSpace(definition.UpgradeMaterialId))
+            {
+                materialId = definition.UpgradeMaterialId;
+            }
             var maxLevel = MaxUpgradeFor(instance, config);
 
             if (instance.UpgradeLevel >= maxLevel)

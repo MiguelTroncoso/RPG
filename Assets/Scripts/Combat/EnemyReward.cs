@@ -55,6 +55,9 @@ namespace MmorpgPrototype
             granted = true;
             var gold = Random.Range(GoldMin, GoldMax + 1);
             var drop = RollLoot();
+            var bonusDrop = Tier == EnemyTier.Boss && !string.IsNullOrEmpty(GuaranteedDrop)
+                ? RollBonusLoot()
+                : string.Empty;
 
             Progression.AddExperience(Experience);
             Progression.AddGold(gold);
@@ -66,7 +69,17 @@ namespace MmorpgPrototype
                 Inventory?.AddItem(drop);
             }
 
+            if (!string.IsNullOrEmpty(bonusDrop))
+            {
+                Inventory?.AddItem(bonusDrop);
+            }
+
             var dropName = Inventory != null ? Inventory.DisplayNameOf(drop) : drop;
+            if (!string.IsNullOrEmpty(bonusDrop))
+            {
+                var bonusName = Inventory != null ? Inventory.DisplayNameOf(bonusDrop) : bonusDrop;
+                dropName = string.IsNullOrEmpty(dropName) ? bonusName : $"{dropName} + {bonusName}";
+            }
             var message = string.IsNullOrEmpty(drop)
                 ? Localization.Tr("reward.kill", Experience, gold)
                 : Localization.Tr("reward.kill_loot", Experience, gold, dropName);
@@ -81,6 +94,11 @@ namespace MmorpgPrototype
                 return GuaranteedDrop;
             }
 
+            return Loot != null ? Loot.Roll(Random.value, Random.value) : string.Empty;
+        }
+
+        public string RollBonusLoot()
+        {
             return Loot != null ? Loot.Roll(Random.value, Random.value) : string.Empty;
         }
     }

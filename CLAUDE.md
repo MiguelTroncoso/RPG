@@ -110,11 +110,15 @@ simple y autocontenido.
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Guardado local en esquema v10 incluye reclamos de puntos de interes por
   personaje; `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
+- Progresion de loot 1-105 con `ProgressionItemCatalog`: dos materiales y siete
+  piezas de equipo por zona, diez reliquias de jefe, tablas normal/elite/jefe y
+  materiales de mejora asociados al equipo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar
   Stats/Datos, regeneracion, minimapa, recompensas de POI, safe zone y lectura
   de jefes en telefono; jugar sesiones de prueba en zonas 41-105 y ajustar con
-  DATOS; sustituir progresivamente la base Quaternius CC0 por meshes finales
-  propios cuando la direccion artistica este cerrada; pulir comercio y uso
-  tactil de items.
+  DATOS; balancear loot, precios, restricciones por clase y bonus de conjunto;
+  sustituir progresivamente la base Quaternius CC0 por meshes finales propios
+  cuando la direccion artistica este cerrada; pulir comercio y uso tactil de
+  items.

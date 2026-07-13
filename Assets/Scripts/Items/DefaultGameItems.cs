@@ -33,7 +33,7 @@ namespace MmorpgPrototype
 
         public static List<ItemDefinition> CreateAll()
         {
-            return new List<ItemDefinition>
+            var items = new List<ItemDefinition>
             {
                 Consumable(MinorPotion, "Pocion menor", "Restaura algo de vida.", Rarity.Common, healAmount: 45, buyPrice: 25, sellPrice: 8),
                 Basic(AncientFragment, "Fragmento antiguo", "Resto de energia del valle. Objeto de mision.", ItemCategory.QuestItem, Rarity.Uncommon, sellPrice: 0),
@@ -52,6 +52,9 @@ namespace MmorpgPrototype
                 Equipment(ValleyAmulet, "Amuleto del valle", "Reliquia menor que vibra con energia antigua.", Rarity.Rare,
                     EquipSlot.Necklace, requiredLevel: 4, damage: 4, health: 25, speed: 0.3f, buyPrice: 260, sellPrice: 90, visualId: "valley_amulet")
             };
+
+            items.AddRange(ProgressionItemCatalog.CreateAll());
+            return items;
         }
 
         public static string[] MaterialDropIds()

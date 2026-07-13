@@ -72,6 +72,7 @@ namespace MmorpgPrototype
             zone.NormalAreaRadius = 6f;
             zone.EliteEnemyId = ValleyEliteId;
             zone.BossEnemyId = ValleyBossId;
+            zone.BossGuaranteedDrop = ProgressionItemCatalog.BossRelicFor(Zone1);
             return zone;
         }
 
@@ -125,7 +126,7 @@ namespace MmorpgPrototype
             zone.BossExp = 900;
             zone.BossGoldMin = 250;
             zone.BossGoldMax = 350;
-            zone.BossGuaranteedDrop = DefaultGameItems.ProtectionRune;
+            zone.BossGuaranteedDrop = ProgressionItemCatalog.BossRelicFor(Zone2);
             zone.BossRespawnSeconds = 120f;
 
             return zone;
@@ -181,7 +182,7 @@ namespace MmorpgPrototype
             zone.BossExp = 2200;
             zone.BossGoldMin = 600;
             zone.BossGoldMax = 800;
-            zone.BossGuaranteedDrop = DefaultGameItems.ValleyAmulet;
+            zone.BossGuaranteedDrop = ProgressionItemCatalog.BossRelicFor(Zone3);
             zone.BossRespawnSeconds = 150f;
 
             return zone;
@@ -237,7 +238,7 @@ namespace MmorpgPrototype
             zone.BossExp = 4200;
             zone.BossGoldMin = 1000;
             zone.BossGoldMax = 1400;
-            zone.BossGuaranteedDrop = DefaultGameItems.ProtectionRune;
+            zone.BossGuaranteedDrop = ProgressionItemCatalog.BossRelicFor(Zone4);
             zone.BossRespawnSeconds = 180f;
 
             return zone;
@@ -253,7 +254,7 @@ namespace MmorpgPrototype
                 1600, 70, 18, 680, 70, 110,
                 4200, 120, 34, 1600, 230, 340,
                 12500, 180, 45, 6500, 1500, 2200,
-                DefaultGameItems.ValleyAmulet);
+                ProgressionItemCatalog.BossRelicFor(Zone5));
         }
 
         public static ZoneDefinition CreateZone6()
@@ -266,7 +267,7 @@ namespace MmorpgPrototype
                 2400, 92, 28, 980, 105, 165,
                 6200, 150, 48, 2400, 360, 560,
                 19000, 225, 62, 9500, 2500, 3600,
-                DefaultGameItems.ProtectionRune);
+                ProgressionItemCatalog.BossRelicFor(Zone6));
         }
 
         public static ZoneDefinition CreateZone7()
@@ -279,7 +280,7 @@ namespace MmorpgPrototype
                 3400, 120, 42, 1400, 155, 235,
                 9000, 195, 70, 3500, 620, 900,
                 28000, 300, 88, 14000, 4600, 6200,
-                DefaultGameItems.ValleyMedal);
+                ProgressionItemCatalog.BossRelicFor(Zone7));
         }
 
         public static ZoneDefinition CreateZone8()
@@ -292,7 +293,7 @@ namespace MmorpgPrototype
                 4700, 155, 58, 2000, 250, 370,
                 12500, 250, 92, 5000, 980, 1350,
                 42000, 390, 118, 21000, 7000, 9800,
-                DefaultGameItems.ProtectionRune);
+                ProgressionItemCatalog.BossRelicFor(Zone8));
         }
 
         public static ZoneDefinition CreateZone9()
@@ -305,7 +306,7 @@ namespace MmorpgPrototype
                 6500, 195, 78, 2900, 360, 560,
                 18000, 320, 124, 7200, 1500, 2100,
                 65000, 500, 155, 32000, 10500, 14500,
-                DefaultGameItems.ValleyAmulet);
+                ProgressionItemCatalog.BossRelicFor(Zone9));
         }
 
         public static ZoneDefinition CreateZone10()
@@ -318,7 +319,7 @@ namespace MmorpgPrototype
                 9000, 250, 105, 4300, 600, 850,
                 26000, 420, 165, 10500, 2500, 3600,
                 100000, 680, 220, 52000, 18000, 26000,
-                DefaultGameItems.ProtectionRune,
+                ProgressionItemCatalog.BossRelicFor(Zone10),
                 15);
         }
 

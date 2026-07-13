@@ -725,6 +725,26 @@ para recompensas siguen pendientes para una fase online posterior.
 - El ritmo de regeneracion, el radio de lectura y la escala visual quedan para
   validacion con el telefono real.
 
+## Fase 5.52: Progresion Real De Loot 1-105
+
+- `ProgressionItemCatalog` crea una progresion determinista para las diez
+  bandas: Valle 1-10, Bosque 11-20, Ceniza 21-30, Cristal 31-40, Escarcha
+  41-50, Abismo 51-60, Obsidiana 61-70, Astral 71-80, Eclipse 81-90 y Vacio
+  91-105.
+- Cada banda tiene dos materiales propios: fragmento comun para drops normales
+  y nucleo de refinamiento para elites/jefes. Los equipos nuevos apuntan al
+  nucleo de su propia zona al mejorar.
+- Cada zona tiene siete piezas de equipo (arma, casco, pechera, guantes,
+  pantalones, botas y collar) con nivel requerido, rareza, estadisticas y
+  precios escalados; ademas cada jefe entrega una reliquia exclusiva de tipo
+  talisman.
+- `ZoneLootProgression` separa tablas para normal, elite y jefe. Los normales
+  dan materiales comunes, los elites refinamiento y piezas del set, y los
+  jefes combinan su reliquia garantizada con un segundo drop adicional.
+- Los equipos antiguos siguen siendo validos para guardados y tutoriales. La
+  siguiente calibracion debe usar telemetria real para ajustar probabilidades,
+  economia, clases permitidas y bonus de conjunto.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.
