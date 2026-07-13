@@ -9,6 +9,7 @@ Documentos clave:
 - [`GAME_ARCHITECTURE.md`](GAME_ARCHITECTURE.md): arquitectura tecnica objetivo y hoja de ruta de las proximas etapas.
 - [`CLAUDE.md`](CLAUDE.md): contrato de desarrollo (reglas, como probar, estado conocido).
 - `docs/`: roadmap, plan tecnico, diseno de juego y checklist Android.
+- [`docs/progress.md`](docs/progress.md): porcentaje estimado y registro diario.
 
 ## Recomendacion Inicial
 
@@ -585,9 +586,22 @@ reinstalarse antes de repetir la prueba tactil.
 - La APK debe reinstalarse y probarse con movimiento sostenido mas ataque,
   ataque repetido y cambio de objetivo.
 
-Proximas fases recomendadas: renovar los mobs con siluetas y animaciones
-distintas por familia, reorganizar la interfaz para separar combate/chat/
-inventario en movil y despues pulir terreno, lectura visual y balance.
+La prueba multitactil sigue pendiente en telefono real. Las siguientes fases
+son reorganizar la interfaz movil, importar mobs 3D finales para la Zona 1 y
+pulir terreno y ambientacion de las primeras zonas.
+
+## Fase 5.43: Mobs Y Lectura De Combate
+
+- Los mobs ya no nacen como capsulas: ahora usan familias visuales
+  procedurales de bestia, guardian, espiritu y sombra segun su `EnemyId`.
+- Los normales, elites y jefes tienen escala, color, adorno y lectura de tier
+  diferenciados sin tocar las reglas de vida, dano, loot o IA.
+- Cada enemigo muestra su nombre y una barra de vida sobre la cabeza; la barra
+  se actualiza con el mismo componente `Health` usado por el combate.
+- La implementacion no agrega dependencias externas y queda lista para cambiar
+  cada familia por un prefab o modelo final mas adelante.
+
+La APK actual incluye esta fase y debe reinstalarse para verla en Android.
 
 ## Clases Iniciales
 

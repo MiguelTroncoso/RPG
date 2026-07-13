@@ -150,20 +150,9 @@ namespace MmorpgPrototype
             int health, int damage, int defense, float moveSpeed,
             int exp, int goldMin, int goldMax, EnemyTier tier, string enemyId, string guaranteedDrop)
         {
-            var enemy = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            var enemy = new GameObject(enemyName);
             enemy.name = enemyName;
             enemy.transform.position = position;
-            enemy.transform.localScale = Vector3.one * scale;
-
-            var material = new Material(Shader.Find("Standard"));
-            material.color = color;
-            enemy.GetComponent<Renderer>().sharedMaterial = material;
-
-            var capsule = enemy.GetComponent<CapsuleCollider>();
-            if (capsule != null)
-            {
-                Destroy(capsule);
-            }
 
             var controller = enemy.AddComponent<CharacterController>();
             controller.height = 2f;
@@ -171,6 +160,9 @@ namespace MmorpgPrototype
 
             var enemyHealth = enemy.AddComponent<Health>();
             enemyHealth.ResetHealth(health);
+
+            var visuals = enemy.AddComponent<EnemyVisualController>();
+            visuals.Initialize(enemyId, enemyName, tier, color, scale, enemyHealth);
 
             var flash = enemy.AddComponent<HitFlashOnDamage>();
             flash.FlashColor = tier == EnemyTier.Boss

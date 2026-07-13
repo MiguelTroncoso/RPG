@@ -363,14 +363,19 @@ perdida del joystick ni bloqueo del personaje.
 Objetivo: reemplazar los enemigos placeholder y hacer que cada familia tenga
 una lectura visual y de combate reconocible.
 
-- Modelos o siluetas CC0 documentadas para lobos, guardianes, elites y jefes.
-- Animaciones o fallback procedural de idle, persecucion, ataque, impacto y
-  muerte.
-- Barras de vida, nombre, tier y telemetria visual con jerarquia clara.
+- Siluetas procedurales de bestia, guardian, espiritu y sombra por familia de
+  zona. [Implementado]
+- Distintivos de elite y jefe con color, escala, crest y nucleo visual. [Implementado]
+- Nombre y barra de vida sobre cada enemigo, sincronizados con `Health`.
+  [Implementado]
+- Modelos o prefabs 3D finales y animaciones especificas por familia.
+  [Pendiente]
 - Variantes por zona sin cambiar la logica data-driven del spawner.
+  [Implementado]
 
 Criterio de exito: el jugador distingue amenaza, distancia, tier y estado del
-enemigo sin depender del texto de la consola.
+enemigo sin depender del texto de la consola. La prueba en telefono queda
+pendiente para confirmar escala y legibilidad real.
 
 ## Fase 5.44: Interfaz De Juego Mobile
 
@@ -385,7 +390,32 @@ largas en pantalla tactil.
   landscape Android.
 
 Criterio de exito: combate y exploracion permanecen legibles sin tapar el
-  avatar ni los enemigos cercanos.
+avatar ni los enemigos cercanos.
+
+## Fase 5.45: Mobs 3D Finales Por Zona
+
+Objetivo: reemplazar progresivamente las siluetas de la Fase 5.43 por
+criaturas con identidad artistica, animaciones y materiales propios.
+
+- Seleccionar o crear el mob normal de la Zona 1 y sus variantes elite/jefe.
+- Importar solo assets CC0, MIT o propios y registrarlos en `ASSET_LICENSES.md`.
+- Conservar `EnemyVisualController` como fallback mientras cada familia se
+  migra a un prefab/modelo real.
+- Preparar idle, persecucion, ataque, impacto, muerte y variantes de color.
+
+Criterio de exito: la Zona 1 tiene mobs reconocibles y consistentes sin
+romper rendimiento ni reglas data-driven.
+
+## Fase 5.46: Terreno Y Ambientacion De Zonas
+
+Objetivo: hacer que las zonas 1-4 se sientan distintas y guien al jugador.
+
+- Suelo, obstaculos, decoracion y puntos de interes por zona.
+- Iluminacion, paleta, niebla y lectura de caminos optimizadas para Android.
+- Señales visuales de nivel, elite, jefe y transicion entre zonas.
+
+Criterio de exito: se reconoce la zona sin leer el nombre y el jugador puede
+orientarse con el mundo.
 
 ## Fase 6: Lanzamiento Inicial
 

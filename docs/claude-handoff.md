@@ -14,10 +14,11 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.42 y como ejecutar).
-4. El codigo existente relacionado con tu tarea.
+3. README.md (historial de fases 1 a 5.43 y como ejecutar).
+4. docs/progress.md (porcentaje estimado y registro diario).
+5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.42 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.43 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -75,6 +76,11 @@ Estado actual (fases 1-5.42 completadas; hoja de ruta A-K completa):
   queda reservado al boton movil y el joystick conserva el dedo activo para
   evitar conflictos al jugar con dos dedos. Repetir la prueba tactil antes de
   avanzar a contenido nuevo.
+- Mobs: `EnemyVisualController` reemplaza las capsulas por familias
+  procedurales de bestia, guardian, espiritu y sombra. Elites y jefes tienen
+  adornos propios y todos los enemigos muestran nombre y barra de vida sobre
+  la cabeza. Los modelos 3D finales y animaciones especificas quedan para la
+  Fase 5.45.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -155,13 +161,12 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Reinstalar la APK de la Fase 5.42 y probar movimiento + ataque con dos dedos.
-- Fase 5.43: reemplazar mobs placeholder por familias visuales, animaciones y
-  barras de vida legibles.
+- Reinstalar la APK de la Fase 5.43 y probar movimiento + ataque con dos dedos.
 - Fase 5.44: reorganizar HUD mobile para separar combate, chat, inventario y
   mision sin tapar el mundo.
-- Despues, convertir perfiles de armadura en assets editables y ajustar zonas
-  41-105 usando DATOS.
+- Fase 5.45: sustituir progresivamente las siluetas por mobs 3D finales CC0 o
+  propios, empezando por la Zona 1.
+- Fase 5.46: pulir terreno, ambientacion y lectura de las zonas 1-4.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.
