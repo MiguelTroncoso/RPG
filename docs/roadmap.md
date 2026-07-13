@@ -392,6 +392,8 @@ largas en pantalla tactil.
   [Implementado]
 - Mantener movimiento y ataque simultaneos en Android sin conflicto de
   rotacion ni perdida del joystick. [Implementado: pendiente de prueba fisica]
+- Girar la camara con arrastre tactil horizontal/vertical sin bloquear
+  joystick, `ATK`, habilidades ni ventanas. [Implementado: pendiente de prueba fisica]
 - Revisar seleccion de personaje, menu, stats, equipo, mision y chat en
   landscape Android. [Pendiente de prueba fisica]
 

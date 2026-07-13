@@ -180,8 +180,9 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Reinstalar la APK y probar el hotfix: mantener joystick, pulsar `ATK`, usar
-  habilidades, Stats/Datos, `EXPLORAR` y safe zone en el telefono.
+- Reinstalar la APK y probar el hotfix: joystick + `ATK`, joystick + camara,
+  giro vertical/horizontal, habilidades, Stats/Datos, `EXPLORAR` y safe zone
+  en el telefono.
 - Fase 5.48: medir FPS, memoria, carga, TTK y legibilidad en las diez zonas.
 - Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y conectarlas
   al pipeline de animacion existente.

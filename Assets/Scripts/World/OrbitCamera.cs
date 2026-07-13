@@ -10,9 +10,19 @@ namespace MmorpgPrototype
         public float Pitch = 38f;
         public float Yaw = 42f;
         public float MouseSensitivity = 160f;
+        public float TouchSensitivity = 0.18f;
+        public float MinimumPitch = 24f;
+        public float MaximumPitch = 62f;
         public float FollowSharpness = 12f;
 
         private Vector3 lastMousePosition;
+        private bool mouseLookActive;
+
+        public void RotateByTouchDelta(Vector2 screenDelta)
+        {
+            Yaw += screenDelta.x * TouchSensitivity;
+            Pitch = Mathf.Clamp(Pitch - screenDelta.y * TouchSensitivity * 0.75f, MinimumPitch, MaximumPitch);
+        }
 
         private void LateUpdate()
         {
@@ -21,10 +31,22 @@ namespace MmorpgPrototype
                 return;
             }
 
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButtonDown(1))
+            {
+                mouseLookActive = true;
+                lastMousePosition = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                mouseLookActive = false;
+            }
+
+            if (mouseLookActive)
             {
                 var delta = Input.mousePosition - lastMousePosition;
                 Yaw += delta.x * MouseSensitivity * 0.01f * Time.deltaTime;
+                Pitch = Mathf.Clamp(Pitch - delta.y * MouseSensitivity * 0.006f * Time.deltaTime, MinimumPitch, MaximumPitch);
             }
 
             lastMousePosition = Input.mousePosition;

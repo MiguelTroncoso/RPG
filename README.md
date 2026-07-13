@@ -616,6 +616,9 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
 - El input multitactil conserva el movimiento mientras se pulsa `ATK`: el
   ataque responde al `pointer down` y no fuerza la rotacion si el joystick esta
   entregando una direccion.
+- En Android, arrastrar una zona libre del mundo gira la camara en horizontal
+  y vertical; la superficie tactil queda detras del joystick, acciones y
+  ventanas para que cada control conserve su propio toque.
 
 ## Fase 5.45: Primera Capa De Mobs 3D
 

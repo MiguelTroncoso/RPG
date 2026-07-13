@@ -241,6 +241,7 @@ namespace MmorpgPrototype
                 { "slot.talisman", "Talisman" },
                 { "hud.initial_status", "Fase 5: prototipo Android preparado para pruebas." },
                 { "hud.controls_help", "WASD/joystick moverse  |  ATK/Space ataque  |  Q/E habilidades  |  Click derecho camara" },
+                { "hud.touch_help", "Joystick mover  |  Arrastra el mundo: camara  |  ATK atacar  |  Q/E habilidades" },
                 { "hud.hint", "Cambia clase, completa la mision, mejora equipo y busca el monolito." },
                 { "hud.player_hp", "Jugador {0}/{1}" },
                 { "hud.target_hp", "Objetivo {0}/{1}" },

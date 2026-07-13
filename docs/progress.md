@@ -6,9 +6,9 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-12
 
-- Avance global estimado hacia el MMORPG publicable: **47%**.
-- Prototipo jugable offline: **94%**.
-- Vertical slice de una zona pulida: **80%**.
+- Avance global estimado hacia el MMORPG publicable: **49%**.
+- Prototipo jugable offline: **95%**.
+- Vertical slice de una zona pulida: **84%**.
 - Online persistente y preparado para produccion: **25%**.
 - Arte final, contenido completo 1-105 y lanzamiento: **30%**.
 
@@ -37,13 +37,15 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   una vez por sesion mediante `RewardService`.
 - Hotfix mobile: movimiento y ataque simultaneos conservan el joystick y el
   ataque tactil responde al presionar.
+- Refinamiento de interfaz mobile: camara tactil con giro horizontal/vertical
+  en zona libre y ayuda de controles separada del chat.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
 
-1. Reinstalar APK y probar dos dedos: mantener joystick, pulsar `ATK`, usar
-   habilidades, abrir Stats/Datos y activar `EXPLORAR` en un telefono real.
+1. Reinstalar APK y probar multitactil real: joystick + `ATK`, joystick +
+   camara y, si el telefono lo permite, joystick + `ATK` + camara.
 2. Fase 5.48: medir rendimiento, balance y experiencia Android en las diez
    zonas con el telefono real.
 3. Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y probar
@@ -55,7 +57,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
-| 2026-07-12 | 5.42+5.44 | Hotfix multitactil y acceso de menu refinado | 47% |
+| 2026-07-12 | 5.42+5.44 | Hotfix multitactil, menu refinado y camara tactil | 49% |
 | 2026-07-12 | 5.50 | Zona segura de comercio y bloqueo de combate | 44% |
 | 2026-07-12 | 5.44+5.45+5.49 | Menu Stats/Datos, criatura de Zona 1 y recompensas de POI | 47% |
 | 2026-07-12 | 5.49 | Obstaculos solidos, POI explorables y reporte de balance | 43% |

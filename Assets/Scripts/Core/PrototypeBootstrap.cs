@@ -493,6 +493,9 @@ namespace MmorpgPrototype
             mobileDiagnostics.SafeAreaRoot = safeAreaRoot.GetComponent<RectTransform>();
             mobileDiagnostics.Audio = player.GetComponent<CombatFeedbackAudio>();
 
+            var camera = Camera.main;
+            CreateCameraLookSurface(uiRoot, camera != null ? camera.GetComponent<OrbitCamera>() : null);
+
             CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(820f, 250f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.52f));
             CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(438f, 330f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
             CreatePanel(uiRoot, "Network Panel", new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(500f, 112f), new Vector2(-18f, -82f), new Color(0.025f, 0.032f, 0.04f, 0.46f));
@@ -606,8 +609,9 @@ namespace MmorpgPrototype
             CreateShopButtons(uiRoot, player, shop, blacksmith, storage);
             CreateNetworkPanel(uiRoot, player);
 
-            var help = CreateText(uiRoot, "Controls Help", Localization.Tr("hud.controls_help"), 17, TextAnchor.MiddleCenter);
-            SetRect(help.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(900f, 28f), new Vector2(0f, 20f));
+            var helpKey = Application.isMobilePlatform ? "hud.touch_help" : "hud.controls_help";
+            var help = CreateText(uiRoot, "Controls Help", Localization.Tr(helpKey), 17, TextAnchor.MiddleCenter);
+            SetRect(help.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(900f, 28f), new Vector2(0f, -14f));
             CreateStartupSplash(uiRoot);
             CreateCharacterSelectionPanel(uiRoot, player, hud);
             return hud;
@@ -939,6 +943,19 @@ namespace MmorpgPrototype
             joystick.Knob = knob.GetComponent<RectTransform>();
             joystick.Radius = 82f;
             return joystick;
+        }
+
+        private static MobileCameraLookSurface CreateCameraLookSurface(Transform parent, OrbitCamera camera)
+        {
+            var surface = CreateUiObject("Mobile Camera Look Surface", parent);
+            var image = surface.AddComponent<Image>();
+            image.color = new Color(0f, 0f, 0f, 0f);
+            image.raycastTarget = true;
+            StretchToParent(surface.GetComponent<RectTransform>());
+
+            var look = surface.AddComponent<MobileCameraLookSurface>();
+            look.Camera = camera;
+            return look;
         }
 
         private static Button CreateRoundButton(Transform parent, string name, string label, Vector2 anchor, Vector2 position, Vector2 size, Color color, int fontSize = 32)
