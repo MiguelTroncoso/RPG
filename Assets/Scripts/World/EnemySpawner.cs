@@ -16,6 +16,7 @@ namespace MmorpgPrototype
         public ZoneDefinition Zone;
         public CombatTelemetry Telemetry;
         public float RespawnDelay = 4.5f;
+        public float ActivationDistance = 112f;
 
         private readonly List<GameObject> normals = new List<GameObject>();
         private readonly List<GameObject> elites = new List<GameObject>();
@@ -25,6 +26,7 @@ namespace MmorpgPrototype
         private float nextEliteSpawn;
         private float nextBossSpawn;
         private int lastEliteCount;
+        private bool zoneActive;
 
         private void Start()
         {
@@ -33,6 +35,11 @@ namespace MmorpgPrototype
                 return;
             }
 
+            RefreshZoneState(true);
+        }
+
+        private void SpawnZone()
+        {
             for (var i = 0; i < Zone.NormalCount; i++)
             {
                 SpawnNormal();
@@ -54,9 +61,66 @@ namespace MmorpgPrototype
                 return;
             }
 
+            RefreshZoneState(false);
+            if (!zoneActive)
+            {
+                return;
+            }
+
             NormalTick();
             EliteTick();
             BossTick();
+        }
+
+        private void RefreshZoneState(bool force)
+        {
+            var shouldBeActive = Target == null || Vector3.Distance(Target.position, Zone.GroundCenter) <= ActivationDistance;
+            if (!force && shouldBeActive == zoneActive)
+            {
+                return;
+            }
+
+            zoneActive = shouldBeActive;
+            if (zoneActive)
+            {
+                SpawnZone();
+                return;
+            }
+
+            ClearZone();
+        }
+
+        private void ClearZone()
+        {
+            foreach (var enemy in normals)
+            {
+                if (enemy != null)
+                {
+                    Destroy(enemy);
+                }
+            }
+
+            foreach (var elite in elites)
+            {
+                if (elite != null)
+                {
+                    Destroy(elite);
+                }
+            }
+
+            if (boss != null)
+            {
+                Destroy(boss);
+            }
+
+            normals.Clear();
+            elites.Clear();
+            boss = null;
+            bossAlive = false;
+            lastEliteCount = 0;
+            nextNormalSpawn = Time.time + RespawnDelay;
+            nextEliteSpawn = Time.time + Zone.EliteRespawnSeconds;
+            nextBossSpawn = Time.time + Zone.BossRespawnSeconds;
         }
 
         private void NormalTick()

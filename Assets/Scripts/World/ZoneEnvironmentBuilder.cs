@@ -21,15 +21,51 @@ namespace MmorpgPrototype
             var random = new System.Random(StableSeed(zone.ZoneId));
             var center = zone.GroundCenter;
 
-            for (var i = 0; i < 12; i++)
+            var decorationCount = Application.platform == RuntimePlatform.Android ? 8 : 12;
+            for (var i = 0; i < decorationCount; i++)
             {
-                var angle = (float)(Math.PI * 2d * i / 12d) + (float)random.NextDouble() * 0.34f;
+                var angle = (float)(Math.PI * 2d * i / decorationCount) + (float)random.NextDouble() * 0.34f;
                 var radius = 10f + (float)random.NextDouble() * 14f;
                 var position = center + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
                 BuildDecoration(root.transform, zone, i, position, random);
             }
 
+            BuildNavigation(root.transform, zone);
             BuildEntryMarker(root.transform, zone);
+        }
+
+        private static void BuildNavigation(Transform parent, ZoneDefinition zone)
+        {
+            var pathStart = zone.SignPosition + Vector3.up * 0.04f;
+            var pathEnd = zone.NormalAreaCenter + Vector3.up * 0.04f;
+            var direction = pathEnd - pathStart;
+            direction.y = 0f;
+            var length = Mathf.Max(4f, direction.magnitude);
+            var pathColor = Color.Lerp(zone.GroundColor, new Color(0.72f, 0.62f, 0.42f), 0.34f);
+            CreatePart(parent, "Main Zone Path", PrimitiveType.Cube, (pathStart + pathEnd) * 0.5f, new Vector3(3.2f, 0.05f, length * 0.5f), pathColor, Quaternion.LookRotation(direction.normalized, Vector3.up));
+
+            BuildLandmark(parent, "Elite Landmark", zone.EliteAreaCenter, new Color(0.72f, 0.32f, 1f), 2.2f);
+            BuildLandmark(parent, "Boss Landmark", zone.BossPosition, new Color(1f, 0.36f, 0.12f), 2.8f);
+
+            var center = zone.GroundCenter;
+            var edge = 29f;
+            BuildBoundaryMarker(parent, center + new Vector3(-edge, 0f, -edge), zone.GroundColor);
+            BuildBoundaryMarker(parent, center + new Vector3(edge, 0f, -edge), zone.GroundColor);
+            BuildBoundaryMarker(parent, center + new Vector3(-edge, 0f, edge), zone.GroundColor);
+            BuildBoundaryMarker(parent, center + new Vector3(edge, 0f, edge), zone.GroundColor);
+        }
+
+        private static void BuildLandmark(Transform parent, string name, Vector3 position, Color accent, float scale)
+        {
+            CreatePart(parent, $"{name} Platform", PrimitiveType.Cylinder, position + Vector3.up * 0.08f, new Vector3(scale, 0.08f, scale), Color.Lerp(accent, Color.black, 0.54f));
+            CreatePart(parent, $"{name} Pillar L", PrimitiveType.Cube, position + new Vector3(-scale * 0.72f, scale * 0.55f, 0f), new Vector3(0.28f, scale * 1.1f, 0.28f), accent);
+            CreatePart(parent, $"{name} Pillar R", PrimitiveType.Cube, position + new Vector3(scale * 0.72f, scale * 0.55f, 0f), new Vector3(0.28f, scale * 1.1f, 0.28f), accent);
+            CreatePart(parent, $"{name} Beacon", PrimitiveType.Sphere, position + Vector3.up * scale * 1.35f, new Vector3(0.34f, 0.34f, 0.34f), Color.Lerp(accent, Color.white, 0.3f));
+        }
+
+        private static void BuildBoundaryMarker(Transform parent, Vector3 position, Color groundColor)
+        {
+            CreatePart(parent, "Zone Boundary Marker", PrimitiveType.Cube, position + Vector3.up * 0.42f, new Vector3(0.26f, 0.84f, 0.26f), Color.Lerp(groundColor, Color.white, 0.26f));
         }
 
         private static void BuildDecoration(Transform parent, ZoneDefinition zone, int index, Vector3 position, System.Random random)
@@ -119,6 +155,9 @@ namespace MmorpgPrototype
         {
             var position = zone.SignPosition + new Vector3(0f, 0f, 2.8f);
             CreatePart(parent, "Entry Marker", PrimitiveType.Cylinder, position + Vector3.up * 0.08f, new Vector3(1.2f, 0.08f, 1.2f), Color.Lerp(zone.GroundColor, Color.white, 0.28f));
+            CreatePart(parent, "Entry Pillar L", PrimitiveType.Cube, position + new Vector3(-2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
+            CreatePart(parent, "Entry Pillar R", PrimitiveType.Cube, position + new Vector3(2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
+            CreatePart(parent, "Entry Arch", PrimitiveType.Cube, position + Vector3.up * 2.35f, new Vector3(4.7f, 0.28f, 0.34f), Color.Lerp(zone.GroundColor, Color.white, 0.2f));
         }
 
         private static GameObject CreatePart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)

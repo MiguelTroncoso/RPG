@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace MmorpgPrototype
@@ -7,6 +8,7 @@ namespace MmorpgPrototype
     // creature assets are imported. The family is selected from data ids.
     public sealed class EnemyVisualController : MonoBehaviour
     {
+        private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
         private GameObject visualRoot;
         private GameObject statusRoot;
         private Transform healthFill;
@@ -26,28 +28,34 @@ namespace MmorpgPrototype
             var id = (enemyId ?? string.Empty).ToLowerInvariant();
             var accent = AccentFor(tier, baseColor);
 
-            if (TryBuildRealModel(id, tier))
+            var builtRealModel = tier != EnemyTier.Normal && TryBuildRealModel(id, tier);
+            if (builtRealModel)
             {
+                ApplyZoneVariant(id, baseColor, accent);
                 BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("forest") || id.Contains("valley"))
             {
                 BuildBeast(baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent);
                 BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("crystal") || id.Contains("frost") || id.Contains("obsidian"))
             {
                 BuildGuardian(baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent);
                 BuildTierAdornment(tier, accent);
             }
             else if (id.Contains("sunken") || id.Contains("astral"))
             {
                 BuildSpirit(baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent);
                 BuildTierAdornment(tier, accent);
             }
             else
             {
                 BuildShadow(baseColor, accent);
+                ApplyZoneVariant(id, baseColor, accent);
                 BuildTierAdornment(tier, accent);
             }
 
@@ -240,6 +248,68 @@ namespace MmorpgPrototype
             CreatePart("Shadow Eye Line", PrimitiveType.Cube, new Vector3(0f, 0.9f, -0.36f), new Vector3(0.3f, 0.08f, 0.06f), accent);
         }
 
+        private void ApplyZoneVariant(string enemyId, Color bodyColor, Color accent)
+        {
+            if (enemyId.Contains("valley"))
+            {
+                CreatePart("Relic Collar", PrimitiveType.Cylinder, new Vector3(0f, 0.58f, 0f), new Vector3(0.34f, 0.08f, 0.34f), new Color(0.76f, 0.5f, 0.18f));
+                return;
+            }
+
+            if (enemyId.Contains("forest"))
+            {
+                CreatePart("Forest Vines", PrimitiveType.Cylinder, new Vector3(0f, 0.15f, -0.36f), new Vector3(0.09f, 0.44f, 0.09f), new Color(0.12f, 0.55f, 0.2f), Quaternion.Euler(0f, 0f, 28f));
+                CreatePart("Forest Thorn", PrimitiveType.Cylinder, new Vector3(0.28f, 0.62f, 0f), new Vector3(0.08f, 0.3f, 0.08f), Color.Lerp(bodyColor, Color.black, 0.2f), Quaternion.Euler(0f, 0f, 34f));
+                return;
+            }
+
+            if (enemyId.Contains("ash") || enemyId.Contains("eclipse"))
+            {
+                CreatePart("Ash Core", PrimitiveType.Sphere, new Vector3(0f, 0.18f, -0.4f), new Vector3(0.19f, 0.19f, 0.12f), new Color(1f, 0.28f, 0.08f));
+                CreatePart("Ash Smoke", PrimitiveType.Sphere, new Vector3(0.25f, 0.7f, 0.1f), new Vector3(0.13f, 0.2f, 0.13f), Color.Lerp(bodyColor, Color.black, 0.2f));
+                return;
+            }
+
+            if (enemyId.Contains("crystal"))
+            {
+                CreatePart("Prism Core", PrimitiveType.Sphere, new Vector3(0f, 0.26f, -0.38f), new Vector3(0.2f, 0.2f, 0.12f), Color.Lerp(accent, Color.white, 0.35f));
+                return;
+            }
+
+            if (enemyId.Contains("frost"))
+            {
+                CreatePart("Frost Crest", PrimitiveType.Cylinder, new Vector3(0f, 1.1f, 0f), new Vector3(0.18f, 0.34f, 0.18f), new Color(0.76f, 0.94f, 1f), Quaternion.Euler(0f, 0f, 18f));
+                return;
+            }
+
+            if (enemyId.Contains("sunken"))
+            {
+                CreatePart("Abyssal Pearl", PrimitiveType.Sphere, new Vector3(0f, 0.45f, -0.4f), new Vector3(0.18f, 0.18f, 0.12f), new Color(0.14f, 0.9f, 0.86f));
+                CreatePart("Abyssal Fin", PrimitiveType.Cube, new Vector3(0f, 0.2f, 0.42f), new Vector3(0.12f, 0.48f, 0.08f), accent, Quaternion.Euler(24f, 0f, 0f));
+                return;
+            }
+
+            if (enemyId.Contains("obsidian"))
+            {
+                CreatePart("Magma Core", PrimitiveType.Sphere, new Vector3(0f, 0.2f, -0.4f), new Vector3(0.22f, 0.22f, 0.12f), new Color(1f, 0.22f, 0.08f));
+                CreatePart("Forge Hammer", PrimitiveType.Cube, new Vector3(0.45f, 0.24f, 0f), new Vector3(0.16f, 0.55f, 0.16f), accent, Quaternion.Euler(0f, 0f, -28f));
+                return;
+            }
+
+            if (enemyId.Contains("astral"))
+            {
+                CreatePart("Astral Star", PrimitiveType.Sphere, new Vector3(0f, 1.18f, -0.12f), new Vector3(0.22f, 0.22f, 0.22f), new Color(0.84f, 0.72f, 1f));
+                CreatePart("Astral Ring", PrimitiveType.Cylinder, new Vector3(0f, 0.54f, 0f), new Vector3(0.45f, 0.025f, 0.45f), accent, Quaternion.Euler(90f, 0f, 0f));
+                return;
+            }
+
+            if (enemyId.Contains("throne"))
+            {
+                CreatePart("Void Crown", PrimitiveType.Cylinder, new Vector3(0f, 1.18f, 0f), new Vector3(0.42f, 0.1f, 0.42f), new Color(0.76f, 0.22f, 1f));
+                CreatePart("Void Core", PrimitiveType.Sphere, new Vector3(0f, 0.25f, -0.4f), new Vector3(0.23f, 0.23f, 0.12f), Color.Lerp(accent, Color.black, 0.2f));
+            }
+        }
+
         private void BuildTierAdornment(EnemyTier tier, Color accent)
         {
             if (tier == EnemyTier.Normal)
@@ -345,8 +415,16 @@ namespace MmorpgPrototype
 
         private static Material MaterialFor(Color color)
         {
+            var key = ((Color32)color).r << 24 | ((Color32)color).g << 16 | ((Color32)color).b << 8 | ((Color32)color).a;
+            if (Materials.TryGetValue(key, out var cached) && cached != null)
+            {
+                return cached;
+            }
+
             var shader = Shader.Find("Standard") ?? Shader.Find("Universal Render Pipeline/Lit");
-            return new Material(shader) { color = color };
+            var material = new Material(shader) { color = color };
+            Materials[key] = material;
+            return material;
         }
     }
 }

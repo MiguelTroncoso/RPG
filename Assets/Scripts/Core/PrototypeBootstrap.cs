@@ -114,6 +114,16 @@ namespace MmorpgPrototype
             Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                QualitySettings.shadows = ShadowQuality.Disable;
+                QualitySettings.shadowDistance = 24f;
+                QualitySettings.pixelLightCount = 1;
+                QualitySettings.antiAliasing = 0;
+                QualitySettings.anisotropicFiltering = AnisotropicFiltering.Disable;
+                QualitySettings.realtimeReflectionProbes = false;
+            }
         }
 
         private static void EnsureEventSystem()

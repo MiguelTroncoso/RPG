@@ -401,6 +401,8 @@ criaturas con identidad artistica, animaciones y materiales propios.
 
 - Primera capa con modelos KayKit CC0 animados por familia de zona.
   [Implementado]
+- Variantes visuales propias por `EnemyId` normal: reliquia, espinas, ceniza,
+  cristal, escarcha, abisal, magma, astral, eclipse y vacio. [Implementado]
 - Seleccionar o crear el mob normal de la Zona 1 y sus variantes elite/jefe.
   [Pendiente]
 - Importar solo assets CC0, MIT o propios y registrarlos en `ASSET_LICENSES.md`.
@@ -417,8 +419,10 @@ romper rendimiento ni reglas data-driven.
 Objetivo: hacer que las zonas 1-4 se sientan distintas y guien al jugador.
 
 - Suelo y decoracion procedural para las zonas 1-10, nivel 1-105. [Implementado]
+- Camino principal, entrada, landmarks de elite/jefe y marcadores de limite
+  para las zonas 1-10. [Implementado]
 - Obstaculos, caminos, puntos de interes e iluminacion final por zona.
-  [Pendiente]
+  [En progreso: base visual lista, colision y arte final pendientes]
 - Señales visuales de nivel, elite, jefe y transicion entre zonas.
   [Base implementada]
 
@@ -443,12 +447,32 @@ termina un ataque sin depender de la consola.
 Objetivo: probar las diez zonas y estabilizar el rendimiento antes de sumar
 mas sistemas.
 
-- Medir FPS, memoria y tiempos de carga por cada zona 1-10.
-- Ajustar cantidad de decoracion, enemigos, VFX y distancia de lectura.
+- Activar spawners solo cerca del jugador y limpiar zonas lejanas.
+  [Implementado]
+- Reducir sombras, luces, antialiasing y reflejos en Android. [Implementado]
+- Reutilizar materiales de mobs y decoracion. [Implementado]
+- Medir FPS, memoria y tiempos de carga por cada zona 1-10. [Pendiente]
+- Ajustar cantidad de decoracion, enemigos, VFX y distancia de lectura con
+  datos del telefono. [Pendiente]
 - Revisar TTK, recompensas y escalado de jefes con la telemetria.
+  [Pendiente]
 - Prueba fisica de HUD, mobs, multitactil, audio y safe area.
+  [Pendiente]
 
 Criterio de exito: una sesion de nivel 1 a 105 es legible, estable y medible.
+
+## Fase 5.49: Progresion Visual Y Balance Por Zona
+
+Objetivo: conectar la identidad de cada zona con su ruta y sus enemigos sin
+duplicar reglas de combate.
+
+- Variantes normales diferenciadas por `EnemyId`. [Implementado]
+- Entrada, camino, landmarks y limites visuales para zonas 1-10. [Implementado]
+- Obstaculos solidos, puntos de interes interactivos y arte final. [Pendiente]
+- Ruta de prueba nivel 1-105 con telemetria, TTK y recompensas. [Pendiente]
+
+Criterio de exito: cada zona se reconoce, se recorre con orientacion clara y
+mantiene un desafio acorde a su rango de nivel.
 
 ## Fase 6: Lanzamiento Inicial
 

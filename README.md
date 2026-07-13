@@ -642,6 +642,29 @@ La APK actual incluye esta fase y debe reinstalarse para verla en Android.
 
 La APK de estas cuatro mejoras debe reinstalarse para revisar el salto visual.
 
+## Fase 5.48: Balance Y Rendimiento Android
+
+- Los `EnemySpawner` lejanos permanecen sin enemigos hasta que el jugador
+  entra en un radio de 112 unidades; al salir limpian sus instancias.
+- Android reduce decoracion por zona, sombras, luces, antialiasing y reflejos
+  para mantener una base de 60 FPS sin eliminar ninguna zona del mundo.
+- Los materiales de mobs y decoracion se reutilizan por color para reducir
+  instanciaciones durante la carga.
+
+La validacion de FPS, memoria, TTK y recompensas en telefono real queda como
+la siguiente prueba de balance.
+
+## Fase 5.49: Progresion Visual Y Balance Por Zona
+
+- Cada `EnemyId` normal tiene una variante visual propia: reliquia, espinas,
+  ceniza, cristal, escarcha, abisal, magma, astral, eclipse o vacio.
+- Cada zona tiene camino principal, entrada, landmarks de elite y jefe, y
+  marcadores de limite desde nivel 1 hasta 105.
+- Los datos de vida, dano, EXP y oro siguen siendo los de `ZoneDefinition`;
+  la identidad visual no cambia la economia ni el combate.
+- Falta probar una ruta completa por las diez zonas y ajustar densidad,
+  distancias, obstaculos solidos y dificultad con telemetria real.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.
