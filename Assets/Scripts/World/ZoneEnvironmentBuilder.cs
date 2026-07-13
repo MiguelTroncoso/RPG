@@ -32,6 +32,7 @@ namespace MmorpgPrototype
 
             BuildNavigation(root.transform, zone);
             BuildEntryMarker(root.transform, zone);
+            BuildObstacleField(root.transform, zone);
         }
 
         private static void BuildNavigation(Transform parent, ZoneDefinition zone)
@@ -46,6 +47,8 @@ namespace MmorpgPrototype
 
             BuildLandmark(parent, "Elite Landmark", zone.EliteAreaCenter, new Color(0.72f, 0.32f, 1f), 2.2f);
             BuildLandmark(parent, "Boss Landmark", zone.BossPosition, new Color(1f, 0.36f, 0.12f), 2.8f);
+            CreatePointOfInterest(parent, "Elite Landmark", zone.EliteAreaCenter, Localization.Tr("poi.elite", zone.DisplayName));
+            CreatePointOfInterest(parent, "Boss Landmark", zone.BossPosition, Localization.Tr("poi.boss", zone.DisplayName));
 
             var center = zone.GroundCenter;
             var edge = 29f;
@@ -53,6 +56,48 @@ namespace MmorpgPrototype
             BuildBoundaryMarker(parent, center + new Vector3(edge, 0f, -edge), zone.GroundColor);
             BuildBoundaryMarker(parent, center + new Vector3(-edge, 0f, edge), zone.GroundColor);
             BuildBoundaryMarker(parent, center + new Vector3(edge, 0f, edge), zone.GroundColor);
+        }
+
+        private static void BuildObstacleField(Transform parent, ZoneDefinition zone)
+        {
+            var center = zone.GroundCenter;
+            var obstacleColor = Color.Lerp(zone.GroundColor, Color.black, 0.28f);
+            var positions = new[]
+            {
+                center + new Vector3(-22f, 0f, -12f),
+                center + new Vector3(22f, 0f, -12f),
+                center + new Vector3(-24f, 0f, 20f),
+                center + new Vector3(24f, 0f, 20f)
+            };
+
+            for (var i = 0; i < positions.Length; i++)
+            {
+                var size = new Vector3(1.8f + (i % 2) * 0.6f, 0.8f + (i % 3) * 0.24f, 1.5f + (i % 2) * 0.5f);
+                CreateSolidPart(parent, "Solid Zone Obstacle", PrimitiveType.Cube, positions[i] + Vector3.up * size.y * 0.5f, size, obstacleColor, Quaternion.Euler(0f, i * 17f, 0f));
+            }
+        }
+
+        private static void CreatePointOfInterest(Transform parent, string name, Vector3 position, string message)
+        {
+            var pointObject = new GameObject($"{name} POI");
+            pointObject.transform.SetParent(parent, true);
+            pointObject.transform.position = position;
+            var point = pointObject.AddComponent<ZonePointOfInterest>();
+            point.DisplayName = name;
+            point.InteractionMessage = message;
+            point.InteractDistance = 8f;
+
+            var labelObject = new GameObject("POI Label");
+            labelObject.transform.SetParent(pointObject.transform, false);
+            labelObject.transform.localPosition = Vector3.up * 3.1f;
+            var label = labelObject.AddComponent<TextMesh>();
+            label.text = name;
+            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.fontSize = 26;
+            label.characterSize = 0.035f;
+            label.anchor = TextAnchor.MiddleCenter;
+            label.alignment = TextAlignment.Center;
+            label.color = Color.Lerp(Color.white, Color.yellow, 0.25f);
         }
 
         private static void BuildLandmark(Transform parent, string name, Vector3 position, Color accent, float scale)
@@ -158,6 +203,7 @@ namespace MmorpgPrototype
             CreatePart(parent, "Entry Pillar L", PrimitiveType.Cube, position + new Vector3(-2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
             CreatePart(parent, "Entry Pillar R", PrimitiveType.Cube, position + new Vector3(2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
             CreatePart(parent, "Entry Arch", PrimitiveType.Cube, position + Vector3.up * 2.35f, new Vector3(4.7f, 0.28f, 0.34f), Color.Lerp(zone.GroundColor, Color.white, 0.2f));
+            CreatePointOfInterest(parent, "Zone Entry", position, Localization.Tr("poi.entry", zone.DisplayName));
         }
 
         private static GameObject CreatePart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)
@@ -167,6 +213,16 @@ namespace MmorpgPrototype
 
         private static GameObject CreatePart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color, Quaternion rotation)
         {
+            return CreatePart(parent, name, primitive, position, scale, color, rotation, false);
+        }
+
+        private static GameObject CreateSolidPart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color, Quaternion rotation)
+        {
+            return CreatePart(parent, name, primitive, position, scale, color, rotation, true);
+        }
+
+        private static GameObject CreatePart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color, Quaternion rotation, bool solid)
+        {
             var part = GameObject.CreatePrimitive(primitive);
             part.name = name;
             part.transform.SetParent(parent, true);
@@ -174,7 +230,7 @@ namespace MmorpgPrototype
             part.transform.localScale = scale;
             part.transform.rotation = rotation;
             var collider = part.GetComponent<Collider>();
-            if (collider != null)
+            if (collider != null && !solid)
             {
                 UnityEngine.Object.Destroy(collider);
             }

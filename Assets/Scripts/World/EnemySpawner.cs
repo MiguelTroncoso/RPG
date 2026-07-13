@@ -40,12 +40,16 @@ namespace MmorpgPrototype
 
         private void SpawnZone()
         {
-            for (var i = 0; i < Zone.NormalCount; i++)
+            var mobile = Application.platform == RuntimePlatform.Android;
+            var normalCount = ZoneBalanceResolver.NormalCountFor(Zone, mobile);
+            var eliteCount = ZoneBalanceResolver.EliteCountFor(Zone, mobile);
+
+            for (var i = 0; i < normalCount; i++)
             {
                 SpawnNormal();
             }
 
-            for (var i = 0; i < Zone.EliteCount; i++)
+            for (var i = 0; i < eliteCount; i++)
             {
                 SpawnElite();
             }
@@ -127,7 +131,8 @@ namespace MmorpgPrototype
         {
             normals.RemoveAll(enemy => enemy == null);
 
-            if (normals.Count >= Zone.NormalCount || Time.time < nextNormalSpawn)
+            var normalTarget = ZoneBalanceResolver.NormalCountFor(Zone, Application.platform == RuntimePlatform.Android);
+            if (normals.Count >= normalTarget || Time.time < nextNormalSpawn)
             {
                 return;
             }
@@ -147,7 +152,8 @@ namespace MmorpgPrototype
 
             lastEliteCount = elites.Count;
 
-            if (elites.Count < Zone.EliteCount && Time.time >= nextEliteSpawn)
+            var eliteTarget = ZoneBalanceResolver.EliteCountFor(Zone, Application.platform == RuntimePlatform.Android);
+            if (elites.Count < eliteTarget && Time.time >= nextEliteSpawn)
             {
                 SpawnElite();
                 lastEliteCount = elites.Count;

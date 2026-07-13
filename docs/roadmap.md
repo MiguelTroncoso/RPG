@@ -468,7 +468,9 @@ duplicar reglas de combate.
 
 - Variantes normales diferenciadas por `EnemyId`. [Implementado]
 - Entrada, camino, landmarks y limites visuales para zonas 1-10. [Implementado]
-- Obstaculos solidos, puntos de interes interactivos y arte final. [Pendiente]
+- Obstaculos solidos y cuatro puntos de interes por zona. [Implementado]
+- Arte final de terreno y puntos de interes interactivos con recompensas.
+  [Pendiente]
 - Ruta de prueba nivel 1-105 con telemetria, TTK y recompensas. [Pendiente]
 
 Criterio de exito: cada zona se reconoce, se recorre con orientacion clara y

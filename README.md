@@ -660,10 +660,12 @@ la siguiente prueba de balance.
   ceniza, cristal, escarcha, abisal, magma, astral, eclipse o vacio.
 - Cada zona tiene camino principal, entrada, landmarks de elite y jefe, y
   marcadores de limite desde nivel 1 hasta 105.
+- Los cuatro obstaculos de cada zona tienen colision real y quedan fuera del
+  camino principal; `EXPLORAR` muestra el estado del landmark mas cercano.
 - Los datos de vida, dano, EXP y oro siguen siendo los de `ZoneDefinition`;
   la identidad visual no cambia la economia ni el combate.
-- Falta probar una ruta completa por las diez zonas y ajustar densidad,
-  distancias, obstaculos solidos y dificultad con telemetria real.
+- `ZoneBalanceResolver` registra TTK estimado, dano base esperado y si cada
+  tier cae dentro de su objetivo; falta cerrar el ajuste con telemetria real.
 
 ## Clases Iniciales
 

@@ -86,13 +86,16 @@ Estado actual (fases 1-5.49 entregadas en primera pasada; hoja de ruta A-K compl
   consultan desde `MENU`, y las acciones secundarias se agrupan bajo `MAS`.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
-  y landmarks base ya estan generados; obstaculos solidos y arte final quedan
-  pendientes.
+  y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
+  y `EXPLORAR` interactua con entrada, elite y jefe. Arte final y recompensas
+  de POI quedan pendientes.
 - Feedback: `AvatarMotionAnimator` mueve mobs con modelos, el windup tiene
   telegraph y la muerte escala el visual antes de destruirlo.
 - Rendimiento: `EnemySpawner` solo mantiene activos los enemigos dentro de
   112 unidades del jugador; Android desactiva sombras, antialiasing y reflejos
-  para priorizar 60 FPS. El balance real necesita prueba fisica.
+  para priorizar 60 FPS y limita la cantidad de normales/elites activos. El
+  `ZoneBalanceResolver` registra TTK esperado por tier; el balance real
+  necesita prueba fisica.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -176,10 +179,10 @@ Proximos objetivos sugeridos:
 - Reinstalar la APK de las fases 5.45-5.48 y probarla en el telefono.
 - Fase 5.45: sustituir arquetipos KayKit por criaturas 3D unicas de cada
   familia, empezando por la Zona 1.
-- Fase 5.49: convertir landmarks en puntos de interes y agregar obstaculos
-  solidos sin romper el camino principal de zonas 1-10.
 - Fase 5.48: medir rendimiento, balance y experiencia Android en las diez
   zonas con el telefono real.
+- Fase 5.49: convertir landmarks en puntos de interes con recompensas y
+  ajustar obstaculos, TTK, EXP y oro.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

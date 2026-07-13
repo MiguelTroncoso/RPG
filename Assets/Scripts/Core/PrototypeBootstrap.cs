@@ -31,6 +31,7 @@ namespace MmorpgPrototype
             var player = CreatePlayer();
             CreateCamera(player.transform);
             var zones = LoadZones();
+            ZoneBalanceResolver.LogReports(zones);
             var shop = CreateShopNpc(player);
             var blacksmith = CreateBlacksmithNpc(player);
             var storage = CreateStorageNpc(player);
@@ -665,6 +666,9 @@ namespace MmorpgPrototype
             var mobileWindow = CreateMobileTestWindow(parent, player);
             var mobileButton = CreateRoundButton(actionParent, "Mobile Test Button", Localization.Tr("ui.mobile_test"), new Vector2(0f, 1f), new Vector2(792f, -396f), new Vector2(128f, 42f), new Color(0.16f, 0.5f, 0.46f), 17);
             mobileButton.onClick.AddListener(mobileWindow.Toggle);
+
+            var exploreButton = CreateRoundButton(actionParent, "Explore POI Button", Localization.Tr("ui.explore"), new Vector2(0f, 1f), new Vector2(932f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.42f, 0.14f), 17);
+            exploreButton.onClick.AddListener(() => ZonePointOfInterest.InteractNearest(player.transform));
         }
 
         private static MobileTestWindowController CreateMobileTestWindow(Transform parent, GameObject player)
