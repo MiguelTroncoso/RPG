@@ -24,7 +24,9 @@ namespace MmorpgPrototype
             PlayerEquipment equipment,
             PlayerAttributes attributes,
             MountService mount,
-            PlayerSkills skills)
+            PlayerSkills skills,
+            PetService pet,
+            CosmeticService cosmetics)
         {
             Sheet.Clear();
 
@@ -64,16 +66,37 @@ namespace MmorpgPrototype
                 Sheet.AddModifier(StatType.Damage, StatModifierSource.Buff, skills.DamageBuff);
             }
 
+            if (pet != null)
+            {
+                Sheet.AddModifier(StatType.Damage, StatModifierSource.Pet, pet.DamageBonus);
+                Sheet.AddModifier(StatType.MaxHealth, StatModifierSource.Pet, pet.MaxHealthBonus);
+                Sheet.AddModifier(StatType.CritChance, StatModifierSource.Pet, pet.CritChanceBonus);
+            }
+
+            if (cosmetics != null)
+            {
+                Sheet.AddModifier(StatType.Damage, StatModifierSource.Cosmetic, cosmetics.DamageBonus);
+                Sheet.AddModifier(StatType.MaxHealth, StatModifierSource.Cosmetic, cosmetics.MaxHealthBonus);
+                Sheet.AddModifier(StatType.CritChance, StatModifierSource.Cosmetic, cosmetics.CritChanceBonus);
+            }
+
             if (mount != null && !Mathf.Approximately(mount.SpeedMultiplier, 1f))
             {
                 var speedBeforeMount = Sheet.GetFloat(StatType.MoveSpeed);
                 Sheet.AddModifier(StatType.MoveSpeed, StatModifierSource.Mount, speedBeforeMount * (mount.SpeedMultiplier - 1f));
             }
+
+            if (mount != null)
+            {
+                Sheet.AddModifier(StatType.Damage, StatModifierSource.Mount, mount.DamageBonus);
+                Sheet.AddModifier(StatType.MaxHealth, StatModifierSource.Mount, mount.MaxHealthBonus);
+                Sheet.AddModifier(StatType.CritChance, StatModifierSource.Mount, mount.CritChanceBonus);
+            }
         }
 
         public string DamageBreakdown()
         {
-            return $"base {BaseDamage}, equipo +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Equipment):0}, atributos +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Attributes):0}, buff +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Buff):0}";
+            return $"base {BaseDamage}, equipo +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Equipment):0}, atributos +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Attributes):0}, mascota +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Pet):0}, cosmeticos +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Cosmetic):0}, buff +{Sheet.GetModifierTotal(StatType.Damage, StatModifierSource.Buff):0}";
         }
     }
 }

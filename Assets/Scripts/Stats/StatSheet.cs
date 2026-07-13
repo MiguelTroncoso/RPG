@@ -23,6 +23,8 @@ namespace MmorpgPrototype
         Equipment,
         Attributes,
         Mount,
+        Pet,
+        Cosmetic,
         Buff
     }
 

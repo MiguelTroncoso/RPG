@@ -12,16 +12,21 @@ namespace MmorpgPrototype
         public EquipmentUpgradeSystem UpgradeSystem;
 
         private readonly List<MountDefinition> mounts = new List<MountDefinition>();
+        private readonly HashSet<string> ownedMountIds = new HashSet<string>();
         private MountDefinition selected;
         private GameObject mountVisual;
 
         public bool IsMounted { get; private set; }
         public string SelectedMountId => selected != null ? selected.MountId : string.Empty;
         public float SpeedMultiplier => IsMounted && selected != null ? selected.SpeedMultiplier : 1f;
+        public int DamageBonus => IsMounted && selected != null ? selected.DamageBonus : 0;
+        public int MaxHealthBonus => IsMounted && selected != null ? selected.MaxHealthBonus : 0;
+        public float CritChanceBonus => IsMounted && selected != null ? selected.CritChanceBonus : 0f;
 
         public void Initialize(List<MountDefinition> definitions)
         {
             mounts.Clear();
+            ownedMountIds.Clear();
             if (definitions != null)
             {
                 foreach (var mount in definitions)
@@ -29,6 +34,10 @@ namespace MmorpgPrototype
                     if (mount != null && !string.IsNullOrWhiteSpace(mount.MountId))
                     {
                         mounts.Add(mount);
+                        if (mount.StarterOwned)
+                        {
+                            ownedMountIds.Add(mount.MountId);
+                        }
                     }
                 }
             }
@@ -42,7 +51,7 @@ namespace MmorpgPrototype
         public void SelectMount(string mountId)
         {
             var mount = Find(mountId);
-            if (mount != null)
+            if (mount != null && IsOwned(mountId))
             {
                 selected = mount;
             }
@@ -62,6 +71,12 @@ namespace MmorpgPrototype
                 return;
             }
 
+            if (!IsOwned(selected.MountId))
+            {
+                Hud?.SetStatus(Localization.Tr("mount.locked"));
+                return;
+            }
+
             if (Progression != null && Progression.Level < selected.RequiredLevel)
             {
                 Hud?.SetStatus(Localization.Tr("mount.need_level", selected.RequiredLevel, selected.DisplayName));
@@ -73,6 +88,41 @@ namespace MmorpgPrototype
             UpgradeSystem?.ApplyBonuses();
             Hud?.SetStatus(Localization.Tr("mount.mounted", selected.DisplayName, selected.SpeedMultiplier.ToString("0.0")), 3.5f);
             Hud?.AddFeed(Localization.Tr("mount.feed", selected.DisplayName));
+        }
+
+        public bool IsOwned(string mountId)
+        {
+            return !string.IsNullOrWhiteSpace(mountId) && ownedMountIds.Contains(mountId);
+        }
+
+        public List<string> ExportOwnedIds()
+        {
+            return new List<string>(ownedMountIds);
+        }
+
+        public void RestoreOwned(List<string> savedIds)
+        {
+            if (savedIds == null || savedIds.Count == 0)
+            {
+                return;
+            }
+
+            ownedMountIds.Clear();
+            foreach (var id in savedIds)
+            {
+                if (Find(id) != null)
+                {
+                    ownedMountIds.Add(id);
+                }
+            }
+        }
+
+        public void UnlockMount(string mountId)
+        {
+            if (Find(mountId) != null)
+            {
+                ownedMountIds.Add(mountId);
+            }
         }
 
         public void Dismount(bool silent = false)

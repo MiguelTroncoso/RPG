@@ -595,6 +595,32 @@ en un endpoint publico sin recompilar por cada cambio de direccion.
 Criterio de exito: dos jugadores pueden conectarse desde APK, verse, chatear
 y conservar su guardado sin editar codigo ni recompilar el cliente.
 
+## Fase 5.55: Cosméticos, Compañeros Y Eventos Diarios
+
+Objetivo: dar una capa de progresion visible y aspiracional al personaje sin
+convertirla todavia en una economia real de pago.
+
+- Slot de atuendo y slot de alas, con visual 3D procedural reemplazable por
+  meshes finales. [Implementado]
+- Bonificaciones de daño, vida y critico aplicadas desde `StatSheet` con origen
+  `Cosmetic`, sin sumar stats desde la UI. [Implementado]
+- Mascotas y monturas con propiedad, rareza, nivel requerido y bonos de combate;
+  se conservan el zorro y caballo iniciales y se preparan compañeros raros.
+  [Implementado]
+- Tienda de objetos MVP con compra de la oferta siguiente usando oro del juego;
+  la tienda muestra el camino hacia un panel completo de inventario y precios.
+  [Implementado]
+- Evento automatico diario `Caceria de Reliquias`: cinco derrotas, recompensa de
+  EXP/oro y desbloqueo de Alas de brasa, persistido por fecha local. [Implementado]
+- Validar precio, rareza, dificultad y lectura visual en Android. [Pendiente de
+  dispositivo]
+- Mover compras, propiedad, drops y calendario a autoridad server-authoritative
+  antes de la prueba publica. [Pendiente online]
+
+Criterio de exito: el jugador puede comprar o desbloquear un cosmetico, verlo
+en su avatar, recibir sus stats, cerrar la app y conservarlo; el evento diario
+se completa una vez y entrega su recompensa sin duplicarse.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

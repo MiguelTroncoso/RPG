@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 10;
+        public int SchemaVersion = 11;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -24,6 +24,14 @@ namespace MmorpgPrototype
         public QuestSaveData Quests = new QuestSaveData();
         public string ActivePetId = string.Empty;
         public string SelectedMountId = string.Empty;
+        public string ActiveOutfitId = string.Empty;
+        public string ActiveWingsId = string.Empty;
+        public List<string> OwnedCosmeticIds = new List<string>();
+        public List<string> OwnedPetIds = new List<string>();
+        public List<string> OwnedMountIds = new List<string>();
+        public string DailyEventDate = string.Empty;
+        public int DailyEventProgress;
+        public bool DailyEventCompleted;
         public List<SavedItemEntry> Storage = new List<SavedItemEntry>();
         public bool HasPosition;
         public float PosX;

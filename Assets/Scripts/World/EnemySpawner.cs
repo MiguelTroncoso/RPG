@@ -15,6 +15,7 @@ namespace MmorpgPrototype
         public LootTableConfig Loot;
         public ZoneDefinition Zone;
         public CombatTelemetry Telemetry;
+        public DailyEventSystem DailyEvents;
         public float RespawnDelay = 4.5f;
         public float ActivationDistance = 112f;
 
@@ -280,6 +281,7 @@ namespace MmorpgPrototype
             reward.ZoneId = Zone != null ? Zone.DisplayName : string.Empty;
             reward.GuaranteedDrop = guaranteedDrop ?? string.Empty;
             reward.Telemetry = Telemetry;
+            reward.DailyEvents = DailyEvents;
 
             return enemy;
         }

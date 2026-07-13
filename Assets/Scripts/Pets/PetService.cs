@@ -11,15 +11,20 @@ namespace MmorpgPrototype
         public PlayerProgression Progression;
 
         private readonly List<PetDefinition> pets = new List<PetDefinition>();
+        private readonly HashSet<string> ownedPetIds = new HashSet<string>();
         private PetDefinition active;
         private GameObject petVisual;
 
         public bool HasActive => active != null;
         public string ActivePetId => active != null ? active.PetId : string.Empty;
+        public int DamageBonus => active != null ? active.DamageBonus : 0;
+        public int MaxHealthBonus => active != null ? active.MaxHealthBonus : 0;
+        public float CritChanceBonus => active != null ? active.CritChanceBonus : 0f;
 
         public void Initialize(List<PetDefinition> definitions)
         {
             pets.Clear();
+            ownedPetIds.Clear();
             if (definitions != null)
             {
                 foreach (var pet in definitions)
@@ -27,6 +32,10 @@ namespace MmorpgPrototype
                     if (pet != null && !string.IsNullOrWhiteSpace(pet.PetId))
                     {
                         pets.Add(pet);
+                        if (pet.StarterOwned)
+                        {
+                            ownedPetIds.Add(pet.PetId);
+                        }
                     }
                 }
             }
@@ -52,8 +61,9 @@ namespace MmorpgPrototype
         public void Summon(string petId)
         {
             var pet = Find(petId);
-            if (pet == null)
+            if (pet == null || !IsOwned(petId))
             {
+                Hud?.SetStatus(Localization.Tr("pet.locked"));
                 return;
             }
 
@@ -99,6 +109,42 @@ namespace MmorpgPrototype
 
             Progression.ExperienceMultiplier = active != null ? 1f + active.ExpBonusPercent / 100f : 1f;
             Progression.GoldMultiplier = active != null ? 1f + active.GoldBonusPercent / 100f : 1f;
+            GetComponent<EquipmentUpgradeSystem>()?.ApplyBonuses();
+        }
+
+        public bool IsOwned(string petId)
+        {
+            return !string.IsNullOrWhiteSpace(petId) && ownedPetIds.Contains(petId);
+        }
+
+        public List<string> ExportOwnedIds()
+        {
+            return new List<string>(ownedPetIds);
+        }
+
+        public void RestoreOwned(List<string> savedIds)
+        {
+            if (savedIds == null || savedIds.Count == 0)
+            {
+                return;
+            }
+
+            ownedPetIds.Clear();
+            foreach (var id in savedIds)
+            {
+                if (Find(id) != null)
+                {
+                    ownedPetIds.Add(id);
+                }
+            }
+        }
+
+        public void UnlockPet(string petId)
+        {
+            if (Find(petId) != null)
+            {
+                ownedPetIds.Add(petId);
+            }
         }
 
         private void CreateVisual(PetDefinition pet)

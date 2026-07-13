@@ -13,10 +13,10 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.54 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.55 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
-avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v10 (incluye posición y reclamos de POI),
+avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v11 (incluye posición, reclamos de POI, cosmeticos y evento diario),
 progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
 equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
@@ -31,6 +31,8 @@ data-only, pipeline de modelos 3D con fallback procedural, animacion procedural
 idle/walk/attack para avatar y fallback, `StatSheet` con modificadores por
 origen, creacion de personaje/habilidades migradas a i18n, Zona 4 data-only,
 y persistencia de servidor por `playerKey`, puente para Animator real,
+slots de atuendo/alas con stats y tienda MVP, propiedad de mascotas/monturas
+con stats y evento diario local persistido,
 i18n visible secundaria, zonas 5-10 hasta nivel 105, previews SVG y primera
 pasada de balance/feedback de combate, telemetria de combate y snapshot completo
 de guardado en servidor). Detalle en
@@ -108,8 +110,9 @@ simple y autocontenido.
   telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
-- Guardado local en esquema v10 incluye reclamos de puntos de interes por
-  personaje; `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
+- Guardado local en esquema v11 incluye reclamos de puntos de interes,
+  cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
+  `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
 - Acceso mobile: splash renovado, seleccion de personaje guardado, creacion
   de personaje y perfiles de servidor `S-01/S-02/S-03`. Solo `S-01` esta
   habilitado contra el WebSocket local; los otros perfiles esperan backend.
@@ -120,6 +123,10 @@ simple y autocontenido.
 - Progresion de loot 1-105 con `ProgressionItemCatalog`: dos materiales y siete
   piezas de equipo por zona, diez reliquias de jefe, tablas normal/elite/jefe y
   materiales de mejora asociados al equipo.
+- Fase 5.55: `CosmeticService` administra slots de atuendo/alas, tienda MVP y
+  stats desde `StatSheet`; `DailyEventSystem` activa la Caceria de Reliquias
+  una vez por fecha local y desbloquea Alas de brasa al completarla. Compras,
+  propiedad y recompensas siguen pendientes de autoridad server-authoritative.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar

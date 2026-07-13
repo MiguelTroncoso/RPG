@@ -6,6 +6,7 @@ namespace MmorpgPrototype
     {
         private GameObject visualRoot;
         private GameObject armorRoot;
+        private GameObject cosmeticRoot;
         private Renderer baseRenderer;
         private CharacterClassType currentClass;
         private CharacterGender currentGender;
@@ -32,6 +33,7 @@ namespace MmorpgPrototype
             if (hasVisual && currentClass == definition.Type && currentGender == gender)
             {
                 RefreshEquipmentVisuals(currentEquipment);
+                ApplyCosmetics(GetComponent<CosmeticService>());
                 return;
             }
 
@@ -57,6 +59,7 @@ namespace MmorpgPrototype
             if (TryBuildCharacterModel(definition, gender))
             {
                 BuildArmorOverlay(definition, gender);
+                ApplyCosmetics(GetComponent<CosmeticService>());
                 return;
             }
 
@@ -91,6 +94,7 @@ namespace MmorpgPrototype
 
             BuildArmorOverlay(definition, gender);
             BindMotionAnimator();
+            ApplyCosmetics(GetComponent<CosmeticService>());
         }
 
         private bool TryBuildCharacterModel(ClassDefinition definition, CharacterGender gender)
@@ -158,6 +162,37 @@ namespace MmorpgPrototype
             }
 
             BuildArmorOverlay(currentDefinition, currentGender);
+        }
+
+        public void ApplyCosmetics(CosmeticService cosmetics)
+        {
+            if (!hasVisual || visualRoot == null)
+            {
+                return;
+            }
+
+            if (cosmeticRoot != null)
+            {
+                Destroy(cosmeticRoot);
+            }
+
+            cosmeticRoot = new GameObject("Cosmetic Visuals");
+            cosmeticRoot.transform.SetParent(visualRoot.transform, false);
+
+            var outfit = cosmetics != null ? cosmetics.GetActive(CosmeticSlot.Outfit) : null;
+            var wings = cosmetics != null ? cosmetics.GetActive(CosmeticSlot.Wings) : null;
+            if (outfit != null)
+            {
+                CreatePart(cosmeticRoot.transform, "Outfit Mantle", PrimitiveType.Cube, new Vector3(0f, 0.08f, 0.24f), new Vector3(0.68f, 0.65f, 0.08f), outfit.PrimaryColor);
+                CreatePart(cosmeticRoot.transform, "Outfit Trim", PrimitiveType.Cube, new Vector3(0f, -0.2f, -0.44f), new Vector3(0.7f, 0.08f, 0.08f), outfit.SecondaryColor);
+            }
+
+            if (wings != null)
+            {
+                CreatePart(cosmeticRoot.transform, "Wing Left", PrimitiveType.Cube, new Vector3(-0.52f, 0.38f, 0.2f), new Vector3(0.12f, 0.72f, 0.28f), wings.PrimaryColor, Quaternion.Euler(0f, -24f, -22f));
+                CreatePart(cosmeticRoot.transform, "Wing Right", PrimitiveType.Cube, new Vector3(0.52f, 0.38f, 0.2f), new Vector3(0.12f, 0.72f, 0.28f), wings.PrimaryColor, Quaternion.Euler(0f, 24f, 22f));
+                CreatePart(cosmeticRoot.transform, "Wing Core", PrimitiveType.Sphere, new Vector3(0f, 0.32f, 0.28f), new Vector3(0.16f, 0.16f, 0.16f), wings.SecondaryColor);
+            }
         }
 
         private void BuildArmorOverlay(ClassDefinition definition, CharacterGender gender)

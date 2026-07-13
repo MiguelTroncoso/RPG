@@ -23,6 +23,8 @@ namespace MmorpgPrototype
         public PlayerQuestLog QuestLog;
         public PetService Pets;
         public MountService Mounts;
+        public CosmeticService Cosmetics;
+        public DailyEventSystem DailyEvents;
         public StorageService Storage;
         public PlayerAttributes Attributes;
 
@@ -130,6 +132,11 @@ namespace MmorpgPrototype
             QuestLog?.Restore(data.Quests);
             Storage?.RestoreEntries(data.Storage);
 
+            Cosmetics?.RestoreOwned(data.OwnedCosmeticIds);
+            Cosmetics?.RestoreActive(data.ActiveOutfitId, data.ActiveWingsId);
+            Pets?.RestoreOwned(data.OwnedPetIds);
+            Mounts?.RestoreOwned(data.OwnedMountIds);
+
             claimedPointOfInterestIds.Clear();
             if (data.ClaimedPointOfInterestIds != null)
             {
@@ -151,6 +158,8 @@ namespace MmorpgPrototype
             {
                 Pets.Summon(data.ActivePetId);
             }
+
+            DailyEvents?.RestoreState(data.DailyEventDate, data.DailyEventProgress, data.DailyEventCompleted);
 
             if (data.HasPosition)
             {
@@ -243,6 +252,14 @@ namespace MmorpgPrototype
                 Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData(),
                 ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
                 SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty,
+                ActiveOutfitId = Cosmetics != null ? Cosmetics.ActiveOutfitId : string.Empty,
+                ActiveWingsId = Cosmetics != null ? Cosmetics.ActiveWingsId : string.Empty,
+                OwnedCosmeticIds = Cosmetics != null ? Cosmetics.ExportOwnedIds() : new List<string>(),
+                OwnedPetIds = Pets != null ? Pets.ExportOwnedIds() : new List<string>(),
+                OwnedMountIds = Mounts != null ? Mounts.ExportOwnedIds() : new List<string>(),
+                DailyEventDate = DailyEvents != null ? DailyEvents.CurrentDate : string.Empty,
+                DailyEventProgress = DailyEvents != null ? DailyEvents.Progress : 0,
+                DailyEventCompleted = DailyEvents != null && DailyEvents.Completed,
                 Storage = Storage != null ? Storage.ExportEntries() : new List<SavedItemEntry>(),
                 HasPosition = true,
                 PosX = transform.position.x,

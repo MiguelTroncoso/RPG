@@ -6,7 +6,7 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **70%**.
+- Avance global estimado hacia el MMORPG publicable: **73%**.
 - Prototipo jugable offline: **98%**.
 - Vertical slice de una zona pulida: **94%**.
 - Online persistente y preparado para produccion: **35%**.
@@ -65,6 +65,14 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.54: servidor Node configurable con `SERVER_ID`, `SERVER_NAME`, `HOST`,
   `PORT` y `MAX_PLAYERS`; el welcome comunica los datos del servidor y el host
   por defecto permite prueba dentro de la red local.
+- Fase 5.55: slot de atuendo y alas con visual 3D procedural, bonificaciones de
+  daño/vida/critico, coleccion persistida y compra de cosmeticos desde una
+  tienda de objetos MVP.
+- Fase 5.55: mascotas y monturas incorporan propiedad, rareza y bonificaciones
+  de combate; se agregan compañeros raros bloqueados para recompensas futuras.
+- Fase 5.55: evento automatico diario Caceria de Reliquias con progreso,
+  recompensa de EXP/oro y desbloqueo dificil de Alas de brasa; queda local por
+  ahora y preparado para autoridad del servidor.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -88,11 +96,16 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    revisar duplicados/concurrencia con telemetria real.
 9. Levantar S-01 en la LAN, probar dos telefonos y luego desplegar un endpoint
    publico antes de habilitar S-02/S-03.
+10. Probar en Android la tienda, atuendo, alas, evento diario y persistencia;
+    calibrar precios y recompensas con telemetria real.
+11. Migrar propiedad, compras, eventos diarios y drops raros a validacion
+    server-authoritative antes de abrir pruebas publicas.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.55 | Atuendos, alas, stats de compañeros, tienda MVP y evento diario | 73% |
 | 2026-07-13 | 5.54 | Conexion automatica, URL configurable y servidor Node parametrizable | 70% |
 | 2026-07-13 | 5.53 | Acceso mobile, seleccion de personaje y perfiles de servidor | 65% |
 | 2026-07-13 | 5.52 | Primera pasada de balance de loot y TTK por banda | 64% |

@@ -19,6 +19,7 @@ namespace MmorpgPrototype
         public PlayerQuestLog QuestLog;
         public PrototypeHud Hud;
         public CombatTelemetry Telemetry;
+        public DailyEventSystem DailyEvents;
 
         private Health health;
         private bool granted;
@@ -63,6 +64,7 @@ namespace MmorpgPrototype
             Progression.AddGold(gold);
             QuestLog?.OnEnemyDefeated(Tier, EnemyId, IsWorldEvent);
             Telemetry?.RecordEnemyDefeated(health, Tier, EnemyId, ZoneId);
+            DailyEvents?.RecordDefeat(Tier, IsWorldEvent);
 
             if (!string.IsNullOrEmpty(drop))
             {

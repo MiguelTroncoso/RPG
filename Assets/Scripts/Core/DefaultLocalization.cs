@@ -76,6 +76,7 @@ namespace MmorpgPrototype
 
                 // Mascotas
                 { "pet.none", "No tienes mascotas." },
+                { "pet.locked", "Esa mascota aun no esta desbloqueada." },
                 { "pet.summoned", "{0} te acompana (+{1}% EXP, +{2}% oro)." },
                 { "pet.feed_summon", "Mascota invocada: {0}" },
                 { "pet.dismissed", "{0} descansa." },
@@ -83,6 +84,7 @@ namespace MmorpgPrototype
 
                 // Monturas
                 { "mount.none", "No tienes monturas." },
+                { "mount.locked", "Esa montura aun no esta desbloqueada." },
                 { "mount.need_level", "Necesitas nivel {0} para montar {1}." },
                 { "mount.mounted", "Montaste {0} (velocidad x{1})." },
                 { "mount.feed", "Montura: {0}" },
@@ -168,6 +170,26 @@ namespace MmorpgPrototype
                 { "event.monolith_label", "Monolito Corrupto\nEvento de mapa" },
                 { "event.monolith_spawned", "Evento: aparecio el Monolito Corrupto al sur." },
                 { "event.monolith_completed", "Evento completado: el monolito reaparecera despues." },
+                { "event.daily_started", "Evento diario: Caceria de Reliquias activa. Derrota 5 enemigos." },
+                { "event.daily_progress", "Caceria de Reliquias: {0}/{1} enemigos." },
+                { "event.daily_completed", "Evento diario completado: recibiste una recompensa rara." },
+                { "event.daily_reward", "+100 EXP, +120 oro y desbloqueaste Alas de brasa" },
+                { "event.daily_summary", "Caceria diaria {0}/{1}" },
+                { "event.daily_done_summary", "Caceria diaria completada {0}/{1}" },
+
+                // Atuendos y tienda de objetos
+                { "cosmetic.none", "Atuendo predeterminado" },
+                { "cosmetic.wings_none", "Sin alas" },
+                { "cosmetic.unlocked", "Desbloqueaste {0}." },
+                { "cosmetic.feed_unlocked", "Cosmetico desbloqueado: {0}" },
+                { "cosmetic.bought", "Compraste {0}." },
+                { "cosmetic.feed_bought", "Tienda: {0} por {1} oro" },
+                { "cosmetic.shop_empty", "La tienda no tiene nuevos articulos para ti." },
+                { "cosmetic.need_level", "Necesitas nivel {0} para comprar {1}." },
+                { "cosmetic.need_gold", "Necesitas {0} oro para esa compra." },
+                { "cosmetic.equipped", "Equipaste {0}." },
+                { "cosmetic.unequipped", "Quitaste el {0}." },
+                { "cosmetic.summary", "Atuendo: {0} | Alas: {1} | Coleccion {2}/{3}" },
 
                 // HUD
                 { "ui.game_title", "Valle de las Reliquias" },
@@ -187,6 +209,9 @@ namespace MmorpgPrototype
                 { "ui.menu", "MENU" },
                 { "ui.more", "MAS" },
                 { "ui.explore", "EXPLORAR" },
+                { "ui.item_shop", "TIENDA" },
+                { "ui.outfit", "ATUENDO" },
+                { "ui.wings", "ALAS" },
                 { "ui.menu_inventory", "Inventario" },
                 { "ui.menu_equipment", "Equipo" },
                 { "ui.menu_quest", "Mision" },

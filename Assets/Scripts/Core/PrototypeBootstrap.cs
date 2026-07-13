@@ -50,13 +50,14 @@ namespace MmorpgPrototype
             shop.Hud = hud;
             blacksmith.Hud = hud;
             storage.Hud = hud;
+            var dailyEvents = CreateDailyEvents(player, hud);
 
             foreach (var zone in zones)
             {
                 CreateZoneGround(zone);
                 CreateZoneSign(zone);
                 ZoneEnvironmentBuilder.Build(zone);
-                CreateEnemySpawner(player, hud, zone);
+                CreateEnemySpawner(player, hud, zone, dailyEvents);
             }
 
             CreateWorldEvent(player, hud);
@@ -236,6 +237,7 @@ namespace MmorpgPrototype
             player.AddComponent<PlayerEquipment>();
             player.AddComponent<PetService>();
             player.AddComponent<MountService>();
+            player.AddComponent<CosmeticService>();
             player.AddComponent<StorageService>();
             player.AddComponent<PlayerAttributes>();
             player.AddComponent<PlayerSkills>();
@@ -319,7 +321,7 @@ namespace MmorpgPrototype
             follow.Target = target;
         }
 
-        private static void CreateEnemySpawner(GameObject player, PrototypeHud hud, ZoneDefinition zone)
+        private static void CreateEnemySpawner(GameObject player, PrototypeHud hud, ZoneDefinition zone, DailyEventSystem dailyEvents)
         {
             var spawnerObject = new GameObject("Enemy Spawner");
             var spawner = spawnerObject.AddComponent<EnemySpawner>();
@@ -331,6 +333,7 @@ namespace MmorpgPrototype
             spawner.Loot = LoadLootTable();
             spawner.Zone = zone;
             spawner.Telemetry = player.GetComponent<CombatTelemetry>();
+            spawner.DailyEvents = dailyEvents;
         }
 
         private static System.Collections.Generic.List<QuestDefinition> LoadQuestLine()
@@ -368,6 +371,17 @@ namespace MmorpgPrototype
             }
 
             return DefaultCompanions.CreateMounts();
+        }
+
+        private static System.Collections.Generic.List<CosmeticDefinition> LoadCosmetics()
+        {
+            var loaded = Resources.LoadAll<CosmeticDefinition>("Game/Cosmetics");
+            if (loaded != null && loaded.Length > 0)
+            {
+                return new System.Collections.Generic.List<CosmeticDefinition>(loaded);
+            }
+
+            return DefaultCosmetics.CreateAll();
         }
 
         private static AttributeConfig LoadAttributeConfig()
@@ -469,6 +483,19 @@ namespace MmorpgPrototype
             worldEvent.QuestLog = player.GetComponent<PlayerQuestLog>();
             worldEvent.Hud = hud;
             worldEvent.Telemetry = player.GetComponent<CombatTelemetry>();
+        }
+
+        private static DailyEventSystem CreateDailyEvents(GameObject player, PrototypeHud hud)
+        {
+            var eventObject = new GameObject("Daily Event System");
+            var dailyEvents = eventObject.AddComponent<DailyEventSystem>();
+            dailyEvents.Progression = player.GetComponent<PlayerProgression>();
+            dailyEvents.Cosmetics = player.GetComponent<CosmeticService>();
+            dailyEvents.Persistence = player.GetComponent<PlayerPersistence>();
+            dailyEvents.Hud = hud;
+            dailyEvents.Initialize();
+            dailyEvents.Persistence.DailyEvents = dailyEvents;
+            return dailyEvents;
         }
 
         private static PrototypeHud CreateHudAndControls(GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage)
@@ -596,6 +623,13 @@ namespace MmorpgPrototype
             mountService.Initialize(LoadMounts());
             persistence.Pets = petService;
             persistence.Mounts = mountService;
+            var cosmetics = player.GetComponent<CosmeticService>();
+            cosmetics.Hud = hud;
+            cosmetics.Progression = progression;
+            cosmetics.UpgradeSystem = equipment;
+            cosmetics.Avatar = player.GetComponent<PlayerAvatarVisual>();
+            cosmetics.Initialize(LoadCosmetics());
+            persistence.Cosmetics = cosmetics;
             var storageService = player.GetComponent<StorageService>();
             storageService.Inventory = inventory;
             storageService.Hud = hud;
@@ -610,7 +644,7 @@ namespace MmorpgPrototype
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
             inventory.AddItem(DefaultGameItems.RecruitSword);
-            CreateShopButtons(uiRoot, player, shop, blacksmith, storage);
+            CreateShopButtons(uiRoot, player, shop, blacksmith, storage, cosmetics);
             CreateNetworkPanel(uiRoot, player);
 
             var helpKey = Application.isMobilePlatform ? "hud.touch_help" : "hud.controls_help";
@@ -621,7 +655,7 @@ namespace MmorpgPrototype
             return hud;
         }
 
-        private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage)
+        private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage, CosmeticService cosmetics)
         {
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
 
@@ -685,6 +719,15 @@ namespace MmorpgPrototype
 
             var exploreButton = CreateRoundButton(actionParent, "Explore POI Button", Localization.Tr("ui.explore"), new Vector2(0f, 1f), new Vector2(932f, -396f), new Vector2(128f, 42f), new Color(0.62f, 0.42f, 0.14f), 17);
             exploreButton.onClick.AddListener(() => ZonePointOfInterest.InteractNearest(player.transform));
+
+            var itemShopButton = CreateRoundButton(actionParent, "Item Shop Button", Localization.Tr("ui.item_shop"), new Vector2(0f, 1f), new Vector2(932f, -348f), new Vector2(128f, 42f), new Color(0.3f, 0.42f, 0.62f), 16);
+            itemShopButton.onClick.AddListener(cosmetics.TryBuyFeatured);
+
+            var outfitButton = CreateRoundButton(actionParent, "Outfit Button", Localization.Tr("ui.outfit"), new Vector2(0f, 1f), new Vector2(1072f, -348f), new Vector2(128f, 42f), new Color(0.22f, 0.5f, 0.4f), 16);
+            outfitButton.onClick.AddListener(cosmetics.ToggleOutfit);
+
+            var wingsButton = CreateRoundButton(actionParent, "Wings Button", Localization.Tr("ui.wings"), new Vector2(0f, 1f), new Vector2(1212f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.24f, 0.54f), 16);
+            wingsButton.onClick.AddListener(cosmetics.ToggleWings);
         }
 
         private static MobileTestWindowController CreateMobileTestWindow(Transform parent, GameObject player)

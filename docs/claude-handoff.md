@@ -14,11 +14,11 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.54 y como ejecutar).
+3. README.md (historial de fases 1 a 5.55 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.54 entregadas en primera pasada; refinamientos 5.44,
+Estado actual (fases 1-5.55 entregadas en primera pasada; refinamientos 5.44,
 5.45 y 5.49 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
@@ -103,6 +103,15 @@ Estado actual (fases 1-5.54 entregadas en primera pasada; refinamientos 5.44,
   adicional propia por zona y una paleta aplicada con `MaterialPropertyBlock`;
   el reemplazo por meshes finales propios queda para una etapa artistica
   posterior.
+- Cosméticos: `CosmeticService` mantiene slots separados de atuendo y alas,
+  propiedad persistida, tienda MVP y bonos de daño/vida/critico conectados a
+  `StatSheet`. `PlayerAvatarVisual.ApplyCosmetics` crea una primera silueta 3D
+  procedural reemplazable por meshes finales.
+- Compañeros y eventos: `PetService`/`MountService` conservan propiedad,
+  rareza y stats de combate; `DailyEventSystem` activa una Caceria de
+  Reliquias por fecha local, cuenta cinco derrotas y entrega EXP/oro y Alas de
+  brasa. El guardado local es esquema v11. Compras y recompensas deben pasar a
+  autoridad del servidor antes de una prueba publica.
 - Interfaz mobile: el HUD principal es mas compacto, inventario y equipo se
   consultan desde `MENU`, y las acciones secundarias se agrupan bajo `MAS`.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
@@ -153,7 +162,7 @@ Estado actual (fases 1-5.54 entregadas en primera pasada; refinamientos 5.44,
   si no pasan. Persistencia por playerKey en Server/data/players.json:
   presencia basica, snapshot completo `PlayerSaveData` via `saveState`/
   `savedState` y ultimo resumen de telemetria recibido.
-- Guardado local JSON (esquema v10) via ISaveStorage/JsonFileStorage con
+- Guardado local JSON (esquema v11) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
   activa y progreso, mascota activa, montura, almacen y posicion del
@@ -220,6 +229,9 @@ Proximos objetivos sugeridos:
   cuando la direccion artistica este cerrada.
 - Fase 5.49: mover la validacion definitiva de recompensas al servidor y
   ajustar valores con telemetria real.
+- Fase 5.55: probar tienda, atuendo, alas, stats, evento diario y persistencia
+  en Android; despues server-authoritative para propiedad, compras, eventos y
+  drops raros.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

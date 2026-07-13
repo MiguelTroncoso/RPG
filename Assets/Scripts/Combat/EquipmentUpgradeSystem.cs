@@ -211,7 +211,9 @@ namespace MmorpgPrototype
 
                 if (statSheet != null)
                 {
-                    statSheet.Rebuild(definition, equipment, attributes, mount, skills);
+                    var pet = GetComponent<PetService>();
+                    var cosmetics = GetComponent<CosmeticService>();
+                    statSheet.Rebuild(definition, equipment, attributes, mount, skills, pet, cosmetics);
                     combat.AttackDamage = statSheet.BaseDamage;
                     combat.EquipmentDamageBonus = statSheet.BonusDamage;
                     combat.AttackRange = statSheet.AttackRange;

@@ -785,6 +785,23 @@ SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=10
   WSS/TLS, firewall y persistencia protegida. S-02 y S-03 no se habilitan hasta
   tener instancias independientes.
 
+## Fase 5.55: Cosméticos, Compañeros Y Eventos Diarios
+
+- El avatar tiene slots separados para atuendo y alas. El primer atuendo es
+  inicial; las alas y atuendos avanzados se compran con oro o se desbloquean
+  mediante recompensas especiales.
+- Los cosmeticos aportan daño, vida y critico a traves de `PlayerStatSheet`.
+  El boton `TIENDA` compra la siguiente oferta y `ATUENDO`/`ALAS` alternan su
+  visual en el personaje.
+- Mascotas y monturas mantienen propiedad y rareza. El zorro y el caballo son
+  de inicio; el zorro de brasa y el lobo de tormenta quedan reservados para
+  contenido dificil y futuras misiones.
+- `Caceria de Reliquias` se activa cada dia, cuenta cinco derrotas y entrega
+  EXP, oro y una posibilidad de progresion hacia Alas de brasa. Esta primera
+  version es local; la recompensa final debe validarse en el servidor.
+- APK validada despues de esta fase en:
+  `Builds/Android/valle-reliquias-debug.apk`.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.
