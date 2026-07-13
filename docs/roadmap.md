@@ -476,6 +476,20 @@ duplicar reglas de combate.
 Criterio de exito: cada zona se reconoce, se recorre con orientacion clara y
 mantiene un desafio acorde a su rango de nivel.
 
+## Fase 5.50: Zonas Seguras De Comercio
+
+Objetivo: separar claramente el combate de los espacios de comercio y
+progresion.
+
+- Zona segura data-driven en la Zona 1 alrededor de los NPC. [Implementado]
+- Spawns y persecucion bloqueados dentro de la zona segura. [Implementado]
+- Combate del jugador bloqueado dentro de la zona segura. [Implementado]
+- Marcador visual y punto `EXPLORAR` para el campamento. [Implementado]
+- Guardias, teletransporte y safe zones para futuras ciudades. [Pendiente]
+
+Criterio de exito: el jugador puede organizar inventario, comprar y mejorar
+equipo sin recibir ataques ni generar enemigos en el campamento.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

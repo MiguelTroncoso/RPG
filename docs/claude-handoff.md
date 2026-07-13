@@ -14,11 +14,11 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.49 y como ejecutar).
+3. README.md (historial de fases 1 a 5.50 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.49 entregadas en primera pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.50 entregadas en primera pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -96,6 +96,9 @@ Estado actual (fases 1-5.49 entregadas en primera pasada; hoja de ruta A-K compl
   para priorizar 60 FPS y limita la cantidad de normales/elites activos. El
   `ZoneBalanceResolver` registra TTK esperado por tier; el balance real
   necesita prueba fisica.
+- Comercio seguro: `ZoneDefinition` marca la zona segura del Valle alrededor
+  de los NPC. Los spawns se filtran, `EnemyAI` expulsa enemigos y detiene
+  ataques, y `PlayerCombat` bloquea combate dentro del radio.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -177,6 +180,8 @@ este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
 - Reinstalar la APK de las fases 5.45-5.48 y probarla en el telefono.
+- Verificar que el campamento de nivel 1 sea completamente seguro y que el
+  Monolito Corrupto aparezca fuera de esa zona.
 - Fase 5.45: sustituir arquetipos KayKit por criaturas 3D unicas de cada
   familia, empezando por la Zona 1.
 - Fase 5.48: medir rendimiento, balance y experiencia Android en las diez

@@ -32,6 +32,13 @@ namespace MmorpgPrototype
             CreateCamera(player.transform);
             var zones = LoadZones();
             ZoneBalanceResolver.LogReports(zones);
+            var commerceZone = zones.Find(zone => zone != null && zone.HasSafeZone);
+            var playerCombat = player.GetComponent<PlayerCombat>();
+            if (commerceZone != null && playerCombat != null)
+            {
+                playerCombat.SafeZoneCenter = commerceZone.SafeZoneCenter;
+                playerCombat.SafeZoneRadius = commerceZone.SafeZoneRadius;
+            }
             var shop = CreateShopNpc(player);
             var blacksmith = CreateBlacksmithNpc(player);
             var storage = CreateStorageNpc(player);

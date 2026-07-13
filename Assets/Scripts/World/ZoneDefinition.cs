@@ -19,6 +19,11 @@ namespace MmorpgPrototype
         public Color GroundColor = new Color(0.22f, 0.34f, 0.24f);
         public Vector3 SignPosition = new Vector3(0f, 0f, -6.5f);
 
+        [Header("Zona segura y comercio")]
+        public bool HasSafeZone;
+        public Vector3 SafeZoneCenter = Vector3.zero;
+        [Min(0f)] public float SafeZoneRadius = 10f;
+
         [Header("Enemigos normales")]
         public string NormalEnemyId = "valley_creature";
         public string NormalName = "Lobo corrupto";
@@ -68,5 +73,11 @@ namespace MmorpgPrototype
         [Min(0.1f)] public float EliteTtkMax = 18f;
         [Min(0.1f)] public float BossTtkMin = 30f;
         [Min(0.1f)] public float BossTtkMax = 75f;
+
+        public bool IsInsideSafeZone(Vector3 position)
+        {
+            return HasSafeZone && SafeZoneRadius > 0f
+                && Vector3.Distance(new Vector3(position.x, 0f, position.z), new Vector3(SafeZoneCenter.x, 0f, SafeZoneCenter.z)) <= SafeZoneRadius;
+        }
     }
 }

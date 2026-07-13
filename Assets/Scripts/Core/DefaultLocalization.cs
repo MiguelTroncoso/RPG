@@ -157,6 +157,8 @@ namespace MmorpgPrototype
                 { "poi.elite", "{0}: santuario de elite listo para explorar." },
                 { "poi.boss", "{0}: el landmark del jefe guarda una amenaza mayor." },
                 { "poi.entry", "Entrada a {0}. Sigue el camino principal para avanzar." },
+                { "poi.safe", "Campamento seguro de {0}: aqui no hay combate." },
+                { "poi.safe_combat_blocked", "Estas en una zona segura: aqui no se puede combatir." },
                 { "poi.no_target", "No hay un punto de interes cercano." },
                 { "poi.too_far", "Acercate a {0} para explorar este punto." },
                 { "poi.interacted", "Exploraste: {0}" },

@@ -10,6 +10,8 @@ namespace MmorpgPrototype
         public PrototypeHud Hud;
         public Color SkillTint = new Color(1f, 0.72f, 0.18f);
         public int EquipmentDamageBonus;
+        public Vector3 SafeZoneCenter;
+        public float SafeZoneRadius;
 
         private float nextAttackTime;
         private PlayerStatSheet statSheet;
@@ -43,6 +45,12 @@ namespace MmorpgPrototype
 
         public void TryAttack()
         {
+            if (IsInSafeZone)
+            {
+                Hud?.SetStatus(Localization.Tr("poi.safe_combat_blocked"));
+                return;
+            }
+
             if (Time.time < nextAttackTime)
             {
                 return;
@@ -87,6 +95,11 @@ namespace MmorpgPrototype
 
         public EnemyAI FindNearestEnemy(float range)
         {
+            if (IsInSafeZone)
+            {
+                return null;
+            }
+
             var enemies = FindObjectsByType<EnemyAI>();
             EnemyAI nearest = null;
             var nearestDistance = float.MaxValue;
@@ -94,7 +107,7 @@ namespace MmorpgPrototype
             foreach (var enemy in enemies)
             {
                 var health = enemy.GetComponent<Health>();
-                if (health == null || health.IsDead)
+                if (health == null || health.IsDead || enemy.IsInSafeZone)
                 {
                     continue;
                 }
@@ -112,6 +125,11 @@ namespace MmorpgPrototype
 
         public int DamageEnemiesInRange(float range, int damage, int maxTargets)
         {
+            if (IsInSafeZone)
+            {
+                return 0;
+            }
+
             var enemies = FindObjectsByType<EnemyAI>();
             var hits = 0;
 
@@ -123,7 +141,7 @@ namespace MmorpgPrototype
                 }
 
                 var health = enemy.GetComponent<Health>();
-                if (health == null || health.IsDead)
+                if (health == null || health.IsDead || enemy.IsInSafeZone)
                 {
                     continue;
                 }
@@ -184,6 +202,8 @@ namespace MmorpgPrototype
             CombatFeedbackVfx.SpawnHit(enemy.transform.position + Vector3.up * 1.1f, popupColor, result.IsCritical);
             return result;
         }
+
+        private bool IsInSafeZone => SafeZoneRadius > 0f && Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), new Vector3(SafeZoneCenter.x, 0f, SafeZoneCenter.z)) <= SafeZoneRadius;
 
         private CombatStats BuildAttackerStats(int baseDamage)
         {

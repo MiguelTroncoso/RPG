@@ -6,7 +6,7 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-12
 
-- Avance global estimado hacia el MMORPG publicable: **43%**.
+- Avance global estimado hacia el MMORPG publicable: **44%**.
 - Prototipo jugable offline: **92%**.
 - Vertical slice de una zona pulida: **74%**.
 - Online persistente y preparado para produccion: **25%**.
@@ -28,6 +28,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   1-10, spawners por proximidad y perfil de calidad Android.
 - Fase 5.49: obstaculos solidos, puntos de interes explorables y reporte de TTK
   por zona; Android limita tambien la cantidad de enemigos activos.
+- Fase 5.50: zona segura de comercio en la Zona 1, con bloqueo de spawns,
+  persecucion y combate dentro del campamento.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -45,6 +47,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-12 | 5.50 | Zona segura de comercio y bloqueo de combate | 44% |
 | 2026-07-12 | 5.49 | Obstaculos solidos, POI explorables y reporte de balance | 43% |
 | 2026-07-12 | 5.45-5.48 | Variantes por zona, rutas, landmarks y optimizacion Android | 40% |
 | 2026-07-12 | 5.44-5.47 | HUD, mobs 3D, zonas 1-10 y feedback de combate | 36% |

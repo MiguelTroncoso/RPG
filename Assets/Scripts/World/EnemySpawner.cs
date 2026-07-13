@@ -210,10 +210,19 @@ namespace MmorpgPrototype
             bossAlive = true;
         }
 
-        private static Vector3 RandomInArea(Vector3 center, float radius)
+        private Vector3 RandomInArea(Vector3 center, float radius)
         {
-            var offset = Random.insideUnitCircle * radius;
-            return center + new Vector3(offset.x, 0f, offset.y);
+            for (var attempt = 0; attempt < 16; attempt++)
+            {
+                var offset = Random.insideUnitCircle * radius;
+                var position = center + new Vector3(offset.x, 0f, offset.y);
+                if (Zone == null || !Zone.IsInsideSafeZone(position))
+                {
+                    return position;
+                }
+            }
+
+            return center;
         }
 
         private GameObject SpawnCustomEnemy(string enemyName, Vector3 position, float scale, Color color,
@@ -248,6 +257,8 @@ namespace MmorpgPrototype
             ai.AggroRange = tier == EnemyTier.Normal ? 9f : 10f;
             ai.AttackCooldown = tier == EnemyTier.Boss ? 1.55f : tier == EnemyTier.Elite ? 1.35f : 1.65f;
             ai.AttackWindup = tier == EnemyTier.Boss ? 0.48f : tier == EnemyTier.Elite ? 0.36f : 0.28f;
+            ai.SafeZoneCenter = Zone.SafeZoneCenter;
+            ai.SafeZoneRadius = Zone.HasSafeZone ? Zone.SafeZoneRadius : 0f;
 
             var reward = enemy.AddComponent<EnemyReward>();
             reward.Progression = Progression;

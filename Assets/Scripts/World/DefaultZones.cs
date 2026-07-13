@@ -65,6 +65,11 @@ namespace MmorpgPrototype
             zone.DisplayName = "Valle de las Reliquias";
             zone.MinLevel = 1;
             zone.MaxLevel = 10;
+            zone.HasSafeZone = true;
+            zone.SafeZoneCenter = new Vector3(0f, 0f, -3f);
+            zone.SafeZoneRadius = 9.5f;
+            zone.NormalAreaCenter = new Vector3(0f, 1f, 14f);
+            zone.NormalAreaRadius = 6f;
             zone.EliteEnemyId = ValleyEliteId;
             zone.BossEnemyId = ValleyBossId;
             return zone;

@@ -667,6 +667,17 @@ la siguiente prueba de balance.
 - `ZoneBalanceResolver` registra TTK estimado, dano base esperado y si cada
   tier cae dentro de su objetivo; falta cerrar el ajuste con telemetria real.
 
+## Fase 5.50: Zona Segura De Comercio
+
+- El Valle de las Reliquias tiene un campamento seguro alrededor del mercader,
+  herrero y almacen.
+- Los spawns normales se filtran para no aparecer dentro del campamento.
+- Los enemigos no pueden perseguir ni atacar dentro de la zona segura y el
+  jugador tampoco puede iniciar combate alli.
+- La zona queda marcada visualmente y `EXPLORAR` informa que es un espacio sin
+  combate.
+- El Monolito Corrupto queda fuera del campamento para conservar el evento.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

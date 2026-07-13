@@ -12,7 +12,7 @@ namespace MmorpgPrototype
         public CombatTelemetry Telemetry;
         public float RespawnDelay = 55f;
 
-        private readonly Vector3 spawnPosition = new Vector3(0f, 1f, -12f);
+        private readonly Vector3 spawnPosition = new Vector3(0f, 1f, -16f);
         private GameObject activeMonolith;
         private float nextSpawnTime;
 

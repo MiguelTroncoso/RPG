@@ -17,8 +17,11 @@ namespace MmorpgPrototype
         public float CritChance = 0.05f;
         public float Accuracy = 0.92f;
         public float AttackWindup = 0.28f;
+        public Vector3 SafeZoneCenter;
+        public float SafeZoneRadius;
 
         public CombatStats DefenderStats => CombatStats.Defender(Evasion, Defense);
+        public bool IsInSafeZone => SafeZoneRadius > 0f && Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), new Vector3(SafeZoneCenter.x, 0f, SafeZoneCenter.z)) <= SafeZoneRadius;
 
         private CharacterController controller;
         private Health health;
@@ -59,6 +62,23 @@ namespace MmorpgPrototype
         {
             if (health.IsDead || Target == null)
             {
+                return;
+            }
+
+            if (IsInSafeZone)
+            {
+                isWindingUp = false;
+                var escapeDirection = transform.position - SafeZoneCenter;
+                escapeDirection.y = 0f;
+                controller.SimpleMove(escapeDirection.sqrMagnitude > 0.001f ? escapeDirection.normalized * MoveSpeed : Vector3.forward * MoveSpeed);
+                return;
+            }
+
+            var targetInSafeZone = SafeZoneRadius > 0f && Vector3.Distance(new Vector3(Target.position.x, 0f, Target.position.z), new Vector3(SafeZoneCenter.x, 0f, SafeZoneCenter.z)) <= SafeZoneRadius;
+            if (targetInSafeZone)
+            {
+                isWindingUp = false;
+                controller.SimpleMove(Vector3.zero);
                 return;
             }
 

@@ -33,6 +33,7 @@ namespace MmorpgPrototype
             BuildNavigation(root.transform, zone);
             BuildEntryMarker(root.transform, zone);
             BuildObstacleField(root.transform, zone);
+            BuildSafeZone(root.transform, zone);
         }
 
         private static void BuildNavigation(Transform parent, ZoneDefinition zone)
@@ -75,6 +76,21 @@ namespace MmorpgPrototype
                 var size = new Vector3(1.8f + (i % 2) * 0.6f, 0.8f + (i % 3) * 0.24f, 1.5f + (i % 2) * 0.5f);
                 CreateSolidPart(parent, "Solid Zone Obstacle", PrimitiveType.Cube, positions[i] + Vector3.up * size.y * 0.5f, size, obstacleColor, Quaternion.Euler(0f, i * 17f, 0f));
             }
+        }
+
+        private static void BuildSafeZone(Transform parent, ZoneDefinition zone)
+        {
+            if (!zone.HasSafeZone || zone.SafeZoneRadius <= 0f)
+            {
+                return;
+            }
+
+            var center = zone.SafeZoneCenter + Vector3.up * 0.035f;
+            var markerColor = new Color(0.16f, 0.72f, 0.48f);
+            CreatePart(parent, "Safe Commerce Zone", PrimitiveType.Cylinder, center, new Vector3(zone.SafeZoneRadius * 2f, 0.018f, zone.SafeZoneRadius * 2f), Color.Lerp(zone.GroundColor, markerColor, 0.42f));
+            CreatePart(parent, "Safe Zone Marker L", PrimitiveType.Cube, center + new Vector3(-zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
+            CreatePart(parent, "Safe Zone Marker R", PrimitiveType.Cube, center + new Vector3(zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
+            CreatePointOfInterest(parent, "Safe Commerce Zone", zone.SafeZoneCenter, Localization.Tr("poi.safe", zone.DisplayName));
         }
 
         private static void CreatePointOfInterest(Transform parent, string name, Vector3 position, string message)
