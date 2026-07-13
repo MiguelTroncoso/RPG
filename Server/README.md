@@ -16,6 +16,21 @@ Por defecto escucha en:
 ws://localhost:7777
 ```
 
+Para una prueba desde un telefono en la misma red, el servidor escucha en
+todas las interfaces (`0.0.0.0`). En la APK se puede introducir la IP local
+del Mac/PC, por ejemplo `ws://192.168.1.20:7777`.
+
+Los perfiles se pueden ejecutar con variables de entorno para preparar varios
+servidores sin duplicar el codigo:
+
+```bash
+SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=100 npm start
+SERVER_ID=S-02 SERVER_NAME="Bosque de los Susurros" PORT=7778 npm start
+```
+
+`S-02` y `S-03` siguen siendo perfiles de preparacion hasta desplegar sus
+instancias y datos separados.
+
 ## Protocolo Inicial
 
 Cliente a servidor:

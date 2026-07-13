@@ -24,6 +24,7 @@ namespace MmorpgPrototype
         public InputField ChatInput;
         public bool AcceptServerSaveOnConnect = true;
         public float SaveSyncIntervalSeconds = 15f;
+        public string CurrentStatus => pendingStatus;
 
         private readonly Queue<string> incoming = new Queue<string>();
         private readonly object incomingLock = new object();

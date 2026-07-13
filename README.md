@@ -764,6 +764,27 @@ para recompensas siguen pendientes para una fase online posterior.
 - La APK debe reinstalarse para validar safe area, lectura, teclado y flujo de
   acceso en el telefono Android.
 
+## Fase 5.54: Preparacion Online Para Prueba Compartida
+
+- Los perfiles de servidor viven en `ServerProfile.cs`: cada uno tiene ID,
+  nombre, URL y disponibilidad.
+- En la pantalla de acceso se puede introducir la direccion real de S-01,
+  por ejemplo `ws://192.168.1.20:7777`, para que un telefono se conecte al
+  servidor del Mac/PC dentro de la misma red.
+- `ENTRAR AL VALLE` conecta automaticamente y el estado queda visible. La
+  URL y el perfil se recuerdan como configuracion del dispositivo.
+- El servidor se puede iniciar con identidad y limites propios:
+
+```bash
+cd Server
+npm install
+SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=100 npm start
+```
+
+- Para amigos fuera de la red local falta desplegar el servidor con dominio,
+  WSS/TLS, firewall y persistencia protegida. S-02 y S-03 no se habilitan hasta
+  tener instancias independientes.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

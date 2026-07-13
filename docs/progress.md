@@ -6,10 +6,10 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **65%**.
+- Avance global estimado hacia el MMORPG publicable: **70%**.
 - Prototipo jugable offline: **98%**.
-- Vertical slice de una zona pulida: **91%**.
-- Online persistente y preparado para produccion: **28%**.
+- Vertical slice de una zona pulida: **94%**.
+- Online persistente y preparado para produccion: **35%**.
 - Arte final, contenido completo 1-105 y lanzamiento: **38%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
@@ -60,13 +60,18 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   de personaje guardado, flujo crear/entrar y perfiles de servidor S-01/S-02/S-03.
   S-01 queda activo para la prueba local; S-02 y S-03 estan preparados para
   backend futuro y bloqueados mientras no existan esas instancias.
+- Fase 5.54: perfiles de servidor data-driven, URL configurable desde la APK,
+  ultimo servidor recordado, conexion automatica al entrar y estado visible.
+- Fase 5.54: servidor Node configurable con `SERVER_ID`, `SERVER_NAME`, `HOST`,
+  `PORT` y `MAX_PLAYERS`; el welcome comunica los datos del servidor y el host
+  por defecto permite prueba dentro de la red local.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
 
 1. Reinstalar APK y validar la nueva pantalla de acceso, seleccion de personaje,
-   creacion de personaje y selector S-01 en telefono real.
+   URL, conexion automatica y estado S-01 en telefono real.
 2. Registrar desde TEST FPS, memoria, carga y objetos activos
    en las diez zonas del telefono real.
 3. Ajustar cantidad de mobs, VFX, decoracion y radio del minimapa con esos
@@ -81,11 +86,14 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    cuando la direccion artistica este cerrada.
 8. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
    revisar duplicados/concurrencia con telemetria real.
+9. Levantar S-01 en la LAN, probar dos telefonos y luego desplegar un endpoint
+   publico antes de habilitar S-02/S-03.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.54 | Conexion automatica, URL configurable y servidor Node parametrizable | 70% |
 | 2026-07-13 | 5.53 | Acceso mobile, seleccion de personaje y perfiles de servidor | 65% |
 | 2026-07-13 | 5.52 | Primera pasada de balance de loot y TTK por banda | 64% |
 | 2026-07-13 | 5.52 | Progresion de loot 1-105 con materiales, sets y reliquias de jefe | 63% |

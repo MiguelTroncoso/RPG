@@ -570,6 +570,31 @@ multiserver.
 Criterio de exito: un jugador puede abrir la APK, reconocer el juego, elegir
 su personaje guardado o crear uno y entrar al servidor de prueba sin confusion.
 
+## Fase 5.54: Preparacion Online Para Prueba Compartida
+
+Objetivo: que el mismo APK pueda probarse en telefono, LAN y posteriormente
+en un endpoint publico sin recompilar por cada cambio de direccion.
+
+- Catalogo de perfiles `ServerProfile` con ID, nombre, URL y disponibilidad.
+  [Implementado]
+- S-01 permite editar la direccion WebSocket desde la pantalla de acceso,
+  recuerda URL/perfil en `PlayerPrefs` y copia la direccion al panel de red.
+  [Implementado]
+- `ENTRAR AL VALLE` inicia la conexion automaticamente y muestra `Offline`,
+  `Conectando` u `Online` en la pantalla de acceso/HUD. [Implementado]
+- El servidor Node acepta `SERVER_ID`, `SERVER_NAME`, `HOST`, `PORT` y
+  `MAX_PLAYERS`, rechaza conexiones cuando esta lleno y envia metadatos en
+  `welcome`. [Implementado]
+- Probar S-01 con dos telefonos en la misma red usando la IP LAN del equipo.
+  [Pendiente de dispositivo]
+- Desplegar S-01 en un endpoint publico con firewall, TLS/WSS, dominio y
+  persistencia protegida. [Pendiente de infraestructura]
+- Habilitar S-02 y S-03 solo cuando tengan instancias y datos separados.
+  [Pendiente de backend]
+
+Criterio de exito: dos jugadores pueden conectarse desde APK, verse, chatear
+y conservar su guardado sin editar codigo ni recompilar el cliente.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

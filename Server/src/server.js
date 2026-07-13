@@ -4,7 +4,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+const serverId = process.env.SERVER_ID ?? "S-01";
+const serverName = process.env.SERVER_NAME ?? "Valle Central";
+const host = process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.PORT ?? 7777);
+const maxPlayers = Number(process.env.MAX_PLAYERS ?? 100);
 const tickRateMs = 100;
 const players = new Map();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -12,9 +16,14 @@ const dataDir = path.resolve(__dirname, "../data");
 const playerStorePath = path.join(dataDir, "players.json");
 const persistedPlayers = loadPersistedPlayers();
 
-const server = new WebSocketServer({ port });
+const server = new WebSocketServer({ host, port });
 
 server.on("connection", (socket, request) => {
+  if (players.size >= maxPlayers) {
+    socket.close(1013, "Server full");
+    return;
+  }
+
   const id = crypto.randomUUID();
   const player = {
     id,
@@ -35,7 +44,7 @@ server.on("connection", (socket, request) => {
   };
 
   players.set(id, player);
-  send(socket, { type: "welcome", id, serverTime: Date.now() });
+  send(socket, { type: "welcome", id, serverId, serverName, maxPlayers, serverTime: Date.now() });
   sendRoster(socket);
   broadcast({ type: "playerJoined", player: publicPlayer(player) }, id);
   console.log(`[join] ${id} from ${request.socket.remoteAddress}`);
@@ -53,7 +62,7 @@ setInterval(() => {
   broadcast({ type: "snapshot", players: snapshot });
 }, tickRateMs);
 
-console.log(`MMORPG prototype server listening on ws://localhost:${port}`);
+console.log(`MMORPG server ${serverId} (${serverName}) listening on ws://${host}:${port} max=${maxPlayers}`);
 
 function handleMessage(player, raw) {
   let message;

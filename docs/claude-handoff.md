@@ -14,11 +14,11 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.53 y como ejecutar).
+3. README.md (historial de fases 1 a 5.54 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.53 entregadas en primera pasada; refinamientos 5.44,
+Estado actual (fases 1-5.54 entregadas en primera pasada; refinamientos 5.44,
 5.45 y 5.49 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
@@ -82,6 +82,11 @@ Estado actual (fases 1-5.53 entregadas en primera pasada; refinamientos 5.44,
   muestran S-01 Valle Central, S-02 Bosque de los Susurros y S-03 Reino de
   Pruebas; solo S-01 apunta al WebSocket local 7777. S-02/S-03 requieren
   instancias de backend antes de habilitarse.
+- Preparacion online: `ServerProfile` centraliza ID/nombre/URL/disponibilidad;
+  S-01 permite editar la URL desde la APK, la recuerda y conecta automaticamente
+  al entrar. El servidor Node admite `SERVER_ID`, `SERVER_NAME`, `HOST`, `PORT`
+  y `MAX_PLAYERS`, envia metadatos en `welcome` y escucha en `0.0.0.0` por defecto.
+  La prueba con dos telefonos y el despliegue WSS/publico siguen pendientes.
 - QA Android: la APK corregida no usa la consola Development, tiene colision
   explicita del campo, recuperacion de caidas, saneamiento de posiciones
   guardadas y escala landscape mas legible. En la Fase 5.42, el ataque tactil
@@ -198,7 +203,8 @@ este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
 - Reinstalar la APK y probar primero el splash, acceso local, tarjeta de
-  personaje guardado, crear/volver y selector S-01; despues regeneracion tras dano, minimapa, joystick +
+  personaje guardado, crear/volver, URL y conexion automatica S-01; despues
+  probar dos telefonos en LAN, regeneracion tras dano, minimapa, joystick +
   `ATK`, joystick + camara, giro vertical/horizontal, habilidades, Stats/Datos,
   `EXPLORAR` y safe zone en el telefono.
 - Fase 5.48: abrir TEST y registrar FPS, memoria, carga, TTK, enemigos y POI
