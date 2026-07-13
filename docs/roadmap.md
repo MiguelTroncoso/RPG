@@ -331,6 +331,20 @@ Objetivo: validar la experiencia tactil y audiovisual en un telefono Android.
 Criterio de exito: instalar, abrir y jugar en un telefono; revisar MENU, TEST,
 joystick, botones de combate, audio y orientacion landscape.
 
+## Fase 5.41: Correcciones De QA Movil
+
+Objetivo: eliminar los bloqueos de la primera prueba Android antes de seguir
+ampliando contenido.
+
+- APK sin consola Development sobre el joystick. [Implementado]
+- Colision explicita del campo de entrenamiento. [Implementado]
+- Recuperacion de caidas y saneamiento de posiciones guardadas. [Implementado]
+- Escala Android landscape y seleccion de personaje responsive. [Implementado]
+- Repetir prueba tactil en el telefono. [Pendiente]
+
+Criterio de exito: el jugador aparece sobre el suelo, permanece estable, el
+joystick mueve al personaje y la ventana de seleccion cabe dentro del safe area.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

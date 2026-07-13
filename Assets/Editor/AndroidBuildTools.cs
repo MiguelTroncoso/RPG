@@ -35,7 +35,9 @@ namespace MmorpgPrototype.Editor
         [MenuItem("MMORPG/Android/Build Debug APK")]
         public static void BuildDebugApk()
         {
-            BuildAndroid(Path.Combine(BuildFolder, "valle-reliquias-debug.apk"), false, BuildOptions.Development);
+            // Keep debug signing/profile without Unity's console overlay over
+            // the mobile controls.
+            BuildAndroid(Path.Combine(BuildFolder, "valle-reliquias-debug.apk"), false, BuildOptions.None);
         }
 
         [MenuItem("MMORPG/Android/Build Google Play AAB")]

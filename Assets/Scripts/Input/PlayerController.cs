@@ -9,6 +9,8 @@ namespace MmorpgPrototype
         public float MoveSpeed = 5.2f;
         public float TurnSpeed = 14f;
         public float Gravity = -18f;
+        public float FallRecoveryY = -2f;
+        public Vector3 SafeSpawnPosition = new Vector3(0f, 1f, 0f);
 
         private CharacterController controller;
         private float verticalVelocity;
@@ -20,6 +22,11 @@ namespace MmorpgPrototype
 
         private void Update()
         {
+            if (transform.position.y < FallRecoveryY)
+            {
+                RecoverFromFall();
+            }
+
             var input = ReadMovementInput();
             var moveDirection = CameraRelativeDirection(input);
 
@@ -39,6 +46,14 @@ namespace MmorpgPrototype
                 var targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, TurnSpeed * Time.deltaTime);
             }
+        }
+
+        private void RecoverFromFall()
+        {
+            controller.enabled = false;
+            transform.position = SafeSpawnPosition;
+            verticalVelocity = -1f;
+            controller.enabled = true;
         }
 
         private Vector2 ReadMovementInput()
@@ -93,4 +108,3 @@ namespace MmorpgPrototype
         }
     }
 }
-

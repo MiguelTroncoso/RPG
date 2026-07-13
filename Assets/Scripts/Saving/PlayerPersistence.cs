@@ -153,6 +153,17 @@ namespace MmorpgPrototype
         // hay que apagarlo para teletransportar.
         private void RestorePosition(Vector3 position, float yaw)
         {
+            if (float.IsNaN(position.x) || float.IsInfinity(position.x) ||
+                float.IsNaN(position.y) || float.IsInfinity(position.y) ||
+                float.IsNaN(position.z) || float.IsInfinity(position.z))
+            {
+                position = new Vector3(0f, 1f, 0f);
+            }
+
+            // A previous build could save while the player was falling below
+            // the training field. Clamp legacy saves to the spawn floor.
+            position.y = Mathf.Max(1f, position.y);
+
             var controller = GetComponent<CharacterController>();
             if (controller != null)
             {

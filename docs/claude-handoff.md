@@ -14,10 +14,10 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.40 y como ejecutar).
+3. README.md (historial de fases 1 a 5.41 y como ejecutar).
 4. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.40 completadas; hoja de ruta A-K completa):
+Estado actual (fases 1-5.41 completadas; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -69,6 +69,10 @@ Estado actual (fases 1-5.40 completadas; hoja de ruta A-K completa):
 - Android: `AndroidBuildTools` deja ARM64, SDK minimo 26, target SDK 35,
   landscape e identificador configurados. La APK debug se genero y valido
   con `aapt2`; la instalacion fisica queda pendiente de conectar un telefono.
+- QA Android: la APK corregida no usa la consola Development, tiene colision
+  explicita del campo, recuperacion de caidas, saneamiento de posiciones
+  guardadas y escala landscape mas legible. Repetir la prueba tactil antes de
+  avanzar a contenido nuevo.
 - Misiones data-driven: QuestDefinition (objetivos TalkToNpc/KillEnemies/
   CollectItems/DefeatWorldEvent), cadena de 4 misiones originales,
   RewardService como punto unico de recompensas, boton HABLAR con el
@@ -149,7 +153,7 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Conectar un telefono Android, instalar la APK y registrar la ventana TEST.
+- Reinstalar la APK corregida, conectar un telefono Android y registrar TEST.
 - Convertir los perfiles de armadura en assets editables y crear sets completos.
 - Jugar sesiones de prueba en zonas 41-105 y ajustar recompensas usando DATOS.
 - Pulir comercio, uso tactil de items y estados de carga/conexion.

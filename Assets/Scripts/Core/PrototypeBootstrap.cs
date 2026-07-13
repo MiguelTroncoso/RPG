@@ -151,6 +151,11 @@ namespace MmorpgPrototype
             material.color = new Color(0.22f, 0.34f, 0.24f);
             ground.GetComponent<Renderer>().sharedMaterial = material;
 
+            var collision = new GameObject("Training Field Collision");
+            collision.transform.position = new Vector3(0f, -0.1f, 0f);
+            var collisionBox = collision.AddComponent<BoxCollider>();
+            collisionBox.size = new Vector3(70f, 0.2f, 70f);
+
             for (var i = 0; i < 16; i++)
             {
                 var marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -284,6 +289,8 @@ namespace MmorpgPrototype
             camera.nearClipPlane = 0.1f;
             camera.farClipPlane = 200f;
             camera.fieldOfView = 55f;
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(0.08f, 0.11f, 0.14f);
 
             var listener = cameraObject.AddComponent<AudioListener>();
             listener.enabled = true;
@@ -452,7 +459,9 @@ namespace MmorpgPrototype
 
             var scaler = canvasObject.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.referenceResolution = Application.platform == RuntimePlatform.Android
+                ? new Vector2(1600f, 900f)
+                : new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 0.5f;
 
             canvasObject.AddComponent<GraphicRaycaster>();
@@ -1005,7 +1014,8 @@ namespace MmorpgPrototype
             overlayImage.color = new Color(0.015f, 0.018f, 0.024f, 0.88f);
             overlayImage.raycastTarget = true;
 
-            CreatePanel(overlay.transform, "Selection Frame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1060f, 660f), Vector2.zero, new Color(0.04f, 0.055f, 0.07f, 0.94f));
+            var selectionFrame = CreatePanel(overlay.transform, "Selection Frame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1060f, 660f), Vector2.zero, new Color(0.04f, 0.055f, 0.07f, 0.94f));
+            selectionFrame.gameObject.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(1060f, 660f);
 
             var title = CreateText(overlay.transform, "Selection Title", Localization.Tr("character.title"), 48, TextAnchor.MiddleCenter);
             title.fontStyle = FontStyle.Bold;

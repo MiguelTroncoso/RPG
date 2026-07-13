@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.40 completadas (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.41 completadas (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -97,11 +97,15 @@ simple y autocontenido.
   a assets ScriptableObject sin cambiar el contrato del avatar.
 - `AndroidBuildTools` configura ARM64, SDK minimo 26, target SDK 35,
   identificador de paquete y landscape. La APK debug ya fue generada y
-  validada; falta instalarla en un telefono fisico.
+  validada; la version de QA no muestra la Development Console sobre los
+  controles y falta instalarla en un telefono fisico.
+- QA movil: el campo tiene colision explicita, el jugador recupera caidas,
+  los guardados corrigen posiciones bajo el mapa y la UI Android usa una
+  referencia landscape mas legible.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
-- Siguientes candidatos: conectar un telefono y registrar TEST; convertir los
-  perfiles de armadura en assets editables; jugar sesiones de prueba en zonas
-  41-105 y ajustar con DATOS; pulir comercio y uso tactil de items.
+- Siguientes candidatos: reinstalar la APK corregida y registrar TEST; convertir
+  los perfiles de armadura en assets editables; jugar sesiones de prueba en
+  zonas 41-105 y ajustar con DATOS; pulir comercio y uso tactil de items.

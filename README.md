@@ -561,6 +561,21 @@ Proxima accion: conectar el telefono con depuracion USB activada y ejecutar
 `adb install -r Builds/Android/valle-reliquias-debug.apk` usando el adb del
 SDK de Unity si el comando global no existe.
 
+## Fase 5.41: Correcciones De QA Movil
+
+- La APK de prueba ya no usa `BuildOptions.Development`, evitando la consola
+  de Unity que cubria el joystick en la parte inferior.
+- Se agrego una superficie de colision explicita para el campo de entrenamiento.
+- El jugador se recupera en el punto seguro si una posicion guardada lo deja
+  bajo el mapa; los guardados antiguos tambien corrigen la altura minima.
+- La UI Android usa una referencia mas adecuada para landscape y la pantalla
+  de creacion escala dentro del safe area.
+- La camara usa un color de fondo controlado para evitar el gris plano durante
+  la carga del mundo.
+
+La build corregida queda en `Builds/Android/valle-reliquias-debug.apk` y debe
+reinstalarse antes de repetir la prueba tactil.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.
