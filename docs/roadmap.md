@@ -547,6 +547,29 @@ progresion reconocible desde el nivel 1 hasta el 105.
 Criterio de exito: un jugador puede avanzar por las diez bandas usando drops
 de la zona actual y mejorar el equipo con materiales de esa misma zona.
 
+## Fase 5.53: Acceso Mobile Y Seleccion De Personaje
+
+Objetivo: presentar una entrada clara antes de la prueba fisica y dejar
+preparado el acceso a futuros servidores sin fingir que ya existe un backend
+multiserver.
+
+- Splash inicial con identidad de Valle de las Reliquias y version Android.
+  [Implementado]
+- Pantalla de acceso con tarjeta del personaje local, nivel, EXP, oro, clase y
+  sexo. [Implementado]
+- Flujo separado para `ENTRAR AL VALLE`, `CREAR NUEVO PERSONAJE` y `VOLVER`.
+  [Implementado]
+- Perfiles visibles `S-01 Valle Central`, `S-02 Bosque de los Susurros` y
+  `S-03 Reino de Pruebas`; solo S-01 esta habilitado contra `ws://localhost:7777`.
+  [Implementado]
+- Servidores S-02 y S-03 con instancias, dominio, matchmaking, cuentas y
+  persistencia separada. [Pendiente de backend]
+- Validar lectura, safe area, teclado, botones y flujo de guardado en Android.
+  [Pendiente de dispositivo]
+
+Criterio de exito: un jugador puede abrir la APK, reconocer el juego, elegir
+su personaje guardado o crear uno y entrar al servidor de prueba sin confusion.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

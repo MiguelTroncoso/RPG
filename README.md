@@ -750,6 +750,20 @@ para recompensas siguen pendientes para una fase online posterior.
   siguiente calibracion debe usar sesiones reales para ajustar oro, precios,
   probabilidades, clases permitidas y bonus de conjunto.
 
+## Fase 5.53: Acceso Mobile Y Seleccion De Personaje
+
+- El arranque muestra una identidad visual mas cuidada para Valle de las
+  Reliquias antes de entrar al mundo.
+- Si existe un guardado local, aparece una tarjeta con personaje, clase, sexo,
+  nivel, EXP y oro junto a `ENTRAR AL VALLE`.
+- `CREAR NUEVO PERSONAJE` abre el flujo de clase, sexo y nombre; `VOLVER`
+  regresa a la tarjeta guardada sin perder el guardado.
+- La pantalla muestra perfiles de servidor: `S-01 Valle Central` esta activo
+  para la prueba local (`ws://localhost:7777`), mientras S-02 y S-03 quedan
+  bloqueados hasta implementar instancias reales.
+- La APK debe reinstalarse para validar safe area, lectura, teclado y flujo de
+  acceso en el telefono Android.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

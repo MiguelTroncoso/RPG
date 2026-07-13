@@ -13,10 +13,10 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.51 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.53 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
-avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
+avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v10 (incluye posición y reclamos de POI),
 progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
 equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
@@ -110,6 +110,9 @@ simple y autocontenido.
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Guardado local en esquema v10 incluye reclamos de puntos de interes por
   personaje; `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
+- Acceso mobile: splash renovado, seleccion de personaje guardado, creacion
+  de personaje y perfiles de servidor `S-01/S-02/S-03`. Solo `S-01` esta
+  habilitado contra el WebSocket local; los otros perfiles esperan backend.
 - Progresion de loot 1-105 con `ProgressionItemCatalog`: dos materiales y siete
   piezas de equipo por zona, diez reliquias de jefe, tablas normal/elite/jefe y
   materiales de mejora asociados al equipo.
@@ -121,4 +124,5 @@ simple y autocontenido.
   DATOS; calibrar loot, oro, precios, TTK, restricciones por clase y bonus de
   conjunto con sesiones reales; sustituir progresivamente la base Quaternius
   CC0 por meshes finales propios cuando la direccion artistica este cerrada;
+  validar acceso/selector en Android, crear instancias reales S-02/S-03 y
   pulir comercio y uso tactil de items.

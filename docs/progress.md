@@ -6,7 +6,7 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-13
 
-- Avance global estimado hacia el MMORPG publicable: **64%**.
+- Avance global estimado hacia el MMORPG publicable: **65%**.
 - Prototipo jugable offline: **98%**.
 - Vertical slice de una zona pulida: **91%**.
 - Online persistente y preparado para produccion: **28%**.
@@ -56,30 +56,37 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Los bosses entregan ahora la reliquia garantizada y un segundo drop adicional.
 - Fase 5.52: primera pasada de balance por banda; las probabilidades progresan
   y `ZoneBalanceResolver` usa el arma esperada para calcular TTK.
+- Fase 5.53: pantalla de acceso mobile renovada con identidad visual, tarjeta
+  de personaje guardado, flujo crear/entrar y perfiles de servidor S-01/S-02/S-03.
+  S-01 queda activo para la prueba local; S-02 y S-03 estan preparados para
+  backend futuro y bloqueados mientras no existan esas instancias.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
 
-1. Reinstalar APK y registrar desde TEST FPS, memoria, carga y objetos activos
+1. Reinstalar APK y validar la nueva pantalla de acceso, seleccion de personaje,
+   creacion de personaje y selector S-01 en telefono real.
+2. Registrar desde TEST FPS, memoria, carga y objetos activos
    en las diez zonas del telefono real.
-2. Ajustar cantidad de mobs, VFX, decoracion y radio del minimapa con esos
+3. Ajustar cantidad de mobs, VFX, decoracion y radio del minimapa con esos
    datos.
-3. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
+4. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
    minimapa con datos reales.
-4. Fase 5.52: calibrar precios, oro, TTK y cantidades de materiales/equipo con
+5. Fase 5.52: calibrar precios, oro, TTK y cantidades de materiales/equipo con
    sesiones reales en las diez bandas.
-5. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
+6. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
    telefono real; ajustar adornos y materiales si algun modelo pierde lectura.
-6. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
+7. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
    cuando la direccion artistica este cerrada.
-7. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
+8. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
    revisar duplicados/concurrencia con telemetria real.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.53 | Acceso mobile, seleccion de personaje y perfiles de servidor | 65% |
 | 2026-07-13 | 5.52 | Primera pasada de balance de loot y TTK por banda | 64% |
 | 2026-07-13 | 5.52 | Progresion de loot 1-105 con materiales, sets y reliquias de jefe | 63% |
 | 2026-07-13 | 5.45 | Diez jefes con modelo unico, silueta y paleta propia por zona | 60% |
