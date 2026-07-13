@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.50 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.51 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v9 (incluye posición),
@@ -102,8 +102,9 @@ simple y autocontenido.
 - QA movil: el campo tiene colision explicita, el jugador recupera caidas,
   los guardados corrigen posiciones bajo el mapa, la UI Android usa una
   referencia landscape mas legible, el ataque tactil conserva el joystick
-  durante el movimiento y la camara acepta arrastre en zona libre; falta
-  confirmar multitactil y giro en telefono real.
+  durante el movimiento, la camara acepta arrastre en zona libre, el jugador
+  regenera salud fuera de combate y existe un minimapa 2D; falta confirmar
+  regeneracion, radar y balance en telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y

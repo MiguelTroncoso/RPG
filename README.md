@@ -691,6 +691,19 @@ la siguiente prueba de balance.
   combate.
 - El Monolito Corrupto queda fuera del campamento para conservar el evento.
 
+## Fase 5.51: Recuperacion Y Minimap Mobile
+
+- El jugador espera cuatro segundos desde el ultimo dano antes de comenzar a
+  recuperar salud automaticamente.
+- La curacion se entrega de forma fraccionada y progresiva, con un ritmo
+  ligeramente mayor mientras el jugador se desplaza.
+- El minimapa es un radar 2D liviano centrado en el jugador: muestra mobs
+  normales en rojo, elites en violeta, jefes en naranja y puntos de interes.
+- El radar reutiliza marcadores y se actualiza por intervalos para conservar
+  rendimiento Android; no crea una segunda camara 3D.
+- El ritmo de regeneracion, el radio de lectura y la escala visual quedan para
+  validacion con el telefono real.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

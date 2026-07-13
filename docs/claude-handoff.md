@@ -14,11 +14,11 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.50 y como ejecutar).
+3. README.md (historial de fases 1 a 5.51 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.50 entregadas en primera pasada; refinamientos 5.44,
+Estado actual (fases 1-5.51 entregadas en primera pasada; refinamientos 5.44,
 5.45 y 5.49 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
@@ -180,9 +180,9 @@ Regla operativa: al cerrar cada fase se actualizan README.md, CLAUDE.md y
 este handoff (docs/claude-handoff.md).
 
 Proximos objetivos sugeridos:
-- Reinstalar la APK y probar el hotfix: joystick + `ATK`, joystick + camara,
-  giro vertical/horizontal, habilidades, Stats/Datos, `EXPLORAR` y safe zone
-  en el telefono.
+- Reinstalar la APK y probar regeneracion tras dano, minimapa, joystick +
+  `ATK`, joystick + camara, giro vertical/horizontal, habilidades, Stats/Datos,
+  `EXPLORAR` y safe zone en el telefono.
 - Fase 5.48: medir FPS, memoria, carga, TTK y legibilidad en las diez zonas.
 - Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y conectarlas
   al pipeline de animacion existente.

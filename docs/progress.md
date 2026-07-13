@@ -6,9 +6,9 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-12
 
-- Avance global estimado hacia el MMORPG publicable: **49%**.
-- Prototipo jugable offline: **95%**.
-- Vertical slice de una zona pulida: **84%**.
+- Avance global estimado hacia el MMORPG publicable: **52%**.
+- Prototipo jugable offline: **97%**.
+- Vertical slice de una zona pulida: **88%**.
 - Online persistente y preparado para produccion: **25%**.
 - Arte final, contenido completo 1-105 y lanzamiento: **30%**.
 
@@ -39,24 +39,26 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   ataque tactil responde al presionar.
 - Refinamiento de interfaz mobile: camara tactil con giro horizontal/vertical
   en zona libre y ayuda de controles separada del chat.
+- Fase 5.51: regeneracion progresiva tras cuatro segundos sin recibir dano y
+  minimapa 2D liviano con jugador, mobs cercanos y puntos de interes.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
 
-1. Reinstalar APK y probar multitactil real: joystick + `ATK`, joystick +
-   camara y, si el telefono lo permite, joystick + `ATK` + camara.
-2. Fase 5.48: medir rendimiento, balance y experiencia Android en las diez
-   zonas con el telefono real.
+1. Reinstalar APK y validar regeneracion, minimapa, multitactil y legibilidad
+   en el telefono real.
+2. Fase 5.48: medir FPS, memoria, carga y TTK en las diez zonas.
 3. Fase 5.45: crear/importar criaturas finales para las zonas 2-10 y probar
    sus animaciones sin perder el fallback procedural.
-4. Fase 5.49: persistir reclamos de POI por personaje y ajustar obstaculos,
-   TTK, EXP y oro con telemetria real.
+4. Fase 5.49: persistir reclamos de POI por personaje y ajustar recompensas
+   con telemetria real.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-12 | 5.51 | Regeneracion progresiva y minimapa 2D de mobs/POI | 52% |
 | 2026-07-12 | 5.42+5.44 | Hotfix multitactil, menu refinado y camara tactil | 49% |
 | 2026-07-12 | 5.50 | Zona segura de comercio y bloqueo de combate | 44% |
 | 2026-07-12 | 5.44+5.45+5.49 | Menu Stats/Datos, criatura de Zona 1 y recompensas de POI | 47% |

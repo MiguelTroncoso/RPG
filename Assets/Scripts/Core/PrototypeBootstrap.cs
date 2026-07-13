@@ -212,6 +212,7 @@ namespace MmorpgPrototype
 
             var health = player.AddComponent<Health>();
             health.ResetHealth(160);
+            player.AddComponent<PlayerRegeneration>();
             var playerFlash = player.AddComponent<HitFlashOnDamage>();
             playerFlash.FlashColor = new Color(1f, 0.42f, 0.32f);
 
@@ -495,6 +496,7 @@ namespace MmorpgPrototype
 
             var camera = Camera.main;
             CreateCameraLookSurface(uiRoot, camera != null ? camera.GetComponent<OrbitCamera>() : null);
+            CreateMiniMap(uiRoot, player.transform);
 
             CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(820f, 250f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.52f));
             CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(438f, 330f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
@@ -543,6 +545,8 @@ namespace MmorpgPrototype
 
             var combat = player.GetComponent<PlayerCombat>();
             combat.Hud = hud;
+            var regeneration = player.GetComponent<PlayerRegeneration>();
+            regeneration.Hud = hud;
             var progression = player.GetComponent<PlayerProgression>();
             progression.Hud = hud;
             var inventory = player.GetComponent<InventorySystem>();
@@ -956,6 +960,37 @@ namespace MmorpgPrototype
             var look = surface.AddComponent<MobileCameraLookSurface>();
             look.Camera = camera;
             return look;
+        }
+
+        private static MiniMapController CreateMiniMap(Transform parent, Transform target)
+        {
+            var panel = CreateUiObject("Mini Map", parent);
+            var panelImage = panel.AddComponent<Image>();
+            panelImage.color = new Color(0.025f, 0.055f, 0.07f, 0.84f);
+            panelImage.raycastTarget = false;
+            SetRect(panel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(220f, 220f), new Vector2(-142f, -274f));
+
+            var title = CreateText(panel.transform, "Mini Map Title", Localization.Tr("ui.minimap"), 16, TextAnchor.MiddleCenter);
+            title.fontStyle = FontStyle.Bold;
+            SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(200f, 26f), new Vector2(0f, -12f));
+
+            var map = CreateUiObject("Mini Map Area", panel.transform);
+            var mapImage = map.AddComponent<Image>();
+            mapImage.color = new Color(0.06f, 0.12f, 0.14f, 0.9f);
+            mapImage.raycastTarget = false;
+            SetRect(map.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(184f, 174f), new Vector2(0f, -18f));
+
+            var playerMarker = CreateUiObject("Mini Map Player", map.transform);
+            var playerMarkerImage = playerMarker.AddComponent<Image>();
+            playerMarkerImage.color = new Color(0.3f, 0.9f, 1f);
+            playerMarkerImage.raycastTarget = false;
+            SetRect(playerMarker.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(14f, 14f), Vector2.zero);
+
+            var controller = panel.AddComponent<MiniMapController>();
+            controller.Target = target;
+            controller.MapRect = map.GetComponent<RectTransform>();
+            controller.PlayerMarker = playerMarker.GetComponent<RectTransform>();
+            return controller;
         }
 
         private static Button CreateRoundButton(Transform parent, string name, string label, Vector2 anchor, Vector2 position, Vector2 size, Color color, int fontSize = 32)

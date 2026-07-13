@@ -500,6 +500,21 @@ progresion.
 Criterio de exito: el jugador puede organizar inventario, comprar y mejorar
 equipo sin recibir ataques ni generar enemigos en el campamento.
 
+## Fase 5.51: Recuperacion Y Minimap Mobile
+
+Objetivo: mejorar la lectura del combate y dar una pausa natural entre
+encuentros sin llenar la pantalla de efectos.
+
+- Registrar el ultimo dano recibido en `Health`. [Implementado]
+- Regeneracion retrasada y progresiva para el jugador. [Implementado]
+- Ritmo ligeramente distinto al estar en movimiento o quieto. [Implementado]
+- Radar 2D sin segunda camara para jugador, mobs cercanos y POI. [Implementado]
+- Ajustar delay, curacion por segundo, radio y legibilidad en telefono real.
+  [Pendiente de prueba fisica]
+
+Criterio de exito: el jugador entiende cuando vuelve a estar fuera de combate
+y puede localizar amenazas cercanas sin abrir otro menu.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

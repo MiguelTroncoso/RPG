@@ -7,6 +7,7 @@ namespace MmorpgPrototype
     {
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private int currentHealth = 100;
+        private float lastDamagedAt = float.NegativeInfinity;
 
         public event Action<Health> Changed;
         public event Action<Health> Died;
@@ -16,6 +17,7 @@ namespace MmorpgPrototype
         public int CurrentHealth => currentHealth;
         public bool IsDead => currentHealth <= 0;
         public float Normalized => maxHealth <= 0 ? 0f : Mathf.Clamp01((float)currentHealth / maxHealth);
+        public float TimeSinceDamage => float.IsNegativeInfinity(lastDamagedAt) ? float.PositiveInfinity : Mathf.Max(0f, Time.time - lastDamagedAt);
 
         private void Awake()
         {
@@ -26,6 +28,7 @@ namespace MmorpgPrototype
         {
             maxHealth = Mathf.Max(1, newMaxHealth);
             currentHealth = maxHealth;
+            lastDamagedAt = float.NegativeInfinity;
             Changed?.Invoke(this);
         }
 
@@ -37,6 +40,7 @@ namespace MmorpgPrototype
             }
 
             currentHealth = Mathf.Max(0, currentHealth - amount);
+            lastDamagedAt = Time.time;
             Damaged?.Invoke(this, amount);
             Changed?.Invoke(this);
 
