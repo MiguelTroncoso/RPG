@@ -20,6 +20,7 @@ namespace MmorpgPrototype
         private PlayerStatSheet Stats => statSheet != null ? statSheet : statSheet = GetComponent<PlayerStatSheet>();
 
         public int TotalAttackDamage => Stats != null ? Stats.Damage : AttackDamage + EquipmentDamageBonus;
+        public bool IsAttackOnCooldown => Time.time < nextAttackTime;
 
         private void Awake()
         {
@@ -51,6 +52,13 @@ namespace MmorpgPrototype
                 return;
             }
 
+            var enemy = FindNearestEnemy(AttackRange);
+            if (enemy == null)
+            {
+                Hud?.SetStatus(Localization.Tr("combat.no_target"));
+                return;
+            }
+
             if (Time.time < nextAttackTime)
             {
                 return;
@@ -59,13 +67,6 @@ namespace MmorpgPrototype
             nextAttackTime = Time.time + AttackCooldown;
             feedback?.PlayAttack();
             GetComponent<AvatarMotionAnimator>()?.PlayAttack();
-            var enemy = FindNearestEnemy(AttackRange);
-
-            if (enemy == null)
-            {
-                Hud?.SetStatus(Localization.Tr("combat.no_target"));
-                return;
-            }
 
             var health = enemy.GetComponent<Health>();
             if (health == null || health.IsDead)
@@ -75,12 +76,11 @@ namespace MmorpgPrototype
             }
 
             var movement = GetComponent<PlayerController>();
-            if (movement == null || !movement.IsReceivingMovementInput)
-            {
-                FaceTarget(enemy.transform.position);
-            }
+            var shouldFaceTarget = movement == null || !movement.IsReceivingMovementInput;
 
-            var result = DamageEnemy(enemy, TotalAttackDamage, new Color(1f, 0.9f, 0.28f));
+            // El ataque no cancela el desplazamiento ni cambia la orientacion
+            // elegida por el joystick mientras el jugador sigue avanzando.
+            var result = DamageEnemy(enemy, TotalAttackDamage, new Color(1f, 0.9f, 0.28f), shouldFaceTarget);
             if (result.IsMiss)
             {
                 Hud?.SetStatus(Localization.Tr("combat.dodged", enemy.name));
@@ -168,7 +168,7 @@ namespace MmorpgPrototype
 
         // Resuelve el golpe con DamageCalculator (critico/evasion) y aplica
         // el resultado. baseDamage ya debe incluir los bonos que correspondan.
-        public DamageResult DamageEnemy(EnemyAI enemy, int baseDamage, Color color)
+        public DamageResult DamageEnemy(EnemyAI enemy, int baseDamage, Color color, bool faceTarget = true)
         {
             if (enemy == null)
             {
@@ -181,7 +181,10 @@ namespace MmorpgPrototype
                 return new DamageResult(0, false, true);
             }
 
-            FaceTarget(enemy.transform.position);
+            if (faceTarget)
+            {
+                FaceTarget(enemy.transform.position);
+            }
 
             var result = DamageCalculator.Resolve(
                 BuildAttackerStats(baseDamage),

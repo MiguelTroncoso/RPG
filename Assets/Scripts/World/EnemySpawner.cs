@@ -243,6 +243,8 @@ namespace MmorpgPrototype
             var controller = enemy.AddComponent<CharacterController>();
             controller.height = 2f;
             controller.radius = 0.4f * scale;
+            controller.stepOffset = 0.35f;
+            controller.skinWidth = 0.08f;
 
             var enemyHealth = enemy.AddComponent<Health>();
             enemyHealth.ResetHealth(health);
@@ -267,6 +269,8 @@ namespace MmorpgPrototype
             ai.SafeZoneCenter = Zone.SafeZoneCenter;
             ai.SafeZoneRadius = Zone.HasSafeZone ? Zone.SafeZoneRadius : 0f;
 
+            IgnoreGameplayCollisions(controller);
+
             var reward = enemy.AddComponent<EnemyReward>();
             reward.Progression = Progression;
             reward.Inventory = Inventory;
@@ -284,6 +288,37 @@ namespace MmorpgPrototype
             reward.DailyEvents = DailyEvents;
 
             return enemy;
+        }
+
+        private void IgnoreGameplayCollisions(CharacterController spawnedController)
+        {
+            if (spawnedController == null)
+            {
+                return;
+            }
+
+            var playerController = Target != null ? Target.GetComponent<CharacterController>() : null;
+            if (playerController != null)
+            {
+                Physics.IgnoreCollision(playerController, spawnedController, true);
+            }
+
+            // Los mobs deben poder rodear al jugador y entre ellos sin formar
+            // una pared de CharacterControllers durante un ataque en movimiento.
+            var enemies = FindObjectsByType<EnemyAI>();
+            foreach (var enemy in enemies)
+            {
+                if (enemy == null)
+                {
+                    continue;
+                }
+
+                var otherController = enemy.GetComponent<CharacterController>();
+                if (otherController != null && otherController != spawnedController)
+                {
+                    Physics.IgnoreCollision(otherController, spawnedController, true);
+                }
+            }
         }
 
         private LootTableConfig LootFor(EnemyTier tier)

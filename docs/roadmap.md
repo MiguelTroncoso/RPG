@@ -645,6 +645,28 @@ Criterio de exito: al comparar la APK anterior con la nueva, el mundo, los
 personajes y los enemigos se distinguen mejor por materiales, silueta, luz y
 acentos de zona sin perder jugabilidad en Android.
 
+## Fase 5.57: Combate Estable Y Vertical Slice De Zona 1
+
+Objetivo: que el primer recorrido del jugador sea claro y que mover, atacar y
+rodear enemigos no produzca bloqueos en Android.
+
+- Ataque basico compatible con movimiento continuo: conserva la orientacion
+  del joystick mientras el personaje golpea. [Implementado]
+- Colisiones entre jugador y mobs, y entre mobs, ignoradas para evitar barreras
+  de `CharacterController` cuando varios enemigos se agrupan. [Implementado]
+- Campamento de la Zona 1 separado del campo de combate mediante radio seguro,
+  spawns fuera del comercio y marcador visual del area de lobos. [Implementado]
+- Valores explicitos de normales, elite y jefe para la progresion nivel 1-10.
+  [Implementado]
+- Validacion fisica de movimiento + ataque, safe zone, FPS y memoria en Android.
+  [Pendiente de dispositivo]
+- Ajuste final de TTK, loot, recompensas y lectura de interfaz despues de la
+  prueba real. [Pendiente de balance]
+
+Criterio de exito: un jugador puede entrar al campamento sin combate, salir al
+campo, combatir mientras se desplaza, completar la cadena inicial y entender
+la diferencia entre zona segura, normales, elite y jefe.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

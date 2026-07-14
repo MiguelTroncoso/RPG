@@ -8,7 +8,7 @@ economia, seguridad, operacion y publicacion.
 
 - Avance global estimado hacia el MMORPG publicable: **75%**.
 - Prototipo jugable offline: **98%**.
-- Vertical slice de una zona pulida: **94%**.
+- Vertical slice de una zona pulida: **96%**.
 - Online persistente y preparado para produccion: **35%**.
 - Arte final, contenido completo 1-105 y lanzamiento: **38%**.
 
@@ -79,40 +79,37 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.56: el mismo acabado visual se aplica a avatar, armaduras, mobs,
   jefes, NPC, mascotas, monturas, monolito y VFX de combate sin agregar
   paquetes externos.
+- Fase 5.57: movimiento y ataque simultaneos estabilizados; el ataque ya no
+  roba la orientacion del joystick y los `CharacterController` de los mobs no
+  bloquean al jugador ni forman barreras entre ellos.
+- Fase 5.57: Zona 1 reforzada como recorrido nivel 1-10, con campamento seguro
+  separado del campo de combate, marcador visual del area de lobos y valores
+  explicitos de spawn, elite y jefe.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
 
-1. Reinstalar APK y validar la nueva pantalla de acceso, seleccion de personaje,
-   URL, conexion automatica y estado S-01 en telefono real.
-2. Registrar desde TEST FPS, memoria, carga y objetos activos
-   en las diez zonas del telefono real.
-3. Ajustar cantidad de mobs, VFX, decoracion y radio del minimapa con esos
-   datos.
-4. Fase 5.48: medir en telefono real y ajustar mobs, VFX, decoracion, TTK y
-   minimapa con datos reales.
-5. Fase 5.52: calibrar precios, oro, TTK y cantidades de materiales/equipo con
-   sesiones reales en las diez bandas.
-6. Fase 5.48: validar escala, lectura, FPS y memoria de los diez jefes en
-   telefono real; ajustar adornos y materiales si algun modelo pierde lectura.
-7. Fase 5.45: sustituir progresivamente el set CC0 por meshes finales propios
-   cuando la direccion artistica este cerrada.
-8. Fase 5.49: mover la validacion definitiva de recompensas al servidor y
-   revisar duplicados/concurrencia con telemetria real.
-9. Levantar S-01 en la LAN, probar dos telefonos y luego desplegar un endpoint
-   publico antes de habilitar S-02/S-03.
-10. Probar en Android la tienda, atuendo, alas, evento diario y persistencia;
-    calibrar precios y recompensas con telemetria real.
-11. Migrar propiedad, compras, eventos diarios y drops raros a validacion
-   server-authoritative antes de abrir pruebas publicas.
-12. Validar la pasada visual en telefono: niebla, brillo de runas, lectura de
-   jefes, FPS y memoria; ajustar los valores de materiales segun el dispositivo.
+1. Reinstalar el APK y probar durante varios minutos joystick + ataque + giro de
+   camara, especialmente atravesando grupos de mobs.
+2. Confirmar que el campamento de la Zona 1 no contiene mobs y que la transicion
+   al campo de combate se entiende visualmente.
+3. Registrar desde TEST FPS, memoria, carga y objetos activos en la Zona 1.
+4. Ajustar cantidad de mobs, VFX, decoracion, TTK y radio del minimapa con datos
+   del telefono real.
+5. Completar la vertical slice nivel 1-10 con modelos finales de jugador y mobs,
+   recompensas calibradas y una interfaz de inventario/tienda mas clara.
+6. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
+   con firewall, TLS/WSS y persistencia protegida.
+7. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
+   servidor antes de una prueba publica.
+8. Sustituir progresivamente la geometria procedural por arte 3D final propio.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-13 | 5.57 | Movimiento + ataque estables y recorrido seguro de Zona 1 nivel 1-10 | 75% |
 | 2026-07-13 | 5.56 | Pasada visual 3D de materiales, luz, niebla y zonas | 75% |
 | 2026-07-13 | 5.55 | Atuendos, alas, stats de compañeros, tienda MVP y evento diario | 73% |
 | 2026-07-13 | 5.54 | Conexion automatica, URL configurable y servidor Node parametrizable | 70% |

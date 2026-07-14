@@ -34,6 +34,7 @@ namespace MmorpgPrototype
             BuildEntryMarker(root.transform, zone);
             BuildObstacleField(root.transform, zone);
             BuildSafeZone(root.transform, zone);
+            BuildCombatAreaMarker(root.transform, zone);
             BuildGroundAccents(root.transform, zone, random);
         }
 
@@ -92,6 +93,29 @@ namespace MmorpgPrototype
             CreatePart(parent, "Safe Zone Marker L", PrimitiveType.Cube, center + new Vector3(-zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
             CreatePart(parent, "Safe Zone Marker R", PrimitiveType.Cube, center + new Vector3(zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
             CreatePointOfInterest(parent, "Safe Commerce Zone", zone.SafeZoneCenter, Localization.Tr("poi.safe", zone.DisplayName), ZonePointOfInterestType.SafeCommerce, RewardFor(zone, ZonePointOfInterestType.SafeCommerce), ClaimIdFor(zone, ZonePointOfInterestType.SafeCommerce));
+        }
+
+        private static void BuildCombatAreaMarker(Transform parent, ZoneDefinition zone)
+        {
+            if (zone == null || zone.NormalAreaRadius <= 0f)
+            {
+                return;
+            }
+
+            var center = new Vector3(zone.NormalAreaCenter.x, 0.028f, zone.NormalAreaCenter.z);
+            var areaColor = new Color(0.72f, 0.22f, 0.16f, 0.9f);
+            CreatePart(parent, "Combat Area Marker", PrimitiveType.Cylinder, center,
+                new Vector3(zone.NormalAreaRadius * 2f, 0.012f, zone.NormalAreaRadius * 2f),
+                Color.Lerp(zone.GroundColor, areaColor, 0.2f));
+
+            var markerRadius = zone.NormalAreaRadius + 0.7f;
+            for (var i = 0; i < 4; i++)
+            {
+                var angle = i * 90f * Mathf.Deg2Rad;
+                var markerPosition = center + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * markerRadius;
+                CreatePart(parent, "Combat Area Marker Post", PrimitiveType.Cube,
+                    markerPosition + Vector3.up * 0.45f, new Vector3(0.16f, 0.9f, 0.16f), areaColor);
+            }
         }
 
         private static void BuildGroundAccents(Transform parent, ZoneDefinition zone, System.Random random)
