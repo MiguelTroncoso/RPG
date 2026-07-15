@@ -667,6 +667,30 @@ Criterio de exito: un jugador puede entrar al campamento sin combate, salir al
 campo, combatir mientras se desplaza, completar la cadena inicial y entender
 la diferencia entre zona segura, normales, elite y jefe.
 
+## Fase 5.58: Habilidades Progresivas
+
+Objetivo: dar al combate una progresion clara por clase sin llenar al jugador
+de botones desde el primer minuto.
+
+- Cada clase tiene cuatro habilidades propias en las ranuras `Q`, `E`, `R` y
+  `F`; las dos primeras estan disponibles desde nivel 1. [Implementado]
+- `R` se desbloquea en nivel 8 y `F` en nivel 20; las ranuras bloqueadas
+  muestran el nivel requerido y no ejecutan efectos. [Implementado]
+- Cada habilidad progresa de nivel 1 a 5. El nivel aumenta dano/curacion y
+  reduce el enfriamiento mediante una formula comun. [Implementado]
+- El `Manual de habilidades` es un material raro: la primera mision entrega
+  uno para probar el sistema y elites/jefes pueden soltar mas. [Implementado]
+- Los niveles se conservan en `PlayerSaveData` esquema 12 y se exponen en el
+  HUD junto a los botones de accion. [Implementado]
+- Ajustar costos, dano, curacion, enfriamientos, drop rate y lectura de R/F con
+  telemetria del telefono real. [Pendiente de balance]
+- Validar que el servidor sea la autoridad de desbloqueos, consumos y efectos
+  antes de permitir progresion compartida. [Pendiente online]
+
+Criterio de exito: un jugador puede aprender y mejorar habilidades con una
+economia entendible, notar una diferencia de poder sin romper el TTK y
+conservar sus niveles al cerrar y reabrir el juego.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

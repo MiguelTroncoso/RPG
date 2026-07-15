@@ -16,6 +16,8 @@ namespace MmorpgPrototype
         public Text ProgressionText;
         public Text SkillOneText;
         public Text SkillTwoText;
+        public Text SkillThreeText;
+        public Text SkillFourText;
         public Text InventoryText;
         public Text QuestText;
         public Text EquipmentText;
@@ -86,7 +88,11 @@ namespace MmorpgPrototype
         {
             UpdatePlayerHealth();
             UpdateEnemyHealth();
-            RefreshSkillCooldowns(skills != null ? skills.SkillOneRemaining : 0f, skills != null ? skills.SkillTwoRemaining : 0f);
+            RefreshSkillCooldowns(
+                skills != null ? skills.SkillOneRemaining : 0f,
+                skills != null ? skills.SkillTwoRemaining : 0f,
+                skills != null ? skills.SkillThreeRemaining : 0f,
+                skills != null ? skills.SkillFourRemaining : 0f);
 
             if (StatusText != null && statusUntil > 0f && Time.time > statusUntil)
             {
@@ -134,12 +140,22 @@ namespace MmorpgPrototype
 
             if (SkillOneText != null)
             {
-                SkillOneText.text = $"Q {definition.SkillOneName}";
+                SkillOneText.text = skills != null ? skills.DisplayLabel(0) : $"Q {definition.SkillOneName}";
             }
 
             if (SkillTwoText != null)
             {
-                SkillTwoText.text = $"E {definition.SkillTwoName}";
+                SkillTwoText.text = skills != null ? skills.DisplayLabel(1) : $"E {definition.SkillTwoName}";
+            }
+
+            if (SkillThreeText != null)
+            {
+                SkillThreeText.text = skills != null ? skills.DisplayLabel(2) : $"R {definition.SkillThreeName}";
+            }
+
+            if (SkillFourText != null)
+            {
+                SkillFourText.text = skills != null ? skills.DisplayLabel(3) : $"F {definition.SkillFourName}";
             }
         }
 
@@ -190,25 +206,31 @@ namespace MmorpgPrototype
             SummaryChanged?.Invoke();
         }
 
-        public void RefreshSkillCooldowns(float skillOneRemaining, float skillTwoRemaining)
+        public void RefreshSkillCooldowns(float skillOneRemaining, float skillTwoRemaining, float skillThreeRemaining, float skillFourRemaining)
         {
-            if (classController == null || classController.Definition == null)
+            if (classController == null || classController.Definition == null || skills == null)
             {
                 return;
             }
 
             if (SkillOneText != null)
             {
-                SkillOneText.text = skillOneRemaining > 0.1f
-                    ? $"Q {classController.Definition.SkillOneName} {skillOneRemaining:0.0}s"
-                    : $"Q {classController.Definition.SkillOneName}";
+                SkillOneText.text = skills.DisplayLabel(0, skillOneRemaining);
             }
 
             if (SkillTwoText != null)
             {
-                SkillTwoText.text = skillTwoRemaining > 0.1f
-                    ? $"E {classController.Definition.SkillTwoName} {skillTwoRemaining:0.0}s"
-                    : $"E {classController.Definition.SkillTwoName}";
+                SkillTwoText.text = skills.DisplayLabel(1, skillTwoRemaining);
+            }
+
+            if (SkillThreeText != null)
+            {
+                SkillThreeText.text = skills.DisplayLabel(2, skillThreeRemaining);
+            }
+
+            if (SkillFourText != null)
+            {
+                SkillFourText.text = skills.DisplayLabel(3, skillFourRemaining);
             }
         }
 

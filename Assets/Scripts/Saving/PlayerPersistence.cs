@@ -27,6 +27,7 @@ namespace MmorpgPrototype
         public DailyEventSystem DailyEvents;
         public StorageService Storage;
         public PlayerAttributes Attributes;
+        public PlayerSkills Skills;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -125,6 +126,7 @@ namespace MmorpgPrototype
             Identity?.ApplySelection(data.CharacterName, gender);
             ClassController?.ApplyClass(classType);
             Progression?.RestoreState(data.Level, data.Experience, data.Gold, data.AttributePoints);
+            Skills?.RestoreLevels(data.SkillLevels);
             Attributes?.Restore(data.SpentStrength, data.SpentVitality, data.SpentAgility);
             Inventory?.RestoreEntries(data.Items);
             Gear?.RestoreEntries(data.Equipment);
@@ -242,6 +244,7 @@ namespace MmorpgPrototype
                 Experience = Progression.Experience,
                 Gold = Progression.Gold,
                 AttributePoints = Progression.AttributePoints,
+                SkillLevels = Skills != null ? Skills.ExportLevels() : new List<int>(),
                 SpentStrength = Attributes != null ? Attributes.Strength : 0,
                 SpentVitality = Attributes != null ? Attributes.Vitality : 0,
                 SpentAgility = Attributes != null ? Attributes.Agility : 0,

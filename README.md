@@ -816,6 +816,21 @@ SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=10
 - La validacion visual final en el telefono queda pendiente para ajustar
   contraste, brillo, FPS y memoria por dispositivo.
 
+## Fase 5.58: Habilidades Progresivas
+
+- Cada clase tiene cuatro habilidades propias en `Q`, `E`, `R` y `F`. `Q` y `E`
+  estan disponibles desde nivel 1; `R` se desbloquea en nivel 8 y `F` en nivel
+  20.
+- Las habilidades tienen niveles 1-5. Cada mejora aumenta dano o curacion y
+  reduce el enfriamiento de forma progresiva.
+- El `Manual de habilidades` es un material raro. La primera mision entrega uno
+  para probar la mejora y los enemigos elite/jefe pueden soltar mas.
+- Los botones `+` del HUD consumen manuales y guardan el nivel en
+  `PlayerSaveData` esquema 12. Las ranuras bloqueadas indican el nivel
+  necesario.
+- APK validada despues de esta fase en:
+  `Builds/Android/valle-reliquias-debug.apk`.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

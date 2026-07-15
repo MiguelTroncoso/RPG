@@ -8,6 +8,8 @@ namespace MmorpgPrototype
         public string DisplayName;
         public string SkillOneName;
         public string SkillTwoName;
+        public string SkillThreeName;
+        public string SkillFourName;
         public string WeaponResource;
 
         // Modelo 3D real (KayKit Adventurers, CC0). Si el asset no esta en
@@ -39,6 +41,8 @@ namespace MmorpgPrototype
                         DisplayName = "Ninja",
                         SkillOneName = "Estocada",
                         SkillTwoName = "Sombra",
+                        SkillThreeName = "Shuriken triple",
+                        SkillFourName = "Danza de hojas",
                         WeaponResource = "ThirdParty/KayKit/Adventurers/Weapons/dagger",
                         CharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/Rogue",
                         FemaleCharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/RogueHooded",
@@ -64,6 +68,8 @@ namespace MmorpgPrototype
                         DisplayName = "Chaman",
                         SkillOneName = "Rayo",
                         SkillTwoName = "Bendicion",
+                        SkillThreeName = "Cadena espiritual",
+                        SkillFourName = "Lluvia sanadora",
                         WeaponResource = "ThirdParty/KayKit/Adventurers/Weapons/staff",
                         CharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/Mage",
                         FemaleCharacterModelResource = "ThirdParty/Quaternius/Characters/AnimatedWoman",
@@ -89,6 +95,8 @@ namespace MmorpgPrototype
                         DisplayName = "Umbra",
                         SkillOneName = "Hoja Oscura",
                         SkillTwoName = "Marca",
+                        SkillThreeName = "Eclipse",
+                        SkillFourName = "Vacio",
                         WeaponResource = "ThirdParty/KayKit/Adventurers/Weapons/sword_2handed",
                         CharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/Barbarian",
                         FemaleCharacterModelResource = "ThirdParty/Quaternius/Characters/AnimatedWoman",
@@ -114,6 +122,8 @@ namespace MmorpgPrototype
                         DisplayName = "Guerrero",
                         SkillOneName = "Corte",
                         SkillTwoName = "Grito",
+                        SkillThreeName = "Golpe pesado",
+                        SkillFourName = "Torbellino",
                         WeaponResource = "ThirdParty/KayKit/Adventurers/Weapons/sword_1handed",
                         CharacterModelResource = "ThirdParty/KayKit/Adventurers/Characters/Knight",
                         FemaleCharacterModelResource = "ThirdParty/Quaternius/Characters/AnimatedWoman",

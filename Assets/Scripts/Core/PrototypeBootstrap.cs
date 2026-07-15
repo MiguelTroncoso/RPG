@@ -525,7 +525,7 @@ namespace MmorpgPrototype
             CreateMiniMap(uiRoot, player.transform);
 
             CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(820f, 250f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.52f));
-            CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(438f, 330f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
+            CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(640f, 390f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
             CreatePanel(uiRoot, "Network Panel", new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(500f, 112f), new Vector2(-18f, -82f), new Color(0.025f, 0.032f, 0.04f, 0.46f));
             CreatePanel(uiRoot, "Activity Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(460f, 116f), new Vector2(-24f, -118f), new Color(0.025f, 0.032f, 0.04f, 0.36f));
 
@@ -559,13 +559,25 @@ namespace MmorpgPrototype
             attackInput.Pressed.AddListener(player.GetComponent<PlayerCombat>().TryAttack);
 
             var skills = player.GetComponent<PlayerSkills>();
-            var skillOneButton = CreateRoundButton(uiRoot, "Skill One Button", "Q", new Vector2(1f, 0f), new Vector2(-344f, 172f), new Vector2(130f, 92f), new Color(0.18f, 0.36f, 0.86f), 22);
+            var skillOneButton = CreateRoundButton(uiRoot, "Skill One Button", "Q", new Vector2(1f, 0f), new Vector2(-500f, 172f), new Vector2(130f, 92f), new Color(0.18f, 0.36f, 0.86f), 17);
             skillOneButton.onClick.AddListener(skills.UseSkillOne);
             hud.SkillOneText = skillOneButton.GetComponentInChildren<Text>();
+            CreateSkillUpgradeButton(uiRoot, skills, 0, new Vector2(-500f, 232f), new Color(0.18f, 0.36f, 0.86f));
 
-            var skillTwoButton = CreateRoundButton(uiRoot, "Skill Two Button", "E", new Vector2(1f, 0f), new Vector2(-302f, 286f), new Vector2(130f, 92f), new Color(0.47f, 0.2f, 0.78f), 22);
+            var skillTwoButton = CreateRoundButton(uiRoot, "Skill Two Button", "E", new Vector2(1f, 0f), new Vector2(-500f, 286f), new Vector2(130f, 92f), new Color(0.47f, 0.2f, 0.78f), 17);
             skillTwoButton.onClick.AddListener(skills.UseSkillTwo);
             hud.SkillTwoText = skillTwoButton.GetComponentInChildren<Text>();
+            CreateSkillUpgradeButton(uiRoot, skills, 1, new Vector2(-500f, 346f), new Color(0.47f, 0.2f, 0.78f));
+
+            var skillThreeButton = CreateRoundButton(uiRoot, "Skill Three Button", "R", new Vector2(1f, 0f), new Vector2(-330f, 286f), new Vector2(130f, 92f), new Color(0.18f, 0.52f, 0.52f), 17);
+            skillThreeButton.onClick.AddListener(skills.UseSkillThree);
+            hud.SkillThreeText = skillThreeButton.GetComponentInChildren<Text>();
+            CreateSkillUpgradeButton(uiRoot, skills, 2, new Vector2(-330f, 346f), new Color(0.18f, 0.52f, 0.52f));
+
+            var skillFourButton = CreateRoundButton(uiRoot, "Skill Four Button", "F", new Vector2(1f, 0f), new Vector2(-330f, 172f), new Vector2(130f, 92f), new Color(0.62f, 0.34f, 0.16f), 17);
+            skillFourButton.onClick.AddListener(skills.UseSkillFour);
+            hud.SkillFourText = skillFourButton.GetComponentInChildren<Text>();
+            CreateSkillUpgradeButton(uiRoot, skills, 3, new Vector2(-330f, 232f), new Color(0.62f, 0.34f, 0.16f));
 
             CreateClassButtons(uiRoot, player);
 
@@ -603,6 +615,8 @@ namespace MmorpgPrototype
             equipmentVisuals.Equipment = gear;
             equipmentVisuals.Initialize();
             skills.Hud = hud;
+            skills.Progression = progression;
+            skills.Inventory = inventory;
             var persistence = player.GetComponent<PlayerPersistence>();
             persistence.Identity = player.GetComponent<PlayerCharacterIdentity>();
             persistence.ClassController = player.GetComponent<PlayerClassController>();
@@ -639,6 +653,7 @@ namespace MmorpgPrototype
             attributes.UpgradeSystem = equipment;
             attributes.Hud = hud;
             persistence.Attributes = attributes;
+            persistence.Skills = skills;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
@@ -727,6 +742,12 @@ namespace MmorpgPrototype
 
             var wingsButton = CreateRoundButton(actionParent, "Wings Button", Localization.Tr("ui.wings"), new Vector2(0f, 1f), new Vector2(1212f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.24f, 0.54f), 16);
             wingsButton.onClick.AddListener(cosmetics.ToggleWings);
+        }
+
+        private static void CreateSkillUpgradeButton(Transform parent, PlayerSkills skills, int slot, Vector2 position, Color color)
+        {
+            var button = CreateRoundButton(parent, $"Upgrade Skill {slot + 1}", "+", new Vector2(1f, 0f), position + new Vector2(44f, 24f), new Vector2(38f, 30f), color, 20);
+            button.onClick.AddListener(() => skills.UpgradeSkill(slot));
         }
 
         private static MobileTestWindowController CreateMobileTestWindow(Transform parent, GameObject player)

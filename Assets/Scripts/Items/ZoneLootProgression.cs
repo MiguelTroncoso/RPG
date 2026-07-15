@@ -31,6 +31,7 @@ namespace MmorpgPrototype
                     entries.Add(new LootTableConfig.LootEntry { ItemId = upgrade, Weight = 28f + bandIndex * 2f });
                     entries.Add(new LootTableConfig.LootEntry { ItemId = DefaultGameItems.MinorPotion, Weight = Mathf.Max(4f, 6f - bandIndex * 0.2f) });
                     entries.Add(new LootTableConfig.LootEntry { ItemId = DefaultGameItems.ProtectionRune, Weight = 3f + bandIndex * 0.4f });
+                    entries.Add(new LootTableConfig.LootEntry { ItemId = DefaultGameItems.SkillTome, Weight = 3f + bandIndex * 0.25f });
                     AddGear(entries, gear, 5f + bandIndex * 0.4f);
                     break;
 
@@ -40,6 +41,7 @@ namespace MmorpgPrototype
                     entries.Add(new LootTableConfig.LootEntry { ItemId = upgrade, Weight = 34f + bandIndex * 2.4f });
                     entries.Add(new LootTableConfig.LootEntry { ItemId = DefaultGameItems.MinorPotion, Weight = 6f });
                     entries.Add(new LootTableConfig.LootEntry { ItemId = DefaultGameItems.ProtectionRune, Weight = 7f + bandIndex * 0.6f });
+                    entries.Add(new LootTableConfig.LootEntry { ItemId = DefaultGameItems.SkillTome, Weight = 8f + bandIndex * 0.5f });
                     AddGear(entries, gear, 4f + bandIndex * 0.5f);
                     break;
 

@@ -13,11 +13,13 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.56 entregadas en primera pasada y refinamientos activos de 5.44, 5.45 y 5.49 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.58 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49 y 5.58 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
-avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v11 (incluye posición, reclamos de POI, cosmeticos y evento diario),
-progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, items como
+avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v12 (incluye posición, reclamos de POI, cosmeticos, evento diario y niveles de habilidades),
+progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, cuatro habilidades
+por clase con desbloqueo en nivel 8/20, mejoras 1-5 con `Manual de habilidades`
+y persistencia en esquema 12, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
 equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
 `UpgradeConfig`/`UpgradeResolver`, daño con crítico/evasión vía
@@ -110,7 +112,7 @@ simple y autocontenido.
   telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
-- Guardado local en esquema v11 incluye reclamos de puntos de interes,
+- Guardado local en esquema v12 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
 - Acceso mobile: splash renovado, seleccion de personaje guardado, creacion
@@ -131,6 +133,10 @@ simple y autocontenido.
   emision selectiva, niebla lineal y acentos de suelo por zona; la pasada se
   aplica a personajes, mobs, jefes, NPC, compañeros, monturas y VFX. Falta
   ajustar contraste/FPS/memoria con un telefono real.
+- Fase 5.58: `PlayerSkills` administra cuatro habilidades por clase, niveles
+  1-5, desbloqueos R/F en niveles 8/20 y mejoras mediante `skill_tome`; el HUD
+  muestra enfriamientos, nivel y botones `+`, y `PlayerPersistence` guarda el
+  arreglo de niveles en esquema 12.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar
@@ -141,4 +147,6 @@ simple y autocontenido.
   CC0 por meshes finales propios cuando la direccion artistica este cerrada;
   validar acceso/selector y conexion LAN en Android, desplegar S-01 con WSS,
   crear instancias reales S-02/S-03 y
-  pulir comercio y uso tactil de items.
+  pulir comercio y uso tactil de items; probar desbloqueos y mejoras de
+  habilidades en Android; despues mover habilidades, consumos y recompensas a
+  autoridad server-authoritative.

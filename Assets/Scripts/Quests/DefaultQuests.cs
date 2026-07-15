@@ -57,7 +57,7 @@ namespace MmorpgPrototype
                     {
                         Objective(QuestObjectiveType.TalkToNpc, MerchantNpcId, 1, "Habla con el Mercader del Valle")
                     },
-                    Reward(30, 20, Item(DefaultGameItems.MinorPotion, 1)),
+                    Reward(30, 20, Item(DefaultGameItems.MinorPotion, 1), Item(DefaultGameItems.SkillTome, 1)),
                     ClearFields),
 
                 Quest(ClearFields, 2, "Campos inquietos",

@@ -85,6 +85,12 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.57: Zona 1 reforzada como recorrido nivel 1-10, con campamento seguro
   separado del campo de combate, marcador visual del area de lobos y valores
   explicitos de spawn, elite y jefe.
+- Fase 5.58: cuatro habilidades por clase con ranuras Q/E/R/F; Q/E comienzan
+  disponibles, R se desbloquea en nivel 8 y F en nivel 20.
+- Fase 5.58: cada habilidad tiene nivel 1-5, aumenta su dano o curacion y
+  reduce progresivamente su enfriamiento; el `Manual de habilidades` se usa
+  para mejorarla, se guarda en el esquema 12 y cae con mas frecuencia de
+  elites y jefes.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -99,16 +105,19 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    del telefono real.
 5. Completar la vertical slice nivel 1-10 con modelos finales de jugador y mobs,
    recompensas calibradas y una interfaz de inventario/tienda mas clara.
-6. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
+6. Probar desbloqueo y mejora de habilidades en Android, incluyendo nivel 8/20,
+   consumo de manuales, persistencia y lectura de los botones R/F.
+7. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
    con firewall, TLS/WSS y persistencia protegida.
-7. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
+8. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-8. Sustituir progresivamente la geometria procedural por arte 3D final propio.
+9. Sustituir progresivamente la geometria procedural por arte 3D final propio.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-15 | 5.58 | Habilidades Q/E/R/F, desbloqueos por nivel, mejoras con manuales y guardado | 75% |
 | 2026-07-13 | 5.57 | Movimiento + ataque estables y recorrido seguro de Zona 1 nivel 1-10 | 75% |
 | 2026-07-13 | 5.56 | Pasada visual 3D de materiales, luz, niebla y zonas | 75% |
 | 2026-07-13 | 5.55 | Atuendos, alas, stats de compañeros, tienda MVP y evento diario | 73% |

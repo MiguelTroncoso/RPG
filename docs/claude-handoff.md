@@ -14,12 +14,12 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.56 y como ejecutar).
+3. README.md (historial de fases 1 a 5.58 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.56 entregadas en primera pasada; refinamientos 5.44,
-5.45 y 5.49 completados en esta pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.58 entregadas en primera pasada; refinamientos 5.44,
+5.45, 5.49 y 5.58 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -110,7 +110,7 @@ Estado actual (fases 1-5.56 entregadas en primera pasada; refinamientos 5.44,
 - Compañeros y eventos: `PetService`/`MountService` conservan propiedad,
   rareza y stats de combate; `DailyEventSystem` activa una Caceria de
   Reliquias por fecha local, cuenta cinco derrotas y entrega EXP/oro y Alas de
-  brasa. El guardado local es esquema v11. Compras y recompensas deben pasar a
+  brasa. El guardado local es esquema v12. Compras y recompensas deben pasar a
   autoridad del servidor antes de una prueba publica.
 - Visual 3D: `VisualMaterialUtility` centraliza materiales compartidos con
   smoothness/metal/emision; `PrototypeBootstrap` configura luz calida, niebla
@@ -118,6 +118,11 @@ Estado actual (fases 1-5.56 entregadas en primera pasada; refinamientos 5.44,
   por paleta de zona. La pasada visual ya cubre avatar, armadura, mobs, jefes,
   NPC, mascotas, monturas y VFX; falta validar contraste y rendimiento en
   telefono real.
+- Habilidades: `PlayerSkills` administra cuatro habilidades propias por clase
+  en Q/E/R/F; R y F se desbloquean en niveles 8/20, cada ranura progresa de
+  nivel 1 a 5 con `Manual de habilidades`, y `PlayerPersistence` conserva el
+  arreglo en `PlayerSaveData` esquema 12. El servidor debe validar consumos,
+  desbloqueos y efectos antes de la progresion online.
 - Interfaz mobile: el HUD principal es mas compacto, inventario y equipo se
   consultan desde `MENU`, y las acciones secundarias se agrupan bajo `MAS`.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
@@ -168,7 +173,7 @@ Estado actual (fases 1-5.56 entregadas en primera pasada; refinamientos 5.44,
   si no pasan. Persistencia por playerKey en Server/data/players.json:
   presencia basica, snapshot completo `PlayerSaveData` via `saveState`/
   `savedState` y ultimo resumen de telemetria recibido.
-- Guardado local JSON (esquema v11) via ISaveStorage/JsonFileStorage con
+- Guardado local JSON (esquema v12) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
   activa y progreso, mascota activa, montura, almacen y posicion del
@@ -240,6 +245,8 @@ Proximos objetivos sugeridos:
   drops raros.
 - Fase 5.56: reinstalar la APK y comparar la lectura visual de zonas, jefes,
   runas emisivas y niebla; medir FPS/memoria y ajustar el perfil Android.
+- Fase 5.58: probar en Android las ranuras Q/E/R/F, los desbloqueos de nivel
+  8/20, el consumo de manuales y la persistencia de mejoras.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

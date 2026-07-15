@@ -63,6 +63,7 @@ namespace MmorpgPrototype
                 new LootEntry { ItemId = DefaultGameItems.DullOre, Weight = 16f },
                 new LootEntry { ItemId = DefaultGameItems.TornScroll, Weight = 12f },
                 new LootEntry { ItemId = DefaultGameItems.ProtectionRune, Weight = 4f },
+                new LootEntry { ItemId = DefaultGameItems.SkillTome, Weight = 2f },
                 new LootEntry { ItemId = DefaultGameItems.RecruitSword, Weight = 4f },
                 new LootEntry { ItemId = DefaultGameItems.LeatherHelmet, Weight = 4f },
                 new LootEntry { ItemId = DefaultGameItems.GuardChestplate, Weight = 3f },
