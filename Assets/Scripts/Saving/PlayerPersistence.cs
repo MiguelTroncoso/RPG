@@ -28,6 +28,7 @@ namespace MmorpgPrototype
         public StorageService Storage;
         public PlayerAttributes Attributes;
         public PlayerSkills Skills;
+        public RepeatableContractSystem Contracts;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -126,6 +127,7 @@ namespace MmorpgPrototype
             Identity?.ApplySelection(data.CharacterName, gender);
             ClassController?.ApplyClass(classType);
             Progression?.RestoreState(data.Level, data.Experience, data.Gold, data.AttributePoints);
+            Progression?.RestoreRebirthState(data.RebirthCount, data.Renown);
             Skills?.RestoreLevels(data.SkillLevels);
             Skills?.RestoreUltimateCooldown(data.UltimateReadyAtUtcTicks);
             Attributes?.Restore(data.SpentStrength, data.SpentVitality, data.SpentAgility);
@@ -133,6 +135,7 @@ namespace MmorpgPrototype
             Gear?.RestoreEntries(data.Equipment);
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
             QuestLog?.Restore(data.Quests);
+            Contracts?.Restore(data.Contracts);
             Storage?.RestoreEntries(data.Storage);
 
             Cosmetics?.RestoreOwned(data.OwnedCosmeticIds);
@@ -245,6 +248,8 @@ namespace MmorpgPrototype
                 Experience = Progression.Experience,
                 Gold = Progression.Gold,
                 AttributePoints = Progression.AttributePoints,
+                RebirthCount = Progression.RebirthCount,
+                Renown = Progression.Renown,
                 SkillLevels = Skills != null ? Skills.ExportLevels() : new List<int>(),
                 UltimateReadyAtUtcTicks = Skills != null ? Skills.ExportUltimateReadyAtUtcTicks() : 0L,
                 SpentStrength = Attributes != null ? Attributes.Strength : 0,
@@ -255,6 +260,7 @@ namespace MmorpgPrototype
                 Items = Inventory != null ? Inventory.ExportEntries() : new List<SavedItemEntry>(),
                 Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>(),
                 Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData(),
+                Contracts = Contracts != null ? Contracts.Export() : new RepeatableContractSaveData(),
                 ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
                 SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty,
                 ActiveOutfitId = Cosmetics != null ? Cosmetics.ActiveOutfitId : string.Empty,

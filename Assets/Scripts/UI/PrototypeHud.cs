@@ -176,11 +176,14 @@ namespace MmorpgPrototype
             var bonusLabel = progression.ExperienceMultiplier > 1.001f
                 ? Localization.Tr("hud.exp_bonus_suffix", ((progression.ExperienceMultiplier - 1f) * 100f).ToString("0"))
                 : string.Empty;
+            var rebirthLabel = progression.RebirthCount > 0
+                ? Localization.Tr("hud.rebirth", progression.RebirthCount, progression.Renown)
+                : string.Empty;
             var expLabel = progression.IsMaxLevel
                 ? Localization.Tr("hud.exp_max")
                 : Localization.Tr("hud.exp", progression.Experience, progression.NextLevelExperience);
             var pointsLabel = progression.AttributePoints > 0 ? Localization.Tr("hud.points_suffix", progression.AttributePoints) : string.Empty;
-            ProgressionText.text = Localization.Tr("hud.progression", progression.Level, expLabel, progression.Gold, pointsLabel, bonusLabel);
+            ProgressionText.text = Localization.Tr("hud.progression", progression.Level, expLabel, progression.Gold, pointsLabel, rebirthLabel + bonusLabel);
         }
 
         public void RefreshInventory()

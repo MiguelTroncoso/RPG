@@ -13,6 +13,7 @@ namespace MmorpgPrototype
         public PrototypeHud Hud;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
+        public RepeatableContractSystem Contracts;
 
         private readonly List<QuestDefinition> questLine = new List<QuestDefinition>();
         private readonly List<string> completedIds = new List<string>();
@@ -52,6 +53,7 @@ namespace MmorpgPrototype
             // El TargetId del objetivo filtra por tier ("Elite", "Boss") o
             // por id de enemigo ("forest_elite"); vacio = cualquier enemigo.
             ProgressAny(QuestObjectiveType.KillEnemies, new[] { tier.ToString(), enemyId }, 1);
+            Contracts?.OnEnemyDefeated(tier, enemyId);
         }
 
         public void OnItemUpgraded()
@@ -62,6 +64,7 @@ namespace MmorpgPrototype
         public void OnItemAdded(string itemId, int amount)
         {
             Progress(QuestObjectiveType.CollectItems, itemId, amount);
+            Contracts?.OnItemAdded(itemId, amount);
         }
 
         public void OnNpcTalked(string npcId)
@@ -103,25 +106,45 @@ namespace MmorpgPrototype
 
         public string DetailedSummary()
         {
+            var builder = new StringBuilder();
             if (activeQuest == null)
             {
-                return completedIds.Count > 0
+                builder.AppendLine(completedIds.Count > 0
                     ? Localization.Tr("quest.all_done")
-                    : Localization.Tr("quest.none");
+                    : Localization.Tr("quest.none"));
             }
-
-            var builder = new StringBuilder();
-            builder.AppendLine(Localization.Tr("menu.quest_title", activeQuest.Title));
-            for (var i = 0; i < activeQuest.Objectives.Length; i++)
+            else
             {
-                var objective = activeQuest.Objectives[i];
-                var current = counters != null && i < counters.Length ? counters[i] : 0;
-                builder.AppendLine(Localization.Tr("menu.quest_objective", objective.Label, current, objective.RequiredCount));
+                builder.AppendLine(Localization.Tr("menu.quest_title", activeQuest.Title));
+                for (var i = 0; i < activeQuest.Objectives.Length; i++)
+                {
+                    var objective = activeQuest.Objectives[i];
+                    var current = counters != null && i < counters.Length ? counters[i] : 0;
+                    builder.AppendLine(Localization.Tr("menu.quest_objective", objective.Label, current, objective.RequiredCount));
+                }
+
+                var reward = activeQuest.Reward;
+                builder.Append(Localization.Tr("menu.quest_reward", reward != null ? reward.Experience : 0, reward != null ? reward.Gold : 0));
             }
 
-            var reward = activeQuest.Reward;
-            builder.Append(Localization.Tr("menu.quest_reward", reward != null ? reward.Experience : 0, reward != null ? reward.Gold : 0));
+            if (Contracts != null)
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(Contracts.Summary());
+            }
+
             return builder.ToString();
+        }
+
+        public void ResetForRebirth()
+        {
+            completedIds.Clear();
+            activeQuest = null;
+            counters = null;
+            ActivateNext(announce: false);
+            Contracts?.OnRebirth();
+            Hud?.RefreshQuest();
         }
 
         public QuestSaveData Export()

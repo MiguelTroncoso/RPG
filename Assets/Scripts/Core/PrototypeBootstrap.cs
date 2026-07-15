@@ -42,7 +42,7 @@ namespace MmorpgPrototype
             var shop = CreateShopNpc(player);
             var blacksmith = CreateBlacksmithNpc(player);
             var storage = CreateStorageNpc(player);
-            var hud = CreateHudAndControls(player, shop, blacksmith, storage);
+            var hud = CreateHudAndControls(player, shop, blacksmith, storage, zones);
             var telemetry = player.GetComponent<CombatTelemetry>();
             telemetry.Hud = hud;
             telemetry.Network = player.GetComponent<MmorpgNetworkClient>();
@@ -234,6 +234,7 @@ namespace MmorpgPrototype
             progression.Table = LoadLevelTable();
             player.AddComponent<InventorySystem>();
             player.AddComponent<PlayerQuestLog>();
+            player.AddComponent<RepeatableContractSystem>();
             player.AddComponent<EquipmentUpgradeSystem>();
             player.AddComponent<PlayerEquipment>();
             player.AddComponent<PetService>();
@@ -497,7 +498,7 @@ namespace MmorpgPrototype
             return dailyEvents;
         }
 
-        private static PrototypeHud CreateHudAndControls(GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage)
+        private static PrototypeHud CreateHudAndControls(GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage, System.Collections.Generic.List<ZoneDefinition> zones)
         {
             var canvasObject = new GameObject("Prototype HUD");
             var canvas = canvasObject.AddComponent<Canvas>();
@@ -659,6 +660,14 @@ namespace MmorpgPrototype
             attributes.Hud = hud;
             persistence.Attributes = attributes;
             persistence.Skills = skills;
+            var contracts = player.GetComponent<RepeatableContractSystem>();
+            contracts.Progression = progression;
+            contracts.Inventory = inventory;
+            contracts.Hud = hud;
+            contracts.Persistence = persistence;
+            contracts.Initialize(zones);
+            questLog.Contracts = contracts;
+            persistence.Contracts = contracts;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
@@ -747,6 +756,21 @@ namespace MmorpgPrototype
 
             var wingsButton = CreateRoundButton(actionParent, "Wings Button", Localization.Tr("ui.wings"), new Vector2(0f, 1f), new Vector2(1212f, -348f), new Vector2(128f, 42f), new Color(0.58f, 0.24f, 0.54f), 16);
             wingsButton.onClick.AddListener(cosmetics.ToggleWings);
+
+            var rebirthButton = CreateRoundButton(actionParent, "Rebirth Button", Localization.Tr("ui.rebirth"), new Vector2(0f, 1f), new Vector2(1072f, -396f), new Vector2(128f, 42f), new Color(0.7f, 0.24f, 0.16f), 16);
+            rebirthButton.onClick.AddListener(() => TryRebirth(player));
+        }
+
+        private static void TryRebirth(GameObject player)
+        {
+            var progression = player.GetComponent<PlayerProgression>();
+            if (progression == null || !progression.TryRebirth())
+            {
+                return;
+            }
+
+            player.GetComponent<PlayerQuestLog>()?.ResetForRebirth();
+            player.GetComponent<PlayerPersistence>()?.SaveNow();
         }
 
         private static void CreateSkillUpgradeButton(Transform parent, PlayerSkills skills, int slot, Vector2 position, Color color)

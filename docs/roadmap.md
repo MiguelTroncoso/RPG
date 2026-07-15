@@ -758,8 +758,34 @@ bandas de nivel antes de invertir en arte comercial y prueba online.
 - El reporte reproducible se genera en `docs/content-completeness.md` desde
   `MMORPG > QA > Generate Content Completeness Report`. [Implementado]
 
-Criterio de exito: el reporte termina con 11/11 checks y cualquier nuevo hueco
+Criterio de exito: el reporte termina con 13/13 checks y cualquier nuevo hueco
 de contenido queda visible antes de continuar con la fase online.
+
+## Fase 5.62: Longevidad, Contratos Y Renacimiento
+
+Objetivo: mantener razones para volver despues de completar las 35 misiones
+principales sin convertir la campana 1-105 en una lista infinita imposible de
+balancear.
+
+- La campana principal conserva 35 misiones narrativas como columna vertebral
+  de las diez zonas. [Implementado]
+- Cada dia UTC se generan tres contratos rotativos para la banda actual:
+  caceria normal, caceria elite y recoleccion de material de mejora.
+  [Implementado]
+- Los contratos muestran progreso, entregan EXP/oro/materiales y se guardan en
+  `PlayerSaveData` esquema 14. [Implementado]
+- Al llegar al nivel 105 aparece `RENACER`: reinicia nivel, EXP, atributos y
+  progreso de campana; conserva equipo, inventario, cosmeticos, mascotas,
+  monturas y habilidades. [Implementado]
+- Cada Renacimiento aumenta Renombre y otorga un 2% permanente de EXP; la
+  campana y los contratos se pueden repetir con una nueva banda de inicio.
+  [Implementado]
+- La autoridad del servidor debe validar fecha, contratos, recompensas y
+  Renacimientos antes de una prueba publica. [Pendiente server-authority]
+
+Criterio de exito: completar la campana, alcanzar nivel 105, Renacer y volver
+a tener objetivos diarios sin perder colecciones ni generar recompensas
+duplicadas por reinicios de la aplicacion.
 
 ## Fase 6: Lanzamiento Inicial
 

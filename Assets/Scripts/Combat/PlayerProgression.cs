@@ -12,6 +12,8 @@ namespace MmorpgPrototype
         public int Experience { get; private set; }
         public int Gold { get; private set; }
         public int AttributePoints { get; private set; }
+        public int RebirthCount { get; private set; }
+        public int Renown { get; private set; }
 
         public LevelProgressionTable Table;
         public PrototypeHud Hud;
@@ -23,6 +25,8 @@ namespace MmorpgPrototype
 
         public int EffectiveMaxLevel => ExperienceResolver.MaxLevelOf(Table);
         public bool IsMaxLevel => Level >= EffectiveMaxLevel;
+        public bool CanRebirth => IsMaxLevel;
+        public float RebirthExperienceMultiplier => 1f + RebirthCount * 0.02f;
 
         public int NextLevelExperience => Table != null
             ? (int)Math.Min(int.MaxValue, Table.GetExpToNext(Level))
@@ -35,7 +39,7 @@ namespace MmorpgPrototype
                 return;
             }
 
-            amount = Mathf.Max(1, Mathf.RoundToInt(amount * ExperienceMultiplier));
+            amount = Mathf.Max(1, Mathf.RoundToInt(amount * ExperienceMultiplier * RebirthExperienceMultiplier));
             var result = ExperienceResolver.AddExperience(Table, Level, Experience, amount);
             Level = result.Level;
             Experience = result.Experience;
@@ -82,6 +86,35 @@ namespace MmorpgPrototype
             Gold = Mathf.Max(0, gold);
             AttributePoints = Mathf.Max(0, attributePoints);
             Hud?.RefreshProgression();
+        }
+
+        public void RestoreRebirthState(int rebirthCount, int renown)
+        {
+            RebirthCount = Mathf.Max(0, rebirthCount);
+            Renown = Mathf.Max(0, renown);
+            Hud?.RefreshProgression();
+        }
+
+        public bool TryRebirth()
+        {
+            if (!CanRebirth)
+            {
+                Hud?.SetStatus(Localization.Tr("rebirth.required", EffectiveMaxLevel), 3f);
+                return false;
+            }
+
+            RebirthCount++;
+            Renown++;
+            Level = 1;
+            Experience = 0;
+            AttributePoints = 0;
+
+            var health = GetComponent<Health>();
+            health?.Heal(health.MaxHealth);
+            Hud?.SetStatus(Localization.Tr("rebirth.success", RebirthCount, Renown), 6f);
+            Hud?.AddFeed(Localization.Tr("rebirth.renown", Renown, RebirthExperienceMultiplier));
+            Hud?.RefreshProgression();
+            return true;
         }
 
         public bool TrySpendAttributePoint()

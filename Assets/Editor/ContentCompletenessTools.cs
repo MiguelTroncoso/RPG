@@ -39,6 +39,7 @@ namespace MmorpgPrototype.Editor
                 AuditClasses(checks);
                 AuditVisualResources(checks);
                 AuditDailyEvent(checks);
+                AuditLongevity(checks);
 
                 temporaryCurve = ScriptableObject.CreateInstance<ExpCurveConfig>();
                 AuditLevelCurve(temporaryCurve, checks);
@@ -300,6 +301,19 @@ namespace MmorpgPrototype.Editor
                 "Eventos diarios",
                 !string.IsNullOrWhiteSpace(DailyEventSystem.EventId) && DailyEventSystem.TargetDefeats > 0,
                 $"Evento {DailyEventSystem.EventId}, objetivo {DailyEventSystem.TargetDefeats} derrotas"));
+        }
+
+        private static void AuditLongevity(List<CheckResult> checks)
+        {
+            var save = new PlayerSaveData();
+            checks.Add(new CheckResult(
+                "Contratos repetibles",
+                RepeatableContractSystem.ContractsPerDay == 3,
+                "3 contratos diarios rotativos por banda: normal, elite y material de mejora"));
+            checks.Add(new CheckResult(
+                "Renacimiento y Renombre",
+                save.SchemaVersion == 14 && save.Contracts != null,
+                "Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 14"));
         }
 
         private static void AuditLevelCurve(ExpCurveConfig curve, List<CheckResult> checks)

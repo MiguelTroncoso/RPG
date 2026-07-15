@@ -863,9 +863,29 @@ SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=10
 - El auditor verifica rangos 1-105, mobs, TTK, recompensas, materiales,
   habilidades, eventos diarios y recursos 3D masculinos/femeninos.
 - Ejecutar `MMORPG > QA > Generate Content Completeness Report` para regenerar
-  `docs/content-completeness.md`; el corte actual pasa 11/11 checks.
+  `docs/content-completeness.md`; el corte 5.62 pasa 13/13 checks.
 - Esto marca el contenido funcional al 100%, pero el arte comercial final,
   online autoritativo, optimizacion y publicacion siguen pendientes.
+
+## Fase 5.62: Longevidad Y Renacimiento
+
+Las 35 misiones principales se mantienen como una campana clara de nivel
+1-105. Para que el juego continue despues de completarla se agregaron:
+
+- Tres contratos diarios rotativos por banda: caceria normal, caceria elite y
+  recoleccion de materiales de mejora.
+- Progreso visible, recompensas de EXP/oro/items y guardado local en esquema
+  14.
+- Renacimiento al nivel 105, con boton `RENACER` dentro de `MAS`.
+- El Renacimiento reinicia nivel, EXP, atributos y campana, pero conserva
+  equipo, inventario, cosmeticos, mascotas, monturas y habilidades.
+- Cada Renacimiento suma Renombre y un 2% permanente de EXP. Esto permite
+  repetir la campana y seguir progresando sin crear niveles infinitos desde
+  el primer lanzamiento.
+
+La fecha diaria usa UTC para que cliente y futuro servidor compartan el mismo
+corte. Antes de abrir el juego se debe validar contratos, recompensas y
+Renacimientos desde S-01 para evitar manipulacion local.
 
 ## Clases Iniciales
 

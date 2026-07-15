@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 13;
+        public int SchemaVersion = 14;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -14,6 +14,8 @@ namespace MmorpgPrototype
         public int Experience;
         public int Gold;
         public int AttributePoints;
+        public int RebirthCount;
+        public int Renown;
         public List<int> SkillLevels = new List<int>();
         public long UltimateReadyAtUtcTicks;
         public int SpentStrength;
@@ -24,6 +26,7 @@ namespace MmorpgPrototype
         public List<SavedItemEntry> Items = new List<SavedItemEntry>();
         public List<SavedEquipmentEntry> Equipment = new List<SavedEquipmentEntry>();
         public QuestSaveData Quests = new QuestSaveData();
+        public RepeatableContractSaveData Contracts = new RepeatableContractSaveData();
         public string ActivePetId = string.Empty;
         public string SelectedMountId = string.Empty;
         public string ActiveOutfitId = string.Empty;
