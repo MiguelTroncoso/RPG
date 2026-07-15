@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 12;
+        public int SchemaVersion = 13;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -15,6 +15,7 @@ namespace MmorpgPrototype
         public int Gold;
         public int AttributePoints;
         public List<int> SkillLevels = new List<int>();
+        public long UltimateReadyAtUtcTicks;
         public int SpentStrength;
         public int SpentVitality;
         public int SpentAgility;

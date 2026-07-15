@@ -14,12 +14,12 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.58 y como ejecutar).
+3. README.md (historial de fases 1 a 5.60 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
 5. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.58 entregadas en primera pasada; refinamientos 5.44,
-5.45, 5.49 y 5.58 completados en esta pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.60 entregadas en primera pasada; refinamientos 5.44,
+5.45, 5.49, 5.58, 5.59 y 5.60 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -35,7 +35,7 @@ Estado actual (fases 1-5.58 entregadas en primera pasada; refinamientos 5.44,
   PlayerEquipment. Mejora +0..+15 con riesgo (UpgradeConfig +
   UpgradeResolver puro + runa de proteccion + tope por rareza).
 - Progresion de loot 1-105: `ProgressionItemCatalog` crea dos materiales y
-  siete piezas de equipo por cada una de las diez zonas, mas una reliquia
+  doce piezas de equipo por cada una de las diez zonas, mas una reliquia
   exclusiva por jefe. `ZoneLootProgression` separa drops normal/elite/jefe y
   `EquipmentItemDefinition.UpgradeMaterialId` enlaza cada pieza con el nucleo
   de refinamiento de su zona.
@@ -110,7 +110,7 @@ Estado actual (fases 1-5.58 entregadas en primera pasada; refinamientos 5.44,
 - Compañeros y eventos: `PetService`/`MountService` conservan propiedad,
   rareza y stats de combate; `DailyEventSystem` activa una Caceria de
   Reliquias por fecha local, cuenta cinco derrotas y entrega EXP/oro y Alas de
-  brasa. El guardado local es esquema v12. Compras y recompensas deben pasar a
+  brasa. El guardado local es esquema v13. Compras y recompensas deben pasar a
   autoridad del servidor antes de una prueba publica.
 - Visual 3D: `VisualMaterialUtility` centraliza materiales compartidos con
   smoothness/metal/emision; `PrototypeBootstrap` configura luz calida, niebla
@@ -118,11 +118,17 @@ Estado actual (fases 1-5.58 entregadas en primera pasada; refinamientos 5.44,
   por paleta de zona. La pasada visual ya cubre avatar, armadura, mobs, jefes,
   NPC, mascotas, monturas y VFX; falta validar contraste y rendimiento en
   telefono real.
-- Habilidades: `PlayerSkills` administra cuatro habilidades propias por clase
-  en Q/E/R/F; R y F se desbloquean en niveles 8/20, cada ranura progresa de
-  nivel 1 a 5 con `Manual de habilidades`, y `PlayerPersistence` conserva el
-  arreglo en `PlayerSaveData` esquema 12. El servidor debe validar consumos,
-  desbloqueos y efectos antes de la progresion online.
+- Habilidades: `PlayerSkills` administra cinco habilidades propias por clase
+  en Q/E/R/F/G; R, F y G se desbloquean en niveles 8/20/50, la final progresa
+  de nivel 1 a 10 con cooldown UTC de 30 minutos, y `PlayerPersistence`
+  conserva el arreglo en `PlayerSaveData` esquema 13. El servidor debe validar
+  consumos, desbloqueos y efectos antes de la progresion online.
+- Equipo y mundo: cada banda tiene doce piezas de equipo visibles por ranura,
+  con rareza/tier, emblemas 3D por clase y landmark propio para cada una de las
+  diez zonas.
+- Hetzner preflight: `Server/src/server.js` expone `/health`, limita payload,
+  hace heartbeat y persiste al recibir senales de apagado. Falta crear la
+  instancia, configurar dominio/Nginx/WSS, firewall, backups y probar dos APK.
 - Interfaz mobile: el HUD principal es mas compacto, inventario y equipo se
   consultan desde `MENU`, y las acciones secundarias se agrupan bajo `MAS`.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
@@ -173,7 +179,7 @@ Estado actual (fases 1-5.58 entregadas en primera pasada; refinamientos 5.44,
   si no pasan. Persistencia por playerKey en Server/data/players.json:
   presencia basica, snapshot completo `PlayerSaveData` via `saveState`/
   `savedState` y ultimo resumen de telemetria recibido.
-- Guardado local JSON (esquema v12) via ISaveStorage/JsonFileStorage con
+- Guardado local JSON (esquema v13) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
   activa y progreso, mascota activa, montura, almacen y posicion del

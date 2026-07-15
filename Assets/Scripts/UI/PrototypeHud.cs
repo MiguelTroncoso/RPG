@@ -18,6 +18,7 @@ namespace MmorpgPrototype
         public Text SkillTwoText;
         public Text SkillThreeText;
         public Text SkillFourText;
+        public Text UltimateSkillText;
         public Text InventoryText;
         public Text QuestText;
         public Text EquipmentText;
@@ -92,7 +93,8 @@ namespace MmorpgPrototype
                 skills != null ? skills.SkillOneRemaining : 0f,
                 skills != null ? skills.SkillTwoRemaining : 0f,
                 skills != null ? skills.SkillThreeRemaining : 0f,
-                skills != null ? skills.SkillFourRemaining : 0f);
+                skills != null ? skills.SkillFourRemaining : 0f,
+                skills != null ? skills.UltimateRemaining : 0f);
 
             if (StatusText != null && statusUntil > 0f && Time.time > statusUntil)
             {
@@ -157,6 +159,11 @@ namespace MmorpgPrototype
             {
                 SkillFourText.text = skills != null ? skills.DisplayLabel(3) : $"F {definition.SkillFourName}";
             }
+
+            if (UltimateSkillText != null)
+            {
+                UltimateSkillText.text = skills != null ? skills.DisplayLabel(4) : $"G {definition.UltimateSkillName}";
+            }
         }
 
         public void RefreshProgression()
@@ -206,7 +213,7 @@ namespace MmorpgPrototype
             SummaryChanged?.Invoke();
         }
 
-        public void RefreshSkillCooldowns(float skillOneRemaining, float skillTwoRemaining, float skillThreeRemaining, float skillFourRemaining)
+        public void RefreshSkillCooldowns(float skillOneRemaining, float skillTwoRemaining, float skillThreeRemaining, float skillFourRemaining, float ultimateRemaining)
         {
             if (classController == null || classController.Definition == null || skills == null)
             {
@@ -231,6 +238,11 @@ namespace MmorpgPrototype
             if (SkillFourText != null)
             {
                 SkillFourText.text = skills.DisplayLabel(3, skillFourRemaining);
+            }
+
+            if (UltimateSkillText != null)
+            {
+                UltimateSkillText.text = skills.DisplayLabel(4, ultimateRemaining);
             }
         }
 

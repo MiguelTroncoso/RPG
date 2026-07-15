@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,30 +8,36 @@ namespace MmorpgPrototype
     [RequireComponent(typeof(PlayerClassController))]
     public sealed class PlayerSkills : MonoBehaviour
     {
-        public const int SkillSlotCount = 4;
+        public const int SkillSlotCount = 5;
         public const int MaxSkillLevel = 5;
+        public const int UltimateMaxSkillLevel = 10;
+        private const int UltimateSlot = 4;
+        private const float UltimateCooldownSeconds = 30f * 60f;
 
         public float SkillOneCooldown = 4f;
         public float SkillTwoCooldown = 7f;
         public float SkillThreeCooldown = 9f;
         public float SkillFourCooldown = 14f;
+        public float UltimateCooldown = UltimateCooldownSeconds;
         public PrototypeHud Hud;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
 
-        private static readonly int[] UnlockLevels = { 1, 1, 8, 20 };
-        private readonly int[] skillLevels = { 1, 1, 0, 0 };
+        private static readonly int[] UnlockLevels = { 1, 1, 8, 20, 50 };
+        private readonly int[] skillLevels = { 1, 1, 0, 0, 0 };
         private readonly float[] nextSkill = new float[SkillSlotCount];
         private PlayerCombat combat;
         private PlayerClassController classController;
         private EquipmentUpgradeSystem upgradeSystem;
         private float buffUntil;
         private int damageBuff;
+        private DateTime ultimateReadyAtUtc = DateTime.MinValue;
 
         public float SkillOneRemaining => Remaining(0);
         public float SkillTwoRemaining => Remaining(1);
         public float SkillThreeRemaining => Remaining(2);
         public float SkillFourRemaining => Remaining(3);
+        public float UltimateRemaining => RemainingUltimate();
         public int DamageBuff => buffUntil > 0f ? damageBuff : 0;
 
         private void Awake()
@@ -42,10 +49,14 @@ namespace MmorpgPrototype
 
         private void Update()
         {
+            EnsureLevelUnlocks();
             if (Input.GetKeyDown(KeyCode.Q)) UseSkillOne();
             if (Input.GetKeyDown(KeyCode.E)) UseSkillTwo();
             if (Input.GetKeyDown(KeyCode.R)) UseSkillThree();
             if (Input.GetKeyDown(KeyCode.F)) UseSkillFour();
+            if (Input.GetKeyDown(KeyCode.G)) UseUltimate();
+
+            Hud?.RefreshSkillCooldowns(SkillOneRemaining, SkillTwoRemaining, SkillThreeRemaining, SkillFourRemaining, UltimateRemaining);
 
             if (buffUntil > 0f && Time.time > buffUntil)
             {
@@ -60,6 +71,7 @@ namespace MmorpgPrototype
         public void UseSkillTwo() => UseSkill(1);
         public void UseSkillThree() => UseSkill(2);
         public void UseSkillFour() => UseSkill(3);
+        public void UseUltimate() => UseSkill(UltimateSlot);
 
         public void UpgradeSkill(int slot)
         {
@@ -75,13 +87,14 @@ namespace MmorpgPrototype
             }
 
             var level = SkillLevelFor(slot);
-            if (level >= MaxSkillLevel)
+            var maxLevel = MaxSkillLevelFor(slot);
+            if (level >= maxLevel)
             {
-                Hud?.SetStatus(Localization.Tr("skill.upgrade_max", SkillNameFor(slot), MaxSkillLevel));
+                Hud?.SetStatus(Localization.Tr("skill.upgrade_max", SkillNameFor(slot), maxLevel));
                 return;
             }
 
-            var tomeCost = level;
+            var tomeCost = Mathf.Max(1, level);
             if (Inventory == null || Inventory.Count(DefaultGameItems.SkillTome) < tomeCost)
             {
                 Hud?.SetStatus(Localization.Tr("skill.upgrade_need_tome", tomeCost));
@@ -93,12 +106,13 @@ namespace MmorpgPrototype
             Hud?.SetStatus(Localization.Tr("skill.upgraded", SkillNameFor(slot), skillLevels[slot]), 3f);
             Hud?.AddFeed(Localization.Tr("skill.upgrade_feed", SkillNameFor(slot), skillLevels[slot]));
             Hud?.RefreshClass();
-            Hud?.RefreshSkillCooldowns(SkillOneRemaining, SkillTwoRemaining, SkillThreeRemaining, SkillFourRemaining);
+            Hud?.RefreshSkillCooldowns(SkillOneRemaining, SkillTwoRemaining, SkillThreeRemaining, SkillFourRemaining, UltimateRemaining);
             GetComponent<PlayerPersistence>()?.SaveNow();
         }
 
         public bool IsSkillUnlocked(int slot)
         {
+            EnsureLevelUnlocks();
             return IsValidSlot(slot)
                 && SkillLevelFor(slot) > 0
                 && (Progression == null || Progression.Level >= UnlockLevelFor(slot));
@@ -112,6 +126,11 @@ namespace MmorpgPrototype
         public int UnlockLevelFor(int slot)
         {
             return IsValidSlot(slot) ? UnlockLevels[slot] : int.MaxValue;
+        }
+
+        public int MaxSkillLevelFor(int slot)
+        {
+            return IsValidSlot(slot) && slot == UltimateSlot ? UltimateMaxSkillLevel : MaxSkillLevel;
         }
 
         public string DisplayLabel(int slot, float remaining = 0f)
@@ -128,7 +147,7 @@ namespace MmorpgPrototype
                 return Localization.Tr("skill.locked_label", key, name, UnlockLevelFor(slot));
             }
 
-            var cooldown = remaining > 0.1f ? $" {remaining:0.0}s" : string.Empty;
+            var cooldown = remaining > 0.1f ? CooldownLabel(slot, remaining) : string.Empty;
             return $"{key} {name} Nv{SkillLevelFor(slot)}{cooldown}";
         }
 
@@ -150,7 +169,31 @@ namespace MmorpgPrototype
             // available in old saves even though they had no skill array.
             skillLevels[0] = Mathf.Max(1, skillLevels[0]);
             skillLevels[1] = Mathf.Max(1, skillLevels[1]);
+            EnsureLevelUnlocks();
             Hud?.RefreshClass();
+        }
+
+        public long ExportUltimateReadyAtUtcTicks()
+        {
+            return ultimateReadyAtUtc == DateTime.MinValue ? 0L : ultimateReadyAtUtc.Ticks;
+        }
+
+        public void RestoreUltimateCooldown(long readyAtUtcTicks)
+        {
+            if (readyAtUtcTicks <= 0L)
+            {
+                ultimateReadyAtUtc = DateTime.MinValue;
+                return;
+            }
+
+            try
+            {
+                ultimateReadyAtUtc = new DateTime(readyAtUtcTicks, DateTimeKind.Utc);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                ultimateReadyAtUtc = DateTime.MinValue;
+            }
         }
 
         private void UseSkill(int slot)
@@ -166,13 +209,35 @@ namespace MmorpgPrototype
                 return;
             }
 
-            if (Time.time < nextSkill[slot])
+            if (slot == UltimateSlot)
+            {
+                if (UltimateRemaining > 0.1f)
+                {
+                    Hud?.SetStatus(Localization.Tr("skill.ultimate_cooldown", CooldownLabel(slot, UltimateRemaining)));
+                    return;
+                }
+
+                if (combat.FindNearestEnemy(9f) == null)
+                {
+                    Hud?.SetStatus(Localization.Tr("skill.ultimate_no_target"));
+                    return;
+                }
+            }
+            else if (Time.time < nextSkill[slot])
             {
                 Hud?.SetStatus(Localization.Tr("skill.cooldown", SkillNameFor(slot)));
                 return;
             }
 
-            nextSkill[slot] = Time.time + CooldownFor(slot);
+            if (slot == UltimateSlot)
+            {
+                ultimateReadyAtUtc = DateTime.UtcNow.AddSeconds(UltimateCooldown);
+            }
+            else
+            {
+                nextSkill[slot] = Time.time + CooldownFor(slot);
+            }
+
             PlaySkillMotion();
 
             switch (slot)
@@ -181,9 +246,17 @@ namespace MmorpgPrototype
                 case 1: UseSkillTwoEffect(); break;
                 case 2: UseSkillThreeEffect(); break;
                 case 3: UseSkillFourEffect(); break;
+                case UltimateSlot: UseUltimateEffect(); break;
             }
 
-            Hud?.RefreshSkillCooldowns(SkillOneRemaining, SkillTwoRemaining, SkillThreeRemaining, SkillFourRemaining);
+            if (slot == UltimateSlot)
+            {
+                Hud?.SetStatus(Localization.Tr("skill.ultimate_used", SkillNameFor(slot)), 4f);
+                Hud?.AddFeed(Localization.Tr("skill.ultimate_feed", SkillNameFor(slot)));
+                GetComponent<PlayerPersistence>()?.SaveNow();
+            }
+
+            Hud?.RefreshSkillCooldowns(SkillOneRemaining, SkillTwoRemaining, SkillThreeRemaining, SkillFourRemaining, UltimateRemaining);
         }
 
         private void UseSkillOneEffect()
@@ -260,6 +333,26 @@ namespace MmorpgPrototype
                     break;
                 default:
                     Cleave(DamageFor(3, 52), 4f, 5);
+                    break;
+            }
+        }
+
+        private void UseUltimateEffect()
+        {
+            switch (classController.CurrentClass)
+            {
+                case CharacterClassType.Ninja:
+                    NinjaDash(DamageFor(UltimateSlot, 190), 6.5f, 8);
+                    break;
+                case CharacterClassType.Chaman:
+                    HealSelf(140 + SkillLevelFor(UltimateSlot) * 22);
+                    MagicBurst(SkillNameFor(UltimateSlot), DamageFor(UltimateSlot, 175), 9f, classController.Definition.SkillColor);
+                    break;
+                case CharacterClassType.Umbra:
+                    Cleave(DamageFor(UltimateSlot, 235), 7f, 12);
+                    break;
+                default:
+                    Cleave(DamageFor(UltimateSlot, 260), 7f, 12);
                     break;
             }
         }
@@ -349,6 +442,47 @@ namespace MmorpgPrototype
             return IsValidSlot(slot) ? Mathf.Max(0f, nextSkill[slot] - Time.time) : 0f;
         }
 
+        private float RemainingUltimate()
+        {
+            if (ultimateReadyAtUtc == DateTime.MinValue)
+            {
+                return 0f;
+            }
+
+            return Mathf.Max(0f, (float)(ultimateReadyAtUtc - DateTime.UtcNow).TotalSeconds);
+        }
+
+        private void EnsureLevelUnlocks()
+        {
+            if (Progression == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i < SkillSlotCount; i++)
+            {
+                if (Progression.Level >= UnlockLevels[i] && skillLevels[i] <= 0)
+                {
+                    skillLevels[i] = 1;
+                    Hud?.SetStatus(Localization.Tr("skill.auto_unlocked", SkillNameFor(i), UnlockLevels[i]), 3.5f);
+                    Hud?.AddFeed(Localization.Tr("skill.upgraded", SkillNameFor(i), 1));
+                    Hud?.RefreshClass();
+                }
+            }
+        }
+
+        private static string CooldownLabel(int slot, float remaining)
+        {
+            if (slot == UltimateSlot)
+            {
+                var minutes = Mathf.FloorToInt(remaining / 60f);
+                var seconds = Mathf.FloorToInt(remaining % 60f);
+                return minutes > 0 ? $" {minutes}m {seconds:00}s" : $" {seconds}s";
+            }
+
+            return $" {remaining:0.0}s";
+        }
+
         private string SkillNameFor(int slot)
         {
             var definition = classController != null ? classController.Definition : null;
@@ -356,7 +490,8 @@ namespace MmorpgPrototype
             return slot == 0 ? definition.SkillOneName
                 : slot == 1 ? definition.SkillTwoName
                 : slot == 2 ? definition.SkillThreeName
-                : definition.SkillFourName;
+                : slot == 3 ? definition.SkillFourName
+                : definition.UltimateSkillName;
         }
 
         private static string KeyFor(int slot)

@@ -36,6 +36,7 @@ namespace MmorpgPrototype
             BuildSafeZone(root.transform, zone);
             BuildCombatAreaMarker(root.transform, zone);
             BuildGroundAccents(root.transform, zone, random);
+            BuildZoneSignature(root.transform, zone);
         }
 
         private static void BuildNavigation(Transform parent, ZoneDefinition zone)
@@ -136,6 +137,86 @@ namespace MmorpgPrototype
                     CreatePart(parent, "Zone Accent Shard", PrimitiveType.Cube, position + Vector3.up * 0.22f, new Vector3(0.08f, 0.42f, 0.08f), accent, Quaternion.Euler(0f, i * 33f, 24f));
                 }
             }
+        }
+
+        private static void BuildZoneSignature(Transform parent, ZoneDefinition zone)
+        {
+            var id = (zone.ZoneId ?? string.Empty).ToLowerInvariant();
+            var center = zone.GroundCenter + new Vector3(0f, 0f, 8f);
+            var accent = AccentFor(zone);
+
+            if (id.Contains("valley"))
+            {
+                CreatePart(parent, "Valley Relic Pillar", PrimitiveType.Cylinder, center + Vector3.up * 1.4f, new Vector3(0.42f, 1.4f, 0.42f), new Color(0.74f, 0.52f, 0.2f));
+                CreatePart(parent, "Valley Relic Orb", PrimitiveType.Sphere, center + Vector3.up * 3.1f, new Vector3(0.42f, 0.42f, 0.42f), accent);
+                return;
+            }
+
+            if (id.Contains("forest"))
+            {
+                CreatePart(parent, "Forest Elder Root", PrimitiveType.Cylinder, center + Vector3.up * 1.8f, new Vector3(0.5f, 1.8f, 0.5f), new Color(0.2f, 0.36f, 0.14f));
+                CreatePart(parent, "Forest Elder Canopy", PrimitiveType.Sphere, center + Vector3.up * 3.6f, new Vector3(2.1f, 1.35f, 2.1f), accent);
+                CreatePart(parent, "Forest Elder Rune", PrimitiveType.Sphere, center + new Vector3(0f, 2.1f, -0.56f), new Vector3(0.28f, 0.28f, 0.16f), Color.Lerp(accent, Color.white, 0.35f));
+                return;
+            }
+
+            if (id.Contains("ash"))
+            {
+                CreatePart(parent, "Ash Obelisk", PrimitiveType.Cube, center + Vector3.up * 1.7f, new Vector3(0.72f, 3.4f, 0.72f), new Color(0.18f, 0.14f, 0.14f), Quaternion.Euler(0f, 18f, 0f));
+                CreatePart(parent, "Ash Ember", PrimitiveType.Sphere, center + Vector3.up * 3.5f, new Vector3(0.42f, 0.42f, 0.42f), accent);
+                return;
+            }
+
+            if (id.Contains("crystal"))
+            {
+                BuildCrystalCluster(parent, center + new Vector3(-1.2f, 0f, 0f), zone.GroundColor, 1.8f);
+                BuildCrystalCluster(parent, center + new Vector3(1.2f, 0f, 0.2f), accent, 1.35f);
+                return;
+            }
+
+            if (id.Contains("frost"))
+            {
+                CreatePart(parent, "Frost Gate L", PrimitiveType.Cylinder, center + new Vector3(-1.7f, 1.4f, 0f), new Vector3(0.36f, 1.4f, 0.36f), accent, Quaternion.Euler(0f, 0f, -14f));
+                CreatePart(parent, "Frost Gate R", PrimitiveType.Cylinder, center + new Vector3(1.7f, 1.4f, 0f), new Vector3(0.36f, 1.4f, 0.36f), accent, Quaternion.Euler(0f, 0f, 14f));
+                CreatePart(parent, "Frost Gate Crown", PrimitiveType.Cube, center + Vector3.up * 2.8f, new Vector3(3.5f, 0.3f, 0.34f), Color.Lerp(accent, Color.white, 0.25f));
+                return;
+            }
+
+            if (id.Contains("sunken"))
+            {
+                CreatePart(parent, "Sunken Broken Arch L", PrimitiveType.Cube, center + new Vector3(-1.5f, 1.2f, 0f), new Vector3(0.5f, 2.4f, 0.5f), accent, Quaternion.Euler(0f, 0f, -12f));
+                CreatePart(parent, "Sunken Broken Arch R", PrimitiveType.Cube, center + new Vector3(1.5f, 0.8f, 0f), new Vector3(0.5f, 1.6f, 0.5f), accent, Quaternion.Euler(0f, 0f, 16f));
+                CreatePart(parent, "Sunken Pearl", PrimitiveType.Sphere, center + Vector3.up * 2.7f, new Vector3(0.5f, 0.5f, 0.5f), Color.Lerp(accent, Color.white, 0.32f));
+                return;
+            }
+
+            if (id.Contains("obsidian"))
+            {
+                CreatePart(parent, "Forge Anvil", PrimitiveType.Cube, center + Vector3.up * 0.7f, new Vector3(1.5f, 1.4f, 0.8f), new Color(0.12f, 0.08f, 0.1f));
+                CreatePart(parent, "Forge Flame", PrimitiveType.Sphere, center + Vector3.up * 1.8f, new Vector3(0.5f, 0.7f, 0.5f), accent);
+                CreatePart(parent, "Forge Ring", PrimitiveType.Cylinder, center + Vector3.up * 1.1f, new Vector3(2.4f, 0.04f, 2.4f), accent, Quaternion.Euler(90f, 0f, 0f));
+                return;
+            }
+
+            if (id.Contains("astral"))
+            {
+                CreatePart(parent, "Astral Spire", PrimitiveType.Cylinder, center + Vector3.up * 1.8f, new Vector3(0.28f, 1.8f, 0.28f), accent);
+                CreatePart(parent, "Astral Planet", PrimitiveType.Sphere, center + Vector3.up * 3.5f, new Vector3(0.7f, 0.7f, 0.7f), Color.Lerp(accent, Color.white, 0.3f));
+                CreatePart(parent, "Astral Orbit", PrimitiveType.Cylinder, center + Vector3.up * 3.5f, new Vector3(1.9f, 0.035f, 1.9f), accent, Quaternion.Euler(72f, 0f, 18f));
+                return;
+            }
+
+            if (id.Contains("eclipse"))
+            {
+                CreatePart(parent, "Eclipse Altar", PrimitiveType.Cylinder, center + Vector3.up * 0.25f, new Vector3(2.4f, 0.5f, 2.4f), new Color(0.08f, 0.06f, 0.12f));
+                CreatePart(parent, "Eclipse Sun", PrimitiveType.Sphere, center + Vector3.up * 2.5f, new Vector3(1.1f, 1.1f, 1.1f), new Color(0.08f, 0.02f, 0.12f));
+                CreatePart(parent, "Eclipse Halo", PrimitiveType.Cylinder, center + Vector3.up * 2.5f, new Vector3(1.7f, 0.05f, 1.7f), accent, Quaternion.Euler(90f, 0f, 0f));
+                return;
+            }
+
+            CreatePart(parent, "Throne Shard L", PrimitiveType.Cube, center + new Vector3(-1.2f, 1.4f, 0f), new Vector3(0.5f, 2.8f, 0.5f), accent, Quaternion.Euler(0f, 0f, -12f));
+            CreatePart(parent, "Throne Shard R", PrimitiveType.Cube, center + new Vector3(1.2f, 1.8f, 0.2f), new Vector3(0.5f, 3.6f, 0.5f), accent, Quaternion.Euler(0f, 0f, 14f));
+            CreatePart(parent, "Throne Crown", PrimitiveType.Cube, center + Vector3.up * 3.5f, new Vector3(3.2f, 0.3f, 0.5f), Color.Lerp(accent, Color.white, 0.2f));
         }
 
         private static Color AccentFor(ZoneDefinition zone)

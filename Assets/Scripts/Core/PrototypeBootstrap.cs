@@ -579,6 +579,11 @@ namespace MmorpgPrototype
             hud.SkillFourText = skillFourButton.GetComponentInChildren<Text>();
             CreateSkillUpgradeButton(uiRoot, skills, 3, new Vector2(-330f, 232f), new Color(0.62f, 0.34f, 0.16f));
 
+            var ultimateButton = CreateRoundButton(uiRoot, "Ultimate Skill Button", "G", new Vector2(1f, 0f), new Vector2(-640f, 228f), new Vector2(160f, 104f), new Color(0.78f, 0.16f, 0.14f), 15);
+            ultimateButton.onClick.AddListener(skills.UseUltimate);
+            hud.UltimateSkillText = ultimateButton.GetComponentInChildren<Text>();
+            CreateSkillUpgradeButton(uiRoot, skills, 4, new Vector2(-640f, 228f), new Color(0.78f, 0.16f, 0.14f));
+
             CreateClassButtons(uiRoot, player);
 
             var combat = player.GetComponent<PlayerCombat>();

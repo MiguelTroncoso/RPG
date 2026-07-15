@@ -4,13 +4,13 @@ Este porcentaje es una estimacion de producto, no un conteo de scripts. Un
 MMORPG completo tambien necesita arte final, contenido, servidores, pruebas,
 economia, seguridad, operacion y publicacion.
 
-## Corte Diario: 2026-07-13
+## Corte Diario: 2026-07-15
 
-- Avance global estimado hacia el MMORPG publicable: **75%**.
-- Prototipo jugable offline: **98%**.
-- Vertical slice de una zona pulida: **96%**.
-- Online persistente y preparado para produccion: **35%**.
-- Arte final, contenido completo 1-105 y lanzamiento: **38%**.
+- Avance global estimado hacia el MMORPG publicable: **78%**.
+- Prototipo jugable offline: **99%**.
+- Vertical slice de una zona pulida: **98%**.
+- Online persistente y preparado para produccion: **45%**.
+- Arte final, contenido completo 1-105 y lanzamiento: **50%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -51,7 +51,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   1-10, con controladores de idle, movimiento y ataque generados en Unity.
 - Fase 5.45: diez jefes con modelos distintos, silueta propia y paleta de zona
   aplicada sin duplicar materiales; la base CC0 sigue siendo reemplazable.
-- Fase 5.52: progresion de loot 1-105 con 20 materiales, 70 piezas de set,
+- Fase 5.52: progresion de loot 1-105 con 20 materiales, 120 piezas de set,
   10 reliquias de jefe, tablas por zona/tier y materiales de mejora asociados.
 - Los bosses entregan ahora la reliquia garantizada y un segundo drop adicional.
 - Fase 5.52: primera pasada de balance por banda; las probabilidades progresan
@@ -91,6 +91,14 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   reduce progresivamente su enfriamiento; el `Manual de habilidades` se usa
   para mejorarla, se guarda en el esquema 12 y cae con mas frecuencia de
   elites y jefes.
+- Fase 5.59: habilidad final `G` por clase, desbloqueada en nivel 50, con
+  niveles 1-10, efectos de ejecucion/area propios y cooldown persistente de
+  30 minutos basado en hora UTC.
+- Fase 5.59: las diez zonas reciben un landmark de identidad propio y cada
+  banda agrega capa, anillos, brazalete y cinturon; el avatar muestra piezas
+  por ranura, rareza y tier, ademas del emblema de clase.
+- Fase 5.60: servidor preparado para preflight de Hetzner con endpoint
+  `/health`, limite de mensajes, heartbeat, apagado limpio y guia WSS/Nginx.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -106,17 +114,21 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 5. Completar la vertical slice nivel 1-10 con modelos finales de jugador y mobs,
    recompensas calibradas y una interfaz de inventario/tienda mas clara.
 6. Probar desbloqueo y mejora de habilidades en Android, incluyendo nivel 8/20,
-   consumo de manuales, persistencia y lectura de los botones R/F.
-7. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
+   nivel 50, consumo de manuales, persistencia y lectura del boton G.
+7. Revisar las diez zonas en una sesion de recorrido, validando landmark, mobs
+   3D, TTK, minimapa y lectura de los nuevos accesorios.
+8. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
    con firewall, TLS/WSS y persistencia protegida.
-8. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
+9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-9. Sustituir progresivamente la geometria procedural por arte 3D final propio.
+10. Sustituir progresivamente la geometria procedural por arte 3D final propio.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-15 | 5.60 | Preflight Hetzner: health check, heartbeat, apagado limpio y guia WSS | 78% |
+| 2026-07-15 | 5.59 | Habilidad final G nivel 50-10, cooldown persistente, landmarks y equipo visual | 78% |
 | 2026-07-15 | 5.58 | Habilidades Q/E/R/F, desbloqueos por nivel, mejoras con manuales y guardado | 75% |
 | 2026-07-13 | 5.57 | Movimiento + ataque estables y recorrido seguro de Zona 1 nivel 1-10 | 75% |
 | 2026-07-13 | 5.56 | Pasada visual 3D de materiales, luz, niebla y zonas | 75% |

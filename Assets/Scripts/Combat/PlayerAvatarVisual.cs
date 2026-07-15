@@ -242,7 +242,28 @@ namespace MmorpgPrototype
                     break;
             }
 
+            BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
             BuildEquippedVisuals(trimColor);
+        }
+
+        private void BuildClassEmblem(Transform parent, CharacterClassType classType, Color trimColor, Color accentColor)
+        {
+            switch (classType)
+            {
+                case CharacterClassType.Ninja:
+                    CreatePart(parent, "Ninja Emblem", PrimitiveType.Cube, new Vector3(0f, 0.27f, -0.51f), new Vector3(0.24f, 0.08f, 0.04f), trimColor, Quaternion.Euler(0f, 0f, 45f));
+                    break;
+                case CharacterClassType.Chaman:
+                    CreatePart(parent, "Chaman Emblem", PrimitiveType.Sphere, new Vector3(0f, 0.28f, -0.51f), new Vector3(0.14f, 0.14f, 0.06f), accentColor);
+                    CreatePart(parent, "Chaman Emblem Ring", PrimitiveType.Cylinder, new Vector3(0f, 0.28f, -0.54f), new Vector3(0.22f, 0.018f, 0.22f), trimColor, Quaternion.Euler(90f, 0f, 0f));
+                    break;
+                case CharacterClassType.Umbra:
+                    CreatePart(parent, "Umbra Emblem", PrimitiveType.Cube, new Vector3(0f, 0.27f, -0.51f), new Vector3(0.16f, 0.16f, 0.04f), accentColor, Quaternion.Euler(0f, 0f, 45f));
+                    break;
+                default:
+                    CreatePart(parent, "Guerrero Emblem", PrimitiveType.Cube, new Vector3(0f, 0.27f, -0.51f), new Vector3(0.22f, 0.16f, 0.04f), trimColor);
+                    break;
+            }
         }
 
         private void BuildEquippedVisuals(Color trimColor)
@@ -252,30 +273,59 @@ namespace MmorpgPrototype
                 return;
             }
 
-            var helmet = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Helmet));
-            if (helmet != null && helmet.VisualId == "leather_helmet")
+            BuildEquippedPiece(EquipSlot.Weapon, new Vector3(0.44f, 0.08f, -0.3f), new Vector3(0.12f, 0.68f, 0.08f), Quaternion.Euler(0f, 0f, -24f));
+            BuildEquippedPiece(EquipSlot.Helmet, new Vector3(0f, 1.08f, 0f), new Vector3(0.48f, 0.18f, 0.48f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Chest, new Vector3(0f, 0.2f, -0.45f), new Vector3(0.62f, 0.32f, 0.08f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Gloves, new Vector3(-0.48f, 0.12f, -0.08f), new Vector3(0.16f, 0.28f, 0.16f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Pants, new Vector3(-0.2f, -0.38f, -0.02f), new Vector3(0.2f, 0.34f, 0.22f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Boots, new Vector3(-0.22f, -0.72f, -0.18f), new Vector3(0.24f, 0.18f, 0.36f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Necklace, new Vector3(0f, 0.36f, -0.52f), new Vector3(0.16f, 0.16f, 0.08f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Talisman, new Vector3(0f, 0.62f, -0.56f), new Vector3(0.2f, 0.2f, 0.08f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Cape, new Vector3(0f, 0.18f, 0.42f), new Vector3(0.74f, 0.82f, 0.06f), Quaternion.Euler(8f, 0f, 0f));
+            BuildEquippedPiece(EquipSlot.RingLeft, new Vector3(-0.45f, 0.03f, -0.25f), new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.RingRight, new Vector3(0.45f, 0.03f, -0.25f), new Vector3(0.1f, 0.1f, 0.1f), Quaternion.identity);
+            BuildEquippedPiece(EquipSlot.Bracelet, new Vector3(-0.49f, 0.28f, -0.16f), new Vector3(0.14f, 0.14f, 0.08f), Quaternion.Euler(0f, 0f, 90f));
+            BuildEquippedPiece(EquipSlot.Belt, new Vector3(0f, -0.17f, -0.43f), new Vector3(0.62f, 0.08f, 0.08f), Quaternion.identity);
+        }
+
+        private void BuildEquippedPiece(EquipSlot slot, Vector3 position, Vector3 size, Quaternion rotation)
+        {
+            var item = currentEquipment.GetDefinition(currentEquipment.GetEquipped(slot));
+            if (item == null)
             {
-                CreatePart(armorRoot.transform, "Equipped Leather Helmet", PrimitiveType.Sphere, new Vector3(0f, 1.08f, 0f), new Vector3(0.48f, 0.18f, 0.48f), new Color(0.3f, 0.16f, 0.08f));
-                CreatePart(armorRoot.transform, "Equipped Helmet Strap", PrimitiveType.Cube, new Vector3(0f, 0.9f, -0.28f), new Vector3(0.38f, 0.08f, 0.05f), new Color(0.18f, 0.08f, 0.04f));
+                return;
             }
 
-            var chest = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Chest));
-            if (chest != null && chest.VisualId == "guard_chest")
-            {
-                CreatePart(armorRoot.transform, "Equipped Guard Plate", PrimitiveType.Cube, new Vector3(0f, 0.2f, -0.45f), new Vector3(0.62f, 0.32f, 0.08f), new Color(0.48f, 0.56f, 0.68f));
-                CreatePart(armorRoot.transform, "Equipped Guard Emblem", PrimitiveType.Cube, new Vector3(0f, 0.22f, -0.5f), new Vector3(0.12f, 0.18f, 0.04f), trimColor);
-            }
+            var tier = Mathf.Clamp(item.ProgressionTier, 1, 10);
+            var tierColor = Color.Lerp(new Color(0.34f, 0.42f, 0.52f), currentDefinition.SkillColor, tier / 10f);
+            var rarityColor = RarityColor(item.Rarity);
+            var metalColor = Color.Lerp(tierColor, rarityColor, 0.48f);
+            CreatePart(armorRoot.transform, $"Equipped {slot} Tier {tier}", PrimitiveType.Cube, position, size, metalColor, rotation);
 
-            var necklace = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Necklace));
-            if (necklace != null && necklace.VisualId == "valley_amulet")
+            if (slot == EquipSlot.Weapon)
             {
-                CreatePart(armorRoot.transform, "Equipped Valley Amulet", PrimitiveType.Sphere, new Vector3(0f, 0.36f, -0.52f), new Vector3(0.16f, 0.16f, 0.08f), new Color(0.98f, 0.76f, 0.24f));
+                CreatePart(armorRoot.transform, "Weapon Guard", PrimitiveType.Cube, position + new Vector3(0f, -0.32f, 0f), new Vector3(0.28f, 0.07f, 0.1f), rarityColor, rotation);
             }
-
-            var weapon = currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Weapon));
-            if (weapon != null && weapon.VisualId == "sword")
+            else if (slot == EquipSlot.Chest)
             {
-                CreatePart(armorRoot.transform, "Equipped Sword Guard", PrimitiveType.Cube, new Vector3(0.44f, 0.08f, -0.3f), new Vector3(0.24f, 0.07f, 0.06f), new Color(0.92f, 0.72f, 0.22f));
+                CreatePart(armorRoot.transform, "Armor Set Emblem", PrimitiveType.Cylinder, position + new Vector3(0f, 0f, -0.08f), new Vector3(0.12f, 0.025f, 0.12f), rarityColor, Quaternion.Euler(90f, 0f, 0f));
+            }
+            else if (slot == EquipSlot.Necklace || slot == EquipSlot.Talisman)
+            {
+                CreatePart(armorRoot.transform, "Relic Gem", PrimitiveType.Sphere, position + new Vector3(0f, -0.02f, -0.06f), new Vector3(0.1f, 0.1f, 0.1f), rarityColor);
+            }
+        }
+
+        private static Color RarityColor(Rarity rarity)
+        {
+            switch (rarity)
+            {
+                case Rarity.Uncommon: return new Color(0.24f, 0.9f, 0.36f);
+                case Rarity.Rare: return new Color(0.28f, 0.56f, 1f);
+                case Rarity.Epic: return new Color(0.68f, 0.3f, 1f);
+                case Rarity.Legendary: return new Color(1f, 0.58f, 0.12f);
+                case Rarity.Mythic: return new Color(1f, 0.2f, 0.42f);
+                default: return new Color(0.78f, 0.82f, 0.88f);
             }
         }
 

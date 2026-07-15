@@ -49,7 +49,12 @@ namespace MmorpgPrototype
             EquipSlot.Gloves,
             EquipSlot.Pants,
             EquipSlot.Boots,
-            EquipSlot.Necklace
+            EquipSlot.Necklace,
+            EquipSlot.Cape,
+            EquipSlot.RingLeft,
+            EquipSlot.RingRight,
+            EquipSlot.Bracelet,
+            EquipSlot.Belt
         };
 
         public static string CommonMaterialFor(string zoneId)
@@ -178,7 +183,7 @@ namespace MmorpgPrototype
             item.Rarity = rarity;
             item.DamageBonus = slot == EquipSlot.Weapon ? power : slot == EquipSlot.Necklace ? Math.Max(1, power / 5) : 0;
             item.MaxHealthBonus = HealthFor(slot, power);
-            item.MoveSpeedBonus = slot == EquipSlot.Boots ? 0.08f + index * 0.015f : slot == EquipSlot.Necklace ? 0.03f + index * 0.01f : 0f;
+            item.MoveSpeedBonus = slot == EquipSlot.Boots ? 0.08f + index * 0.015f : slot == EquipSlot.Necklace || slot == EquipSlot.Cape ? 0.03f + index * 0.01f : 0f;
             item.BuyPrice = Growth(70 + index * 20, band.MinLevel, 1.05f);
             item.SellPrice = Math.Max(1, item.BuyPrice / 3);
             item.VisualId = slot == EquipSlot.Weapon ? "sword" : string.Empty;
@@ -221,6 +226,11 @@ namespace MmorpgPrototype
                 case EquipSlot.Pants: return power * 2;
                 case EquipSlot.Boots: return power;
                 case EquipSlot.Necklace: return power * 2;
+                case EquipSlot.Cape: return power * 2;
+                case EquipSlot.RingLeft:
+                case EquipSlot.RingRight: return power;
+                case EquipSlot.Bracelet: return power;
+                case EquipSlot.Belt: return power * 2;
                 default: return 0;
             }
         }

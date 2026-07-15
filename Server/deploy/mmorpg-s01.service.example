@@ -1,0 +1,24 @@
+[Unit]
+Description=Valle de las Reliquias S-01 WebSocket server
+After=network.target
+
+[Service]
+Type=simple
+User=mmorpg
+WorkingDirectory=/opt/mmorpg/Server
+Environment=NODE_ENV=production
+Environment=SERVER_ID=S-01
+Environment=SERVER_NAME=Valle Central
+Environment=HOST=127.0.0.1
+Environment=PORT=7777
+Environment=MAX_PLAYERS=100
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -734,10 +734,10 @@ para recompensas siguen pendientes para una fase online posterior.
 - Cada banda tiene dos materiales propios: fragmento comun para drops normales
   y nucleo de refinamiento para elites/jefes. Los equipos nuevos apuntan al
   nucleo de su propia zona al mejorar.
-- Cada zona tiene siete piezas de equipo (arma, casco, pechera, guantes,
-  pantalones, botas y collar) con nivel requerido, rareza, estadisticas y
-  precios escalados; ademas cada jefe entrega una reliquia exclusiva de tipo
-  talisman.
+- Cada zona tiene doce piezas de equipo (arma, casco, pechera, guantes,
+  pantalones, botas, collar, capa, dos anillos, brazalete y cinturon) con nivel
+  requerido, rareza, estadisticas y precios escalados; ademas cada jefe entrega
+  una reliquia exclusiva de tipo talisman.
 - `ZoneLootProgression` separa tablas para normal, elite y jefe. Los normales
   dan materiales comunes, los elites refinamiento y piezas del set, y los
   jefes combinan su reliquia garantizada con un segundo drop adicional.
@@ -830,6 +830,29 @@ SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=10
   necesario.
 - APK validada despues de esta fase en:
   `Builds/Android/valle-reliquias-debug.apk`.
+
+## Fase 5.59: Habilidad Final Y Equipo Visible
+
+- La ranura `G` contiene una habilidad final propia para cada clase. Se
+  desbloquea automaticamente en nivel 50 y puede subir de nivel 1 a 10.
+- La habilidad final tiene un cooldown de 30 minutos medido con hora UTC y
+  persistido en `PlayerSaveData` esquema 13. El cierre de la app no lo reinicia.
+- Guerrero, Ninja, Chaman y Umbra tienen efectos finales distintos: area masiva,
+  ejecucion veloz, juicio magico o eclipse de sombra.
+- Cada banda 1-105 tiene doce piezas visuales de equipo y el avatar muestra
+  rareza/tier en armas, armadura y accesorios. Cada clase lleva un emblema 3D.
+- Las diez zonas reciben landmarks de identidad: reliquia, bosque antiguo,
+  obelisco de ceniza, cristales, portal glacial, ruinas sumergidas, forja,
+  jardin astral, altar del eclipse y trono del vacio.
+
+## Fase 5.60: Preflight De Hetzner
+
+- `Server/src/server.js` expone `/health`, limita mensajes WebSocket a 64 KB,
+  mantiene heartbeat y persiste al recibir senales de apagado.
+- `Server/README.md` incluye la ruta recomendada para Ubuntu + systemd + Nginx
+  + WSS, firewall y backups.
+- Falta ejecutar el despliegue en la cuenta Hetzner, configurar dominio y
+  certificado, y probar dos telefonos desde Internet.
 
 ## Clases Iniciales
 

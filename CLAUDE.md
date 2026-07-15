@@ -13,13 +13,13 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.58 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49 y 5.58 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.60 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59 y 5.60 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
-avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v12 (incluye posición, reclamos de POI, cosmeticos, evento diario y niveles de habilidades),
-progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, cuatro habilidades
-por clase con desbloqueo en nivel 8/20, mejoras 1-5 con `Manual de habilidades`
-y persistencia en esquema 12, items como
+avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v13 (incluye posición, reclamos de POI, cosmeticos, evento diario, habilidades y cooldown final),
+progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, cinco habilidades
+por clase con desbloqueos en nivel 8/20/50, habilidad final G de nivel 1-10,
+mejoras con `Manual de habilidades` y persistencia en esquema 13, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
 equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
 `UpgradeConfig`/`UpgradeResolver`, daño con crítico/evasión vía
@@ -112,7 +112,7 @@ simple y autocontenido.
   telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
-- Guardado local en esquema v12 incluye reclamos de puntos de interes,
+- Guardado local en esquema v13 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   `EXPLORAR` no vuelve a entregar la misma recompensa al reabrir.
 - Acceso mobile: splash renovado, seleccion de personaje guardado, creacion
@@ -122,7 +122,7 @@ simple y autocontenido.
   de acceso conecta automaticamente y el estado queda visible. El servidor
   Node acepta `SERVER_ID`, `SERVER_NAME`, `HOST`, `PORT` y `MAX_PLAYERS` y por
   defecto escucha en `0.0.0.0`; falta validar dos telefonos y desplegar WSS.
-- Progresion de loot 1-105 con `ProgressionItemCatalog`: dos materiales y siete
+- Progresion de loot 1-105 con `ProgressionItemCatalog`: dos materiales y doce
   piezas de equipo por zona, diez reliquias de jefe, tablas normal/elite/jefe y
   materiales de mejora asociados al equipo.
 - Fase 5.55: `CosmeticService` administra slots de atuendo/alas, tienda MVP y
@@ -133,10 +133,15 @@ simple y autocontenido.
   emision selectiva, niebla lineal y acentos de suelo por zona; la pasada se
   aplica a personajes, mobs, jefes, NPC, compañeros, monturas y VFX. Falta
   ajustar contraste/FPS/memoria con un telefono real.
-- Fase 5.58: `PlayerSkills` administra cuatro habilidades por clase, niveles
-  1-5, desbloqueos R/F en niveles 8/20 y mejoras mediante `skill_tome`; el HUD
-  muestra enfriamientos, nivel y botones `+`, y `PlayerPersistence` guarda el
-  arreglo de niveles en esquema 12.
+- Fase 5.58/5.59: `PlayerSkills` administra cinco habilidades por clase,
+  desbloqueos R/F/G en niveles 8/20/50, niveles 1-5 y final 1-10, mejoras
+  mediante `skill_tome`, cooldown final UTC de 30 minutos y persistencia en
+  esquema 13. El HUD muestra niveles, enfriamientos y botones `+`.
+- Fase 5.59: cada banda genera doce piezas de equipo y el avatar las representa
+  por ranura, tier y rareza; hay emblemas 3D de clase y landmarks propios para
+  las diez zonas.
+- Fase 5.60: el servidor tiene `/health`, payload maximo, heartbeat y apagado
+  limpio; falta desplegar S-01 en Hetzner con dominio, Nginx/WSS y backups.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar

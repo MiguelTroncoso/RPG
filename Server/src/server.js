@@ -1,6 +1,7 @@
 import { WebSocket, WebSocketServer } from "ws";
 import crypto from "node:crypto";
 import fs from "node:fs";
+import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,7 +17,26 @@ const dataDir = path.resolve(__dirname, "../data");
 const playerStorePath = path.join(dataDir, "players.json");
 const persistedPlayers = loadPersistedPlayers();
 
-const server = new WebSocketServer({ host, port });
+const httpServer = http.createServer((request, response) => {
+  if (request.method === "GET" && request.url === "/health") {
+    const payload = JSON.stringify({
+      status: "ok",
+      serverId,
+      serverName,
+      players: players.size,
+      maxPlayers,
+      uptimeSeconds: Math.floor(process.uptime())
+    });
+    response.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
+    response.end(payload);
+    return;
+  }
+
+  response.writeHead(404, { "Content-Type": "application/json" });
+  response.end(JSON.stringify({ error: "Not found" }));
+});
+
+const server = new WebSocketServer({ server: httpServer, maxPayload: 65536 });
 
 server.on("connection", (socket, request) => {
   if (players.size >= maxPlayers) {
@@ -40,6 +60,7 @@ server.on("connection", (socket, request) => {
     z: 0,
     yaw: 0,
     connectedAt: Date.now(),
+    isAlive: true,
     socket
   };
 
@@ -50,6 +71,9 @@ server.on("connection", (socket, request) => {
   console.log(`[join] ${id} from ${request.socket.remoteAddress}`);
 
   socket.on("message", (raw) => handleMessage(player, raw));
+  socket.on("pong", () => {
+    player.isAlive = true;
+  });
   socket.on("close", () => disconnect(player));
   socket.on("error", (error) => {
     console.warn(`[socket-error] ${id}`, error.message);
@@ -62,7 +86,33 @@ setInterval(() => {
   broadcast({ type: "snapshot", players: snapshot });
 }, tickRateMs);
 
-console.log(`MMORPG server ${serverId} (${serverName}) listening on ws://${host}:${port} max=${maxPlayers}`);
+setInterval(() => {
+  for (const player of players.values()) {
+    if (!player.isAlive) {
+      player.socket.terminate();
+      continue;
+    }
+
+    player.isAlive = false;
+    player.socket.ping();
+  }
+}, 30000);
+
+httpServer.listen(port, host, () => {
+  console.log(`MMORPG server ${serverId} (${serverName}) listening on ws://${host}:${port} max=${maxPlayers}`);
+});
+
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => {
+    console.log(`[shutdown] ${signal}`);
+    for (const player of players.values()) {
+      persistPlayer(player);
+      player.socket.close(1001, "Server shutting down");
+    }
+
+    server.close(() => httpServer.close(() => process.exit(0)));
+  });
+}
 
 function handleMessage(player, raw) {
   let message;

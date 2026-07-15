@@ -691,6 +691,53 @@ Criterio de exito: un jugador puede aprender y mejorar habilidades con una
 economia entendible, notar una diferencia de poder sin romper el TTK y
 conservar sus niveles al cerrar y reabrir el juego.
 
+## Fase 5.59: Habilidad Final Y Equipo Visible
+
+Objetivo: crear una recompensa de largo plazo y que la progresion 1-105 se
+vea realmente en el personaje, no solo en numeros.
+
+- Cada clase tiene una habilidad final propia en la ranura `G`, desbloqueada
+  automaticamente en nivel 50. [Implementado]
+- La habilidad final progresa de nivel 1 a 10, tiene dano/curacion y area
+  superior a las habilidades normales, y usa un cooldown real de 30 minutos.
+  [Implementado]
+- El cooldown se persiste en UTC dentro de `PlayerSaveData` esquema 13 para
+  que no se reinicie al cerrar la app. [Implementado]
+- Cada banda 1-105 entrega doce piezas de set por zona: arma, armadura,
+  accesorios y piezas de movilidad, mas la reliquia exclusiva del jefe.
+  [Implementado]
+- El avatar genera una lectura visual de arma, casco, pecho, guantes, piernas,
+  botas, capa, anillos, brazalete, cinturon, collar y talisman, usando tier,
+  rareza y color de clase. [Implementado]
+- Cada zona recibe un landmark 3D procedural reconocible y cada clase un
+  emblema visible sobre su equipo. [Implementado]
+- Sustituir overlays procedurales por meshes finales y animaciones de fatality
+  cuando la direccion artistica este cerrada. [Pendiente artistico]
+- Balancear la habilidad final con TTK real, jefes y contenido PvP futuro.
+  [Pendiente de balance]
+
+Criterio de exito: llegar a nivel 50 se siente como un hito, la habilidad G
+es poderosa pero no spameable y el equipo de cada banda se reconoce al verlo.
+
+## Fase 5.60: Preflight De Hetzner
+
+Objetivo: dejar S-01 listo para una primera prueba publica controlada, sin
+confundir esta etapa operacional con autoridad MMO completa.
+
+- El servidor expone `GET /health` con estado, jugadores, limite y uptime.
+  [Implementado]
+- El WebSocket limita payload a 64 KB, mantiene heartbeat cada 30 segundos y
+  persiste sesiones durante `SIGTERM`/`SIGINT`. [Implementado]
+- La guia documenta Ubuntu, systemd, Nginx, WSS, firewall, backups y el uso de
+  `ws://` en LAN frente a `wss://` en Hetzner. [Implementado]
+- Crear instancia, dominio, certificado, servicio systemd, backup probado y
+  prueba con dos APK desde redes distintas. [Pendiente de infraestructura]
+- Mover combate, drops, inventario, habilidades, compras y anti-cheat al
+  servidor antes de abrir el juego a desconocidos. [Pendiente server-authority]
+
+Criterio de exito: S-01 reinicia sin perder datos, responde al health check,
+acepta WebSocket seguro y dos jugadores pueden conectarse desde Internet.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.
