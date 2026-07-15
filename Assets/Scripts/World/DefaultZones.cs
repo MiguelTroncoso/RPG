@@ -21,6 +21,7 @@ namespace MmorpgPrototype
 
         public const string ValleyEliteId = "valley_elite";
         public const string ValleyBossId = "valley_boss";
+        public const string ForestCreatureId = "forest_creature";
         public const string ForestEliteId = "forest_elite";
         public const string ForestBossId = "forest_boss";
         public const string AshCreatureId = "ash_creature";
@@ -106,7 +107,7 @@ namespace MmorpgPrototype
             zone.GroundColor = new Color(0.13f, 0.24f, 0.15f);
             zone.SignPosition = new Vector3(0f, 0f, 38f);
 
-            zone.NormalEnemyId = "forest_creature";
+            zone.NormalEnemyId = ForestCreatureId;
             zone.NormalName = "Espinoso del bosque";
             zone.NormalColor = new Color(0.2f, 0.42f, 0.2f);
             zone.NormalCount = 6;

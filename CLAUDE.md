@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.60 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59 y 5.60 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.61 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60 y 5.61 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v13 (incluye posición, reclamos de POI, cosmeticos, evento diario, habilidades y cooldown final),
@@ -142,6 +142,9 @@ simple y autocontenido.
   las diez zonas.
 - Fase 5.60: el servidor tiene `/health`, payload maximo, heartbeat y apagado
   limpio; falta desplegar S-01 en Hetzner con dominio, Nginx/WSS y backups.
+- Fase 5.61: `docs/content-completeness.md` pasa 11/11 checks y confirma
+  cobertura funcional 1-105: 10 zonas, 35 misiones, 162 items, loot por tier,
+  habilidades, eventos diarios y recursos 3D base.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar

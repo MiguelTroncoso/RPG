@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    // Cadena inicial de misiones del valle (contenido original). Fuente
+    // Cadena principal de misiones 1-105. Fuente
     // unica para el generador de assets del editor (MMORPG > Quests >
     // Generate Quests) y el fallback runtime del bootstrap.
     public static class DefaultQuests
@@ -19,6 +19,7 @@ namespace MmorpgPrototype
         public const string ForgeFirstSteel = "forge_first_steel";
         public const string EliteHunt = "elite_hunt";
         public const string ZoneBoss = "zone_boss";
+        public const string ForestCreatures = "forest_creatures";
         public const string ForestEliteHunt = "forest_elite_hunt";
         public const string ForestBossHunt = "forest_boss_hunt";
         public const string AshWanderers = "ash_wanderers";
@@ -130,9 +131,19 @@ namespace MmorpgPrototype
                         Objective(QuestObjectiveType.KillEnemies, DefaultZones.ValleyBossId, 1, "Derrota al Coloso de las Reliquias")
                     },
                     Reward(300, 150),
+                    ForestCreatures),
+
+                Quest(ForestCreatures, 9, "Susurros entre espinos",
+                    "El Bosque de los Susurros no es un camino seguro. Abre la entrada derrotando a sus criaturas.",
+                    "Los espinos retroceden y el sendero queda abierto. Las sombras del bosque ya te han visto.",
+                    new[]
+                    {
+                        Objective(QuestObjectiveType.KillEnemies, DefaultZones.ForestCreatureId, 8, "Derrota Espinosos del bosque")
+                    },
+                    Reward(520, 240, Item(DefaultGameItems.MinorPotion, 2)),
                     ForestEliteHunt),
 
-                Quest(ForestEliteHunt, 9, "Ecos del bosque",
+                Quest(ForestEliteHunt, 10, "Ecos del bosque",
                     "En el Bosque de los Susurros, al norte, rondan Sombras que susurran nombres olvidados. Caza tres.",
                     "Las Sombras callan... pero el Anciano de Espinas sigue despierto en lo profundo.",
                     new[]
@@ -142,7 +153,7 @@ namespace MmorpgPrototype
                     Reward(400, 180, Item(DefaultGameItems.MinorPotion, 2)),
                     ForestBossHunt),
 
-                Quest(ForestBossHunt, 10, "El corazon del bosque",
+                Quest(ForestBossHunt, 11, "El corazon del bosque",
                     "El Anciano de Espinas corrompe el bosque desde su corazon, al noroeste. Derrotalo.",
                     "El bosque respira... pero el viento trae ceniza desde las colinas del norte.",
                     new[]
@@ -152,7 +163,7 @@ namespace MmorpgPrototype
                     Reward(800, 400, Item(DefaultGameItems.ProtectionRune, 1)),
                     AshWanderers),
 
-                Quest(AshWanderers, 11, "Cenizas al viento",
+                Quest(AshWanderers, 12, "Cenizas al viento",
                     "Mas alla del bosque, las Colinas Cenicientas arden sin fuego. Reduce a los Cenicientos errantes.",
                     "La ceniza no cae del cielo: alguien la respira y la devuelve. Sigue subiendo.",
                     new[]
@@ -162,7 +173,7 @@ namespace MmorpgPrototype
                     Reward(1200, 500, Item(DefaultGameItems.MinorPotion, 3)),
                     AshEliteHunt),
 
-                Quest(AshEliteHunt, 12, "Los devoradores",
+                Quest(AshEliteHunt, 13, "Los devoradores",
                     "Los Devoradores de ceniza custodian el paso alto, al oeste de las colinas. Caza dos.",
                     "Solo queda su origen: un corazon que late ceniza en lo alto de la colina.",
                     new[]
@@ -172,7 +183,7 @@ namespace MmorpgPrototype
                     Reward(1600, 700, Item(DefaultGameItems.ProtectionRune, 1)),
                     AshBossHunt),
 
-                Quest(AshBossHunt, 13, "El corazon de ceniza",
+                Quest(AshBossHunt, 14, "El corazon de ceniza",
                     "El Corazon de Ceniza arde en el este de las colinas. Apagalo para siempre.",
                     "Las colinas se enfrian. En lo alto brillan cumbres que no reflejan el sol.",
                     new[]
@@ -182,7 +193,7 @@ namespace MmorpgPrototype
                     Reward(3000, 1500, Item(DefaultGameItems.ValleyMedal, 1)),
                     CrystalSentinels),
 
-                Quest(CrystalSentinels, 14, "Cumbres de cristal",
+                Quest(CrystalSentinels, 15, "Cumbres de cristal",
                     "Mas alla de las cenizas se alzan cristales que caminan como guardianes. Rompe su avanzada.",
                     "Los centinelas caen en fragmentos, pero cada pedazo susurra una misma voz.",
                     new[]
@@ -192,7 +203,7 @@ namespace MmorpgPrototype
                     Reward(4200, 1800, Item(DefaultGameItems.MinorPotion, 3)),
                     CrystalEliteHunt),
 
-                Quest(CrystalEliteHunt, 15, "Custodios prismales",
+                Quest(CrystalEliteHunt, 16, "Custodios prismales",
                     "Los Custodios prismales protegen el sendero alto de las cumbres. Derrota a dos.",
                     "El sendero esta abierto. El Oraculo Fragmentado espera entre ecos de luz.",
                     new[]
@@ -202,7 +213,7 @@ namespace MmorpgPrototype
                     Reward(5200, 2300, Item(DefaultGameItems.ProtectionRune, 1)),
                     CrystalBossHunt),
 
-                Quest(CrystalBossHunt, 16, "El Oraculo Fragmentado",
+                Quest(CrystalBossHunt, 17, "El Oraculo Fragmentado",
                     "El Oraculo Fragmentado intenta recomponer la corrupcion en las cumbres. Detenlo.",
                     "Las cumbres dejan de cantar. El paso glacial se abre hacia el norte.",
                     new[]
@@ -212,7 +223,7 @@ namespace MmorpgPrototype
                     Reward(7000, 3200, Item(DefaultGameItems.ValleyMedal, 1)),
                     FrostFront),
 
-                Quest(FrostFront, 17, "Frontera glacial",
+                Quest(FrostFront, 18, "Frontera glacial",
                     "El Paso Glacial corta el avance con bestias de escarcha. Reduce su manada.",
                     "La nieve deja de moverse. Aun quedan vigias marcando el camino.",
                     new[]
@@ -222,7 +233,7 @@ namespace MmorpgPrototype
                     Reward(9000, 4200, Item(DefaultGameItems.MinorPotion, 3)),
                     FrostEliteHunt),
 
-                Quest(FrostEliteHunt, 18, "Vigias del hielo",
+                Quest(FrostEliteHunt, 19, "Vigias del hielo",
                     "Los Vigias del hielo custodian los puentes helados. Derrota a tres.",
                     "Los puentes ya no tienen ojos. La Matriarca Invernal ruge desde la cima.",
                     new[]
@@ -232,7 +243,7 @@ namespace MmorpgPrototype
                     Reward(11000, 5200, Item(DefaultGameItems.ProtectionRune, 1)),
                     FrostBossHunt),
 
-                Quest(FrostBossHunt, 19, "La Matriarca Invernal",
+                Quest(FrostBossHunt, 20, "La Matriarca Invernal",
                     "La Matriarca Invernal quiere cubrir el valle bajo hielo eterno. Derribala.",
                     "El frio retrocede y revela unas ruinas bajo aguas oscuras.",
                     new[]
@@ -242,7 +253,7 @@ namespace MmorpgPrototype
                     Reward(16000, 7200, Item(DefaultGameItems.ValleyMedal, 1)),
                     SunkenDead),
 
-                Quest(SunkenDead, 20, "Ruinas sumergidas",
+                Quest(SunkenDead, 21, "Ruinas sumergidas",
                     "En las Ruinas Sumergidas caminan ahogados antiguos. Despeja la entrada.",
                     "Los viejos cuerpos se hunden otra vez, pero algo abisal responde.",
                     new[]
@@ -252,7 +263,7 @@ namespace MmorpgPrototype
                     Reward(19000, 8500, Item(DefaultGameItems.MinorPotion, 4)),
                     SunkenEliteHunt),
 
-                Quest(SunkenEliteHunt, 21, "Sirvientes abisales",
+                Quest(SunkenEliteHunt, 22, "Sirvientes abisales",
                     "Los Sirvientes abisales recogen voces en las ruinas. Rompe su ritual.",
                     "El ritual se apaga. La Reina de las Mareas Rotas se muestra.",
                     new[]
@@ -262,7 +273,7 @@ namespace MmorpgPrototype
                     Reward(23000, 10000, Item(DefaultGameItems.ProtectionRune, 1)),
                     SunkenBossHunt),
 
-                Quest(SunkenBossHunt, 22, "Mareas rotas",
+                Quest(SunkenBossHunt, 23, "Mareas rotas",
                     "La Reina de las Mareas Rotas levanta el agua contra la tierra. Detenla.",
                     "El agua cae. Bajo las ruinas despierta una forja de obsidiana.",
                     new[]
@@ -272,7 +283,7 @@ namespace MmorpgPrototype
                     Reward(32000, 14000, Item(DefaultGameItems.ValleyMedal, 1)),
                     ObsidianForged),
 
-                Quest(ObsidianForged, 23, "Forjados de obsidiana",
+                Quest(ObsidianForged, 24, "Forjados de obsidiana",
                     "La Forja Obsidiana produce soldados sin descanso. Destruye sus forjados.",
                     "La cadena de produccion se rompe. Ahora su martillo busca dueno.",
                     new[]
@@ -282,7 +293,7 @@ namespace MmorpgPrototype
                     Reward(38000, 16500, Item(DefaultGameItems.MinorPotion, 4)),
                     ObsidianEliteHunt),
 
-                Quest(ObsidianEliteHunt, 24, "Martillos vivientes",
+                Quest(ObsidianEliteHunt, 25, "Martillos vivientes",
                     "Los Martillos vivientes alimentan la forja con golpes de guerra. Caza tres.",
                     "La forja tiembla. El Senor del Yunque Negro sale a defenderla.",
                     new[]
@@ -292,7 +303,7 @@ namespace MmorpgPrototype
                     Reward(45000, 19000, Item(DefaultGameItems.ProtectionRune, 1)),
                     ObsidianBossHunt),
 
-                Quest(ObsidianBossHunt, 25, "El Yunque Negro",
+                Quest(ObsidianBossHunt, 26, "El Yunque Negro",
                     "El Senor del Yunque Negro quiere rehacer la corrupcion como metal. Derrotalo.",
                     "La forja se enfria y una luz imposible revela el Jardin Astral.",
                     new[]
@@ -302,7 +313,7 @@ namespace MmorpgPrototype
                     Reward(62000, 26000, Item(DefaultGameItems.ValleyMedal, 1)),
                     AstralSeeds),
 
-                Quest(AstralSeeds, 26, "Jardin astral",
+                Quest(AstralSeeds, 27, "Jardin astral",
                     "Semillas estelares caen como meteoros vivos. Limpia el Jardin Astral.",
                     "Las semillas dejan de brotar. Los guardias zodiacales aun sostienen el cielo.",
                     new[]
@@ -312,7 +323,7 @@ namespace MmorpgPrototype
                     Reward(72000, 30000, Item(DefaultGameItems.MinorPotion, 5)),
                     AstralEliteHunt),
 
-                Quest(AstralEliteHunt, 27, "Guardias zodiacales",
+                Quest(AstralEliteHunt, 28, "Guardias zodiacales",
                     "Los Guardias zodiacales protegen el centro del jardin. Derrota a tres.",
                     "Las constelaciones tiemblan. El Arbol de Constelaciones pierde sus raices.",
                     new[]
@@ -322,7 +333,7 @@ namespace MmorpgPrototype
                     Reward(85000, 36000, Item(DefaultGameItems.ProtectionRune, 1)),
                     AstralBossHunt),
 
-                Quest(AstralBossHunt, 28, "Raices de estrellas",
+                Quest(AstralBossHunt, 29, "Raices de estrellas",
                     "El Arbol de Constelaciones guia la corrupcion desde el cielo. Talo sus raices.",
                     "El cielo se abre y aparece un santuario cubierto por eclipse.",
                     new[]
@@ -332,7 +343,7 @@ namespace MmorpgPrototype
                     Reward(120000, 52000, Item(DefaultGameItems.ValleyMedal, 1)),
                     EclipseDevotees),
 
-                Quest(EclipseDevotees, 29, "Santuario del eclipse",
+                Quest(EclipseDevotees, 30, "Santuario del eclipse",
                     "Devotos del eclipse rezan para apagar el dia. Rompe sus filas.",
                     "Las plegarias callan. Los profetas sin sombra siguen mirando.",
                     new[]
@@ -342,7 +353,7 @@ namespace MmorpgPrototype
                     Reward(140000, 62000, Item(DefaultGameItems.MinorPotion, 5)),
                     EclipseEliteHunt),
 
-                Quest(EclipseEliteHunt, 30, "Profetas sin sombra",
+                Quest(EclipseEliteHunt, 31, "Profetas sin sombra",
                     "Los Profetas sin sombra predicen tu derrota. Demuestra que se equivocan.",
                     "La profecia se rompe. El Sol Negro desciende sobre el santuario.",
                     new[]
@@ -352,7 +363,7 @@ namespace MmorpgPrototype
                     Reward(160000, 72000, Item(DefaultGameItems.ProtectionRune, 1)),
                     EclipseBossHunt),
 
-                Quest(EclipseBossHunt, 31, "Sol Negro",
+                Quest(EclipseBossHunt, 32, "Sol Negro",
                     "El Sol Negro absorbe la luz de las zonas liberadas. Apagalo.",
                     "La luz vuelve, pero revela el Trono del Vacio al final del camino.",
                     new[]
@@ -362,7 +373,7 @@ namespace MmorpgPrototype
                     Reward(220000, 95000, Item(DefaultGameItems.ValleyMedal, 1)),
                     ThroneHeralds),
 
-                Quest(ThroneHeralds, 32, "Heraldos del vacio",
+                Quest(ThroneHeralds, 33, "Heraldos del vacio",
                     "Los Heraldos del vacio anuncian al ultimo rey. Silencia su marcha.",
                     "El anuncio termina. Los caballeros sin nombre guardan la puerta.",
                     new[]
@@ -372,7 +383,7 @@ namespace MmorpgPrototype
                     Reward(280000, 120000, Item(DefaultGameItems.MinorPotion, 6)),
                     ThroneEliteHunt),
 
-                Quest(ThroneEliteHunt, 33, "Caballeros sin nombre",
+                Quest(ThroneEliteHunt, 34, "Caballeros sin nombre",
                     "Los Caballeros sin nombre no recuerdan por que luchan. Libera a cuatro.",
                     "La puerta del trono se abre. Solo queda el Rey Sin Alba.",
                     new[]
@@ -382,7 +393,7 @@ namespace MmorpgPrototype
                     Reward(340000, 150000, Item(DefaultGameItems.ProtectionRune, 2)),
                     ThroneBossHunt),
 
-                Quest(ThroneBossHunt, 34, "El Rey Sin Alba",
+                Quest(ThroneBossHunt, 35, "El Rey Sin Alba",
                     "El Rey Sin Alba espera en el Trono del Vacio. Derrotalo y cierra esta era.",
                     "El trono cae en silencio. El mundo queda listo para la siguiente gran historia.",
                     new[]

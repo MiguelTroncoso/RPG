@@ -14,12 +14,13 @@ ANTES DE TOCAR NADA lee, en este orden:
 1. CLAUDE.md (contrato del proyecto: reglas no negociables, como probar).
 2. GAME_ARCHITECTURE.md (arquitectura objetivo y hoja de ruta §16 con etapas
    marcadas; las que tienen check ya estan hechas).
-3. README.md (historial de fases 1 a 5.60 y como ejecutar).
+3. README.md (historial de fases 1 a 5.61 y como ejecutar).
 4. docs/progress.md (porcentaje estimado y registro diario).
-5. El codigo existente relacionado con tu tarea.
+5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
+6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.60 entregadas en primera pasada; refinamientos 5.44,
-5.45, 5.49, 5.58, 5.59 y 5.60 completados en esta pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.61 entregadas en primera pasada; refinamientos 5.44,
+5.45, 5.49, 5.58, 5.59, 5.60 y 5.61 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -126,6 +127,9 @@ Estado actual (fases 1-5.60 entregadas en primera pasada; refinamientos 5.44,
 - Equipo y mundo: cada banda tiene doce piezas de equipo visibles por ranura,
   con rareza/tier, emblemas 3D por clase y landmark propio para cada una de las
   diez zonas.
+- Fase 5.61: `docs/content-completeness.md` pasa 11/11 checks y confirma
+  contenido funcional 1-105 completo: 10 zonas, 35 misiones, 162 items, 30
+  tablas de loot, 120 piezas de set, 10 reliquias y recursos 3D base.
 - Hetzner preflight: `Server/src/server.js` expone `/health`, limita payload,
   hace heartbeat y persiste al recibir senales de apagado. Falta crear la
   instancia, configurar dominio/Nginx/WSS, firewall, backups y probar dos APK.

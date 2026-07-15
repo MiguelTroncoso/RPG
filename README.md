@@ -854,6 +854,19 @@ SERVER_ID=S-01 SERVER_NAME="Valle Central" HOST=0.0.0.0 PORT=7777 MAX_PLAYERS=10
 - Falta ejecutar el despliegue en la cuenta Hetzner, configurar dominio y
   certificado, y probar dos telefonos desde Internet.
 
+## Fase 5.61: Cierre De Contenido Funcional 1-105
+
+- Se corrigio la cadena de misiones para que el Bosque de los Susurros tenga
+  una mision normal antes de sus objetivos elite y jefe.
+- El contenido funcional queda cubierto por 10 zonas, 35 misiones, 162 items,
+  30 tablas de loot, 120 piezas de set y 10 reliquias de jefe.
+- El auditor verifica rangos 1-105, mobs, TTK, recompensas, materiales,
+  habilidades, eventos diarios y recursos 3D masculinos/femeninos.
+- Ejecutar `MMORPG > QA > Generate Content Completeness Report` para regenerar
+  `docs/content-completeness.md`; el corte actual pasa 11/11 checks.
+- Esto marca el contenido funcional al 100%, pero el arte comercial final,
+  online autoritativo, optimizacion y publicacion siguen pendientes.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

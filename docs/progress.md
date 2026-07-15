@@ -6,11 +6,12 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-15
 
-- Avance global estimado hacia el MMORPG publicable: **78%**.
-- Prototipo jugable offline: **99%**.
+- Avance global estimado hacia el MMORPG publicable: **80%**.
+- Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
 - Online persistente y preparado para produccion: **45%**.
-- Arte final, contenido completo 1-105 y lanzamiento: **50%**.
+- Contenido funcional 1-105: **100%**.
+- Arte final comercial, online y lanzamiento: **50%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -99,6 +100,11 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   por ranura, rareza y tier, ademas del emblema de clase.
 - Fase 5.60: servidor preparado para preflight de Hetzner con endpoint
   `/health`, limite de mensajes, heartbeat, apagado limpio y guia WSS/Nginx.
+- Fase 5.61: auditoria automatica de contenido 1-105 y correccion de la cadena
+  de misiones; las diez bandas quedan cubiertas con normal, elite y jefe.
+- El reporte `docs/content-completeness.md` confirma 11/11 checks: 10 zonas,
+  35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
+  personaje masculino/femenino disponibles.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -122,11 +128,14 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
 10. Sustituir progresivamente la geometria procedural por arte 3D final propio.
+11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
+    cada cambio de zonas, misiones, loot o equipos.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-15 | 5.61 | Auditoria funcional 1-105, mision normal de Bosque y reporte 11/11 | 80% |
 | 2026-07-15 | 5.60 | Preflight Hetzner: health check, heartbeat, apagado limpio y guia WSS | 78% |
 | 2026-07-15 | 5.59 | Habilidad final G nivel 50-10, cooldown persistente, landmarks y equipo visual | 78% |
 | 2026-07-15 | 5.58 | Habilidades Q/E/R/F, desbloqueos por nivel, mejoras con manuales y guardado | 75% |
