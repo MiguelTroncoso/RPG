@@ -922,9 +922,12 @@ ocho combinaciones jugables con siluetas Vanguard, Veil, Spirit y Void.
 firmas de clase sobre los modelos FBX existentes sin romper animaciones,
 equipamiento, sexo, cosmeticos o jugadores remotos.
 
-La especificacion completa queda en `docs/character-art-direction.md`. La
-siguiente parte reemplazara estas firmas procedurales por meshes finales de la
-Zona 1 y luego extendera el pipeline a las diez zonas.
+Las armas principales ya usan meshes FBX reales de KayKit. La Zona 1 carga
+`Tribal`, `Orc` y `Orc_Skull` para normal, elite y jefe, respectivamente, con
+tintes de reliquia y adornos diferenciados por tier. La especificacion completa
+queda en `docs/character-art-direction.md`. Los meshes propios o comerciales de
+mayor fidelidad quedan como una mejora posterior, no como bloqueo de esta
+vertical slice.
 
 ## Fase 5.65: Interfaz Cinematografica Para Android
 

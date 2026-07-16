@@ -162,12 +162,13 @@ Estado actual (fases 1-5.65 entregadas en primera pasada; refinamientos 5.44,
 - Fase 5.65: `UiPerformanceSettings` expone `Quality` y `Performance`, guarda
   la preferencia de dispositivo y deja `Performance` como valor inicial en
   Android. La orientacion y autorrotacion quedan fijas en horizontal.
-- Fase 5.66 (partes 1 y 2): la direccion artistica esta documentada en
+- Fase 5.66 (partes 1 a 4): la direccion artistica esta documentada en
   `docs/character-art-direction.md`. `CharacterArtProfiles` define las ocho
   variantes jugables y `PlayerAvatarVisual` aplica sus escalas, materiales,
-  siluetas, hombreras, capas, mascaras, coronas y nucleos de clase sobre los
-  FBX actuales. Falta sustituir esas firmas por meshes finales comerciales o
-  propios, empezando por Zona 1.
+  siluetas, armas FBX, hombreras, capas, mascaras, coronas y nucleos de clase
+  sobre los FBX actuales. Zona 1 usa Tribal, Orc y Orc_Skull por tier con
+  tratamiento de reliquia. Falta como mejora posterior el arte propio o
+  comercial de mayor fidelidad.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

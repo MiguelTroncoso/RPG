@@ -38,9 +38,25 @@ escala corporal, la proporcion de hombros, la capa y los accesorios de clase.
 - `DefaultArmorVisualSets` conserva el contrato de sets y rarezas mientras se
   sustituyen las piezas procedurales por meshes finales.
 
+## Fase 5.66 3+4: Salto 3D Y Zona 1
+
+- Las armas de clase cargan los meshes FBX reales de KayKit: espada de una
+  mano, dagas dobles, baston y espada de dos manos.
+- El arma de clase solo aparece cuando no hay un arma equipada; al equipar un
+  objeto se conserva una unica composicion visual y se usa el mesh 3D de la
+  clase para representar su familia.
+- La Zona 1 usa `Tribal` para el mob normal, `Orc` para el elite y `Orc_Skull`
+  para el jefe, con tintes de reliquia, cicatriz, sigilo y adornos de tier.
+- Los modelos Quaternius reciben tratamiento de material por zona, nivel y
+  jerarquia, manteniendo los originales CC0 y evitando duplicar materiales.
+
+Esta entrega cierra la primera vertical slice artistica 3D con assets CC0. El
+siguiente reemplazo de mayor calidad sera arte propio o comercial de los ocho
+personajes y de la familia de mobs, sin cambiar los contratos de gameplay.
+
 ## Acceptance
 
-Antes de avanzar a los mobs finales, las ocho variantes deben verse distintas
+Antes de avanzar a los mobs de las siguientes zonas, las ocho variantes deben verse distintas
 en seleccion de personaje y dentro de la Zona 1, conservar sus ranuras de
 equipo, animarse en idle/correr/ataque y no producir una caida de rendimiento
 visible en Android `Performance`.

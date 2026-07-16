@@ -11,6 +11,9 @@ namespace MmorpgPrototype
         private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
+        private static readonly int MetallicId = Shader.PropertyToID("_Metallic");
+        private static readonly int SmoothnessId = Shader.PropertyToID("_Smoothness");
+        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
         private GameObject visualRoot;
         private GameObject statusRoot;
         private Transform healthFill;
@@ -131,10 +134,7 @@ namespace MmorpgPrototype
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
 
-            if (tier == EnemyTier.Boss)
-            {
-                ApplyBossPalette(model, enemyId, baseColor);
-            }
+            ApplyModelArtTreatment(model, enemyId, baseColor, accent, tier);
 
             foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
             {
@@ -170,16 +170,29 @@ namespace MmorpgPrototype
             return true;
         }
 
-        private static void ApplyBossPalette(GameObject model, string enemyId, Color fallback)
+        private static void ApplyModelArtTreatment(GameObject model, string enemyId, Color baseColor, Color accent, EnemyTier tier)
         {
-            var palette = BossPaletteFor(enemyId, fallback);
+            var palette = tier == EnemyTier.Boss ? BossPaletteFor(enemyId, baseColor) : baseColor;
+            if (enemyId.Contains("valley"))
+            {
+                palette = tier == EnemyTier.Boss
+                    ? new Color(0.76f, 0.5f, 0.18f)
+                    : tier == EnemyTier.Elite
+                        ? new Color(0.38f, 0.2f, 0.12f)
+                        : new Color(0.24f, 0.1f, 0.08f);
+            }
+
+            var tintStrength = tier == EnemyTier.Boss ? 0.22f : tier == EnemyTier.Elite ? 0.16f : 0.1f;
             var block = new MaterialPropertyBlock();
             foreach (var renderer in model.GetComponentsInChildren<Renderer>())
             {
                 renderer.GetPropertyBlock(block);
-                var tint = Color.Lerp(Color.white, palette, 0.22f);
+                var tint = Color.Lerp(Color.white, palette, tintStrength);
                 block.SetColor(BaseColorId, tint);
                 block.SetColor(LegacyColorId, tint);
+                block.SetFloat(MetallicId, tier == EnemyTier.Boss ? 0.3f : 0.16f);
+                block.SetFloat(SmoothnessId, tier == EnemyTier.Boss ? 0.5f : 0.36f);
+                block.SetColor(EmissionColorId, Color.Lerp(Color.black, accent, tier == EnemyTier.Boss ? 0.12f : 0.035f));
                 renderer.SetPropertyBlock(block);
             }
         }
@@ -252,7 +265,11 @@ namespace MmorpgPrototype
         {
             enemyId = (enemyId ?? string.Empty).ToLowerInvariant();
             var scale = 0.85f;
-            if (enemyId.Contains("glub") || enemyId.Contains("goleling"))
+            if (enemyId.Contains("tribal"))
+            {
+                scale = 0.92f;
+            }
+            else if (enemyId.Contains("glub") || enemyId.Contains("goleling"))
             {
                 scale = 1.05f;
             }
@@ -285,7 +302,7 @@ namespace MmorpgPrototype
         {
             if (enemyId.Contains("valley"))
             {
-                return tier == EnemyTier.Boss ? MonsterResource("Orc_Skull") : tier == EnemyTier.Elite ? MonsterResource("Orc") : MonsterResource("MushroomKing");
+                return tier == EnemyTier.Boss ? MonsterResource("Orc_Skull") : tier == EnemyTier.Elite ? MonsterResource("Orc") : MonsterResource("Tribal");
             }
 
             if (enemyId.Contains("forest"))
@@ -438,10 +455,16 @@ namespace MmorpgPrototype
             if (enemyId.Contains("valley"))
             {
                 CreatePart("Relic Collar", PrimitiveType.Cylinder, new Vector3(0f, 0.58f, 0f), new Vector3(0.34f, 0.08f, 0.34f), new Color(0.76f, 0.5f, 0.18f));
-                if (tier == EnemyTier.Elite)
+                if (tier == EnemyTier.Normal)
+                {
+                    CreatePart("Relic Scar", PrimitiveType.Cube, new Vector3(0f, 0.34f, -0.46f), new Vector3(0.24f, 0.06f, 0.05f), new Color(1f, 0.3f, 0.12f), Quaternion.Euler(0f, 0f, -24f));
+                    CreatePart("Relic Shard", PrimitiveType.Cylinder, new Vector3(0.26f, 0.64f, 0.08f), new Vector3(0.06f, 0.24f, 0.06f), accent, Quaternion.Euler(0f, 0f, -22f));
+                }
+                else if (tier == EnemyTier.Elite)
                 {
                     CreatePart("Relic Shoulder L", PrimitiveType.Cube, new Vector3(-0.48f, 0.38f, 0f), new Vector3(0.24f, 0.24f, 0.44f), accent, Quaternion.Euler(0f, 0f, -18f));
                     CreatePart("Relic Shoulder R", PrimitiveType.Cube, new Vector3(0.48f, 0.38f, 0f), new Vector3(0.24f, 0.24f, 0.44f), accent, Quaternion.Euler(0f, 0f, 18f));
+                    CreatePart("Relic Elite Sigil", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.5f), new Vector3(0.14f, 0.14f, 0.08f), new Color(1f, 0.42f, 0.14f));
                 }
                 else if (tier == EnemyTier.Boss)
                 {

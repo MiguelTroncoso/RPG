@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **87%**.
+- Avance global estimado hacia el MMORPG publicable: **89%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **58%**.
+- Arte final comercial, online y lanzamiento: **61%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -128,9 +128,10 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   y perfiles `CALIDAD`/`RENDIMIENTO`, con rendimiento como predeterminado Android.
 - Fase 5.65: orientacion horizontal fija, autorrotacion deshabilitada y
   referencia UI 1600x900 conservando safe area y multitactil existente.
-- Fase 5.66 (partes 1 y 2): direccion artistica documentada y ocho perfiles
-  visuales jugables con silueta, paleta, escala y firma propia sobre los FBX
-  existentes; se conserva el contrato de sexo, equipo y animaciones.
+- Fase 5.66 (partes 1 a 4): direccion artistica documentada, ocho perfiles
+  visuales jugables, armas FBX reales por clase y vertical slice 3D de Zona 1
+  con Tribal, Orc y Orc_Skull; se conserva el contrato de sexo, equipo y
+  animaciones.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -170,7 +171,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
-| 2026-07-16 | 5.66 1+2 | Direccion artistica y perfiles visuales de los ocho personajes | 88% |
+| 2026-07-16 | 5.66 1-4 | Ocho personajes 3D con armas FBX y mobs 3D de Zona 1 | 89% |
 | 2026-07-16 | 5.65 | Interfaz cinematografica Android, conexion discreta y perfiles graficos | 87% |
 | 2026-07-15 | 5.64 | Calendario diario, jefe mundial, clan y todos contra todos preparados | 84% |
 | 2026-07-15 | 5.63 | Evento semanal, temporada de 28 dias y recompensas por hitos | 83% |

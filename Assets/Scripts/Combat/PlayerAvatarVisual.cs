@@ -265,6 +265,10 @@ namespace MmorpgPrototype
 
         private void BuildClassSignature(Transform parent, CharacterArtProfile profile)
         {
+            var classWeaponBuilt = IsWeaponUnequipped()
+                ? BuildClassWeaponModels(parent, profile)
+                : true;
+
             var shoulderWidth = profile.Silhouette == CharacterArtSilhouette.Vanguard ? 0.54f : 0.46f;
             var shoulderSize = new Vector3(0.28f, 0.16f, 0.34f) * profile.ShoulderScale;
             if (profile.Silhouette == CharacterArtSilhouette.Vanguard)
@@ -273,14 +277,21 @@ namespace MmorpgPrototype
                 CreatePart(parent, "Vanguard Shoulder Right", PrimitiveType.Sphere, new Vector3(shoulderWidth, 0.52f, 0f), shoulderSize, profile.MetalColor);
                 CreatePart(parent, "Vanguard Crest", PrimitiveType.Cylinder, new Vector3(0f, 1.16f, -0.02f), new Vector3(0.14f, 0.24f, 0.14f), profile.GlowColor, Quaternion.Euler(0f, 0f, 45f));
                 CreatePart(parent, "Vanguard Chest Gem", PrimitiveType.Sphere, new Vector3(0f, 0.28f, -0.52f), new Vector3(0.1f, 0.1f, 0.06f), profile.GlowColor);
+                if (!classWeaponBuilt)
+                {
+                    CreatePart(parent, "Vanguard Blade", PrimitiveType.Cube, new Vector3(0.48f, 0.16f, -0.2f), new Vector3(0.08f, 0.7f, 0.08f), profile.MetalColor, Quaternion.Euler(0f, 0f, -26f));
+                }
             }
             else if (profile.Silhouette == CharacterArtSilhouette.Veil)
             {
                 CreatePart(parent, "Veil Hood", PrimitiveType.Sphere, new Vector3(0f, 0.94f, 0.02f), new Vector3(0.46f, 0.34f, 0.44f), profile.SecondaryColor);
                 CreatePart(parent, "Veil Mask", PrimitiveType.Cube, new Vector3(0f, 0.88f, -0.38f), new Vector3(0.3f, 0.09f, 0.05f), profile.GlowColor);
                 CreatePart(parent, "Veil Sash", PrimitiveType.Cube, new Vector3(0f, 0.03f, -0.5f), new Vector3(0.68f, 0.08f, 0.05f), profile.MetalColor);
-                CreatePart(parent, "Veil Dagger Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.04f, -0.3f), new Vector3(0.06f, 0.42f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, 28f));
-                CreatePart(parent, "Veil Dagger Right", PrimitiveType.Cube, new Vector3(0.5f, 0.04f, -0.3f), new Vector3(0.06f, 0.42f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, -28f));
+                if (!classWeaponBuilt)
+                {
+                    CreatePart(parent, "Veil Dagger Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.04f, -0.3f), new Vector3(0.06f, 0.42f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, 28f));
+                    CreatePart(parent, "Veil Dagger Right", PrimitiveType.Cube, new Vector3(0.5f, 0.04f, -0.3f), new Vector3(0.06f, 0.42f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, -28f));
+                }
             }
             else if (profile.Silhouette == CharacterArtSilhouette.Spirit)
             {
@@ -288,6 +299,10 @@ namespace MmorpgPrototype
                 CreatePart(parent, "Spirit Crown", PrimitiveType.Cylinder, new Vector3(0f, 1.28f, 0f), new Vector3(0.12f, 0.18f, 0.12f), profile.GlowColor);
                 CreatePart(parent, "Spirit Orb", PrimitiveType.Sphere, new Vector3(0f, 0.37f, -0.53f), new Vector3(0.14f, 0.14f, 0.08f), profile.GlowColor);
                 CreatePart(parent, "Spirit Collar", PrimitiveType.Cube, new Vector3(0f, 0.58f, -0.32f), new Vector3(0.36f, 0.08f, 0.05f), profile.MetalColor);
+                if (!classWeaponBuilt)
+                {
+                    CreatePart(parent, "Spirit Staff", PrimitiveType.Cylinder, new Vector3(0.58f, 0.28f, 0.05f), new Vector3(0.07f, 0.82f, 0.07f), profile.MetalColor, Quaternion.Euler(0f, 0f, -12f));
+                }
             }
             else
             {
@@ -296,11 +311,87 @@ namespace MmorpgPrototype
                 CreatePart(parent, "Void Chest Core", PrimitiveType.Sphere, new Vector3(0f, 0.28f, -0.53f), new Vector3(0.14f, 0.14f, 0.08f), profile.GlowColor);
                 CreatePart(parent, "Void Shoulder Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.48f, 0f), new Vector3(0.26f, 0.18f, 0.4f), profile.MetalColor, Quaternion.Euler(0f, 0f, 18f));
                 CreatePart(parent, "Void Shoulder Right", PrimitiveType.Cube, new Vector3(0.5f, 0.48f, 0f), new Vector3(0.26f, 0.18f, 0.4f), profile.MetalColor, Quaternion.Euler(0f, 0f, -18f));
+                if (!classWeaponBuilt)
+                {
+                    CreatePart(parent, "Void Blade", PrimitiveType.Cube, new Vector3(0.52f, 0.16f, 0.08f), new Vector3(0.1f, 0.82f, 0.1f), profile.MetalColor, Quaternion.Euler(0f, 0f, -24f));
+                }
             }
 
             if (profile.UseCloak)
             {
                 CreatePart(parent, "Class Cloak", PrimitiveType.Cube, new Vector3(0f, 0.14f, 0.38f), new Vector3(0.72f * profile.CloakScale, 0.76f, 0.06f), profile.SecondaryColor, Quaternion.Euler(8f, 0f, 0f));
+            }
+        }
+
+        private bool IsWeaponUnequipped()
+        {
+            return currentEquipment == null || currentEquipment.GetDefinition(currentEquipment.GetEquipped(EquipSlot.Weapon)) == null;
+        }
+
+        private bool BuildClassWeaponModels(Transform parent, CharacterArtProfile profile)
+        {
+            if (currentDefinition == null || string.IsNullOrEmpty(currentDefinition.WeaponResource))
+            {
+                return false;
+            }
+
+            var prefab = Resources.Load<GameObject>(currentDefinition.WeaponResource);
+            if (prefab == null)
+            {
+                return false;
+            }
+
+            if (profile.Silhouette == CharacterArtSilhouette.Veil)
+            {
+                AttachWeaponModel(parent, prefab, "Class Dagger Left", new Vector3(-0.48f, 0.02f, -0.28f), Quaternion.Euler(0f, 0f, 26f), 0.62f, profile.MetalColor);
+                AttachWeaponModel(parent, prefab, "Class Dagger Right", new Vector3(0.48f, 0.02f, -0.28f), Quaternion.Euler(0f, 0f, -26f), 0.62f, profile.MetalColor);
+            }
+            else if (profile.Silhouette == CharacterArtSilhouette.Spirit)
+            {
+                AttachWeaponModel(parent, prefab, "Class Staff", new Vector3(0.56f, 0.26f, 0.04f), Quaternion.Euler(0f, 0f, -10f), 0.68f, profile.MetalColor);
+            }
+            else
+            {
+                var position = profile.Silhouette == CharacterArtSilhouette.Void
+                    ? new Vector3(0.52f, 0.14f, 0.06f)
+                    : new Vector3(0.48f, 0.16f, -0.2f);
+                var rotation = profile.Silhouette == CharacterArtSilhouette.Void
+                    ? Quaternion.Euler(0f, 0f, -24f)
+                    : Quaternion.Euler(0f, 0f, -26f);
+                AttachWeaponModel(parent, prefab, "Class Weapon", position, rotation, profile.Silhouette == CharacterArtSilhouette.Void ? 0.72f : 0.62f, profile.MetalColor);
+            }
+
+            return true;
+        }
+
+        private static void AttachWeaponModel(Transform parent, GameObject prefab, string name, Vector3 position, Quaternion rotation, float scale, Color tint)
+        {
+            var weapon = Instantiate(prefab, parent);
+            weapon.name = name;
+            weapon.transform.localPosition = position;
+            weapon.transform.localRotation = rotation;
+            weapon.transform.localScale = Vector3.one * scale;
+
+            foreach (var collider in weapon.GetComponentsInChildren<Collider>())
+            {
+                Object.Destroy(collider);
+            }
+
+            ApplyWeaponArtTreatment(weapon, tint);
+        }
+
+        private static void ApplyWeaponArtTreatment(GameObject weapon, Color tint)
+        {
+            var block = new MaterialPropertyBlock();
+            foreach (var renderer in weapon.GetComponentsInChildren<Renderer>())
+            {
+                renderer.GetPropertyBlock(block);
+                var color = Color.Lerp(Color.white, tint, 0.12f);
+                block.SetColor(BaseColorId, color);
+                block.SetColor(LegacyColorId, color);
+                block.SetFloat(MetallicId, 0.7f);
+                block.SetFloat(SmoothnessId, 0.58f);
+                renderer.SetPropertyBlock(block);
             }
         }
 
@@ -372,6 +463,12 @@ namespace MmorpgPrototype
             var tierColor = Color.Lerp(new Color(0.34f, 0.42f, 0.52f), currentDefinition.SkillColor, tier / 10f);
             var rarityColor = RarityColor(item.Rarity);
             var metalColor = Color.Lerp(tierColor, rarityColor, 0.48f);
+
+            if (slot == EquipSlot.Weapon && currentDefinition != null && BuildClassWeaponModels(armorRoot.transform, currentArtProfile ?? CharacterArtProfiles.Get(currentClass, currentGender)))
+            {
+                return;
+            }
+
             CreatePart(armorRoot.transform, $"Equipped {slot} Tier {tier}", PrimitiveType.Cube, position, size, metalColor, rotation);
 
             if (slot == EquipSlot.Weapon)

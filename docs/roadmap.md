@@ -871,13 +871,17 @@ mobs finales.
 - `PlayerAvatarVisual` aplica tratamiento de materiales y firmas visuales sobre
   los modelos FBX existentes, conservando sexo, clase, animaciones, equipo,
   cosmeticos y jugadores remotos. [Implementado]
-- La siguiente subfase debe sustituir progresivamente las firmas procedurales
-  por meshes finales propios o con licencia comercial, comenzando por la Zona 1.
-  [Pendiente]
+- Las armas de clase ya cargan meshes FBX reales de KayKit: espada, dagas,
+  baston y espada de dos manos, evitando cubos como representacion principal.
+  [Implementado]
+- La Zona 1 usa `Tribal`, `Orc` y `Orc_Skull` para normal, elite y jefe, con
+  tratamiento de material de reliquia y adornos de tier. [Implementado]
+- La sustitucion por arte propio o comercial de mayor fidelidad queda como
+  mejora posterior, sin bloquear la vertical slice 3D actual. [Planificado]
 
 Criterio de exito: las ocho variantes se reconocen sin leer el HUD, mantienen
 las ranuras de equipamiento y funcionan en la prueba Android sin duplicar reglas
-de combate o persistencia.
+de combate o persistencia; la Zona 1 presenta una familia de mobs 3D coherente.
 
 ## Fase 6: Lanzamiento Inicial
 
