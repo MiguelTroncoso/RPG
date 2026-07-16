@@ -179,8 +179,14 @@ Estado actual (fases 1-5.65 entregadas en primera pasada; refinamientos 5.44,
   resolucion, normales, LOD y animaciones finales quedan como pulido comercial.
 - Fase 5.69: el cuerpo propio se combina en `SkinnedMeshRenderer` con pesos por
   pieza, atlas albedo/normal 512x512, `LODGroup` y animacion procedural de
-  brazos/piernas. La exportacion FBX authored y clips artisticos finales aun
-  requiere una herramienta 3D externa.
+  brazos/piernas.
+- Fase 5.70: Blender 5.2 ya esta instalado. El script
+  `Tools/blender/create_original_art_assets.py` genera ocho FBX skinned
+  authored, atlas albedo/normal, `Starter Weapon` separado y tres clips por
+  variante. `Assets/Editor/OriginalArtAnimatorAssetGenerator.cs` crea los ocho
+  controllers de Unity; `PlayerAvatarVisual` los prioriza y conserva fallback
+  procedural. Validar el pipeline con `docs/original-art-pipeline.md`. El LOD
+  actual es culling runtime; falta LOD geometrico real para el siguiente salto.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

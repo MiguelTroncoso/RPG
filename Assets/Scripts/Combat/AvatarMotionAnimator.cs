@@ -37,10 +37,10 @@ namespace MmorpgPrototype
             visualRoot = root;
             modelAnimator = animator;
             baseLocalPosition = visualRoot != null ? visualRoot.localPosition : Vector3.zero;
-            leftArm = visualRoot != null ? FindDeepChild(visualRoot, "Left Arm") : null;
-            rightArm = visualRoot != null ? FindDeepChild(visualRoot, "Right Arm") : null;
-            leftLeg = visualRoot != null ? FindDeepChild(visualRoot, "Left Leg") : null;
-            rightLeg = visualRoot != null ? FindDeepChild(visualRoot, "Right Leg") : null;
+            leftArm = visualRoot != null ? FindFirstDeepChild(visualRoot, "Left Arm", "UpperArm.L") : null;
+            rightArm = visualRoot != null ? FindFirstDeepChild(visualRoot, "Right Arm", "UpperArm.R") : null;
+            leftLeg = visualRoot != null ? FindFirstDeepChild(visualRoot, "Left Leg", "Thigh.L") : null;
+            rightLeg = visualRoot != null ? FindFirstDeepChild(visualRoot, "Right Leg", "Thigh.R") : null;
             CacheAnimatorParameters();
         }
 
@@ -87,6 +87,11 @@ namespace MmorpgPrototype
 
         private void AnimateProceduralArms(float phase, float movement, float attack)
         {
+            if (modelAnimator != null && modelAnimator.runtimeAnimatorController != null)
+            {
+                return;
+            }
+
             if (leftArm == null && rightArm == null && leftLeg == null && rightLeg == null)
             {
                 return;
@@ -195,6 +200,20 @@ namespace MmorpgPrototype
                 if (nested != null)
                 {
                     return nested;
+                }
+            }
+
+            return null;
+        }
+
+        private static Transform FindFirstDeepChild(Transform parent, params string[] childNames)
+        {
+            foreach (var childName in childNames)
+            {
+                var match = FindDeepChild(parent, childName);
+                if (match != null)
+                {
+                    return match;
                 }
             }
 

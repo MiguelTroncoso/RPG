@@ -943,6 +943,33 @@ Criterio de exito: el cuerpo propio se renderiza con un solo skin, el atlas no
 crea materiales por pieza, el mob y el jugador desaparecen correctamente a
 distancia y la APK conserva movimiento + ataque multitactil.
 
+## Fase 5.70: FBX Authored Y Animaciones Propias
+
+Objetivo: convertir el rig modular y la direccion artistica propia en assets
+FBX reales, editables y reutilizables por Unity y por el futuro pipeline de
+contenido.
+
+- Blender 5.2 LTS queda instalado en macOS Apple Silicon y el proceso se
+  conserva en `Tools/blender/create_original_art_assets.py`. [Implementado]
+- Se exportan ocho FBX skinned, uno por clase y sexo, con armature, bind poses,
+  pesos por hueso, atlas albedo/normal y materiales con rutas relativas.
+  [Implementado]
+- Cada variante conserva `Starter Weapon` como objeto separado para ocultarlo
+  al equipar otra arma sin duplicar la composicion. [Implementado]
+- Cada FBX contiene clips propios `Idle`, `Run` y `Attack`; Unity genera ocho
+  controllers con estados `Idle`, `Run`, `Attack` y parametros `Speed`/`Attack`.
+  [Implementado]
+- `PlayerAvatarVisual` prioriza el FBX authored, `AvatarMotionAnimator`
+  reconoce los huesos del rig exportado y queda fallback procedural si falta
+  el asset. [Implementado]
+- `LODGroup` se aplica tambien al modelo authored con culling lejano; el LOD
+  geometrico real con versiones reducidas queda como siguiente salto comercial.
+  [Implementado parcial]
+
+Criterio de exito: las ocho combinaciones cargan el FBX authored, reproducen
+sus tres clips sin mezclarlos entre clases, ocultan el arma inicial al equipar,
+mantienen fallback funcional y no rompen el contrato de Android.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

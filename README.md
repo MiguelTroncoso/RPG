@@ -961,6 +961,23 @@ culling lejano y animacion procedural de brazos y piernas. La exportacion del
 FBX authored, los clips artisticos finales y los mapas de alta resolucion
 requieren una herramienta 3D externa y quedan como el siguiente bloque.
 
+## Fase 5.70: FBX Authored Y Animaciones Propias
+
+Blender 5.2 LTS queda instalado como herramienta gratuita para generar el arte
+3D editable, sin convertirse en dependencia del APK. El script
+`Tools/blender/create_original_art_assets.py` exporta las ocho combinaciones de
+clase/sexo a `Assets/Resources/OriginalArt/Characters`, con armature skinned,
+bind poses, pesos, atlas albedo/normal 512x512, materiales con rutas relativas,
+arma inicial separada y clips `Idle`, `Run`, `Attack`.
+
+Unity genera los ocho controllers desde los clips importados con
+`MMORPG > Characters > Generate Original Art Controllers`. `PlayerAvatarVisual`
+prioriza estos FBX authored y conserva el arte procedural como fallback. El
+pipeline completo, comandos de regeneracion y validacion queda documentado en
+`docs/original-art-pipeline.md`. El LOD actual usa `LODGroup` con culling
+lejano; el siguiente salto comercial sera crear LOD geometrico real y
+animaciones de combate con mas poses.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

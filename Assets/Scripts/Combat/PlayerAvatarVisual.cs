@@ -112,6 +112,16 @@ namespace MmorpgPrototype
 
         private bool TryBuildCharacterModel(ClassDefinition definition, CharacterGender gender)
         {
+            var authoredModel = OriginalArtVisualFactory.BuildAuthoredCharacter(visualRoot.transform, currentArtProfile);
+            if (authoredModel != null)
+            {
+                usingOriginalArt = true;
+                var authoredAnimator = authoredModel.GetComponentInChildren<Animator>();
+                ApplyModelArtTreatment(authoredModel, currentArtProfile);
+                BindMotionAnimator(authoredAnimator);
+                return true;
+            }
+
             var originalModel = OriginalArtVisualFactory.BuildCharacter(visualRoot.transform, currentArtProfile);
             if (originalModel != null)
             {

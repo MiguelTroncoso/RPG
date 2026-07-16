@@ -65,6 +65,61 @@ namespace MmorpgPrototype
             return root;
         }
 
+        public static GameObject BuildAuthoredCharacter(Transform parent, CharacterArtProfile profile)
+        {
+            if (parent == null || profile == null)
+            {
+                return null;
+            }
+
+            var resourcePath = $"OriginalArt/Characters/{profile.ClassType}_{profile.Gender}";
+            var prefab = Resources.Load<GameObject>(resourcePath);
+            if (prefab == null)
+            {
+                return null;
+            }
+
+            var model = Object.Instantiate(prefab, parent);
+            model.name = $"Authored {profile.ClassType} {profile.Gender}";
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.identity;
+            model.transform.localScale = Vector3.one;
+
+            foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
+            {
+                Object.Destroy(modelCollider);
+            }
+
+            var animator = model.GetComponentInChildren<Animator>();
+            if (animator == null)
+            {
+                animator = model.AddComponent<Animator>();
+            }
+
+            var controllerPath = $"OriginalArt/Controllers/{profile.ClassType}_{profile.Gender}";
+            var controller = Resources.Load<RuntimeAnimatorController>(controllerPath);
+            if (controller != null)
+            {
+                animator.runtimeAnimatorController = controller;
+            }
+
+            var renderers = model.GetComponentsInChildren<Renderer>(true);
+            var lodGroup = model.GetComponent<LODGroup>();
+            if (lodGroup == null)
+            {
+                lodGroup = model.AddComponent<LODGroup>();
+            }
+
+            lodGroup.SetLODs(new[]
+            {
+                new LOD(0.42f, renderers),
+                new LOD(0.12f, new Renderer[0])
+            });
+            lodGroup.RecalculateBounds();
+
+            return model;
+        }
+
         public static GameObject BuildWarriorMale(Transform parent, CharacterArtProfile profile)
         {
             if (profile == null || profile.ClassType != CharacterClassType.Guerrero || profile.Gender != CharacterGender.Masculino)

@@ -136,8 +136,15 @@ simple y autocontenido.
   resolucion, normales, LOD y animaciones finales quedan como pulido comercial.
 - Fase 5.69: el cuerpo propio se combina en `SkinnedMeshRenderer` con pesos por
   pieza, atlas albedo/normal 512x512, `LODGroup` y animacion procedural de
-  brazos/piernas. La exportacion FBX authored y clips artisticos finales aun
-  requiere una herramienta 3D externa.
+  brazos/piernas.
+- Fase 5.70: Blender 5.2 esta instalado y
+  `Tools/blender/create_original_art_assets.py` exporta ocho FBX authored con
+  skinning, atlas albedo/normal, `Starter Weapon` separado y clips
+  `Idle`/`Run`/`Attack`. `OriginalArtAnimatorAssetGenerator` crea ocho
+  controllers en Resources; el runtime prioriza estos modelos y mantiene
+  fallback procedural. El LOD authored actual es `LODGroup` con culling lejano;
+  el LOD geometrico real y las animaciones de combate de mayor fidelidad quedan
+  para el siguiente bloque comercial. Ver `docs/original-art-pipeline.md`.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

@@ -144,6 +144,10 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   propio combinado en `SkinnedMeshRenderer` con pesos por pieza, `LODGroup`
   con culling lejano para personajes y mob propio, y animacion procedural de
   brazos y piernas compatible con el rig modular.
+- Fase 5.70: Blender 5.2 instalado y pipeline reproducible para ocho FBX
+  skinned authored con atlas albedo/normal, objeto `Starter Weapon`, clips
+  propios `Idle`/`Run`/`Attack` y ocho controllers de Unity. El runtime prioriza
+  esos FBX, conserva fallback procedural y aplica culling `LODGroup`.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -169,8 +173,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    con firewall, TLS/WSS y persistencia protegida.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Sustituir progresivamente la geometria procedural por meshes finales
-    exportados con rig skinned, atlas de texturas y LOD por dispositivo.
+10. Sustituir progresivamente los meshes low-poly authored por esculturas
+    finales, LOD geometrico real, normales horneadas y animaciones de combate.
 11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
 12. Probar contratos diarios y Renacimiento con varios personajes antes de
@@ -184,6 +188,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.70 | Blender, ocho FBX skinned authored, atlas, normals, clips y controllers Unity | 94% |
 | 2026-07-16 | 5.69 | Atlas albedo/normal, skinning runtime, LOD y animacion articulada | 93% |
 | 2026-07-16 | 5.68 | Ocho variantes propias, UVs, microtexturas y rig modular runtime | 92% |
 | 2026-07-16 | 5.67 | Primer arte propio 3D para Guerrero y mob de Zona 1 | 90% |
