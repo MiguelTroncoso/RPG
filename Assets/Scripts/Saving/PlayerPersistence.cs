@@ -29,6 +29,8 @@ namespace MmorpgPrototype
         public PlayerAttributes Attributes;
         public PlayerSkills Skills;
         public RepeatableContractSystem Contracts;
+        public WeeklyEventSystem WeeklyEvent;
+        public SeasonProgressionSystem Season;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -136,6 +138,8 @@ namespace MmorpgPrototype
             Equipment?.RestoreUpgrades(data.WeaponLevel, data.ArmorLevel);
             QuestLog?.Restore(data.Quests);
             Contracts?.Restore(data.Contracts);
+            WeeklyEvent?.Restore(data.WeeklyEvent);
+            Season?.Restore(data.Season);
             Storage?.RestoreEntries(data.Storage);
 
             Cosmetics?.RestoreOwned(data.OwnedCosmeticIds);
@@ -261,6 +265,8 @@ namespace MmorpgPrototype
                 Equipment = Gear != null ? Gear.ExportEntries() : new List<SavedEquipmentEntry>(),
                 Quests = QuestLog != null ? QuestLog.Export() : new QuestSaveData(),
                 Contracts = Contracts != null ? Contracts.Export() : new RepeatableContractSaveData(),
+                WeeklyEvent = WeeklyEvent != null ? WeeklyEvent.Export() : new WeeklyEventSaveData(),
+                Season = Season != null ? Season.Export() : new SeasonSaveData(),
                 ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
                 SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty,
                 ActiveOutfitId = Cosmetics != null ? Cosmetics.ActiveOutfitId : string.Empty,

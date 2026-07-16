@@ -14,6 +14,8 @@ namespace MmorpgPrototype
         public PlayerProgression Progression;
         public InventorySystem Inventory;
         public RepeatableContractSystem Contracts;
+        public WeeklyEventSystem WeeklyEvent;
+        public SeasonProgressionSystem Season;
 
         private readonly List<QuestDefinition> questLine = new List<QuestDefinition>();
         private readonly List<string> completedIds = new List<string>();
@@ -44,6 +46,8 @@ namespace MmorpgPrototype
 
         public void OnEnemyDefeated(EnemyTier tier, string enemyId, bool isWorldEvent)
         {
+            WeeklyEvent?.RecordDefeat(tier, isWorldEvent);
+            Season?.RecordDefeat(tier, isWorldEvent);
             if (isWorldEvent)
             {
                 Progress(QuestObjectiveType.DefeatWorldEvent, string.Empty, 1);
@@ -132,6 +136,20 @@ namespace MmorpgPrototype
                 builder.AppendLine();
                 builder.AppendLine();
                 builder.Append(Contracts.Summary());
+            }
+
+            if (WeeklyEvent != null)
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(WeeklyEvent.Summary());
+            }
+
+            if (Season != null)
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(Season.Summary());
             }
 
             return builder.ToString();
@@ -282,6 +300,7 @@ namespace MmorpgPrototype
             counters = null;
 
             RewardService.Grant(quest.Reward, Progression, Inventory, Hud, $"Mision '{quest.Title}'");
+            Season?.RecordQuestCompletion();
             Hud?.SetStatus(Localization.Tr("quest.completed", quest.Title, quest.CompleteDialog), 5f);
 
             if (!string.IsNullOrWhiteSpace(quest.NextQuestId))

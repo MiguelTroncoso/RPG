@@ -887,6 +887,21 @@ La fecha diaria usa UTC para que cliente y futuro servidor compartan el mismo
 corte. Antes de abrir el juego se debe validar contratos, recompensas y
 Renacimientos desde S-01 para evitar manipulacion local.
 
+## Fase 5.63: Eventos Semanales Y Temporadas
+
+- `Conquista del Valle` se reinicia cada lunes UTC y pide 30 derrotas, con al
+  menos 3 enemigos elite. Entrega EXP, oro, runas y manuales.
+- La temporada actual dura 28 dias y tiene 30 niveles. La XP llega por
+  derrotar enemigos, completar misiones, contratos y el evento semanal.
+- Los niveles 5/10/15/20/25/30 entregan recompensas una sola vez. El nivel 30
+  desbloquea el `Atuendo del eclipse`.
+- El progreso semanal y de temporada se guarda en `PlayerSaveData` esquema 15
+  y aparece dentro del menu `Mision`.
+
+Esta primera version es local para probar el ritmo. Antes de publicar, S-01
+debe convertirse en la autoridad de fechas, progreso, recompensas y cambios de
+temporada.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

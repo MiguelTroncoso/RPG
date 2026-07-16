@@ -19,8 +19,8 @@ ANTES DE TOCAR NADA lee, en este orden:
 5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
 6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.62 entregadas en primera pasada; refinamientos 5.44,
-5.45, 5.49, 5.58, 5.59, 5.60, 5.61 y 5.62 completados en esta pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.63 entregadas en primera pasada; refinamientos 5.44,
+5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62 y 5.63 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -111,7 +111,7 @@ Estado actual (fases 1-5.62 entregadas en primera pasada; refinamientos 5.44,
 - Compañeros y eventos: `PetService`/`MountService` conservan propiedad,
   rareza y stats de combate; `DailyEventSystem` activa una Caceria de
   Reliquias por fecha local, cuenta cinco derrotas y entrega EXP/oro y Alas de
-  brasa. El guardado local es esquema v14. Compras y recompensas deben pasar a
+  brasa. El guardado local es esquema v15. Compras y recompensas deben pasar a
   autoridad del servidor antes de una prueba publica.
 - Longevidad: `RepeatableContractSystem` genera tres contratos diarios UTC por
   banda actual (normal, elite y material), muestra progreso y entrega
@@ -120,6 +120,13 @@ Estado actual (fases 1-5.62 entregadas en primera pasada; refinamientos 5.44,
   campana y otorga Renombre mas 2% de EXP por Renacimiento. El boton vive en
   `MAS`; fecha, recompensas y Renacimientos deben pasar a autoridad del
   servidor antes de abrirlo al publico.
+- Eventos live-ops locales: `WeeklyEventSystem` reinicia Conquista del Valle
+  cada lunes UTC (30 derrotas y 3 elites), y `SeasonProgressionSystem` ofrece
+  una temporada de 28 dias y 30 niveles con hitos 5/10/15/20/25/30. La XP
+  proviene de combate, misiones, contratos y el evento semanal; el nivel 30
+  desbloquea `void_outfit`. El progreso se guarda en esquema 15 y se muestra
+  en el menu de Misiones. Fecha, recompensas y cambio de temporada deben pasar
+  a autoridad del servidor antes de publicar.
 - Visual 3D: `VisualMaterialUtility` centraliza materiales compartidos con
   smoothness/metal/emision; `PrototypeBootstrap` configura luz calida, niebla
   lineal y camara sin HDR; `ZoneEnvironmentBuilder` agrega acentos de suelo
@@ -129,15 +136,16 @@ Estado actual (fases 1-5.62 entregadas en primera pasada; refinamientos 5.44,
 - Habilidades: `PlayerSkills` administra cinco habilidades propias por clase
   en Q/E/R/F/G; R, F y G se desbloquean en niveles 8/20/50, la final progresa
   de nivel 1 a 10 con cooldown UTC de 30 minutos, y `PlayerPersistence`
-  conserva el arreglo en `PlayerSaveData` esquema 14. El servidor debe validar
+  conserva el arreglo en `PlayerSaveData` esquema 15. El servidor debe validar
   consumos, desbloqueos y efectos antes de la progresion online.
 - Equipo y mundo: cada banda tiene doce piezas de equipo visibles por ranura,
   con rareza/tier, emblemas 3D por clase y landmark propio para cada una de las
   diez zonas.
-- Fase 5.61/5.62: `docs/content-completeness.md` pasa 13/13 checks y confirma
+- Fase 5.61/5.62/5.63: `docs/content-completeness.md` pasa 15/15 checks y confirma
   contenido funcional 1-105 completo: 10 zonas, 35 misiones, 162 items, 30
   tablas de loot, 120 piezas de set, 10 reliquias, contratos repetibles,
-  Renacimiento y recursos 3D base. El guardado local actual es esquema 14.
+  Renacimiento, eventos semanales, temporada y recursos 3D base. El guardado
+  local actual es esquema 15.
 - Hetzner preflight: `Server/src/server.js` expone `/health`, limita payload,
   hace heartbeat y persiste al recibir senales de apagado. Falta crear la
   instancia, configurar dominio/Nginx/WSS, firewall, backups y probar dos APK.
@@ -191,7 +199,7 @@ Estado actual (fases 1-5.62 entregadas en primera pasada; refinamientos 5.44,
   si no pasan. Persistencia por playerKey en Server/data/players.json:
   presencia basica, snapshot completo `PlayerSaveData` via `saveState`/
   `savedState` y ultimo resumen de telemetria recibido.
-- Guardado local JSON (esquema v14) via ISaveStorage/JsonFileStorage con
+- Guardado local JSON (esquema v15) via ISaveStorage/JsonFileStorage con
   escritura atomica + backup: identidad, nivel, EXP, oro, puntos y
   atributos gastados, inventario, equipo con niveles de mejora, mision
   activa y progreso, mascota activa, montura, almacen y posicion del
@@ -268,6 +276,8 @@ Proximos objetivos sugeridos:
 - Fase 5.62: probar tres contratos diarios, cierre/reapertura de la app,
   finalizacion de campana, Renacimiento al nivel 105, conservacion de equipo y
   reinicio correcto de objetivos.
+- Fase 5.63: probar el cambio semanal UTC, los hitos de temporada, la
+  recompensa final, el cambio de temporada y la persistencia en Android.
 
 Empieza proponiendo un plan corto para la etapa que te pida y espera mi ok
 antes de escribir codigo masivo.

@@ -200,6 +200,18 @@ namespace MmorpgPrototype
                 { "event.daily_reward", "+100 EXP, +120 oro y desbloqueaste Alas de brasa" },
                 { "event.daily_summary", "Caceria diaria {0}/{1}" },
                 { "event.daily_done_summary", "Caceria diaria completada {0}/{1}" },
+                { "event.weekly_started", "Evento semanal activo: Conquista del Valle." },
+                { "event.weekly_progress", "Conquista semanal: {0}/{1} derrotas | elites {2}/{3}." },
+                { "event.weekly_completed", "Evento semanal completado: Conquista del Valle." },
+                { "event.weekly_reward", "+600 EXP, +500 oro, 2 Runas y 1 Manual de habilidades" },
+                { "event.weekly_summary", "Conquista semanal {0}/{1} | elites {2}/{3}" },
+                { "event.weekly_done_summary", "Conquista semanal completada {0}/{1} | elites {2}/{3}" },
+                { "season.started", "{0} activa: quedan {1} dias." },
+                { "season.name", "Temporada {0}: Renacer del Valle" },
+                { "season.summary", "{0} | Nivel {1}/{2} | XP {3}/{4} | quedan {5} dias" },
+                { "season.level_up", "Subiste el pase de temporada {0} al nivel {1}." },
+                { "season.reward", "Recompensa de temporada nivel {0}: {1}x {2} y {3} oro." },
+                { "season.final_reward", "Recompensa final: Atuendo del eclipse desbloqueado." },
 
                 // Atuendos y tienda de objetos
                 { "cosmetic.none", "Atuendo predeterminado" },

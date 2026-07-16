@@ -1,6 +1,6 @@
 # Auditoria de contenido 1-105
 
-> Generado por `MMORPG > QA > Generate Content Completeness Report` el 2026-07-15 18:38.
+> Generado por `MMORPG > QA > Generate Content Completeness Report` el 2026-07-15 22:21.
 
 ## Estado
 
@@ -23,7 +23,9 @@
 | PASS | Personajes 3D y animacion | 6/6 modelos de clase y 4/4 controladores |
 | PASS | Eventos diarios | Evento daily_relic_hunt, objetivo 5 derrotas |
 | PASS | Contratos repetibles | 3 contratos diarios rotativos por banda: normal, elite y material de mejora |
-| PASS | Renacimiento y Renombre | Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 14 |
+| PASS | Renacimiento y Renombre | Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 15 |
+| PASS | Evento semanal | Conquista semanal: 30 derrotas y 3 objetivos elite con reset UTC |
+| PASS | Temporada | Temporada de 28 dias con 30 niveles, hitos y recompensa final |
 | PASS | Curva de experiencia | Tabla funcional de nivel 1 a 105 con EXP monotonicamente creciente |
 
 ## Lectura de producto

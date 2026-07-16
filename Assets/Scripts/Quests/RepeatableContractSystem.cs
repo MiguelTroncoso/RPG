@@ -49,6 +49,7 @@ namespace MmorpgPrototype
         public InventorySystem Inventory;
         public PrototypeHud Hud;
         public PlayerPersistence Persistence;
+        public SeasonProgressionSystem Season;
 
         public string CurrentDateUtc { get; private set; } = string.Empty;
         public int CompletedCount
@@ -312,6 +313,7 @@ namespace MmorpgPrototype
             }
 
             contract.Completed = true;
+            Season?.RecordContractCompletion();
             Progression?.AddExperience(contract.Experience);
             Progression?.AddGold(contract.Gold);
             if (!string.IsNullOrWhiteSpace(contract.RewardItemId) && contract.RewardItemCount > 0)

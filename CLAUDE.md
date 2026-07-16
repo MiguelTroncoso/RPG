@@ -16,11 +16,11 @@ en `Server/`.
 Estado: prototipo con fases 1–5.62 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61 y 5.62 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
-avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v14 (incluye posición, reclamos de POI, cosmeticos, evento diario, contratos diarios, Renombre, habilidades y cooldown final),
+avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v15 (incluye posición, reclamos de POI, cosmeticos, eventos diarios/semanales, temporada, contratos diarios, Renombre, habilidades y cooldown final),
 progresión 1–105 con `LevelProgressionTable`/`ExpCurveConfig`, cinco habilidades
 por clase con desbloqueos en nivel 8/20/50, habilidad final G de nivel 1-10,
 mejoras con `Manual de habilidades`, contratos diarios y Renacimiento con
-persistencia en esquema 14, items como
+persistencia en esquema 15, items como
 ScriptableObjects con rarezas en `RarityTable`, inventario por instancias,
 equipamiento con slots y requisitos, mejora +0..+15 con riesgo vía
 `UpgradeConfig`/`UpgradeResolver`, daño con crítico/evasión vía
@@ -113,9 +113,10 @@ simple y autocontenido.
   telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
-- Guardado local en esquema v14 incluye reclamos de puntos de interes,
+- Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
-  tambien conserva contratos diarios y Renombre; `EXPLORAR` no vuelve a
+  tambien conserva contratos diarios, eventos semanales, temporada y Renombre;
+  `EXPLORAR` no vuelve a
   entregar la misma recompensa al reabrir.
 - Acceso mobile: splash renovado, seleccion de personaje guardado, creacion
   de personaje y perfiles de servidor `S-01/S-02/S-03`. Solo `S-01` esta
@@ -138,16 +139,16 @@ simple y autocontenido.
 - Fase 5.58/5.59: `PlayerSkills` administra cinco habilidades por clase,
   desbloqueos R/F/G en niveles 8/20/50, niveles 1-5 y final 1-10, mejoras
   mediante `skill_tome`, cooldown final UTC de 30 minutos y persistencia en
-  esquema 14. El HUD muestra niveles, enfriamientos, botones `+` y `RENACER`.
+  esquema 15. El HUD muestra niveles, enfriamientos, botones `+` y `RENACER`.
 - Fase 5.59: cada banda genera doce piezas de equipo y el avatar las representa
   por ranura, tier y rareza; hay emblemas 3D de clase y landmarks propios para
   las diez zonas.
 - Fase 5.60: el servidor tiene `/health`, payload maximo, heartbeat y apagado
   limpio; falta desplegar S-01 en Hetzner con dominio, Nginx/WSS y backups.
-- Fase 5.61/5.62: `docs/content-completeness.md` pasa 13/13 checks y confirma
+- Fase 5.61/5.62/5.63: `docs/content-completeness.md` pasa 15/15 checks y confirma
   cobertura funcional 1-105: 10 zonas, 35 misiones, 162 items, loot por tier,
-  habilidades, contratos repetibles, Renacimiento, eventos diarios y recursos
-  3D base.
+  habilidades, contratos repetibles, Renacimiento, eventos diarios/semanales,
+  temporada y recursos 3D base.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar

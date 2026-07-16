@@ -758,7 +758,7 @@ bandas de nivel antes de invertir en arte comercial y prueba online.
 - El reporte reproducible se genera en `docs/content-completeness.md` desde
   `MMORPG > QA > Generate Content Completeness Report`. [Implementado]
 
-Criterio de exito: el reporte termina con 13/13 checks y cualquier nuevo hueco
+Criterio de exito: el reporte termina con 11/11 checks y cualquier nuevo hueco
 de contenido queda visible antes de continuar con la fase online.
 
 ## Fase 5.62: Longevidad, Contratos Y Renacimiento
@@ -786,6 +786,31 @@ balancear.
 Criterio de exito: completar la campana, alcanzar nivel 105, Renacer y volver
 a tener objetivos diarios sin perder colecciones ni generar recompensas
 duplicadas por reinicios de la aplicacion.
+
+Criterio de exito de la fase: el reporte termina con 13/13 checks y el
+Renacimiento conserva las colecciones sin duplicar recompensas.
+
+## Fase 5.63: Eventos Semanales Y Temporadas
+
+Objetivo: crear un calendario de actividad que renueve los objetivos sin
+inflar indefinidamente el nivel maximo ni romper el balance de las zonas.
+
+- `WeeklyEventSystem` activa Conquista del Valle cada lunes UTC, con 30
+  derrotas y 3 objetivos elite. [Implementado]
+- El evento semanal entrega EXP, oro, runas y manuales, y se guarda junto al
+  personaje en `PlayerSaveData` esquema 15. [Implementado]
+- `SeasonProgressionSystem` crea temporadas de 28 dias con 30 niveles y XP
+  obtenida por combate, misiones, contratos y el evento semanal. [Implementado]
+- Los hitos de temporada 5/10/15/20/25/30 entregan recompensas sin duplicarse;
+  el nivel 30 desbloquea el Atuendo del eclipse. [Implementado]
+- El menu de Misiones muestra campaña, contratos, evento semanal y temporada.
+  [Implementado]
+- Fecha, progreso, recompensas, cambio de temporada y desbloqueos deben ser
+  validados por el servidor antes de una prueba publica. [Pendiente]
+
+Criterio de exito: una semana ofrece objetivos nuevos, una temporada ofrece
+progreso acumulativo y ninguna recompensa vuelve a entregarse al cerrar o
+reabrir la aplicacion.
 
 ## Fase 6: Lanzamiento Inicial
 

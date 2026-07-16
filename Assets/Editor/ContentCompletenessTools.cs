@@ -312,8 +312,16 @@ namespace MmorpgPrototype.Editor
                 "3 contratos diarios rotativos por banda: normal, elite y material de mejora"));
             checks.Add(new CheckResult(
                 "Renacimiento y Renombre",
-                save.SchemaVersion == 14 && save.Contracts != null,
-                "Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 14"));
+                save.SchemaVersion == 15 && save.Contracts != null,
+                "Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 15"));
+            checks.Add(new CheckResult(
+                "Evento semanal",
+                WeeklyEventSystem.TargetDefeats == 30 && WeeklyEventSystem.TargetEliteDefeats == 3,
+                "Conquista semanal: 30 derrotas y 3 objetivos elite con reset UTC"));
+            checks.Add(new CheckResult(
+                "Temporada",
+                SeasonProgressionSystem.MaxSeasonLevel == 30 && SeasonProgressionSystem.SeasonLengthDays == 28 && save.Season != null,
+                "Temporada de 28 dias con 30 niveles, hitos y recompensa final"));
         }
 
         private static void AuditLevelCurve(ExpCurveConfig curve, List<CheckResult> checks)
