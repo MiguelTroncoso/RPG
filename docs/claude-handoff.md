@@ -19,7 +19,7 @@ ANTES DE TOCAR NADA lee, en este orden:
 5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
 6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.71 entregadas en primera pasada; refinamientos 5.44,
+Estado actual (fases 1-5.72 entregadas en primera pasada; refinamientos 5.44,
 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64 y 5.65 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
@@ -190,8 +190,13 @@ Estado actual (fases 1-5.71 entregadas en primera pasada; refinamientos 5.44,
   decimacion geometrica real y `LODGroup` Unity a 0.52/0.22/0.08. La geometria
   base tiene mas segmentos, suavizado y bordes biselados; `Idle`, `Run` y
   `Attack` animan torso, brazos, manos, cadera, piernas, pies y cabeza. El
-  siguiente salto comercial es escultura de mayor fidelidad, normales
-  horneadas, atlas 1024/2048 y animaciones finales producidas en Blender.
+  siguiente salto comercial es escultura de mayor fidelidad, bake desde
+  high-poly, atlas 2K y animaciones finales producidas en Blender.
+- Fase 5.72: los atlas authored son 1024x1024 con tiles 64x64 y normal detail
+  offline para los materiales de clase. La geometria base tiene mas densidad,
+  biseles y normales ponderadas; `Idle`, `Run` y `Attack` refinan cuello/cabeza
+  y mantienen anticipacion, impacto y recuperacion. El siguiente paso es
+  escultura high-poly, bake desde esa escultura y animacion profesional.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

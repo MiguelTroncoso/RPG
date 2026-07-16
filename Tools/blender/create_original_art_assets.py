@@ -10,8 +10,8 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 CHARACTER_DIR = os.path.join(PROJECT_ROOT, "Assets/Resources/OriginalArt/Characters")
 TEXTURE_DIR = os.path.join(PROJECT_ROOT, "Assets/Resources/OriginalArt/Textures")
 SOURCE_DIR = os.path.join(PROJECT_ROOT, "Assets/Art/Original")
-ATLAS_SIZE = 512
-TILE_SIZE = 32
+ATLAS_SIZE = 1024
+TILE_SIZE = 64
 TILES_PER_SIDE = ATLAS_SIZE // TILE_SIZE
 
 PALETTES = {
@@ -73,6 +73,7 @@ def atlas_key(class_name, pattern):
 
 def build_atlas_pixels():
     global ALBEDO_PIXELS, NORMAL_PIXELS
+    ATLAS_ENTRIES.clear()
     pixel_count = ATLAS_SIZE * ATLAS_SIZE * 4
     ALBEDO_PIXELS = [0.0] * pixel_count
     NORMAL_PIXELS = [0.5, 0.5, 1.0, 1.0] * (ATLAS_SIZE * ATLAS_SIZE)
@@ -91,35 +92,56 @@ def build_atlas_pixels():
             color = pattern_color(palette, pattern)
             for y in range(TILE_SIZE):
                 for x in range(TILE_SIZE):
-                    wave = math.sin((x * 1.7 + y * 2.3) * math.pi * 0.18) * 0.035
-                    pixel = [clamp(channel * (0.94 + wave)) for channel in color[:3]]
-                    normal_x = 0.5 + wave * 1.8
-                    normal_y = 0.5 + math.cos((x + y) * 0.23) * 0.025
-                    if pattern == "metal" and (x == 0 or x == TILE_SIZE // 2):
-                        pixel = blend(pixel, (1.0, 1.0, 1.0), 0.12)
-                        normal_x += 0.06
-                    elif pattern == "fabric" and (x + y) % 7 == 0:
-                        pixel = blend(pixel, (0.0, 0.0, 0.0), 0.08)
-                        normal_y += 0.05
-                    elif pattern == "leather" and (x * 3 + y) % 11 == 0:
-                        pixel = blend(pixel, (0.0, 0.0, 0.0), 0.15)
-                        normal_x -= 0.04
-                    elif pattern == "rune" and (x == y or x + y == TILE_SIZE - 1):
-                        pixel = blend(pixel, (1.0, 1.0, 1.0), 0.2)
-                        normal_x += 0.05
-                    elif pattern == "scale" and (x + y) % 4 == 0:
-                        pixel = blend(pixel, (1.0, 1.0, 1.0), 0.07)
-                        normal_y += 0.06
-                    elif pattern == "stone" and (x * 5 + y * 3) % 13 == 0:
-                        pixel = blend(pixel, (0.0, 0.0, 0.0), 0.2)
-                        normal_y -= 0.05
-                    elif pattern == "bone" and (x * 2 + y) % 9 == 0:
-                        pixel = blend(pixel, (1.0, 1.0, 1.0), 0.1)
-                        normal_x += 0.03
+                    height = pattern_height(pattern, x, y)
+                    wave = (height - 0.5) * 0.18
+                    pixel = [clamp(channel * (0.90 + wave)) for channel in color[:3]]
+                    if height > 0.58:
+                        pixel = blend(pixel, (1.0, 1.0, 1.0), min((height - 0.58) * 0.18, 0.10))
+                    elif height < 0.42:
+                        pixel = blend(pixel, (0.0, 0.0, 0.0), min((0.42 - height) * 0.22, 0.12))
+
+                    normal_x, normal_y = baked_normal(pattern, x, y)
 
                     write_pixel(ALBEDO_PIXELS, tile_x + x, tile_y + y, pixel + [1.0])
-                    write_pixel(NORMAL_PIXELS, tile_x + x, tile_y + y, [clamp(normal_x), clamp(normal_y), 1.0, 1.0])
+                    write_pixel(NORMAL_PIXELS, tile_x + x, tile_y + y, [normal_x, normal_y, 1.0, 1.0])
             slot += 1
+
+
+def pattern_height(pattern, x, y):
+    u = (x + 0.5) / TILE_SIZE
+    v = (y + 0.5) / TILE_SIZE
+    if pattern == "metal":
+        ridge = math.sin(u * math.pi * 12.0) * 0.08
+        groove = math.cos(v * math.pi * 5.0) * 0.035
+        return 0.5 + ridge + groove
+    if pattern == "fabric":
+        return 0.5 + math.sin(u * math.pi * 32.0) * 0.045 + math.sin(v * math.pi * 28.0) * 0.04
+    if pattern == "leather":
+        grain = math.sin((u * 17.0 + v * 9.0) * math.pi) * math.cos((v * 23.0 - u * 5.0) * math.pi)
+        return 0.5 + grain * 0.075
+    if pattern == "rune":
+        diagonal = min(abs(u - v), abs((1.0 - u) - v))
+        return 0.66 if diagonal < 0.035 else 0.5
+    if pattern == "scale":
+        cell_u = (u * 8.0) % 1.0
+        cell_v = (v * 8.0) % 1.0
+        distance = math.sqrt((cell_u - 0.5) ** 2 + (cell_v - 0.42) ** 2)
+        return 0.64 if distance < 0.32 else 0.46
+    if pattern == "stone":
+        crack = math.sin((u * 7.0 + v * 11.0) * math.pi) * 0.5 + 0.5
+        return 0.43 + crack * 0.14
+    if pattern == "bone":
+        return 0.5 + math.sin((u * 4.0 + v * 2.0) * math.pi) * 0.07
+    return 0.5
+
+
+def baked_normal(pattern, x, y):
+    left = pattern_height(pattern, (x - 1) % TILE_SIZE, y)
+    right = pattern_height(pattern, (x + 1) % TILE_SIZE, y)
+    down = pattern_height(pattern, x, (y - 1) % TILE_SIZE)
+    up = pattern_height(pattern, x, (y + 1) % TILE_SIZE)
+    normal = Vector((-(right - left) * 2.8, -(up - down) * 2.8, 1.0)).normalized()
+    return clamp(normal.x * 0.5 + 0.5), clamp(normal.y * 0.5 + 0.5)
 
 
 def pattern_color(palette, pattern):
@@ -149,12 +171,16 @@ def write_pixel(pixels, x, y, value):
 
 def save_atlas_images():
     os.makedirs(TEXTURE_DIR, exist_ok=True)
-    albedo = bpy.data.images.get("OriginalArt_AlbedoAtlas") or bpy.data.images.new(
-        "OriginalArt_AlbedoAtlas", width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True
-    )
-    normal = bpy.data.images.get("OriginalArt_NormalAtlas") or bpy.data.images.new(
-        "OriginalArt_NormalAtlas", width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True
-    )
+    albedo = bpy.data.images.get("OriginalArt_AlbedoAtlas")
+    normal = bpy.data.images.get("OriginalArt_NormalAtlas")
+    if albedo is not None and (albedo.size[0] != ATLAS_SIZE or albedo.size[1] != ATLAS_SIZE):
+        bpy.data.images.remove(albedo)
+        albedo = None
+    if normal is not None and (normal.size[0] != ATLAS_SIZE or normal.size[1] != ATLAS_SIZE):
+        bpy.data.images.remove(normal)
+        normal = None
+    albedo = albedo or bpy.data.images.new("OriginalArt_AlbedoAtlas", width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True)
+    normal = normal or bpy.data.images.new("OriginalArt_NormalAtlas", width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True)
     albedo.pixels = ALBEDO_PIXELS
     normal.pixels = NORMAL_PIXELS
     albedo.filepath_raw = os.path.join(TEXTURE_DIR, "OriginalArt_AlbedoAtlas.png")
@@ -260,9 +286,9 @@ def make_armature():
 
 def create_part(name, primitive, location, scale, material, bone_name, rotation=(0, 0, 0), vertices=8):
     if primitive == "sphere":
-        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=1.0, location=location)
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=4, radius=1.0, location=location)
     elif primitive == "cone":
-        bpy.ops.mesh.primitive_cone_add(vertices=max(vertices, 12), radius1=1.0, radius2=0.7, depth=1.0, location=location)
+        bpy.ops.mesh.primitive_cone_add(vertices=max(vertices, 18), radius1=1.0, radius2=0.7, depth=1.0, location=location)
     else:
         bpy.ops.mesh.primitive_cube_add(size=1.0, location=location)
     obj = bpy.context.object
@@ -273,10 +299,15 @@ def create_part(name, primitive, location, scale, material, bone_name, rotation=
     if primitive == "cube":
         bevel = obj.modifiers.new("Soft Armor Edges", "BEVEL")
         bevel.width = min(min(obj.dimensions) * 0.22, 0.055)
-        bevel.segments = 2
+        bevel.segments = 3
         bevel.limit_method = "ANGLE"
         bpy.context.view_layer.objects.active = obj
         bpy.ops.object.modifier_apply(modifier=bevel.name)
+        weighted = obj.modifiers.new("Weighted Armor Normals", "WEIGHTED_NORMAL")
+        weighted.keep_sharp = True
+        weighted.weight = 50
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.modifier_apply(modifier=weighted.name)
     if primitive in ("sphere", "cone"):
         for polygon in obj.data.polygons:
             polygon.use_smooth = True
@@ -352,6 +383,7 @@ def create_action(armature, name, mode):
             "Hips": (0.0, 0.0, math.radians(1.5)),
             "Spine": (0.0, 0.0, math.radians(2.4)),
             "Chest": (math.radians(1.5), 0.0, math.radians(-1.8)),
+            "Neck": (0.0, 0.0, math.radians(-1.2)),
             "Head": (0.0, 0.0, math.radians(1.8)),
             "Shoulder.L": (0.0, 0.0, math.radians(-2.0)),
             "Shoulder.R": (0.0, 0.0, math.radians(2.0)),
@@ -367,6 +399,7 @@ def create_action(armature, name, mode):
             "Hips": (0.0, 0.0, math.radians(4.0)),
             "Spine": (math.radians(-3.0), 0.0, math.radians(-3.0)),
             "Chest": (math.radians(4.0), 0.0, math.radians(2.5)),
+            "Neck": (math.radians(1.5), 0.0, math.radians(2.0)),
             "Head": (math.radians(-2.0), 0.0, math.radians(-1.5)),
             "Shoulder.L": (0.0, 0.0, math.radians(4.0)),
             "Shoulder.R": (0.0, 0.0, math.radians(-4.0)),
@@ -388,6 +421,7 @@ def create_action(armature, name, mode):
             "Hips": (math.radians(-4), 0.0, math.radians(-5)),
             "Spine": (math.radians(10), 0.0, math.radians(-12)),
             "Chest": (math.radians(14), 0.0, math.radians(-18)),
+            "Neck": (math.radians(-12), 0.0, math.radians(10)),
             "Head": (math.radians(-8), 0.0, math.radians(8)),
             "Shoulder.L": (math.radians(-10), 0.0, math.radians(-8)),
             "Shoulder.R": (math.radians(18), 0.0, math.radians(12)),

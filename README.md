@@ -998,6 +998,25 @@ genero con target SDK 35. El arte sigue siendo estilizado authored: el siguiente
 salto comercial son esculturas de mayor fidelidad, normales horneadas, atlas
 1024/2048 y animaciones finales producidas en Blender.
 
+## Fase 5.72: Alta Fidelidad Authored Y Normal Detail
+
+El atlas compartido de albedo y normal ahora es 1024x1024 con tiles 64x64.
+El normal atlas se genera offline desde alturas de metal, tela, cuero, runa,
+escama, piedra y hueso para que los materiales respondan mejor a la luz. La
+geometria base usa esferas mas densas, conos con mas segmentos, biseles de tres
+segmentos y normales ponderadas en la armadura.
+
+La pasada de animacion agrega cuello y cabeza a las poses existentes y refina
+torso, hombros, antebrazos, manos, cadera, piernas y pies. `Attack` conserva
+anticipacion, impacto y recuperacion sin cambiar el contrato de combate. Los
+LOD `LOD0`/`LOD1`/`LOD2` y el fallback procedural siguen activos.
+
+Validacion de esta fase: los ocho FBX mantienen tres clips y sus seis nombres
+LOD, Unity regenera los ocho controllers, la APK compila con target SDK 35 y
+la auditoria permanece en 17/17. Esto mejora el arte authored del prototipo;
+el arte comercial final aun requiere escultura high-poly, retopologia manual,
+bake desde esa escultura, atlas 2K por familia y animaciones profesionales.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

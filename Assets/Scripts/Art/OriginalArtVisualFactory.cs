@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    // Original modular low-poly art. It is deliberately generated at runtime
-    // so the first art pass stays editable, deterministic and light on Android.
+    // Original modular authored fallback art. It remains generated at runtime
+    // so the fallback stays editable, deterministic and light on Android.
     public static class OriginalArtVisualFactory
     {
         private enum TexturePattern
@@ -21,8 +21,8 @@ namespace MmorpgPrototype
 
         private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
         private static readonly Dictionary<int, TextureAtlasEntry> TextureEntries = new Dictionary<int, TextureAtlasEntry>();
-        private const int AtlasSize = 512;
-        private const int AtlasTileSize = 32;
+        private const int AtlasSize = 1024;
+        private const int AtlasTileSize = 64;
         private const int AtlasTilesPerSide = AtlasSize / AtlasTileSize;
         private static Texture2D albedoAtlas;
         private static Texture2D normalAtlas;
@@ -733,14 +733,14 @@ namespace MmorpgPrototype
 
             albedoAtlas = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, false, true)
             {
-                name = "Original Character Albedo Atlas 512",
+                name = "Original Character Albedo Atlas 1K",
                 filterMode = FilterMode.Bilinear,
                 wrapMode = TextureWrapMode.Clamp,
                 hideFlags = HideFlags.HideAndDontSave
             };
             normalAtlas = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, false, true)
             {
-                name = "Original Character Normal Atlas 512",
+                name = "Original Character Normal Atlas 1K",
                 filterMode = FilterMode.Bilinear,
                 wrapMode = TextureWrapMode.Clamp,
                 hideFlags = HideFlags.HideAndDontSave

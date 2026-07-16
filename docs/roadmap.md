@@ -998,6 +998,37 @@ Siguiente salto comercial: esculturas menos estilizadas, normales horneadas,
 atlas 1024/2048, LOD artistico optimizado manualmente y animaciones finales
 producidas en Blender con captura o keyframe especializado.
 
+## Fase 5.72: Alta Fidelidad Authored Y Normal Detail
+
+Objetivo: elevar la calidad visual de los personajes authored antes de
+encargar esculturas y animaciones de producción, manteniendo el presupuesto
+de Android y la compatibilidad del runtime.
+
+- El atlas compartido de albedo y normal sube a 1024x1024 con tiles 64x64,
+  conservando las rutas relativas y un único material por patrón/clase.
+  [Implementado]
+- El normal atlas se genera offline a partir de alturas detalladas para metal,
+  tela, cuero, runa, escama, piedra y hueso; el resultado se importa como
+  textura de normales para la iluminación authored. [Implementado]
+- Las formas base usan esferas de mayor subdivisión, conos con más segmentos,
+  biseles de tres segmentos y normales ponderadas en piezas de armadura.
+  [Implementado]
+- `Idle`, `Run` y `Attack` reciben una pasada de pose completa con cuello,
+  cabeza, torso, hombros, antebrazos, manos, cadera, piernas y pies; el ataque
+  conserva anticipación, impacto y recuperación. [Implementado]
+- La APK Android se valida con target SDK 35; Assimp confirma tres clips y
+  Unity regenera los ocho controllers. La auditoría conserva 17/17 checks.
+  [Implementado]
+
+Criterio de exito: el atlas 1K ilumina correctamente los FBX authored, los
+  LOD siguen funcionando, el combate conserva su respuesta tactil y el peso
+  de la APK se mantiene controlado.
+
+Pendiente para arte comercial final: escultura high-poly específica por clase,
+retopologia manual, bake desde esa escultura a los LOD, atlas 2K por familia y
+animaciones finales creadas por un artista especializado o captura de
+movimiento.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

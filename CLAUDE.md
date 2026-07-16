@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.71 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67, 5.68, 5.70 y 5.71 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.72 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67, 5.68, 5.70, 5.71 y 5.72 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v15 (incluye posición, reclamos de POI, cosmeticos, eventos diarios/semanales, temporada, contratos diarios, Renombre, habilidades y cooldown final),
@@ -147,8 +147,14 @@ simple y autocontenido.
   con reduccion geometrica por decimacion y umbrales `LODGroup` 0.52/0.22/0.08.
   La geometria usa mas segmentos, suavizado y bordes biselados; `Idle`, `Run` y
   `Attack` animan la cadena de cuerpo completo. El siguiente bloque comercial
-  es escultura de mayor fidelidad, normales horneadas, atlas 1024/2048 y
-  animacion final de produccion.
+  es escultura de mayor fidelidad, bake desde high-poly, atlas 2K y animacion
+  final de produccion.
+- Fase 5.72: los atlas authored son 1024x1024 con tiles 64x64 y normal detail
+  offline para metal, tela, cuero, runa, escama, piedra y hueso. Las formas
+  base usan mas densidad, biseles y normales ponderadas; `Idle`, `Run` y
+  `Attack` refinan cuello/cabeza y mantienen anticipacion, impacto y
+  recuperacion. El siguiente paso sigue siendo escultura high-poly, bake
+  desde esa escultura, atlas 2K por familia y animaciones profesionales.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;
