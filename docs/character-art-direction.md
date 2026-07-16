@@ -66,13 +66,31 @@ la API de Unity, sin reutilizar geometria externa:
 
 La geometria queda limitada a pocos vertices, materiales compartidos y cero
 colisionadores visuales para mantener el perfil `Performance` de Android. Esta
-es una referencia artistica propia lista para iterar; no se declara aun como
-arte final comercial porque faltan texturas atlas, UVs, rig FBX y las otras
-variantes de clase.
+referencia se amplio en la Fase 5.68 hasta cubrir las ocho variantes jugables.
+
+## Fase 5.68: Variantes, Texturas Y Rig Modular
+
+`OriginalArtVisualFactory` ahora construye las ocho combinaciones de clase y
+sexo con piezas propias: Vanguard para Guerrero, Veil para Ninja, Spirit para
+Chaman y Void para Umbra. Cada familia tiene arma inicial, silueta, paleta,
+accesorios y proporciones femeninas/masculinas diferenciadas.
+
+- Los meshes generan UVs en runtime y usan microtexturas albedo 8x8 cacheadas
+  para placa, tela, cuero, escama, runa, piedra y hueso.
+- El rig modular expone `Hips`, `Spine`, `Chest`, `Neck`, brazos, manos, piernas,
+  pies, `WeaponGrip` y `SpellHand`; los brazos y piernas siguen siendo
+  transforms articulados compatibles con `AvatarMotionAnimator`.
+- `OriginalRigDescriptor` conserva clase y sexo para herramientas futuras y
+  exportacion de un rig skinned.
+- Las texturas son generadas en runtime, no dependen de paquetes externos y
+  mantienen el perfil `Performance` de Android.
+
+Esto cierra el bloque de variantes propias y la primera pasada de texturas y
+rigging runtime. El siguiente paso de calidad comercial es exportar meshes
+skinned, atlas de mayor resolucion, normales, LOD y animaciones FBX finales.
 
 ## Acceptance
 
-Antes de avanzar a los mobs de las siguientes zonas, las ocho variantes deben verse distintas
-en seleccion de personaje y dentro de la Zona 1, conservar sus ranuras de
-equipo, animarse en idle/correr/ataque y no producir una caida de rendimiento
-visible en Android `Performance`.
+Las ocho variantes deben verse distintas en seleccion de personaje y dentro de
+la Zona 1, conservar sus ranuras de equipo, animarse en idle/correr/ataque y no
+producir una caida de rendimiento visible en Android `Performance`.

@@ -895,11 +895,33 @@ packs externos para la referencia principal.
   cabeza, patas, cola, cicatriz, espina y ojos emisivos. [Implementado]
 - Las mallas no agregan colisionadores y comparten materiales para Android.
   [Implementado]
-- UVs, texturas atlas, rigs FBX y las otras siete variantes propias quedan como
-  el siguiente bloque de arte. [Pendiente]
+- Las ocho variantes restantes, UVs, microtexturas y rig modular quedan
+  ampliados en la Fase 5.68. [Completado]
 
 Criterio de exito: el Guerrero y el mob propios se instancian, se ven en 3D,
 responden al movimiento/combate y no cambian las reglas de gameplay.
+
+## Fase 5.68: Variantes Propias, Texturas Y Rig Modular
+
+Objetivo: cerrar la primera pasada de arte propio para los ocho personajes
+jugables sin cambiar las reglas de combate, equipamiento ni persistencia.
+
+- `OriginalArtVisualFactory` genera Vanguard, Veil, Spirit y Void para ambos
+  sexos, con rasgos de clase, armas iniciales y proporciones diferenciadas.
+  [Implementado]
+- Los meshes tienen UVs y reciben microtexturas albedo 8x8 cacheadas para
+  placa, tela, cuero, escama, runa, piedra y hueso. [Implementado]
+- El rig modular runtime expone torso, brazos, manos, piernas, pies, agarres y
+  manos de hechizo; los brazos se mantienen compatibles con el movimiento
+  procedural de Android. [Implementado]
+- `OriginalRigDescriptor` deja clase y sexo disponibles para una futura
+  exportacion a rig skinned. [Implementado]
+- El rig FBX final, atlas de mayor resolucion, mapas normales, LOD y animaciones
+  finales quedan como pulido comercial posterior. [Planificado]
+
+Criterio de exito: las ocho variantes se instancian, se distinguen sin leer el
+HUD, muestran textura albedo, responden a idle/correr/ataque y permiten cambiar
+arma sin duplicar la composicion visual.
 
 ## Fase 6: Lanzamiento Inicial
 

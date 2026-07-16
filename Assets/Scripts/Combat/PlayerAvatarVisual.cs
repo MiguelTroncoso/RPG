@@ -112,15 +112,12 @@ namespace MmorpgPrototype
 
         private bool TryBuildCharacterModel(ClassDefinition definition, CharacterGender gender)
         {
-            if (definition.Type == CharacterClassType.Guerrero && gender == CharacterGender.Masculino)
+            var originalModel = OriginalArtVisualFactory.BuildCharacter(visualRoot.transform, currentArtProfile);
+            if (originalModel != null)
             {
-                var originalModel = OriginalArtVisualFactory.BuildWarriorMale(visualRoot.transform, currentArtProfile);
-                if (originalModel != null)
-                {
-                    usingOriginalArt = true;
-                    BindMotionAnimator();
-                    return true;
-                }
+                usingOriginalArt = true;
+                BindMotionAnimator();
+                return true;
             }
 
             var modelResource = definition.ModelResourceFor(gender);
@@ -275,6 +272,10 @@ namespace MmorpgPrototype
                 {
                     BuildClassSignature(armorRoot.transform, artProfile);
                 }
+            }
+            if (usingOriginalArt)
+            {
+                OriginalArtVisualFactory.SetStarterWeaponVisible(visualRoot.transform, IsWeaponUnequipped());
             }
             BuildEquippedVisuals(trimColor);
         }
@@ -480,7 +481,7 @@ namespace MmorpgPrototype
             var rarityColor = RarityColor(item.Rarity);
             var metalColor = Color.Lerp(tierColor, rarityColor, 0.48f);
 
-            if (slot == EquipSlot.Weapon && currentDefinition != null && BuildClassWeaponModels(armorRoot.transform, currentArtProfile ?? CharacterArtProfiles.Get(currentClass, currentGender)))
+            if (!usingOriginalArt && slot == EquipSlot.Weapon && currentDefinition != null && BuildClassWeaponModels(armorRoot.transform, currentArtProfile ?? CharacterArtProfiles.Get(currentClass, currentGender)))
             {
                 return;
             }

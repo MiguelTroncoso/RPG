@@ -3,47 +3,63 @@ using UnityEngine;
 
 namespace MmorpgPrototype
 {
-    // Original low-poly reference art for the first production visual pass.
-    // The meshes are generated once per spawned reference and use no external
-    // geometry, textures or colliders.
+    // Original modular low-poly art. It is deliberately generated at runtime
+    // so the first art pass stays editable, deterministic and light on Android.
     public static class OriginalArtVisualFactory
     {
-        private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
-
-        public static GameObject BuildWarriorMale(Transform parent, CharacterArtProfile profile)
+        private enum TexturePattern
         {
-            if (parent == null || profile == null || profile.ClassType != CharacterClassType.Guerrero || profile.Gender != CharacterGender.Masculino)
+            Solid,
+            Plate,
+            Fabric,
+            Leather,
+            Scale,
+            Rune,
+            Stone,
+            Bone
+        }
+
+        private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
+        private static readonly Dictionary<int, Texture2D> Textures = new Dictionary<int, Texture2D>();
+
+        public static GameObject BuildCharacter(Transform parent, CharacterArtProfile profile)
+        {
+            if (parent == null || profile == null)
             {
                 return null;
             }
 
-            var root = new GameObject("Original Warrior Male");
+            var root = new GameObject($"Original {profile.ClassType} {profile.Gender}");
             root.transform.SetParent(parent, false);
 
-            var armor = profile.MetalColor;
-            var leather = Color.Lerp(profile.SecondaryColor, Color.black, 0.12f);
-            var body = Color.Lerp(profile.PrimaryColor, Color.white, 0.14f);
-            var glow = profile.GlowColor;
+            switch (profile.Silhouette)
+            {
+                case CharacterArtSilhouette.Veil:
+                    BuildVeil(root.transform, profile);
+                    break;
+                case CharacterArtSilhouette.Spirit:
+                    BuildSpirit(root.transform, profile);
+                    break;
+                case CharacterArtSilhouette.Void:
+                    BuildVoid(root.transform, profile);
+                    break;
+                default:
+                    BuildVanguard(root.transform, profile);
+                    break;
+            }
 
-            CreatePart(root.transform, "Torso Armor", Frustum(0.52f, 0.38f, 0.78f, 8), new Vector3(0f, 0.02f, 0f), Vector3.one, Quaternion.identity, armor, false);
-            CreatePart(root.transform, "Chest Inlay", Frustum(0.18f, 0.1f, 0.38f, 6), new Vector3(0f, 0.12f, -0.38f), new Vector3(1f, 0.9f, 0.3f), Quaternion.Euler(90f, 0f, 0f), glow, true);
-            CreatePart(root.transform, "Head", LowPolySphere(0.34f, 8, 5), new Vector3(0f, 0.86f, 0f), Vector3.one, Quaternion.identity, body, false);
-            CreatePart(root.transform, "Helmet Crown", Frustum(0.38f, 0.26f, 0.24f, 8), new Vector3(0f, 1.12f, 0f), Vector3.one, Quaternion.identity, armor, false);
-            CreatePart(root.transform, "Helmet Crest", Frustum(0.12f, 0.035f, 0.36f, 4), new Vector3(0f, 1.38f, -0.02f), Vector3.one, Quaternion.Euler(0f, 0f, 45f), glow, true);
-
-            CreatePart(root.transform, "Left Shoulder", LowPolySphere(0.28f, 8, 4), new Vector3(-0.54f, 0.42f, 0f), new Vector3(1.25f, 0.7f, 1.1f), Quaternion.identity, armor, false);
-            CreatePart(root.transform, "Right Shoulder", LowPolySphere(0.28f, 8, 4), new Vector3(0.54f, 0.42f, 0f), new Vector3(1.25f, 0.7f, 1.1f), Quaternion.identity, armor, false);
-            CreatePart(root.transform, "Left Arm", Frustum(0.16f, 0.12f, 0.62f, 6), new Vector3(-0.45f, 0.08f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 16f), leather, false);
-            CreatePart(root.transform, "Right Arm", Frustum(0.16f, 0.12f, 0.62f, 6), new Vector3(0.45f, 0.08f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, -16f), leather, false);
-            CreatePart(root.transform, "Left Leg", Frustum(0.2f, 0.15f, 0.62f, 6), new Vector3(-0.2f, -0.57f, 0f), Vector3.one, Quaternion.identity, leather, false);
-            CreatePart(root.transform, "Right Leg", Frustum(0.2f, 0.15f, 0.62f, 6), new Vector3(0.2f, -0.57f, 0f), Vector3.one, Quaternion.identity, leather, false);
-            CreatePart(root.transform, "Left Boot", Frustum(0.24f, 0.18f, 0.24f, 6), new Vector3(-0.2f, -0.89f, -0.08f), Vector3.one, Quaternion.identity, armor, false);
-            CreatePart(root.transform, "Right Boot", Frustum(0.24f, 0.18f, 0.24f, 6), new Vector3(0.2f, -0.89f, -0.08f), Vector3.one, Quaternion.identity, armor, false);
-            CreatePart(root.transform, "Belt", Frustum(0.48f, 0.44f, 0.12f, 8), new Vector3(0f, -0.28f, 0f), Vector3.one, Quaternion.identity, glow, true);
-            CreatePart(root.transform, "Back Mantle", CapeMesh(), new Vector3(0f, 0.02f, 0.34f), Vector3.one, Quaternion.Euler(8f, 0f, 0f), leather, false);
-
-            BuildOriginalSword(root.transform, armor, glow);
+            BuildRigMarkers(root.transform, profile);
             return root;
+        }
+
+        public static GameObject BuildWarriorMale(Transform parent, CharacterArtProfile profile)
+        {
+            if (profile == null || profile.ClassType != CharacterClassType.Guerrero || profile.Gender != CharacterGender.Masculino)
+            {
+                return null;
+            }
+
+            return BuildCharacter(parent, profile);
         }
 
         public static GameObject BuildValleyMob(Transform parent, Color baseColor, Color accent)
@@ -60,31 +76,216 @@ namespace MmorpgPrototype
             var bone = new Color(0.62f, 0.42f, 0.2f);
             var corruption = new Color(1f, 0.24f, 0.08f);
 
-            CreatePart(root.transform, "Hound Body", LowPolySphere(0.52f, 10, 5), new Vector3(0f, 0.06f, 0f), new Vector3(1.1f, 0.72f, 1.55f), Quaternion.Euler(90f, 0f, 0f), hide, false);
-            CreatePart(root.transform, "Hound Head", LowPolySphere(0.38f, 10, 5), new Vector3(0f, 0.22f, 0.64f), new Vector3(1.05f, 0.92f, 1.08f), Quaternion.identity, hide, false);
-            CreatePart(root.transform, "Hound Muzzle", Frustum(0.22f, 0.12f, 0.32f, 6), new Vector3(0f, 0.12f, 0.94f), new Vector3(1f, 0.8f, 1f), Quaternion.Euler(90f, 0f, 0f), bone, false);
-            CreatePart(root.transform, "Hound Ear Left", Frustum(0.14f, 0.035f, 0.42f, 5), new Vector3(-0.25f, 0.58f, 0.56f), Vector3.one, Quaternion.Euler(0f, 0f, -22f), bone, false);
-            CreatePart(root.transform, "Hound Ear Right", Frustum(0.14f, 0.035f, 0.42f, 5), new Vector3(0.25f, 0.58f, 0.56f), Vector3.one, Quaternion.Euler(0f, 0f, 22f), bone, false);
-            CreatePart(root.transform, "Hound Leg Front Left", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(-0.3f, -0.42f, 0.38f), Vector3.one, Quaternion.identity, hide, false);
-            CreatePart(root.transform, "Hound Leg Front Right", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(0.3f, -0.42f, 0.38f), Vector3.one, Quaternion.identity, hide, false);
-            CreatePart(root.transform, "Hound Leg Back Left", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(-0.3f, -0.42f, -0.38f), Vector3.one, Quaternion.identity, hide, false);
-            CreatePart(root.transform, "Hound Leg Back Right", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(0.3f, -0.42f, -0.38f), Vector3.one, Quaternion.identity, hide, false);
-            CreatePart(root.transform, "Hound Tail", Frustum(0.13f, 0.035f, 0.78f, 6), new Vector3(0f, 0.22f, -0.76f), Vector3.one, Quaternion.Euler(-48f, 0f, 0f), bone, false);
-            CreatePart(root.transform, "Relic Scar", Frustum(0.12f, 0.035f, 0.48f, 5), new Vector3(0f, 0.38f, 0.86f), Vector3.one, Quaternion.Euler(90f, 0f, 0f), corruption, true);
-            CreatePart(root.transform, "Relic Spine", Frustum(0.11f, 0.025f, 0.48f, 5), new Vector3(0f, 0.48f, 0.02f), Vector3.one, Quaternion.Euler(0f, 0f, 90f), accent, true);
-            CreatePart(root.transform, "Eye Left", LowPolySphere(0.055f, 6, 3), new Vector3(-0.13f, 0.28f, 0.91f), Vector3.one, Quaternion.identity, corruption, true);
-            CreatePart(root.transform, "Eye Right", LowPolySphere(0.055f, 6, 3), new Vector3(0.13f, 0.28f, 0.91f), Vector3.one, Quaternion.identity, corruption, true);
+            CreatePart(root.transform, "Hound Body", LowPolySphere(0.52f, 10, 5), new Vector3(0f, 0.06f, 0f), new Vector3(1.1f, 0.72f, 1.55f), Quaternion.Euler(90f, 0f, 0f), hide, false, TexturePattern.Scale);
+            CreatePart(root.transform, "Hound Head", LowPolySphere(0.38f, 10, 5), new Vector3(0f, 0.22f, 0.64f), new Vector3(1.05f, 0.92f, 1.08f), Quaternion.identity, hide, false, TexturePattern.Scale);
+            CreatePart(root.transform, "Hound Muzzle", Frustum(0.22f, 0.12f, 0.32f, 6), new Vector3(0f, 0.12f, 0.94f), new Vector3(1f, 0.8f, 1f), Quaternion.Euler(90f, 0f, 0f), bone, false, TexturePattern.Bone);
+            CreatePart(root.transform, "Hound Ear Left", Frustum(0.14f, 0.035f, 0.42f, 5), new Vector3(-0.25f, 0.58f, 0.56f), Vector3.one, Quaternion.Euler(0f, 0f, -22f), bone, false, TexturePattern.Bone);
+            CreatePart(root.transform, "Hound Ear Right", Frustum(0.14f, 0.035f, 0.42f, 5), new Vector3(0.25f, 0.58f, 0.56f), Vector3.one, Quaternion.Euler(0f, 0f, 22f), bone, false, TexturePattern.Bone);
+            CreatePart(root.transform, "Hound Leg Front Left", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(-0.3f, -0.42f, 0.38f), Vector3.one, Quaternion.identity, hide, false, TexturePattern.Scale);
+            CreatePart(root.transform, "Hound Leg Front Right", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(0.3f, -0.42f, 0.38f), Vector3.one, Quaternion.identity, hide, false, TexturePattern.Scale);
+            CreatePart(root.transform, "Hound Leg Back Left", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(-0.3f, -0.42f, -0.38f), Vector3.one, Quaternion.identity, hide, false, TexturePattern.Scale);
+            CreatePart(root.transform, "Hound Leg Back Right", Frustum(0.16f, 0.11f, 0.62f, 6), new Vector3(0.3f, -0.42f, -0.38f), Vector3.one, Quaternion.identity, hide, false, TexturePattern.Scale);
+            CreatePart(root.transform, "Hound Tail", Frustum(0.13f, 0.035f, 0.78f, 6), new Vector3(0f, 0.22f, -0.76f), Vector3.one, Quaternion.Euler(-48f, 0f, 0f), bone, false, TexturePattern.Bone);
+            CreatePart(root.transform, "Relic Scar", Frustum(0.12f, 0.035f, 0.48f, 5), new Vector3(0f, 0.38f, 0.86f), Vector3.one, Quaternion.Euler(90f, 0f, 0f), corruption, true, TexturePattern.Rune);
+            CreatePart(root.transform, "Relic Spine", Frustum(0.11f, 0.025f, 0.48f, 5), new Vector3(0f, 0.48f, 0.02f), Vector3.one, Quaternion.Euler(0f, 0f, 90f), accent, true, TexturePattern.Rune);
+            CreatePart(root.transform, "Eye Left", LowPolySphere(0.055f, 6, 3), new Vector3(-0.13f, 0.28f, 0.91f), Vector3.one, Quaternion.identity, corruption, true, TexturePattern.Rune);
+            CreatePart(root.transform, "Eye Right", LowPolySphere(0.055f, 6, 3), new Vector3(0.13f, 0.28f, 0.91f), Vector3.one, Quaternion.identity, corruption, true, TexturePattern.Rune);
             return root;
         }
 
-        private static void BuildOriginalSword(Transform parent, Color metal, Color glow)
+        public static void SetStarterWeaponVisible(Transform root, bool visible)
         {
-            CreatePart(parent, "Original Sword Blade", Frustum(0.11f, 0.035f, 0.92f, 4), new Vector3(0.52f, 0.12f, -0.18f), Vector3.one, Quaternion.Euler(0f, 0f, -26f), metal, false);
-            CreatePart(parent, "Original Sword Guard", Frustum(0.12f, 0.12f, 0.08f, 6), new Vector3(0.4f, -0.28f, -0.18f), new Vector3(1.5f, 1f, 0.7f), Quaternion.Euler(0f, 0f, -26f), glow, true);
-            CreatePart(parent, "Original Sword Grip", Frustum(0.055f, 0.055f, 0.28f, 6), new Vector3(0.3f, -0.39f, -0.18f), Vector3.one, Quaternion.Euler(0f, 0f, -26f), new Color(0.12f, 0.07f, 0.045f), false);
+            var weapon = FindDeepChild(root, "Starter Weapon");
+            if (weapon != null)
+            {
+                weapon.gameObject.SetActive(visible);
+            }
         }
 
-        private static void CreatePart(Transform parent, string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Color color, bool glow)
+        private static void BuildVanguard(Transform root, CharacterArtProfile profile)
+        {
+            var female = profile.Gender == CharacterGender.Femenino;
+            var armor = profile.MetalColor;
+            var fabric = profile.SecondaryColor;
+            var skin = female ? new Color(0.9f, 0.66f, 0.5f) : new Color(0.72f, 0.46f, 0.31f);
+            BuildHumanoidBase(root, profile, armor, fabric, skin);
+
+            CreatePart(root, "Vanguard Chest Plate", Frustum(0.38f, 0.32f, 0.42f, 8), new Vector3(0f, 0.12f, -0.32f), new Vector3(1f, 0.7f, 0.24f), Quaternion.Euler(90f, 0f, 0f), armor, false, TexturePattern.Plate);
+            CreatePart(root, "Vanguard Chest Rune", Frustum(0.11f, 0.035f, 0.28f, 4), new Vector3(0f, 0.18f, -0.49f), Vector3.one, Quaternion.Euler(90f, 0f, 45f), profile.GlowColor, true, TexturePattern.Rune);
+            CreatePart(root, "Vanguard Shoulder Left", LowPolySphere(0.27f, 8, 4), new Vector3(-0.5f, 0.42f, 0f), new Vector3(1.25f, 0.72f, 1.1f), Quaternion.identity, armor, false, TexturePattern.Plate);
+            CreatePart(root, "Vanguard Shoulder Right", LowPolySphere(0.27f, 8, 4), new Vector3(0.5f, 0.42f, 0f), new Vector3(1.25f, 0.72f, 1.1f), Quaternion.identity, armor, false, TexturePattern.Plate);
+            CreatePart(root, "Vanguard Belt", Frustum(0.46f, 0.42f, 0.12f, 8), new Vector3(0f, -0.28f, 0f), Vector3.one, Quaternion.identity, profile.GlowColor, true, TexturePattern.Rune);
+
+            if (female)
+            {
+                CreatePart(root, "Vanguard Hair", LowPolySphere(0.35f, 8, 4), new Vector3(0f, 0.96f, 0.04f), new Vector3(1.04f, 0.9f, 1.04f), Quaternion.identity, new Color(0.12f, 0.055f, 0.035f), false, TexturePattern.Leather);
+                CreatePart(root, "Vanguard Tiara", Frustum(0.34f, 0.21f, 0.08f, 6), new Vector3(0f, 1.18f, -0.04f), Vector3.one, Quaternion.identity, profile.GlowColor, true, TexturePattern.Rune);
+            }
+            else
+            {
+                CreatePart(root, "Vanguard Helmet", Frustum(0.38f, 0.27f, 0.24f, 8), new Vector3(0f, 1.12f, 0f), Vector3.one, Quaternion.identity, armor, false, TexturePattern.Plate);
+                CreatePart(root, "Vanguard Crest", Frustum(0.12f, 0.035f, 0.36f, 4), new Vector3(0f, 1.38f, -0.02f), Vector3.one, Quaternion.Euler(0f, 0f, 45f), profile.GlowColor, true, TexturePattern.Rune);
+            }
+
+            CreatePart(root, "Vanguard Cape", CapeMesh(), new Vector3(0f, 0.02f, 0.34f), Vector3.one * profile.CloakScale, Quaternion.Euler(8f, 0f, 0f), fabric, false, TexturePattern.Fabric);
+            BuildSword(root, armor, profile.GlowColor);
+        }
+
+        private static void BuildVeil(Transform root, CharacterArtProfile profile)
+        {
+            var female = profile.Gender == CharacterGender.Femenino;
+            var fabric = profile.SecondaryColor;
+            var leather = Color.Lerp(fabric, Color.black, 0.24f);
+            var skin = female ? new Color(0.9f, 0.66f, 0.5f) : new Color(0.68f, 0.42f, 0.28f);
+            BuildHumanoidBase(root, profile, leather, fabric, skin);
+
+            CreatePart(root, "Veil Hood", LowPolySphere(0.37f, 8, 4), new Vector3(0f, 0.96f, 0.02f), new Vector3(1.12f, 0.96f, 1.1f), Quaternion.identity, fabric, false, TexturePattern.Fabric);
+            CreatePart(root, "Veil Mask", Frustum(0.24f, 0.12f, 0.11f, 6), new Vector3(0f, 0.87f, -0.36f), new Vector3(1.2f, 0.8f, 0.5f), Quaternion.Euler(90f, 0f, 0f), profile.GlowColor, true, TexturePattern.Rune);
+            CreatePart(root, "Veil Shoulder Left", Frustum(0.2f, 0.08f, 0.34f, 5), new Vector3(-0.46f, 0.43f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 20f), profile.MetalColor, false, TexturePattern.Plate);
+            CreatePart(root, "Veil Shoulder Right", Frustum(0.2f, 0.08f, 0.34f, 5), new Vector3(0.46f, 0.43f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, -20f), profile.MetalColor, false, TexturePattern.Plate);
+            CreatePart(root, "Veil Sash", Frustum(0.45f, 0.4f, 0.1f, 8), new Vector3(0f, -0.02f, -0.42f), Vector3.one, Quaternion.identity, profile.MetalColor, false, TexturePattern.Leather);
+            CreatePart(root, "Veil Cloak", CapeMesh(), new Vector3(0f, 0.04f, 0.34f), Vector3.one * profile.CloakScale, Quaternion.Euler(10f, 0f, 0f), fabric, false, TexturePattern.Fabric);
+
+            if (female)
+            {
+                CreatePart(root, "Veil Hair Ribbon", Frustum(0.05f, 0.025f, 0.52f, 5), new Vector3(0.28f, 0.62f, 0.04f), Vector3.one, Quaternion.Euler(0f, 0f, -16f), profile.GlowColor, true, TexturePattern.Rune);
+            }
+
+            var weaponRoot = CreateEmpty(root, "Starter Weapon");
+            CreatePart(weaponRoot.transform, "Veil Dagger Left", Frustum(0.07f, 0.018f, 0.58f, 4), new Vector3(-0.48f, 0.02f, -0.28f), Vector3.one, Quaternion.Euler(0f, 0f, 26f), profile.MetalColor, false, TexturePattern.Plate);
+            CreatePart(weaponRoot.transform, "Veil Dagger Right", Frustum(0.07f, 0.018f, 0.58f, 4), new Vector3(0.48f, 0.02f, -0.28f), Vector3.one, Quaternion.Euler(0f, 0f, -26f), profile.MetalColor, false, TexturePattern.Plate);
+        }
+
+        private static void BuildSpirit(Transform root, CharacterArtProfile profile)
+        {
+            var female = profile.Gender == CharacterGender.Femenino;
+            var robe = Color.Lerp(profile.PrimaryColor, Color.white, 0.08f);
+            var fabric = profile.SecondaryColor;
+            var skin = female ? new Color(0.9f, 0.66f, 0.5f) : new Color(0.7f, 0.44f, 0.3f);
+            BuildHumanoidBase(root, profile, robe, fabric, skin);
+
+            CreatePart(root, "Spirit Robe", Frustum(0.52f, 0.34f, 0.46f, 8), new Vector3(0f, -0.48f, 0f), new Vector3(1.08f, 1f, 0.9f), Quaternion.identity, fabric, false, TexturePattern.Fabric);
+            CreatePart(root, "Spirit Hood", LowPolySphere(0.38f, 8, 4), new Vector3(0f, 0.96f, 0.02f), new Vector3(1.14f, 0.96f, 1.08f), Quaternion.identity, fabric, false, TexturePattern.Fabric);
+            CreatePart(root, "Spirit Face Rune", Frustum(0.2f, 0.03f, 0.12f, 5), new Vector3(0f, 0.86f, -0.37f), new Vector3(1.25f, 0.7f, 0.45f), Quaternion.Euler(90f, 0f, 0f), profile.GlowColor, true, TexturePattern.Rune);
+            CreatePart(root, "Spirit Collar", Frustum(0.25f, 0.18f, 0.1f, 8), new Vector3(0f, 0.58f, -0.08f), Vector3.one, Quaternion.identity, profile.MetalColor, false, TexturePattern.Plate);
+            CreatePart(root, "Spirit Orb", LowPolySphere(0.14f, 8, 4), new Vector3(0f, 0.34f, -0.5f), Vector3.one, Quaternion.identity, profile.GlowColor, true, TexturePattern.Rune);
+
+            if (female)
+            {
+                CreatePart(root, "Spirit Headdress", Frustum(0.27f, 0.08f, 0.3f, 6), new Vector3(0f, 1.24f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 14f), profile.MetalColor, false, TexturePattern.Plate);
+            }
+            else
+            {
+                CreatePart(root, "Spirit Crown", Frustum(0.16f, 0.035f, 0.34f, 5), new Vector3(0f, 1.27f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 18f), profile.GlowColor, true, TexturePattern.Rune);
+            }
+
+            var weaponRoot = CreateEmpty(root, "Starter Weapon");
+            CreatePart(weaponRoot.transform, "Spirit Staff", Frustum(0.07f, 0.05f, 1.12f, 6), new Vector3(0.56f, 0.26f, 0.04f), Vector3.one, Quaternion.Euler(0f, 0f, -10f), profile.MetalColor, false, TexturePattern.Leather);
+            CreatePart(weaponRoot.transform, "Spirit Staff Crystal", LowPolySphere(0.16f, 8, 4), new Vector3(0.66f, 0.8f, 0.04f), Vector3.one, Quaternion.identity, profile.GlowColor, true, TexturePattern.Rune);
+        }
+
+        private static void BuildVoid(Transform root, CharacterArtProfile profile)
+        {
+            var female = profile.Gender == CharacterGender.Femenino;
+            var armor = profile.MetalColor;
+            var shadow = profile.SecondaryColor;
+            var skin = female ? new Color(0.9f, 0.66f, 0.5f) : new Color(0.66f, 0.4f, 0.28f);
+            BuildHumanoidBase(root, profile, armor, shadow, skin);
+
+            CreatePart(root, "Void Chest Plate", Frustum(0.44f, 0.28f, 0.5f, 8), new Vector3(0f, 0.08f, -0.28f), new Vector3(1f, 0.8f, 0.28f), Quaternion.Euler(90f, 0f, 0f), armor, false, TexturePattern.Plate);
+            CreatePart(root, "Void Core", LowPolySphere(0.14f, 8, 4), new Vector3(0f, 0.26f, -0.5f), Vector3.one, Quaternion.identity, profile.GlowColor, true, TexturePattern.Rune);
+            CreatePart(root, "Void Shoulder Left", Frustum(0.24f, 0.06f, 0.48f, 5), new Vector3(-0.5f, 0.48f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 22f), armor, false, TexturePattern.Plate);
+            CreatePart(root, "Void Shoulder Right", Frustum(0.24f, 0.06f, 0.48f, 5), new Vector3(0.5f, 0.48f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, -22f), armor, false, TexturePattern.Plate);
+            CreatePart(root, "Void Cloak", CapeMesh(), new Vector3(0f, 0.04f, 0.38f), Vector3.one * profile.CloakScale, Quaternion.Euler(12f, 0f, 0f), shadow, false, TexturePattern.Fabric);
+
+            if (female)
+            {
+                CreatePart(root, "Void Veil", LowPolySphere(0.36f, 8, 4), new Vector3(0f, 0.98f, 0.02f), new Vector3(1.08f, 0.9f, 1.06f), Quaternion.identity, shadow, false, TexturePattern.Fabric);
+                CreatePart(root, "Void Tiara", Frustum(0.3f, 0.04f, 0.28f, 5), new Vector3(0f, 1.25f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 16f), profile.GlowColor, true, TexturePattern.Rune);
+            }
+            else
+            {
+                CreatePart(root, "Void Horn Left", Frustum(0.12f, 0.025f, 0.4f, 5), new Vector3(-0.18f, 1.25f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, -28f), profile.GlowColor, true, TexturePattern.Rune);
+                CreatePart(root, "Void Horn Right", Frustum(0.12f, 0.025f, 0.4f, 5), new Vector3(0.18f, 1.25f, 0f), Vector3.one, Quaternion.Euler(0f, 0f, 28f), profile.GlowColor, true, TexturePattern.Rune);
+            }
+
+            var weaponRoot = CreateEmpty(root, "Starter Weapon");
+            CreatePart(weaponRoot.transform, "Void Blade", Frustum(0.12f, 0.03f, 1.0f, 4), new Vector3(0.52f, 0.14f, 0.06f), Vector3.one, Quaternion.Euler(0f, 0f, -24f), profile.MetalColor, false, TexturePattern.Plate);
+            CreatePart(weaponRoot.transform, "Void Blade Rune", Frustum(0.06f, 0.02f, 0.28f, 4), new Vector3(0.3f, 0.42f, 0.06f), Vector3.one, Quaternion.Euler(0f, 0f, -24f), profile.GlowColor, true, TexturePattern.Rune);
+        }
+
+        private static void BuildHumanoidBase(Transform root, CharacterArtProfile profile, Color torsoColor, Color fabricColor, Color skinColor)
+        {
+            var female = profile.Gender == CharacterGender.Femenino;
+            var shoulderWidth = female ? 0.44f : 0.5f;
+            var hipWidth = female ? 0.24f : 0.2f;
+            CreatePart(root, "Torso", Frustum(0.4f, female ? 0.34f : 0.38f, 0.78f, 8), new Vector3(0f, 0.04f, 0f), Vector3.one, Quaternion.identity, torsoColor, false, TexturePattern.Plate);
+            CreatePart(root, "Neck", Frustum(0.13f, 0.11f, 0.14f, 6), new Vector3(0f, 0.48f, 0f), Vector3.one, Quaternion.identity, skinColor, false, TexturePattern.Solid);
+            CreatePart(root, "Head", LowPolySphere(0.34f, 8, 5), new Vector3(0f, 0.84f, 0f), Vector3.one * (female ? 0.98f : 1f), Quaternion.identity, skinColor, false, TexturePattern.Solid);
+            CreateLimb(root, "Left Arm", new Vector3(-shoulderWidth, 0.06f, 0f), new Vector3(0.17f, 0.4f, 0.17f), Quaternion.Euler(0f, 0f, 16f), fabricColor, TexturePattern.Leather);
+            CreateLimb(root, "Right Arm", new Vector3(shoulderWidth, 0.06f, 0f), new Vector3(0.17f, 0.4f, 0.17f), Quaternion.Euler(0f, 0f, -16f), fabricColor, TexturePattern.Leather);
+            CreateLimb(root, "Left Leg", new Vector3(-hipWidth, -0.58f, 0f), new Vector3(0.2f, 0.56f, 0.2f), Quaternion.identity, fabricColor, TexturePattern.Leather);
+            CreateLimb(root, "Right Leg", new Vector3(hipWidth, -0.58f, 0f), new Vector3(0.2f, 0.56f, 0.2f), Quaternion.identity, fabricColor, TexturePattern.Leather);
+            CreatePart(root, "Left Boot", Frustum(0.23f, 0.18f, 0.22f, 6), new Vector3(-hipWidth, -0.91f, -0.08f), Vector3.one, Quaternion.identity, torsoColor, false, TexturePattern.Plate);
+            CreatePart(root, "Right Boot", Frustum(0.23f, 0.18f, 0.22f, 6), new Vector3(hipWidth, -0.91f, -0.08f), Vector3.one, Quaternion.identity, torsoColor, false, TexturePattern.Plate);
+            CreatePart(root, "Hip Sash", Frustum(0.46f, 0.4f, 0.1f, 8), new Vector3(0f, -0.3f, 0f), Vector3.one, Quaternion.identity, profile.GlowColor, true, TexturePattern.Rune);
+        }
+
+        private static void BuildSword(Transform root, Color metal, Color glow)
+        {
+            var weaponRoot = CreateEmpty(root, "Starter Weapon");
+            CreatePart(weaponRoot.transform, "Sword Blade", Frustum(0.11f, 0.035f, 0.92f, 4), new Vector3(0.52f, 0.12f, -0.18f), Vector3.one, Quaternion.Euler(0f, 0f, -26f), metal, false, TexturePattern.Plate);
+            CreatePart(weaponRoot.transform, "Sword Guard", Frustum(0.12f, 0.12f, 0.08f, 6), new Vector3(0.4f, -0.28f, -0.18f), new Vector3(1.5f, 1f, 0.7f), Quaternion.Euler(0f, 0f, -26f), glow, true, TexturePattern.Rune);
+            CreatePart(weaponRoot.transform, "Sword Grip", Frustum(0.055f, 0.055f, 0.28f, 6), new Vector3(0.3f, -0.39f, -0.18f), Vector3.one, Quaternion.Euler(0f, 0f, -26f), new Color(0.12f, 0.07f, 0.045f), false, TexturePattern.Leather);
+        }
+
+        private static void BuildRigMarkers(Transform root, CharacterArtProfile profile)
+        {
+            var rig = CreateEmpty(root, "Rig Root").transform;
+            var hips = CreateEmpty(rig, "Hips").transform;
+            var spine = CreateEmpty(hips, "Spine").transform;
+            var chest = CreateEmpty(spine, "Chest").transform;
+            var neck = CreateEmpty(chest, "Neck").transform;
+            CreateEmpty(neck, "Head");
+
+            var leftShoulder = CreateEmpty(chest, "Shoulder.L").transform;
+            var leftUpperArm = CreateEmpty(leftShoulder, "UpperArm.L").transform;
+            var leftLowerArm = CreateEmpty(leftUpperArm, "LowerArm.L").transform;
+            CreateEmpty(leftLowerArm, "Hand.L");
+
+            var rightShoulder = CreateEmpty(chest, "Shoulder.R").transform;
+            var rightUpperArm = CreateEmpty(rightShoulder, "UpperArm.R").transform;
+            var rightLowerArm = CreateEmpty(rightUpperArm, "LowerArm.R").transform;
+            CreateEmpty(rightLowerArm, "Hand.R");
+
+            var leftHip = CreateEmpty(hips, "Thigh.L").transform;
+            CreateEmpty(leftHip, "Foot.L");
+            var rightHip = CreateEmpty(hips, "Thigh.R").transform;
+            CreateEmpty(rightHip, "Foot.R");
+
+            var grip = CreateEmpty(rightLowerArm, "WeaponGrip").transform;
+            grip.localPosition = new Vector3(0f, -0.22f, -0.08f);
+            var spell = CreateEmpty(leftLowerArm, "SpellHand").transform;
+            spell.localPosition = new Vector3(0f, -0.2f, -0.08f);
+
+            var descriptor = root.gameObject.AddComponent<OriginalRigDescriptor>();
+            descriptor.ClassType = profile.ClassType;
+            descriptor.Gender = profile.Gender;
+        }
+
+        private static GameObject CreateLimb(Transform parent, string name, Vector3 position, Vector3 scale, Quaternion rotation, Color color, TexturePattern pattern)
+        {
+            return CreatePart(parent, name, Frustum(0.16f, 0.12f, 0.9f, 6), position, scale, rotation, color, false, pattern);
+        }
+
+        private static GameObject CreateEmpty(Transform parent, string name)
+        {
+            var empty = new GameObject(name);
+            empty.transform.SetParent(parent, false);
+            return empty;
+        }
+
+        private static GameObject CreatePart(Transform parent, string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Color color, bool glow, TexturePattern pattern)
         {
             var part = new GameObject(name);
             part.transform.SetParent(parent, false);
@@ -94,7 +295,8 @@ namespace MmorpgPrototype
             var filter = part.AddComponent<MeshFilter>();
             filter.sharedMesh = mesh;
             var renderer = part.AddComponent<MeshRenderer>();
-            renderer.sharedMaterial = MaterialFor(color, glow);
+            renderer.sharedMaterial = MaterialFor(color, glow, pattern);
+            return part;
         }
 
         private static Mesh LowPolySphere(float radius, int segments, int rings)
@@ -195,23 +397,126 @@ namespace MmorpgPrototype
             mesh.name = "Original Low Poly Mesh";
             mesh.vertices = vertices;
             mesh.triangles = triangles;
+            var uv = new Vector2[vertices.Length];
+            for (var index = 0; index < vertices.Length; index++)
+            {
+                uv[index] = new Vector2(vertices[index].x * 1.8f + vertices[index].z * 0.6f, vertices[index].y * 1.8f + vertices[index].z * 0.4f);
+            }
+
+            mesh.uv = uv;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             return mesh;
         }
 
-        private static Material MaterialFor(Color color, bool glow)
+        private static Material MaterialFor(Color color, bool glow, TexturePattern pattern)
         {
             var rgba = (Color32)color;
             var key = rgba.r << 25 | rgba.g << 17 | rgba.b << 9 | rgba.a << 1 | (glow ? 1 : 0);
+            key = key * 31 + (int)pattern;
             if (Materials.TryGetValue(key, out var cached) && cached != null)
             {
                 return cached;
             }
 
-            var material = VisualMaterialUtility.Create(color, glow, glow ? 0.16f : 0.08f, glow ? 0.5f : 0.38f);
+            var texture = TextureFor(color, pattern);
+            var material = VisualMaterialUtility.CreateTextured(color, texture, glow, glow ? 0.16f : 0.08f, glow ? 0.5f : 0.38f);
             Materials[key] = material;
             return material;
         }
+
+        private static Texture2D TextureFor(Color color, TexturePattern pattern)
+        {
+            var rgba = (Color32)color;
+            var key = rgba.r << 24 | rgba.g << 16 | rgba.b << 8 | (int)pattern;
+            if (Textures.TryGetValue(key, out var cached) && cached != null)
+            {
+                return cached;
+            }
+
+            const int size = 8;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false, true)
+            {
+                name = $"Original {pattern} Albedo",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Repeat,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+
+            for (var y = 0; y < size; y++)
+            {
+                for (var x = 0; x < size; x++)
+                {
+                    var wave = Mathf.Sin((x * 1.7f + y * 2.3f) * Mathf.PI * 0.5f) * 0.035f;
+                    var pixel = color * (0.94f + wave);
+                    if (pattern == TexturePattern.Plate && (x == 0 || x == 4))
+                    {
+                        pixel = Color.Lerp(pixel, Color.white, 0.12f);
+                    }
+                    else if (pattern == TexturePattern.Fabric && (x + y) % 3 == 0)
+                    {
+                        pixel = Color.Lerp(pixel, Color.black, 0.08f);
+                    }
+                    else if (pattern == TexturePattern.Leather && (x * 3 + y) % 5 == 0)
+                    {
+                        pixel = Color.Lerp(pixel, Color.black, 0.15f);
+                    }
+                    else if (pattern == TexturePattern.Scale && (x + y) % 2 == 0)
+                    {
+                        pixel = Color.Lerp(pixel, Color.white, 0.07f);
+                    }
+                    else if (pattern == TexturePattern.Rune && (x == y || x + y == size - 1))
+                    {
+                        pixel = Color.Lerp(pixel, Color.white, 0.2f);
+                    }
+                    else if (pattern == TexturePattern.Stone && (x * 5 + y * 3) % 7 == 0)
+                    {
+                        pixel = Color.Lerp(pixel, Color.black, 0.2f);
+                    }
+                    else if (pattern == TexturePattern.Bone && (x * 2 + y) % 4 == 0)
+                    {
+                        pixel = Color.Lerp(pixel, Color.white, 0.1f);
+                    }
+
+                    texture.SetPixel(x, y, pixel);
+                }
+            }
+
+            texture.Apply(false, true);
+            Textures[key] = texture;
+            return texture;
+        }
+
+        private static Transform FindDeepChild(Transform parent, string childName)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            foreach (Transform child in parent)
+            {
+                if (child.name == childName)
+                {
+                    return child;
+                }
+
+                var nested = FindDeepChild(child, childName);
+                if (nested != null)
+                {
+                    return nested;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    // Small runtime descriptor so tools and future export code can identify
+    // the class/gender behind a generated modular rig.
+    public sealed class OriginalRigDescriptor : MonoBehaviour
+    {
+        public CharacterClassType ClassType;
+        public CharacterGender Gender;
     }
 }

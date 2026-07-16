@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.65 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64 y 5.65 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.68 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67 y 5.68 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v15 (incluye posición, reclamos de POI, cosmeticos, eventos diarios/semanales, temporada, contratos diarios, Renombre, habilidades y cooldown final),
@@ -130,6 +130,10 @@ simple y autocontenido.
   el Guerrero masculino y el mob normal de Zona 1 directamente con Unity,
   sin geometria externa. El resto del elenco conserva FBX CC0 hasta completar
   UVs, texturas, rigs y variantes propias.
+- Fase 5.68: `OriginalArtVisualFactory` genera las ocho variantes propias por
+  clase/sexo, con UVs, microtexturas albedo, armas iniciales y rig modular
+  runtime con `WeaponGrip`/`SpellHand`. El rig skinned FBX, atlas de mayor
+  resolucion, normales, LOD y animaciones finales quedan como pulido comercial.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

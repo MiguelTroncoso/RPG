@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **90%**.
+- Avance global estimado hacia el MMORPG publicable: **92%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **64%**.
+- Arte final comercial, online y lanzamiento: **70%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -135,6 +135,11 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.67: primer arte propio 3D generado con Unity para Guerrero masculino
   y el mob normal de Zona 1, con mallas low-poly, materiales compartidos,
   espada, armadura, reliquia y animacion procedural sin geometria externa.
+- Fase 5.68: las ocho variantes jugables usan arte propio modular por clase y
+  sexo, con armas, siluetas, rasgos de identidad y proporciones diferenciadas.
+  Los meshes generan UVs y microtexturas albedo de Android para placas, tela,
+  cuero, escama, runa y hueso; el rig runtime expone torso, brazos, manos,
+  piernas, pies y agarres sin colisionadores visuales.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -150,7 +155,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 3. Registrar desde TEST FPS, memoria, carga y objetos activos en la Zona 1.
 4. Ajustar cantidad de mobs, VFX, decoracion, TTK y radio del minimapa con datos
    del telefono real.
-5. Completar la vertical slice nivel 1-10 con modelos finales de jugador y mobs,
+5. Completar la vertical slice nivel 1-10 con modelos propios de elite/jefe,
    recompensas calibradas y una interfaz de inventario/tienda mas clara.
 6. Probar desbloqueo y mejora de habilidades en Android, incluyendo nivel 8/20,
    nivel 50, consumo de manuales, persistencia y lectura del boton G.
@@ -160,7 +165,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    con firewall, TLS/WSS y persistencia protegida.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Sustituir progresivamente la geometria procedural por arte 3D final propio.
+10. Sustituir progresivamente la geometria procedural por meshes finales
+    exportados con rig skinned, atlas de texturas y LOD por dispositivo.
 11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
 12. Probar contratos diarios y Renacimiento con varios personajes antes de
@@ -174,6 +180,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.68 | Ocho variantes propias, UVs, microtexturas y rig modular runtime | 92% |
 | 2026-07-16 | 5.67 | Primer arte propio 3D para Guerrero y mob de Zona 1 | 90% |
 | 2026-07-16 | 5.66 1-4 | Ocho personajes 3D con armas FBX y mobs 3D de Zona 1 | 89% |
 | 2026-07-16 | 5.65 | Interfaz cinematografica Android, conexion discreta y perfiles graficos | 87% |

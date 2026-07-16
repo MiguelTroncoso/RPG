@@ -10,11 +10,22 @@ namespace MmorpgPrototype
 
         public static Material Create(Color color, bool emissive = false, float metallic = 0.05f, float smoothness = 0.24f)
         {
+            return CreateInternal(color, null, emissive, metallic, smoothness);
+        }
+
+        public static Material CreateTextured(Color color, Texture2D texture, bool emissive = false, float metallic = 0.05f, float smoothness = 0.24f)
+        {
+            return CreateInternal(color, texture, emissive, metallic, smoothness);
+        }
+
+        private static Material CreateInternal(Color color, Texture2D texture, bool emissive, float metallic, float smoothness)
+        {
             var color32 = (Color32)color;
             var key = color32.r << 24 | color32.g << 16 | color32.b << 8 | color32.a;
             key = key * 31 + (emissive ? 1 : 0);
             key = key * 31 + Mathf.RoundToInt(metallic * 100f);
             key = key * 31 + Mathf.RoundToInt(smoothness * 100f);
+            key = key * 31 + (texture != null ? texture.name.GetHashCode() : 0);
             if (Cache.TryGetValue(key, out var cached) && cached != null)
             {
                 return cached;
@@ -26,6 +37,19 @@ namespace MmorpgPrototype
             if (material.HasProperty("_BaseColor"))
             {
                 material.SetColor("_BaseColor", color);
+            }
+
+            if (texture != null)
+            {
+                if (material.HasProperty("_BaseMap"))
+                {
+                    material.SetTexture("_BaseMap", texture);
+                }
+
+                if (material.HasProperty("_MainTex"))
+                {
+                    material.SetTexture("_MainTex", texture);
+                }
             }
 
             if (material.HasProperty("_Metallic"))

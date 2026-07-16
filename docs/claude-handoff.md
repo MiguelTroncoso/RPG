@@ -173,6 +173,10 @@ Estado actual (fases 1-5.65 entregadas en primera pasada; refinamientos 5.44,
   en runtime para Guerrero masculino y el mob normal de Zona 1. Son mallas
   originales sin packs externos, con materiales compartidos y animacion
   procedural. Faltan UVs, texturas atlas, rigs FBX y las otras siete variantes.
+- Fase 5.68: `OriginalArtVisualFactory` genera las ocho variantes propias por
+  clase/sexo, con UVs, microtexturas albedo, armas iniciales y rig modular
+  runtime con `WeaponGrip`/`SpellHand`. El rig skinned FBX, atlas de mayor
+  resolucion, normales, LOD y animaciones finales quedan como pulido comercial.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

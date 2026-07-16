@@ -940,6 +940,18 @@ La APK actual mantiene los FBX CC0 para el resto de clases, elites y jefes. La
 siguiente iteracion convertira esta referencia en assets con UVs, texturas atlas,
 rig y variantes femeninas antes de sustituir progresivamente el resto.
 
+## Fase 5.68: Variantes Propias, Texturas Y Rig Modular
+
+`OriginalArtVisualFactory` ahora genera las ocho variantes jugables propias:
+Vanguard, Veil, Spirit y Void para masculino y femenino. Cada familia tiene
+arma inicial, paleta, silueta y accesorios de identidad, con UVs y
+microtexturas albedo 8x8 cacheadas para Android. El rig modular runtime expone
+torso, brazos, manos, piernas, pies, `WeaponGrip` y `SpellHand`, conservando la
+animacion procedural y el cambio de equipo sin duplicar armas.
+
+El siguiente pulido comercial sera exportar rigs skinned, atlas de mayor
+resolucion, mapas normales, LOD y animaciones FBX finales.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,
