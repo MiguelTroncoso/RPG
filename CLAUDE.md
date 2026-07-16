@@ -134,6 +134,10 @@ simple y autocontenido.
   clase/sexo, con UVs, microtexturas albedo, armas iniciales y rig modular
   runtime con `WeaponGrip`/`SpellHand`. El rig skinned FBX, atlas de mayor
   resolucion, normales, LOD y animaciones finales quedan como pulido comercial.
+- Fase 5.69: el cuerpo propio se combina en `SkinnedMeshRenderer` con pesos por
+  pieza, atlas albedo/normal 512x512, `LODGroup` y animacion procedural de
+  brazos/piernas. La exportacion FBX authored y clips artisticos finales aun
+  requiere una herramienta 3D externa.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

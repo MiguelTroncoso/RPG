@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **92%**.
+- Avance global estimado hacia el MMORPG publicable: **93%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **70%**.
+- Arte final comercial, online y lanzamiento: **76%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -140,6 +140,10 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   Los meshes generan UVs y microtexturas albedo de Android para placas, tela,
   cuero, escama, runa y hueso; el rig runtime expone torso, brazos, manos,
   piernas, pies y agarres sin colisionadores visuales.
+- Fase 5.69: atlas compartido albedo/normal 512x512 con tiles 32x32, cuerpo
+  propio combinado en `SkinnedMeshRenderer` con pesos por pieza, `LODGroup`
+  con culling lejano para personajes y mob propio, y animacion procedural de
+  brazos y piernas compatible con el rig modular.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -180,6 +184,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.69 | Atlas albedo/normal, skinning runtime, LOD y animacion articulada | 93% |
 | 2026-07-16 | 5.68 | Ocho variantes propias, UVs, microtexturas y rig modular runtime | 92% |
 | 2026-07-16 | 5.67 | Primer arte propio 3D para Guerrero y mob de Zona 1 | 90% |
 | 2026-07-16 | 5.66 1-4 | Ocho personajes 3D con armas FBX y mobs 3D de Zona 1 | 89% |

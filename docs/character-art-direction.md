@@ -89,6 +89,25 @@ Esto cierra el bloque de variantes propias y la primera pasada de texturas y
 rigging runtime. El siguiente paso de calidad comercial es exportar meshes
 skinned, atlas de mayor resolucion, normales, LOD y animaciones FBX finales.
 
+## Fase 5.69: Pipeline Skinned, Atlas Y LOD
+
+La factory combina las piezas visuales propias en un `SkinnedMeshRenderer` con
+un peso por pieza y bind poses calculadas desde el rig modular. Los transforms
+de brazos y piernas siguen siendo los huesos que mueve `AvatarMotionAnimator`,
+por lo que el cambio no altera el control tactil ni el combate.
+
+- Un atlas compartido de albedo 512x512 y otro de normales 512x512 usan tiles
+  32x32, con escala/offset por material para reducir texturas sueltas.
+- El personaje propio y el mob de Zona 1 tienen `LODGroup` y culling lejano;
+  el cuerpo del personaje usa un solo renderer skinned y el arma inicial queda
+  modular para ocultarse al equipar un objeto.
+- La animacion procedural incluye idle, carrera, ataque y balanceo alterno de
+  brazos y piernas; los clips FBX finales quedan preparados como reemplazo.
+
+Esta entrega es el pipeline tecnico comercial dentro de Unity. El FBX skinned
+authored, sus mapas de alta resolucion y animaciones artisticas finales todavia
+requieren exportacion desde una herramienta 3D externa.
+
 ## Acceptance
 
 Las ocho variantes deben verse distintas en seleccion de personaje y dentro de

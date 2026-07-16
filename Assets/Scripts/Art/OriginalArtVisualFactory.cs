@@ -20,7 +20,19 @@ namespace MmorpgPrototype
         }
 
         private static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
-        private static readonly Dictionary<int, Texture2D> Textures = new Dictionary<int, Texture2D>();
+        private static readonly Dictionary<int, TextureAtlasEntry> TextureEntries = new Dictionary<int, TextureAtlasEntry>();
+        private const int AtlasSize = 512;
+        private const int AtlasTileSize = 32;
+        private const int AtlasTilesPerSide = AtlasSize / AtlasTileSize;
+        private static Texture2D albedoAtlas;
+        private static Texture2D normalAtlas;
+        private static int nextAtlasSlot;
+
+        private struct TextureAtlasEntry
+        {
+            public Vector2 Scale;
+            public Vector2 Offset;
+        }
 
         public static GameObject BuildCharacter(Transform parent, CharacterArtProfile profile)
         {
@@ -49,6 +61,7 @@ namespace MmorpgPrototype
             }
 
             BuildRigMarkers(root.transform, profile);
+            BuildSkinnedRepresentation(root.transform);
             return root;
         }
 
@@ -90,6 +103,7 @@ namespace MmorpgPrototype
             CreatePart(root.transform, "Relic Spine", Frustum(0.11f, 0.025f, 0.48f, 5), new Vector3(0f, 0.48f, 0.02f), Vector3.one, Quaternion.Euler(0f, 0f, 90f), accent, true, TexturePattern.Rune);
             CreatePart(root.transform, "Eye Left", LowPolySphere(0.055f, 6, 3), new Vector3(-0.13f, 0.28f, 0.91f), Vector3.one, Quaternion.identity, corruption, true, TexturePattern.Rune);
             CreatePart(root.transform, "Eye Right", LowPolySphere(0.055f, 6, 3), new Vector3(0.13f, 0.28f, 0.91f), Vector3.one, Quaternion.identity, corruption, true, TexturePattern.Rune);
+            BuildCullLod(root.transform);
             return root;
         }
 
@@ -273,6 +287,122 @@ namespace MmorpgPrototype
             descriptor.Gender = profile.Gender;
         }
 
+        private static void BuildSkinnedRepresentation(Transform root)
+        {
+            var filters = root.GetComponentsInChildren<MeshFilter>(true);
+            var parts = new List<MeshFilter>();
+            foreach (var filter in filters)
+            {
+                if (filter.sharedMesh == null || filter.GetComponent<MeshRenderer>() == null || IsUnderNamedRoot(filter.transform, "Starter Weapon"))
+                {
+                    continue;
+                }
+
+                parts.Add(filter);
+            }
+
+            if (parts.Count == 0)
+            {
+                return;
+            }
+
+            var combines = new CombineInstance[parts.Count];
+            var bones = new Transform[parts.Count];
+            var bindposes = new Matrix4x4[parts.Count];
+            var weights = new List<BoneWeight>();
+            var materials = new List<Material>();
+            for (var index = 0; index < parts.Count; index++)
+            {
+                var filter = parts[index];
+                var renderer = filter.GetComponent<MeshRenderer>();
+                combines[index] = new CombineInstance
+                {
+                    mesh = filter.sharedMesh,
+                    transform = root.worldToLocalMatrix * filter.transform.localToWorldMatrix
+                };
+                bones[index] = filter.transform;
+                bindposes[index] = filter.transform.worldToLocalMatrix * root.localToWorldMatrix;
+                materials.Add(renderer.sharedMaterial);
+                renderer.enabled = false;
+
+                for (var vertex = 0; vertex < filter.sharedMesh.vertexCount; vertex++)
+                {
+                    weights.Add(new BoneWeight
+                    {
+                        boneIndex0 = index,
+                        weight0 = 1f
+                    });
+                }
+            }
+
+            var skinnedMesh = new Mesh
+            {
+                name = "Original Character Skinned Mesh"
+            };
+            skinnedMesh.CombineMeshes(combines, false, true, false);
+            skinnedMesh.bindposes = bindposes;
+            skinnedMesh.boneWeights = weights.ToArray();
+            skinnedMesh.RecalculateBounds();
+
+            var skinnedObject = new GameObject("Skinned Avatar Body");
+            skinnedObject.transform.SetParent(root, false);
+            var skinnedRenderer = skinnedObject.AddComponent<SkinnedMeshRenderer>();
+            skinnedRenderer.sharedMesh = skinnedMesh;
+            skinnedRenderer.sharedMaterials = materials.ToArray();
+            skinnedRenderer.bones = bones;
+            skinnedRenderer.rootBone = root;
+            skinnedRenderer.quality = SkinQuality.Bone1;
+            skinnedRenderer.updateWhenOffscreen = false;
+
+            var renderers = new List<Renderer> { skinnedRenderer };
+            var starterWeapon = FindDeepChild(root, "Starter Weapon");
+            if (starterWeapon != null)
+            {
+                renderers.AddRange(starterWeapon.GetComponentsInChildren<Renderer>(true));
+            }
+
+            var lodGroup = root.gameObject.AddComponent<LODGroup>();
+            lodGroup.SetLODs(new[]
+            {
+                new LOD(0.42f, renderers.ToArray()),
+                new LOD(0.12f, new Renderer[0])
+            });
+            lodGroup.RecalculateBounds();
+        }
+
+        private static void BuildCullLod(Transform root)
+        {
+            var renderers = root.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length == 0)
+            {
+                return;
+            }
+
+            var lodGroup = root.gameObject.AddComponent<LODGroup>();
+            lodGroup.SetLODs(new[]
+            {
+                new LOD(0.32f, renderers),
+                new LOD(0.08f, new Renderer[0])
+            });
+            lodGroup.RecalculateBounds();
+        }
+
+        private static bool IsUnderNamedRoot(Transform child, string rootName)
+        {
+            var current = child;
+            while (current != null)
+            {
+                if (current.name == rootName)
+                {
+                    return true;
+                }
+
+                current = current.parent;
+            }
+
+            return false;
+        }
+
         private static GameObject CreateLimb(Transform parent, string name, Vector3 position, Vector3 scale, Quaternion rotation, Color color, TexturePattern pattern)
         {
             return CreatePart(parent, name, Frustum(0.16f, 0.12f, 0.9f, 6), position, scale, rotation, color, false, pattern);
@@ -419,72 +549,111 @@ namespace MmorpgPrototype
                 return cached;
             }
 
-            var texture = TextureFor(color, pattern);
-            var material = VisualMaterialUtility.CreateTextured(color, texture, glow, glow ? 0.16f : 0.08f, glow ? 0.5f : 0.38f);
+            var atlasEntry = GetTextureAtlasEntry(color, pattern);
+            var material = VisualMaterialUtility.CreateTextured(color, albedoAtlas, normalAtlas, atlasEntry.Scale, atlasEntry.Offset, glow, glow ? 0.16f : 0.08f, glow ? 0.5f : 0.38f);
             Materials[key] = material;
             return material;
         }
 
-        private static Texture2D TextureFor(Color color, TexturePattern pattern)
+        private static TextureAtlasEntry GetTextureAtlasEntry(Color color, TexturePattern pattern)
         {
             var rgba = (Color32)color;
             var key = rgba.r << 24 | rgba.g << 16 | rgba.b << 8 | (int)pattern;
-            if (Textures.TryGetValue(key, out var cached) && cached != null)
+            if (TextureEntries.TryGetValue(key, out var cached))
             {
                 return cached;
             }
 
-            const int size = 8;
-            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false, true)
+            EnsureTextureAtlases();
+            if (nextAtlasSlot >= AtlasTilesPerSide * AtlasTilesPerSide)
             {
-                name = $"Original {pattern} Albedo",
-                filterMode = FilterMode.Bilinear,
-                wrapMode = TextureWrapMode.Repeat,
-                hideFlags = HideFlags.HideAndDontSave
-            };
+                nextAtlasSlot = 0;
+            }
 
-            for (var y = 0; y < size; y++)
+            var slot = nextAtlasSlot++;
+            var tileX = (slot % AtlasTilesPerSide) * AtlasTileSize;
+            var tileY = (slot / AtlasTilesPerSide) * AtlasTileSize;
+            for (var y = 0; y < AtlasTileSize; y++)
             {
-                for (var x = 0; x < size; x++)
+                for (var x = 0; x < AtlasTileSize; x++)
                 {
-                    var wave = Mathf.Sin((x * 1.7f + y * 2.3f) * Mathf.PI * 0.5f) * 0.035f;
+                    var wave = Mathf.Sin((x * 1.7f + y * 2.3f) * Mathf.PI * 0.18f) * 0.035f;
                     var pixel = color * (0.94f + wave);
-                    if (pattern == TexturePattern.Plate && (x == 0 || x == 4))
+                    var normalX = 0.5f + wave * 1.8f;
+                    var normalY = 0.5f + Mathf.Cos((x + y) * 0.23f) * 0.025f;
+                    if (pattern == TexturePattern.Plate && (x == 0 || x == 16))
                     {
                         pixel = Color.Lerp(pixel, Color.white, 0.12f);
+                        normalX += 0.06f;
                     }
-                    else if (pattern == TexturePattern.Fabric && (x + y) % 3 == 0)
+                    else if (pattern == TexturePattern.Fabric && (x + y) % 7 == 0)
                     {
                         pixel = Color.Lerp(pixel, Color.black, 0.08f);
+                        normalY += 0.05f;
                     }
-                    else if (pattern == TexturePattern.Leather && (x * 3 + y) % 5 == 0)
+                    else if (pattern == TexturePattern.Leather && (x * 3 + y) % 11 == 0)
                     {
                         pixel = Color.Lerp(pixel, Color.black, 0.15f);
+                        normalX -= 0.04f;
                     }
-                    else if (pattern == TexturePattern.Scale && (x + y) % 2 == 0)
+                    else if (pattern == TexturePattern.Scale && (x + y) % 4 == 0)
                     {
                         pixel = Color.Lerp(pixel, Color.white, 0.07f);
+                        normalY += 0.06f;
                     }
-                    else if (pattern == TexturePattern.Rune && (x == y || x + y == size - 1))
+                    else if (pattern == TexturePattern.Rune && (x == y || x + y == AtlasTileSize - 1))
                     {
                         pixel = Color.Lerp(pixel, Color.white, 0.2f);
+                        normalX += 0.05f;
                     }
-                    else if (pattern == TexturePattern.Stone && (x * 5 + y * 3) % 7 == 0)
+                    else if (pattern == TexturePattern.Stone && (x * 5 + y * 3) % 13 == 0)
                     {
                         pixel = Color.Lerp(pixel, Color.black, 0.2f);
+                        normalY -= 0.05f;
                     }
-                    else if (pattern == TexturePattern.Bone && (x * 2 + y) % 4 == 0)
+                    else if (pattern == TexturePattern.Bone && (x * 2 + y) % 9 == 0)
                     {
                         pixel = Color.Lerp(pixel, Color.white, 0.1f);
+                        normalX += 0.03f;
                     }
 
-                    texture.SetPixel(x, y, pixel);
+                    albedoAtlas.SetPixel(tileX + x, tileY + y, pixel);
+                    normalAtlas.SetPixel(tileX + x, tileY + y, new Color(normalX, normalY, 1f, 1f));
                 }
             }
 
-            texture.Apply(false, true);
-            Textures[key] = texture;
-            return texture;
+            albedoAtlas.Apply(false, false);
+            normalAtlas.Apply(false, false);
+            var entry = new TextureAtlasEntry
+            {
+                Scale = new Vector2(1f / AtlasTilesPerSide, 1f / AtlasTilesPerSide),
+                Offset = new Vector2(tileX / (float)AtlasSize, tileY / (float)AtlasSize)
+            };
+            TextureEntries[key] = entry;
+            return entry;
+        }
+
+        private static void EnsureTextureAtlases()
+        {
+            if (albedoAtlas != null && normalAtlas != null)
+            {
+                return;
+            }
+
+            albedoAtlas = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, false, true)
+            {
+                name = "Original Character Albedo Atlas 512",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            normalAtlas = new Texture2D(AtlasSize, AtlasSize, TextureFormat.RGBA32, false, true)
+            {
+                name = "Original Character Normal Atlas 512",
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
         }
 
         private static Transform FindDeepChild(Transform parent, string childName)

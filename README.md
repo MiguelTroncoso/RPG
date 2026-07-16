@@ -952,6 +952,15 @@ animacion procedural y el cambio de equipo sin duplicar armas.
 El siguiente pulido comercial sera exportar rigs skinned, atlas de mayor
 resolucion, mapas normales, LOD y animaciones FBX finales.
 
+## Fase 5.69: Pipeline Skinned, Atlas Y LOD
+
+El cuerpo propio se combina en un `SkinnedMeshRenderer` con pesos por pieza y
+bind poses calculadas desde el rig modular. Los personajes y el mob propio usan
+atlas compartidos de albedo/normal 512x512 con tiles 32x32, `LODGroup` con
+culling lejano y animacion procedural de brazos y piernas. La exportacion del
+FBX authored, los clips artisticos finales y los mapas de alta resolucion
+requieren una herramienta 3D externa y quedan como el siguiente bloque.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

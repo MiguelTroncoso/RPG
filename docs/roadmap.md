@@ -923,6 +923,26 @@ Criterio de exito: las ocho variantes se instancian, se distinguen sin leer el
 HUD, muestran textura albedo, responden a idle/correr/ataque y permiten cambiar
 arma sin duplicar la composicion visual.
 
+## Fase 5.69: Pipeline Skinned, Atlas Y LOD
+
+Objetivo: preparar la sustitucion por arte 3D comercial sin volver a crear la
+arquitectura de combate, equipamiento y animacion.
+
+- Atlas albedo y normal 512x512 con tiles 32x32 compartidos por los meshes
+  propios y UVs con escala/offset por material. [Implementado]
+- Cuerpo propio combinado en `SkinnedMeshRenderer` con bind poses y pesos por
+  pieza, conservando brazos y piernas como transforms articulados. [Implementado]
+- `LODGroup` con culling lejano para personajes propios y mob normal de Zona 1.
+  [Implementado]
+- Idle, carrera, ataque y balanceo de extremidades compatibles con
+  `AvatarMotionAnimator`. [Implementado]
+- Exportacion FBX authored, atlas de alta resolucion, mapas normales de arte,
+  LOD geometrico y clips FBX finales. [Planificado]
+
+Criterio de exito: el cuerpo propio se renderiza con un solo skin, el atlas no
+crea materiales por pieza, el mob y el jugador desaparecen correctamente a
+distancia y la APK conserva movimiento + ataque multitactil.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

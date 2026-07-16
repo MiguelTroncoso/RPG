@@ -10,15 +10,20 @@ namespace MmorpgPrototype
 
         public static Material Create(Color color, bool emissive = false, float metallic = 0.05f, float smoothness = 0.24f)
         {
-            return CreateInternal(color, null, emissive, metallic, smoothness);
+            return CreateInternal(color, null, null, Vector2.one, Vector2.zero, emissive, metallic, smoothness);
         }
 
         public static Material CreateTextured(Color color, Texture2D texture, bool emissive = false, float metallic = 0.05f, float smoothness = 0.24f)
         {
-            return CreateInternal(color, texture, emissive, metallic, smoothness);
+            return CreateInternal(color, texture, null, Vector2.one, Vector2.zero, emissive, metallic, smoothness);
         }
 
-        private static Material CreateInternal(Color color, Texture2D texture, bool emissive, float metallic, float smoothness)
+        public static Material CreateTextured(Color color, Texture2D texture, Texture2D normalMap, Vector2 textureScale, Vector2 textureOffset, bool emissive = false, float metallic = 0.05f, float smoothness = 0.24f)
+        {
+            return CreateInternal(color, texture, normalMap, textureScale, textureOffset, emissive, metallic, smoothness);
+        }
+
+        private static Material CreateInternal(Color color, Texture2D texture, Texture2D normalMap, Vector2 textureScale, Vector2 textureOffset, bool emissive, float metallic, float smoothness)
         {
             var color32 = (Color32)color;
             var key = color32.r << 24 | color32.g << 16 | color32.b << 8 | color32.a;
@@ -26,6 +31,10 @@ namespace MmorpgPrototype
             key = key * 31 + Mathf.RoundToInt(metallic * 100f);
             key = key * 31 + Mathf.RoundToInt(smoothness * 100f);
             key = key * 31 + (texture != null ? texture.name.GetHashCode() : 0);
+            key = key * 31 + (normalMap != null ? normalMap.name.GetHashCode() : 0);
+            key = key * 31 + Mathf.RoundToInt(textureScale.x * 10000f);
+            key = key * 31 + Mathf.RoundToInt(textureOffset.x * 10000f);
+            key = key * 31 + Mathf.RoundToInt(textureOffset.y * 10000f);
             if (Cache.TryGetValue(key, out var cached) && cached != null)
             {
                 return cached;
@@ -49,6 +58,33 @@ namespace MmorpgPrototype
                 if (material.HasProperty("_MainTex"))
                 {
                     material.SetTexture("_MainTex", texture);
+                }
+
+                if (material.HasProperty("_BaseMap"))
+                {
+                    material.SetTextureScale("_BaseMap", textureScale);
+                    material.SetTextureOffset("_BaseMap", textureOffset);
+                }
+
+                if (material.HasProperty("_MainTex"))
+                {
+                    material.SetTextureScale("_MainTex", textureScale);
+                    material.SetTextureOffset("_MainTex", textureOffset);
+                }
+            }
+
+            if (normalMap != null)
+            {
+                if (material.HasProperty("_BumpMap"))
+                {
+                    material.SetTexture("_BumpMap", normalMap);
+                    material.EnableKeyword("_NORMALMAP");
+                }
+
+                if (material.HasProperty("_BumpMap"))
+                {
+                    material.SetTextureScale("_BumpMap", textureScale);
+                    material.SetTextureOffset("_BumpMap", textureOffset);
                 }
             }
 

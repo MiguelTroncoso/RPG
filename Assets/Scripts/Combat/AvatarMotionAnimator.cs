@@ -13,6 +13,8 @@ namespace MmorpgPrototype
         private Transform visualRoot;
         private Transform leftArm;
         private Transform rightArm;
+        private Transform leftLeg;
+        private Transform rightLeg;
         private Animator modelAnimator;
         private Vector3 baseLocalPosition;
         private Vector3 lastWorldPosition;
@@ -37,6 +39,8 @@ namespace MmorpgPrototype
             baseLocalPosition = visualRoot != null ? visualRoot.localPosition : Vector3.zero;
             leftArm = visualRoot != null ? FindDeepChild(visualRoot, "Left Arm") : null;
             rightArm = visualRoot != null ? FindDeepChild(visualRoot, "Right Arm") : null;
+            leftLeg = visualRoot != null ? FindDeepChild(visualRoot, "Left Leg") : null;
+            rightLeg = visualRoot != null ? FindDeepChild(visualRoot, "Right Leg") : null;
             CacheAnimatorParameters();
         }
 
@@ -83,15 +87,32 @@ namespace MmorpgPrototype
 
         private void AnimateProceduralArms(float phase, float movement, float attack)
         {
-            if (leftArm == null || rightArm == null)
+            if (leftArm == null && rightArm == null && leftLeg == null && rightLeg == null)
             {
                 return;
             }
 
             var swing = Mathf.Sin(phase) * movement * 28f;
             var attackSwing = attack * 62f;
-            leftArm.localRotation = Quaternion.Euler(attackSwing, 0f, 18f + swing);
-            rightArm.localRotation = Quaternion.Euler(-attackSwing, 0f, -18f - swing);
+            if (leftArm != null)
+            {
+                leftArm.localRotation = Quaternion.Euler(attackSwing, 0f, 18f + swing);
+            }
+
+            if (rightArm != null)
+            {
+                rightArm.localRotation = Quaternion.Euler(-attackSwing, 0f, -18f - swing);
+            }
+
+            if (leftLeg != null)
+            {
+                leftLeg.localRotation = Quaternion.Euler(-swing * 0.8f, 0f, 0f);
+            }
+
+            if (rightLeg != null)
+            {
+                rightLeg.localRotation = Quaternion.Euler(swing * 0.8f, 0f, 0f);
+            }
         }
 
         private void AnimateModel(float movement)
