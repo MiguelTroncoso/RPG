@@ -25,6 +25,8 @@ namespace MmorpgPrototype
         public bool AcceptServerSaveOnConnect = true;
         public float SaveSyncIntervalSeconds = 15f;
         public string CurrentStatus => pendingStatus;
+        public NetworkConnectionState ConnectionState { get; private set; } = NetworkConnectionState.Offline;
+        public event System.Action<NetworkConnectionState> ConnectionStateChanged;
 
         private readonly Queue<string> incoming = new Queue<string>();
         private readonly object incomingLock = new object();
@@ -102,6 +104,7 @@ namespace MmorpgPrototype
             }
 
             SetStatus(Localization.Tr("net.status_offline"));
+            SetConnectionState(NetworkConnectionState.Offline);
         }
 
         public void SendChatFromInput()
@@ -124,6 +127,7 @@ namespace MmorpgPrototype
         private async Task ConnectAsync()
         {
             isConnecting = true;
+            SetConnectionState(NetworkConnectionState.Connecting);
             SetStatus(Localization.Tr("net.status_connecting"));
 
             try
@@ -138,12 +142,14 @@ namespace MmorpgPrototype
                     : ServerUrl;
 
                 await socket.ConnectAsync(new Uri(url), cancellation.Token);
+                SetConnectionState(NetworkConnectionState.Online);
                 SetStatus(Localization.Tr("net.status_online", url));
                 await SendHelloAsync();
                 _ = ReceiveLoopAsync(cancellation.Token);
             }
             catch (Exception error)
             {
+                SetConnectionState(NetworkConnectionState.Error);
                 SetStatus(Localization.Tr("net.status_no_connection", error.Message));
                 socket?.Dispose();
                 socket = null;
@@ -171,6 +177,7 @@ namespace MmorpgPrototype
 
                         if (result.MessageType == WebSocketMessageType.Close)
                         {
+                            SetConnectionState(NetworkConnectionState.Offline);
                             SetStatus(Localization.Tr("net.status_server_disconnected"));
                             return;
                         }
@@ -190,6 +197,7 @@ namespace MmorpgPrototype
             }
             catch (Exception error)
             {
+                SetConnectionState(NetworkConnectionState.Error);
                 SetStatus(Localization.Tr("net.status_connection_closed", error.Message));
             }
         }
@@ -551,6 +559,7 @@ namespace MmorpgPrototype
             }
             catch (Exception error)
             {
+                SetConnectionState(NetworkConnectionState.Error);
                 SetStatus(Localization.Tr("net.status_send_failed", error.Message));
             }
             finally
@@ -577,6 +586,17 @@ namespace MmorpgPrototype
         private void SetStatus(string status)
         {
             pendingStatus = status;
+        }
+
+        private void SetConnectionState(NetworkConnectionState state)
+        {
+            if (ConnectionState == state)
+            {
+                return;
+            }
+
+            ConnectionState = state;
+            ConnectionStateChanged?.Invoke(state);
         }
 
         private void ApplyPendingStatus()

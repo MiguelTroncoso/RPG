@@ -913,6 +913,26 @@ temporada.
 - La APK local muestra estos estados desde el menu `Mision`; antes de publicar,
   S-01 debe validar horarios, membresias, rankings, recompensas y resultados PvP.
 
+## Fase 5.65: Interfaz Cinematografica Para Android
+
+- `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,
+  sombras, acentos por clase y estados de boton sin depender de un paquete
+  artistico cerrado.
+- El HUD de combate ahora concentra vida, energia, objetivo, minimapa, feed,
+  joystick, ataque y habilidades en zonas separadas; el chat puede colapsarse.
+- La habilidad final usa un boton circular distintivo y los `+` de mejora pasan
+  a la ventana `HABILIDADES`, fuera del combate.
+- La conexion se representa como un indicador discreto `S-01`; URL y errores
+  tecnicos completos quedan en `Servidor y conexion`.
+- `GRAFICOS` permite elegir `CALIDAD` o `RENDIMIENTO`; Android parte en
+  `RENDIMIENTO` y ajusta FPS objetivo, sombras, antialiasing y reflejos.
+- La orientacion Android queda fija en horizontal, con safe area y referencia
+  de UI 1600x900. El joystick, camara y multitactil se mantienen activos.
+
+La APK de esta fase se genero con Unity 6000.5.3f1, se valido como ZIP Android
+sin errores y queda lista para reinstalar en el telefono. Falta medir FPS,
+memoria y carga en varios formatos de pantalla reales.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

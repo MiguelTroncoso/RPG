@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.62 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61 y 5.62 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.65 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64 y 5.65 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v15 (incluye posición, reclamos de POI, cosmeticos, eventos diarios/semanales, temporada, contratos diarios, Renombre, habilidades y cooldown final),
@@ -113,6 +113,14 @@ simple y autocontenido.
   telefono real.
 - Persistencia del servidor cubre snapshot completo `PlayerSaveData` por
   `playerKey` via `saveState`/`savedState`; el JSON local sigue siendo respaldo.
+- Fase 5.65: `UiThemeConfig` centraliza el tema visual runtime; `PrototypeHud`
+  mantiene vida/energia/objetivo/feed por separado, el chat es colapsable y
+  la habilidad final usa un boton circular propio. `ConnectionStatusIndicator`
+  reduce la red a S-01 + punto de estado, mientras `ServerSettingsWindowController`
+  conserva URL y diagnostico en una ventana secundaria.
+- Fase 5.65: `UiPerformanceSettings` mantiene `Quality`/`Performance` en
+  PlayerPrefs, con `Performance` como valor inicial Android. La orientacion se
+  fuerza a LandscapeRight y las autorrotaciones quedan desactivadas.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

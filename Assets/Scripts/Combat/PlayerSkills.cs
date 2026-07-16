@@ -22,6 +22,7 @@ namespace MmorpgPrototype
         public PrototypeHud Hud;
         public PlayerProgression Progression;
         public InventorySystem Inventory;
+        public PlayerEnergySystem Energy;
 
         private static readonly int[] UnlockLevels = { 1, 1, 8, 20, 50 };
         private readonly int[] skillLevels = { 1, 1, 0, 0, 0 };
@@ -229,6 +230,14 @@ namespace MmorpgPrototype
                 return;
             }
 
+            var energy = Energy != null ? Energy : GetComponent<PlayerEnergySystem>();
+            var energyCost = EnergyCostFor(slot);
+            if (energy != null && !energy.TrySpend(energyCost))
+            {
+                Hud?.SetStatus(Localization.Tr("skill.need_energy", energyCost));
+                return;
+            }
+
             if (slot == UltimateSlot)
             {
                 ultimateReadyAtUtc = DateTime.UtcNow.AddSeconds(UltimateCooldown);
@@ -275,6 +284,19 @@ namespace MmorpgPrototype
                 default:
                     Cleave(DamageFor(0, 34), 2.8f, 3);
                     break;
+            }
+        }
+
+        public float EnergyCostFor(int slot)
+        {
+            switch (slot)
+            {
+                case 0: return 10f;
+                case 1: return 16f;
+                case 2: return 22f;
+                case 3: return 30f;
+                case UltimateSlot: return 55f;
+                default: return 0f;
             }
         }
 

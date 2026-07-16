@@ -4,16 +4,16 @@ Este porcentaje es una estimacion de producto, no un conteo de scripts. Un
 MMORPG completo tambien necesita arte final, contenido, servidores, pruebas,
 economia, seguridad, operacion y publicacion.
 
-## Corte Diario: 2026-07-15
+## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **84%**.
+- Avance global estimado hacia el MMORPG publicable: **87%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **50%**.
+- Arte final comercial, online y lanzamiento: **55%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -118,6 +118,16 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   diario con horario variable y ventana de recompensa de 60 minutos.
 - Fase 5.64: contribucion semanal de clan y contrato de resultados para todos
   contra todos, preparados para autoridad de servidor sin falsear PvP local.
+- Fase 5.65: tema visual cinematografico runtime con marcos, sombras, estados
+  de boton, tipografia comun y colores centralizados en `UiThemeConfig`.
+- Fase 5.65: HUD Android compacto con barra de energia, objetivo contextual,
+  minimapa enmarcado, chat colapsable, habilidades circulares y habilidad final
+  separada del grupo de mejoras.
+- Fase 5.65: estado de conexion discreto para S-01; URL, errores completos y
+  diagnostico pasan a la ventana de servidor. Se agregan ventanas de habilidades
+  y perfiles `CALIDAD`/`RENDIMIENTO`, con rendimiento como predeterminado Android.
+- Fase 5.65: orientacion horizontal fija, autorrotacion deshabilitada y
+  referencia UI 1600x900 conservando safe area y multitactil existente.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -157,6 +167,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.65 | Interfaz cinematografica Android, conexion discreta y perfiles graficos | 87% |
 | 2026-07-15 | 5.64 | Calendario diario, jefe mundial, clan y todos contra todos preparados | 84% |
 | 2026-07-15 | 5.63 | Evento semanal, temporada de 28 dias y recompensas por hitos | 83% |
 | 2026-07-15 | 5.62 | Contratos diarios rotativos, Renacimiento y Renombre persistente | 82% |

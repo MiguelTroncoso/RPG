@@ -118,19 +118,14 @@ namespace MmorpgPrototype
 
         private static void ConfigureRuntime()
         {
-            Application.targetFrameRate = 60;
+            UiPerformanceSettings.LoadAndApply();
             QualitySettings.vSyncCount = 0;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                QualitySettings.shadows = ShadowQuality.Disable;
-                QualitySettings.shadowDistance = 24f;
-                QualitySettings.pixelLightCount = 1;
-                QualitySettings.antiAliasing = 0;
-                QualitySettings.anisotropicFiltering = AnisotropicFiltering.Disable;
-                QualitySettings.realtimeReflectionProbes = false;
-            }
+            Screen.autorotateToPortrait = false;
+            Screen.autorotateToPortraitUpsideDown = false;
+            Screen.autorotateToLandscapeLeft = false;
+            Screen.autorotateToLandscapeRight = false;
+            Screen.orientation = ScreenOrientation.LandscapeRight;
         }
 
         private static void EnsureEventSystem()
@@ -234,6 +229,7 @@ namespace MmorpgPrototype
             progression.Table = LoadLevelTable();
             player.AddComponent<InventorySystem>();
             player.AddComponent<PlayerQuestLog>();
+            player.AddComponent<PlayerEnergySystem>();
             player.AddComponent<RepeatableContractSystem>();
             player.AddComponent<WeeklyEventSystem>();
             player.AddComponent<SeasonProgressionSystem>();
@@ -531,67 +527,70 @@ namespace MmorpgPrototype
             CreateCameraLookSurface(uiRoot, camera != null ? camera.GetComponent<OrbitCamera>() : null);
             CreateMiniMap(uiRoot, player.transform);
 
-            CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(820f, 250f), new Vector2(18f, -18f), new Color(0.025f, 0.032f, 0.04f, 0.52f));
-            CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(640f, 390f), new Vector2(-22f, 22f), new Color(0.025f, 0.032f, 0.04f, 0.42f));
-            CreatePanel(uiRoot, "Network Panel", new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(500f, 112f), new Vector2(-18f, -82f), new Color(0.025f, 0.032f, 0.04f, 0.46f));
-            CreatePanel(uiRoot, "Activity Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(460f, 116f), new Vector2(-24f, -118f), new Color(0.025f, 0.032f, 0.04f, 0.36f));
+            CreatePanel(uiRoot, "Vitals Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(620f, 184f), new Vector2(18f, -18f), new Color(0.018f, 0.028f, 0.04f, 0.78f));
+            CreatePanel(uiRoot, "Action Buttons Panel", new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(500f, 328f), new Vector2(-18f, 18f), new Color(0.018f, 0.028f, 0.04f, 0.64f));
+            CreatePanel(uiRoot, "Target Panel", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(560f, 78f), new Vector2(0f, -18f), new Color(0.018f, 0.028f, 0.04f, 0.72f));
+            CreatePanel(uiRoot, "Activity Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(390f, 92f), new Vector2(-18f, -122f), new Color(0.018f, 0.028f, 0.04f, 0.58f));
 
             var hud = canvasObject.AddComponent<PrototypeHud>();
-            hud.PlayerHealthFill = CreateBar(uiRoot, "Player Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(360f, 34f), new Vector2(28f, -28f), new Color(0.05f, 0.08f, 0.1f), new Color(0.1f, 0.8f, 0.32f), out var playerText);
+            hud.PlayerHealthFill = CreateBar(uiRoot, "Player Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(360f, 28f), new Vector2(28f, -26f), new Color(0.04f, 0.07f, 0.09f), UiThemeConfig.Runtime.Health, out var playerText);
             hud.PlayerHealthText = playerText;
-            hud.EnemyHealthFill = CreateBar(uiRoot, "Enemy Health", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(360f, 28f), new Vector2(28f, -70f), new Color(0.05f, 0.08f, 0.1f), new Color(0.95f, 0.24f, 0.18f), out var enemyText);
+            hud.PlayerEnergyFill = CreateBar(uiRoot, "Player Energy", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(360f, 16f), new Vector2(28f, -60f), new Color(0.04f, 0.07f, 0.09f), UiThemeConfig.Runtime.Energy, out var energyText);
+            hud.PlayerEnergyText = energyText;
+            hud.EnemyHealthFill = CreateBar(uiRoot, "Enemy Health", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(500f, 20f), new Vector2(0f, -48f), new Color(0.04f, 0.07f, 0.09f), UiThemeConfig.Runtime.Danger, out var enemyText);
             hud.EnemyHealthText = enemyText;
-            hud.StatusText = CreateText(uiRoot, "Status", Localization.Tr("hud.initial_status"), 25, TextAnchor.MiddleLeft);
-            SetRect(hud.StatusText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(700f, 32f), new Vector2(28f, -108f));
-            hud.ClassText = CreateText(uiRoot, "Class Info", string.Empty, 23, TextAnchor.MiddleLeft);
-            SetRect(hud.ClassText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(700f, 32f), new Vector2(28f, -144f));
-            hud.ProgressionText = CreateText(uiRoot, "Progression Info", string.Empty, 23, TextAnchor.MiddleLeft);
-            SetRect(hud.ProgressionText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(700f, 32f), new Vector2(28f, -180f));
-            hud.QuestText = CreateText(uiRoot, "Quest Info", string.Empty, 21, TextAnchor.MiddleLeft);
-            SetRect(hud.QuestText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(760f, 32f), new Vector2(28f, -216f));
+            hud.EnemyNameText = CreateText(uiRoot, "Enemy Name", Localization.Tr("hud.no_target"), 18, TextAnchor.MiddleCenter);
+            SetRect(hud.EnemyNameText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(500f, 24f), new Vector2(0f, -26f));
+            hud.StatusText = CreateText(uiRoot, "Status", Localization.Tr("hud.initial_status"), 18, TextAnchor.MiddleLeft);
+            SetRect(hud.StatusText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(560f, 24f), new Vector2(28f, -86f));
+            hud.ClassText = CreateText(uiRoot, "Class Info", string.Empty, 18, TextAnchor.MiddleLeft);
+            SetRect(hud.ClassText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(560f, 24f), new Vector2(28f, -108f));
+            hud.ProgressionText = CreateText(uiRoot, "Progression Info", string.Empty, 17, TextAnchor.MiddleLeft);
+            SetRect(hud.ProgressionText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(560f, 24f), new Vector2(28f, -130f));
+            hud.QuestText = CreateText(uiRoot, "Quest Info", string.Empty, 16, TextAnchor.MiddleLeft);
+            SetRect(hud.QuestText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(560f, 24f), new Vector2(28f, -154f));
             hud.InventoryText = CreateText(uiRoot, "Inventory Info", string.Empty, 21, TextAnchor.MiddleLeft);
-            SetRect(hud.InventoryText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(900f, 32f), new Vector2(28f, -264f));
+            SetRect(hud.InventoryText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(560f, 24f), new Vector2(28f, -178f));
             hud.InventoryText.gameObject.SetActive(false);
             hud.EquipmentText = CreateText(uiRoot, "Equipment Info", string.Empty, 21, TextAnchor.MiddleLeft);
-            SetRect(hud.EquipmentText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(900f, 32f), new Vector2(28f, -298f));
+            SetRect(hud.EquipmentText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(560f, 24f), new Vector2(28f, -202f));
             hud.EquipmentText.gameObject.SetActive(false);
             hud.FeedText = CreateText(uiRoot, "Activity Feed", string.Empty, 18, TextAnchor.LowerRight);
-            SetRect(hud.FeedText.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(460f, 104f), new Vector2(-44f, -116f));
+            SetRect(hud.FeedText.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(360f, 76f), new Vector2(-34f, -122f));
 
             var movementJoystick = CreateJoystick(uiRoot);
             player.GetComponent<PlayerController>().MovementJoystick = movementJoystick;
 
-            var attackButton = CreateRoundButton(uiRoot, "Attack Button", Localization.Tr("ui.attack"), new Vector2(1f, 0f), new Vector2(-170f, 170f), new Vector2(148f, 148f), new Color(0.88f, 0.28f, 0.16f));
+            var attackButton = CreateRoundButton(uiRoot, "Attack Button", "ATK", new Vector2(1f, 0f), new Vector2(-128f, 128f), new Vector2(132f, 132f), new Color(0.78f, 0.18f, 0.14f));
             var attackInput = attackButton.gameObject.AddComponent<MobileActionButton>();
             attackInput.Pressed.AddListener(player.GetComponent<PlayerCombat>().TryAttack);
 
             var skills = player.GetComponent<PlayerSkills>();
-            var skillOneButton = CreateRoundButton(uiRoot, "Skill One Button", "Q", new Vector2(1f, 0f), new Vector2(-500f, 172f), new Vector2(130f, 92f), new Color(0.18f, 0.36f, 0.86f), 17);
+            var skillOneButton = CreateRoundButton(uiRoot, "Skill One Button", "Q", new Vector2(1f, 0f), new Vector2(-292f, 110f), new Vector2(82f, 82f), new Color(0.16f, 0.34f, 0.78f), 17);
             skillOneButton.onClick.AddListener(skills.UseSkillOne);
             hud.SkillOneText = skillOneButton.GetComponentInChildren<Text>();
-            CreateSkillUpgradeButton(uiRoot, skills, 0, new Vector2(-500f, 232f), new Color(0.18f, 0.36f, 0.86f));
 
-            var skillTwoButton = CreateRoundButton(uiRoot, "Skill Two Button", "E", new Vector2(1f, 0f), new Vector2(-500f, 286f), new Vector2(130f, 92f), new Color(0.47f, 0.2f, 0.78f), 17);
+            var skillTwoButton = CreateRoundButton(uiRoot, "Skill Two Button", "E", new Vector2(1f, 0f), new Vector2(-218f, 198f), new Vector2(82f, 82f), new Color(0.46f, 0.2f, 0.76f), 17);
             skillTwoButton.onClick.AddListener(skills.UseSkillTwo);
             hud.SkillTwoText = skillTwoButton.GetComponentInChildren<Text>();
-            CreateSkillUpgradeButton(uiRoot, skills, 1, new Vector2(-500f, 346f), new Color(0.47f, 0.2f, 0.78f));
 
-            var skillThreeButton = CreateRoundButton(uiRoot, "Skill Three Button", "R", new Vector2(1f, 0f), new Vector2(-330f, 286f), new Vector2(130f, 92f), new Color(0.18f, 0.52f, 0.52f), 17);
+            var skillThreeButton = CreateRoundButton(uiRoot, "Skill Three Button", "R", new Vector2(1f, 0f), new Vector2(-122f, 210f), new Vector2(82f, 82f), new Color(0.12f, 0.52f, 0.58f), 17);
             skillThreeButton.onClick.AddListener(skills.UseSkillThree);
             hud.SkillThreeText = skillThreeButton.GetComponentInChildren<Text>();
-            CreateSkillUpgradeButton(uiRoot, skills, 2, new Vector2(-330f, 346f), new Color(0.18f, 0.52f, 0.52f));
 
-            var skillFourButton = CreateRoundButton(uiRoot, "Skill Four Button", "F", new Vector2(1f, 0f), new Vector2(-330f, 172f), new Vector2(130f, 92f), new Color(0.62f, 0.34f, 0.16f), 17);
+            var skillFourButton = CreateRoundButton(uiRoot, "Skill Four Button", "F", new Vector2(1f, 0f), new Vector2(-58f, 144f), new Vector2(82f, 82f), new Color(0.66f, 0.34f, 0.16f), 17);
             skillFourButton.onClick.AddListener(skills.UseSkillFour);
             hud.SkillFourText = skillFourButton.GetComponentInChildren<Text>();
-            CreateSkillUpgradeButton(uiRoot, skills, 3, new Vector2(-330f, 232f), new Color(0.62f, 0.34f, 0.16f));
 
-            var ultimateButton = CreateRoundButton(uiRoot, "Ultimate Skill Button", "G", new Vector2(1f, 0f), new Vector2(-640f, 228f), new Vector2(160f, 104f), new Color(0.78f, 0.16f, 0.14f), 15);
+            var ultimateButton = CreateRoundButton(uiRoot, "Ultimate Skill Button", "G", new Vector2(1f, 0f), new Vector2(-338f, 210f), new Vector2(94f, 94f), new Color(0.78f, 0.14f, 0.16f), 16);
             ultimateButton.onClick.AddListener(skills.UseUltimate);
             hud.UltimateSkillText = ultimateButton.GetComponentInChildren<Text>();
-            CreateSkillUpgradeButton(uiRoot, skills, 4, new Vector2(-640f, 228f), new Color(0.78f, 0.16f, 0.14f));
+            skills.Energy = player.GetComponent<PlayerEnergySystem>();
 
-            CreateClassButtons(uiRoot, player);
+            if (!Application.isMobilePlatform)
+            {
+                CreateClassButtons(uiRoot, player);
+            }
 
             var combat = player.GetComponent<PlayerCombat>();
             combat.Hud = hud;
@@ -732,6 +731,7 @@ namespace MmorpgPrototype
         private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage, CosmeticService cosmetics)
         {
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
+            var skills = player.GetComponent<PlayerSkills>();
 
             var secondaryActions = CreateUiObject("Secondary Actions", parent);
             StretchToParent(secondaryActions.GetComponent<RectTransform>());
@@ -740,6 +740,8 @@ namespace MmorpgPrototype
             var statsWindow = CreateStatsWindow(parent, player);
             var telemetryWindow = CreateTelemetryWindow(parent, player);
             var menuWindow = CreatePlayerMenuWindow(parent, player, statsWindow, telemetryWindow);
+            var skillsWindow = CreateSkillsWindow(parent, player, skills);
+            var graphicsWindow = CreateGraphicsWindow(parent);
             var menuButton = CreateRoundButton(parent, "Mobile Menu Button", Localization.Tr("ui.menu"), new Vector2(0f, 0f), new Vector2(322f, 348f), new Vector2(128f, 42f), new Color(0.34f, 0.3f, 0.48f), 17);
             menuButton.onClick.AddListener(menuWindow.Toggle);
 
@@ -787,6 +789,12 @@ namespace MmorpgPrototype
             var telemetryButton = CreateRoundButton(actionParent, "Telemetry Button", Localization.Tr("ui.telemetry"), new Vector2(0f, 1f), new Vector2(652f, -396f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.46f), 17);
             telemetryButton.onClick.AddListener(telemetryWindow.Toggle);
 
+            var skillsButton = CreateRoundButton(actionParent, "Skills Button", Localization.Tr("ui.skills"), new Vector2(0f, 1f), new Vector2(792f, -444f), new Vector2(128f, 42f), new Color(0.4f, 0.22f, 0.62f), 15);
+            skillsButton.onClick.AddListener(skillsWindow.Toggle);
+
+            var graphicsButton = CreateRoundButton(actionParent, "Graphics Button", Localization.Tr("ui.graphics"), new Vector2(0f, 1f), new Vector2(932f, -444f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.52f), 15);
+            graphicsButton.onClick.AddListener(graphicsWindow.Toggle);
+
             var mobileWindow = CreateMobileTestWindow(parent, player);
             var mobileButton = CreateRoundButton(actionParent, "Mobile Test Button", Localization.Tr("ui.mobile_test"), new Vector2(0f, 1f), new Vector2(792f, -396f), new Vector2(128f, 42f), new Color(0.16f, 0.5f, 0.46f), 17);
             mobileButton.onClick.AddListener(mobileWindow.Toggle);
@@ -819,6 +827,88 @@ namespace MmorpgPrototype
             player.GetComponent<PlayerPersistence>()?.SaveNow();
         }
 
+        private static SkillsWindowController CreateSkillsWindow(Transform parent, GameObject player, PlayerSkills skills)
+        {
+            var window = CreateUiObject("Skills Window", parent);
+            SetRect(window.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(820f, 520f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(820f, 520f);
+            var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
+            background.color = new Color(0.018f, 0.028f, 0.04f, 0.98f);
+            background.raycastTarget = true;
+
+            var controller = window.AddComponent<SkillsWindowController>();
+            controller.Panel = window;
+            controller.Skills = skills;
+            controller.TitleText = CreateText(window.transform, "Title", Localization.Tr("ui.skills"), 30, TextAnchor.MiddleCenter);
+            controller.TitleText.fontStyle = FontStyle.Bold;
+            SetRect(controller.TitleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(760f, 44f), new Vector2(0f, -28f));
+            controller.BodyText = CreateText(window.transform, "Body", string.Empty, 18, TextAnchor.UpperLeft);
+            controller.BodyText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            controller.BodyText.verticalOverflow = VerticalWrapMode.Overflow;
+            SetRect(controller.BodyText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(740f, 220f), new Vector2(0f, -84f));
+
+            var colors = new[]
+            {
+                new Color(0.16f, 0.34f, 0.78f),
+                new Color(0.46f, 0.2f, 0.76f),
+                new Color(0.12f, 0.52f, 0.58f),
+                new Color(0.66f, 0.34f, 0.16f),
+                new Color(0.78f, 0.14f, 0.16f)
+            };
+            for (var i = 0; i < PlayerSkills.SkillSlotCount; i++)
+            {
+                var slot = i;
+                var button = CreateRoundButton(window.transform, $"Upgrade Skill Window {i + 1}", $"+ {KeyForSkillSlot(i)}", new Vector2(0.5f, 0.5f), new Vector2(-280f + i * 140f, -184f), new Vector2(128f, 44f), colors[i], 15);
+                button.onClick.AddListener(() => controller.Upgrade(slot));
+            }
+
+            var closeButton = CreateRoundButton(window.transform, "Close Skills", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 42f), new Vector2(170f, 44f), new Color(0.22f, 0.28f, 0.34f), 17);
+            closeButton.onClick.AddListener(controller.Toggle);
+            window.SetActive(false);
+            return controller;
+        }
+
+        private static string KeyForSkillSlot(int slot)
+        {
+            switch (slot)
+            {
+                case 0: return "Q";
+                case 1: return "E";
+                case 2: return "R";
+                case 3: return "F";
+                default: return "G";
+            }
+        }
+
+        private static GraphicsWindowController CreateGraphicsWindow(Transform parent)
+        {
+            var window = CreateUiObject("Graphics Window", parent);
+            SetRect(window.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(720f, 360f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(720f, 360f);
+            var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
+            background.color = new Color(0.018f, 0.028f, 0.04f, 0.98f);
+            background.raycastTarget = true;
+
+            var controller = window.AddComponent<GraphicsWindowController>();
+            controller.Panel = window;
+            controller.ProfileText = CreateText(window.transform, "Profile", string.Empty, 20, TextAnchor.MiddleCenter);
+            SetRect(controller.ProfileText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(620f, 40f), new Vector2(0f, -82f));
+            controller.TitleText = CreateText(window.transform, "Title", Localization.Tr("ui.graphics"), 30, TextAnchor.MiddleCenter);
+            controller.TitleText.fontStyle = FontStyle.Bold;
+            SetRect(controller.TitleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(650f, 44f), new Vector2(0f, -28f));
+
+            var qualityButton = CreateRoundButton(window.transform, "Quality Profile", Localization.Tr("ui.quality"), new Vector2(0.5f, 0.5f), new Vector2(-130f, 20f), new Vector2(210f, 54f), new Color(0.64f, 0.42f, 0.16f), 18);
+            qualityButton.onClick.AddListener(controller.UseQuality);
+            var performanceButton = CreateRoundButton(window.transform, "Performance Profile", Localization.Tr("ui.performance"), new Vector2(0.5f, 0.5f), new Vector2(130f, 20f), new Vector2(210f, 54f), new Color(0.16f, 0.46f, 0.5f), 18);
+            performanceButton.onClick.AddListener(controller.UsePerformance);
+            var closeButton = CreateRoundButton(window.transform, "Close Graphics", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 42f), new Vector2(170f, 44f), new Color(0.22f, 0.28f, 0.34f), 17);
+            closeButton.onClick.AddListener(controller.Toggle);
+            window.SetActive(false);
+            return controller;
+        }
+
         private static void CreateSkillUpgradeButton(Transform parent, PlayerSkills skills, int slot, Vector2 position, Color color)
         {
             var button = CreateRoundButton(parent, $"Upgrade Skill {slot + 1}", "+", new Vector2(1f, 0f), position + new Vector2(44f, 24f), new Vector2(38f, 30f), color, 20);
@@ -833,6 +923,7 @@ namespace MmorpgPrototype
             window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(700f, 390f);
 
             var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
             background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
             background.raycastTarget = true;
 
@@ -877,6 +968,7 @@ namespace MmorpgPrototype
             window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(560f, 320f);
 
             var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
             background.color = new Color(0.04f, 0.055f, 0.07f, 0.94f);
             background.raycastTarget = true;
 
@@ -922,6 +1014,7 @@ namespace MmorpgPrototype
             window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(860f, 560f);
 
             var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
             background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
             background.raycastTarget = true;
 
@@ -959,6 +1052,7 @@ namespace MmorpgPrototype
             window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(860f, 560f);
 
             var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
             background.color = new Color(0.035f, 0.055f, 0.07f, 0.96f);
             background.raycastTarget = true;
 
@@ -1025,27 +1119,90 @@ namespace MmorpgPrototype
             network.Persistence = player.GetComponent<PlayerPersistence>();
             player.GetComponent<PlayerProgression>().Network = network;
 
-            network.NetworkStatusText = CreateText(parent, "Network Status", Localization.Tr("net.status_offline"), 20, TextAnchor.MiddleRight);
-            SetRect(network.NetworkStatusText.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(520f, 28f), new Vector2(-24f, -96f));
+            var serverButton = CreateRoundButton(parent, "Server Status Button", Localization.Tr("net.server_name"), new Vector2(1f, 1f), new Vector2(-122f, -46f), new Vector2(290f, 42f), new Color(0.035f, 0.12f, 0.14f, 0.94f), 14);
+            var serverText = serverButton.GetComponentInChildren<Text>();
+            var serverIndicatorObject = serverButton.gameObject.AddComponent<ConnectionStatusIndicator>();
+            var serverDotObject = CreateUiObject("Server Status Dot", serverButton.transform);
+            var serverDot = serverDotObject.AddComponent<Image>();
+            serverDot.sprite = UiThemeConfig.Runtime.CircleSprite;
+            serverDot.preserveAspect = true;
+            serverDot.raycastTarget = false;
+            SetRect(serverDotObject.GetComponent<RectTransform>(), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(14f, 14f), new Vector2(16f, 0f));
+            serverIndicatorObject.Client = network;
+            serverIndicatorObject.Dot = serverDot;
+            serverIndicatorObject.Label = serverText;
+            serverIndicatorObject.ServerLabel = "S-01";
+            serverIndicatorObject.RefreshNow();
 
-            network.UrlInput = CreateInputField(parent, "Server Url Input", "ws://localhost:7777", Localization.Tr("net.url_placeholder"), new Vector2(1f, 1f), new Vector2(-244f, -138f), new Vector2(360f, 42f));
+            var serverWindow = CreateServerSettingsWindow(parent, network);
+            serverButton.onClick.AddListener(serverWindow.Toggle);
 
-            var connectButton = CreateRoundButton(parent, "Online Button", Localization.Tr("ui.online"), new Vector2(1f, 1f), new Vector2(-70f, -138f), new Vector2(118f, 42f), new Color(0.08f, 0.48f, 0.34f), 18);
-            connectButton.onClick.AddListener(network.Connect);
-
-            var chatBackground = CreateUiObject("Chat Background", parent);
+            var chatRoot = CreateUiObject("Compact Chat Panel", parent);
+            SetRect(chatRoot.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(700f, 190f), new Vector2(0f, 116f));
+            var chatBackground = CreateUiObject("Chat Background", chatRoot.transform);
             var chatImage = chatBackground.AddComponent<Image>();
-            chatImage.color = new Color(0.04f, 0.05f, 0.06f, 0.58f);
+            UiThemeConfig.Runtime.StylePanel(chatImage);
+            chatImage.color = new Color(0.025f, 0.05f, 0.06f, 0.86f);
             chatImage.raycastTarget = false;
-            SetRect(chatBackground.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(620f, 164f), new Vector2(0f, 88f));
+            SetRect(chatBackground.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(660f, 164f), new Vector2(0f, 0f));
 
-            network.ChatLogText = CreateText(parent, "Chat Log", Localization.Tr("ui.chat_title"), 18, TextAnchor.LowerLeft);
-            SetRect(network.ChatLogText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(590f, 94f), new Vector2(-5f, 126f));
+            network.ChatLogText = CreateText(chatRoot.transform, "Chat Log", Localization.Tr("ui.chat_title"), 17, TextAnchor.LowerLeft);
+            SetRect(network.ChatLogText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(620f, 88f), new Vector2(0f, 30f));
 
-            network.ChatInput = CreateInputField(parent, "Chat Input", string.Empty, Localization.Tr("net.chat_placeholder"), new Vector2(0.5f, 0f), new Vector2(-66f, 52f), new Vector2(460f, 42f));
+            network.ChatInput = CreateInputField(chatRoot.transform, "Chat Input", string.Empty, Localization.Tr("net.chat_placeholder"), new Vector2(0.5f, 0.5f), new Vector2(-54f, -52f), new Vector2(460f, 38f));
 
-            var sendButton = CreateRoundButton(parent, "Send Chat Button", Localization.Tr("ui.send"), new Vector2(0.5f, 0f), new Vector2(232f, 52f), new Vector2(112f, 42f), new Color(0.18f, 0.32f, 0.62f), 18);
+            var sendButton = CreateRoundButton(chatRoot.transform, "Send Chat Button", Localization.Tr("ui.send"), new Vector2(0.5f, 0.5f), new Vector2(252f, -52f), new Vector2(106f, 38f), new Color(0.18f, 0.32f, 0.62f), 16);
             sendButton.onClick.AddListener(network.SendChatFromInput);
+
+            var chatToggle = CreateRoundButton(parent, "Chat Toggle Button", Localization.Tr("ui.chat_collapse"), new Vector2(0.5f, 0f), new Vector2(0f, 24f), new Vector2(118f, 34f), new Color(0.12f, 0.34f, 0.38f), 14);
+            var chatOpen = true;
+            chatToggle.onClick.AddListener(() =>
+            {
+                chatOpen = !chatOpen;
+                chatRoot.SetActive(chatOpen);
+                var toggleLabel = chatToggle.GetComponentInChildren<Text>();
+                if (toggleLabel != null)
+                {
+                    toggleLabel.text = Localization.Tr(chatOpen ? "ui.chat_collapse" : "ui.chat_expand");
+                }
+            });
+        }
+
+        private static ServerSettingsWindowController CreateServerSettingsWindow(Transform parent, MmorpgNetworkClient network)
+        {
+            var window = CreateUiObject("Server Settings Window", parent);
+            SetRect(window.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 430f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(760f, 430f);
+            var background = window.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(background, true);
+            background.color = new Color(0.018f, 0.028f, 0.04f, 0.98f);
+            background.raycastTarget = true;
+
+            var controller = window.AddComponent<ServerSettingsWindowController>();
+            controller.Panel = window;
+            controller.Client = network;
+            controller.TitleText = CreateText(window.transform, "Title", Localization.Tr("net.server_settings"), 28, TextAnchor.MiddleCenter);
+            controller.TitleText.fontStyle = FontStyle.Bold;
+            SetRect(controller.TitleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(700f, 44f), new Vector2(0f, -30f));
+
+            var serverName = CreateText(window.transform, "Server Name", Localization.Tr("net.server_name"), 18, TextAnchor.MiddleCenter);
+            serverName.color = UiThemeConfig.Runtime.AccentGold;
+            SetRect(serverName.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(680f, 30f), new Vector2(0f, -70f));
+
+            controller.UrlInput = CreateInputField(window.transform, "Server Url Input", network.ServerUrl, Localization.Tr("net.url_placeholder"), new Vector2(0.5f, 0.5f), new Vector2(0f, 66f), new Vector2(560f, 48f));
+            controller.StatusText = CreateText(window.transform, "Network Status", network.CurrentStatus, 17, TextAnchor.MiddleCenter);
+            SetRect(controller.StatusText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(680f, 46f), new Vector2(0f, 12f));
+
+            var hint = CreateText(window.transform, "Hint", Localization.Tr("net.connection_hint"), 14, TextAnchor.MiddleCenter);
+            hint.color = UiThemeConfig.Runtime.TextMuted;
+            SetRect(hint.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(680f, 30f), new Vector2(0f, -28f));
+
+            var connectButton = CreateRoundButton(window.transform, "Connect Server Button", Localization.Tr("ui.online"), new Vector2(0.5f, 0f), new Vector2(-120f, 48f), new Vector2(190f, 48f), new Color(0.08f, 0.48f, 0.34f), 17);
+            connectButton.onClick.AddListener(controller.Connect);
+            var closeButton = CreateRoundButton(window.transform, "Close Server Settings", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(120f, 48f), new Vector2(190f, 48f), new Color(0.22f, 0.28f, 0.34f), 17);
+            closeButton.onClick.AddListener(controller.Toggle);
+            window.SetActive(false);
+            return controller;
         }
 
         private static void CreateClassButtons(Transform parent, GameObject player)
@@ -1072,12 +1229,15 @@ namespace MmorpgPrototype
         {
             var background = CreateUiObject("Move Joystick", parent);
             var backgroundImage = background.AddComponent<Image>();
-            backgroundImage.color = new Color(0.08f, 0.1f, 0.12f, 0.52f);
+            UiThemeConfig.Runtime.StylePanel(backgroundImage);
+            backgroundImage.color = new Color(0.08f, 0.1f, 0.12f, 0.72f);
             backgroundImage.raycastTarget = true;
             SetRect(background.GetComponent<RectTransform>(), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(220f, 220f), new Vector2(170f, 170f));
 
             var knob = CreateUiObject("Joystick Knob", background.transform);
             var knobImage = knob.AddComponent<Image>();
+            knobImage.sprite = UiThemeConfig.Runtime.CircleSprite;
+            knobImage.preserveAspect = true;
             knobImage.color = new Color(0.74f, 0.82f, 0.92f, 0.86f);
             SetRect(knob.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(92f, 92f), Vector2.zero);
 
@@ -1104,7 +1264,8 @@ namespace MmorpgPrototype
         {
             var panel = CreateUiObject("Mini Map", parent);
             var panelImage = panel.AddComponent<Image>();
-            panelImage.color = new Color(0.025f, 0.055f, 0.07f, 0.84f);
+            UiThemeConfig.Runtime.StylePanel(panelImage, true);
+            panelImage.color = new Color(0.025f, 0.055f, 0.07f, 0.94f);
             panelImage.raycastTarget = false;
             SetRect(panel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(220f, 220f), new Vector2(-142f, -274f));
 
@@ -1114,7 +1275,8 @@ namespace MmorpgPrototype
 
             var map = CreateUiObject("Mini Map Area", panel.transform);
             var mapImage = map.AddComponent<Image>();
-            mapImage.color = new Color(0.06f, 0.12f, 0.14f, 0.9f);
+            UiThemeConfig.Runtime.StylePanel(mapImage);
+            mapImage.color = new Color(0.06f, 0.12f, 0.14f, 0.94f);
             mapImage.raycastTarget = false;
             SetRect(map.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(184f, 174f), new Vector2(0f, -18f));
 
@@ -1140,10 +1302,14 @@ namespace MmorpgPrototype
             SetRect(buttonObject.GetComponent<RectTransform>(), anchor, new Vector2(0.5f, 0.5f), size, position);
 
             var button = buttonObject.AddComponent<Button>();
-            var colors = button.colors;
-            colors.highlightedColor = color * 1.14f;
-            colors.pressedColor = color * 0.78f;
-            button.colors = colors;
+            button.targetGraphic = image;
+            UiThemeConfig.Runtime.StyleButton(button, image, color);
+            if (name.Contains("Skill") || name.Contains("Attack") || name.Contains("Ultimate"))
+            {
+                image.sprite = UiThemeConfig.Runtime.CircleSprite;
+                image.type = Image.Type.Simple;
+                image.preserveAspect = true;
+            }
 
             var text = CreateText(buttonObject.transform, "Label", label, fontSize, TextAnchor.MiddleCenter);
             SetRect(text.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), size, Vector2.zero);
@@ -1156,6 +1322,7 @@ namespace MmorpgPrototype
         {
             var inputObject = CreateUiObject(name, parent);
             var image = inputObject.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(image);
             image.color = new Color(0.03f, 0.04f, 0.05f, 0.78f);
             image.raycastTarget = true;
             SetRect(inputObject.GetComponent<RectTransform>(), anchor, new Vector2(0.5f, 0.5f), size, position);
@@ -1770,6 +1937,7 @@ namespace MmorpgPrototype
         {
             var frame = CreateUiObject(name, parent);
             var frameImage = frame.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(frameImage);
             frameImage.color = backgroundColor;
             SetRect(frame.GetComponent<RectTransform>(), anchor, pivot, size, position);
 
@@ -1790,8 +1958,8 @@ namespace MmorpgPrototype
         {
             var panel = CreateUiObject(name, parent);
             var image = panel.AddComponent<Image>();
+            UiThemeConfig.Runtime.StylePanel(image, color.a > 0.8f);
             image.color = color;
-            image.raycastTarget = false;
             SetRect(panel.GetComponent<RectTransform>(), anchor, pivot, size, position);
             return image;
         }
@@ -1808,13 +1976,13 @@ namespace MmorpgPrototype
             var textObject = CreateUiObject(name, parent);
             var text = textObject.AddComponent<Text>();
             text.text = value;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = UiThemeConfig.Runtime.Font;
             if (text.font == null)
             {
                 text.font = Font.CreateDynamicFontFromOSFont("Arial", fontSize);
             }
             text.fontSize = fontSize;
-            text.color = Color.white;
+            text.color = UiThemeConfig.Runtime.TextPrimary;
             text.alignment = alignment;
             text.raycastTarget = false;
             return text;

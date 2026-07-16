@@ -9,8 +9,11 @@ namespace MmorpgPrototype
     {
         public Image PlayerHealthFill;
         public Text PlayerHealthText;
+        public Image PlayerEnergyFill;
+        public Text PlayerEnergyText;
         public Image EnemyHealthFill;
         public Text EnemyHealthText;
+        public Text EnemyNameText;
         public Text StatusText;
         public Text ClassText;
         public Text ProgressionText;
@@ -59,6 +62,8 @@ namespace MmorpgPrototype
             questLog = playerQuestLog;
             equipment = playerEquipment;
             combat = playerCombat;
+            var energy = player.GetComponent<PlayerEnergySystem>();
+            UpdatePlayerEnergy(energy);
             UpdatePlayerHealth();
             UpdateEnemyHealth();
             RefreshClass();
@@ -88,6 +93,7 @@ namespace MmorpgPrototype
         private void Update()
         {
             UpdatePlayerHealth();
+            UpdatePlayerEnergy(playerHealth != null ? playerHealth.GetComponent<PlayerEnergySystem>() : null);
             UpdateEnemyHealth();
             RefreshSkillCooldowns(
                 skills != null ? skills.SkillOneRemaining : 0f,
@@ -279,6 +285,38 @@ namespace MmorpgPrototype
             if (EnemyHealthText != null)
             {
                 EnemyHealthText.text = hasEnemy ? Localization.Tr("hud.target_hp", watchedEnemy.CurrentHealth, watchedEnemy.MaxHealth) : Localization.Tr("hud.no_target");
+            }
+
+            if (EnemyNameText != null)
+            {
+                if (!hasEnemy)
+                {
+                    EnemyNameText.text = Localization.Tr("hud.no_target");
+                }
+                else
+                {
+                    var reward = watchedEnemy.GetComponent<EnemyReward>();
+                    var tier = reward != null ? reward.Tier.ToString().ToUpperInvariant() : "NORMAL";
+                    EnemyNameText.text = $"{tier}  {watchedEnemy.gameObject.name}";
+                }
+            }
+        }
+
+        private void UpdatePlayerEnergy(PlayerEnergySystem energy)
+        {
+            if (energy == null)
+            {
+                return;
+            }
+
+            if (PlayerEnergyFill != null)
+            {
+                PlayerEnergyFill.fillAmount = energy.Normalized;
+            }
+
+            if (PlayerEnergyText != null)
+            {
+                PlayerEnergyText.text = $"{Mathf.RoundToInt(energy.CurrentEnergy)}/{Mathf.RoundToInt(energy.MaxEnergy)}";
             }
         }
     }

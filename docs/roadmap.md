@@ -832,6 +832,31 @@ Criterio de exito: siete dias tienen una actividad legible, el jefe ofrece una
 ventana diaria consistente entre cliente y servidor, y los modos competitivos
 no pueden conceder recompensas por manipulacion local.
 
+## Fase 5.65: Interfaz Cinematografica Para Android
+
+Objetivo: convertir la interfaz funcional en una experiencia legible, compacta
+y coherente para una prueba real en telefonos Android.
+
+- `UiThemeConfig` centraliza paneles oscuros, marcos, bordes, acentos por clase,
+  tipografia, barras y estados de botones con recursos procedurales originales.
+  [Implementado]
+- `PrototypeHud` usa vitals compactos, vida/energia, objetivo contextual,
+  minimapa enmarcado, feed de actividad, chat colapsable y botones circulares
+  para ataque, habilidades y final. [Implementado]
+- El estado de red visible se limita a un indicador `S-01`; URL, conexion y
+  diagnostico completo se consultan desde la ventana de servidor. [Implementado]
+- Se agregan ventanas visuales de habilidades y configuracion grafica con los
+  perfiles `Quality` y `Performance`; Android inicia en `Performance`. [Implementado]
+- La orientacion queda fija en horizontal, con safe area, referencia 1600x900 y
+  compatibilidad con joystick, camara y acciones multitactiles existentes.
+  [Implementado]
+- Falta validar en telefonos 16:9 y alargados, medir FPS/memoria/carga y hacer
+  una pasada adicional de arte 3D final y servidor autoritativo. [Pendiente]
+
+Criterio de exito: el centro del combate queda libre, las ventanas no bloquean
+la interaccion tactil y la APK mantiene una lectura clara sin mostrar errores
+tecnicos durante una sesion offline o conectada.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

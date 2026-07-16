@@ -19,8 +19,8 @@ ANTES DE TOCAR NADA lee, en este orden:
 5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
 6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.64 entregadas en primera pasada; refinamientos 5.44,
-5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63 y 5.64 completados en esta pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.65 entregadas en primera pasada; refinamientos 5.44,
+5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64 y 5.65 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -144,7 +144,7 @@ Estado actual (fases 1-5.64 entregadas en primera pasada; refinamientos 5.44,
 - Equipo y mundo: cada banda tiene doce piezas de equipo visibles por ranura,
   con rareza/tier, emblemas 3D por clase y landmark propio para cada una de las
   diez zonas.
-- Fase 5.61/5.62/5.63/5.64: `docs/content-completeness.md` pasa 17/17 checks y confirma
+- Fase 5.61/5.62/5.63/5.64/5.65: `docs/content-completeness.md` pasa 17/17 checks y confirma
   contenido funcional 1-105 completo: 10 zonas, 35 misiones, 162 items, 30
   tablas de loot, 120 piezas de set, 10 reliquias, contratos repetibles,
   Renacimiento, eventos semanales, temporada, calendario diario, jefe mundial
@@ -154,6 +154,14 @@ Estado actual (fases 1-5.64 entregadas en primera pasada; refinamientos 5.44,
   instancia, configurar dominio/Nginx/WSS, firewall, backups y probar dos APK.
 - Interfaz mobile: el HUD principal es mas compacto, inventario y equipo se
   consultan desde `MENU`, y las acciones secundarias se agrupan bajo `MAS`.
+- Fase 5.65: `UiThemeConfig` aplica paneles con marco, sombras, tipografia y
+  estados de boton; `PrototypeHud` separa vida/energia/objetivo/feed, usa
+  habilidades circulares y permite colapsar el chat. `ConnectionStatusIndicator`
+  muestra solo `S-01` y un punto de estado; URL y errores completos pasan a
+  `ServerSettingsWindowController`.
+- Fase 5.65: `UiPerformanceSettings` expone `Quality` y `Performance`, guarda
+  la preferencia de dispositivo y deja `Performance` como valor inicial en
+  Android. La orientacion y autorrotacion quedan fijas en horizontal.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
@@ -256,6 +264,9 @@ Proximos objetivos sugeridos:
   probar dos telefonos en LAN, regeneracion tras dano, minimapa, joystick +
   `ATK`, joystick + camara, giro vertical/horizontal, habilidades, Stats/Datos,
   `EXPLORAR` y safe zone en el telefono.
+- Fase 5.65: abrir `Servidor y conexion`, comprobar URL/diagnostico, alternar
+  `HABILIDADES` y mejorar una ranura, cambiar `GRAFICOS` entre perfiles y
+  verificar que el centro de combate queda despejado en 16:9 y 19.5:9.
 - Fase 5.48: abrir TEST y registrar FPS, memoria, carga, TTK, enemigos y POI
   activos en las diez zonas.
 - Fase 5.48: reinstalar la APK y medir TEST, TTK, memoria, minimapa y safe zone
