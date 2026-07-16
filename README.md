@@ -929,6 +929,17 @@ queda en `docs/character-art-direction.md`. Los meshes propios o comerciales de
 mayor fidelidad quedan como una mejora posterior, no como bloqueo de esta
 vertical slice.
 
+## Fase 5.67: Primer Arte Propio 3D
+
+`OriginalArtVisualFactory` genera una referencia 3D original directamente en
+Unity para el Guerrero masculino y el mob normal de Zona 1. Incluye mallas
+low-poly propias, materiales compartidos, espada, armadura, capa, reliquia,
+animacion procedural y ojos emisivos, sin copiar geometria de los packs CC0.
+
+La APK actual mantiene los FBX CC0 para el resto de clases, elites y jefes. La
+siguiente iteracion convertira esta referencia en assets con UVs, texturas atlas,
+rig y variantes femeninas antes de sustituir progresivamente el resto.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

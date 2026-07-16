@@ -126,6 +126,10 @@ simple y autocontenido.
   combinaciones visuales. `PlayerAvatarVisual` aplica firmas Vanguard, Veil,
   Spirit y Void, armas FBX reales por clase y una sola composicion cuando hay
   equipo. Zona 1 usa Tribal, Orc y Orc_Skull por tier.
+- Fase 5.67: `OriginalArtVisualFactory` genera mallas originales low-poly para
+  el Guerrero masculino y el mob normal de Zona 1 directamente con Unity,
+  sin geometria externa. El resto del elenco conserva FBX CC0 hasta completar
+  UVs, texturas, rigs y variantes propias.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

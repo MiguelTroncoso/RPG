@@ -21,10 +21,12 @@ namespace MmorpgPrototype
         private float healthBarWidth = 1.25f;
         private Vector3 visualBaseScale;
         private Coroutine deathRoutine;
+        private bool usingOriginalArt;
 
         public void Initialize(string enemyId, string displayName, EnemyTier tier, Color baseColor, float scale, Health enemyHealth)
         {
             health = enemyHealth;
+            usingOriginalArt = false;
             visualRoot = new GameObject("Enemy Visual");
             visualRoot.transform.SetParent(transform, false);
             visualRoot.transform.localScale = Vector3.one * Mathf.Max(0.7f, scale);
@@ -121,48 +123,58 @@ namespace MmorpgPrototype
 
         private bool TryBuildRealModel(string enemyId, EnemyTier tier, Color baseColor, Color accent)
         {
-            var modelResource = ModelResourceFor(enemyId, tier);
-            var prefab = Resources.Load<GameObject>(modelResource);
-            if (prefab == null)
+            var originalModelRequested = tier == EnemyTier.Normal && enemyId == "valley_creature";
+            var model = originalModelRequested
+                ? OriginalArtVisualFactory.BuildValleyMob(visualRoot.transform, baseColor, accent)
+                : null;
+            usingOriginalArt = model != null;
+            Animator modelAnimator = null;
+
+            if (model == null)
             {
-                return false;
-            }
-
-            var model = Instantiate(prefab, visualRoot.transform);
-            model.name = "Enemy 3D Model";
-            model.transform.localPosition = ModelOffsetFor(modelResource);
-            model.transform.localRotation = Quaternion.identity;
-            model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
-
-            ApplyModelArtTreatment(model, enemyId, baseColor, accent, tier);
-
-            foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
-            {
-                Destroy(modelCollider);
-            }
-
-            var modelAnimator = model.GetComponentInChildren<Animator>();
-            if (modelAnimator == null)
-            {
-                modelAnimator = model.AddComponent<Animator>();
-            }
-
-            if (modelAnimator.avatar == null)
-            {
-                foreach (var importedAvatar in Resources.LoadAll<Avatar>(modelResource))
+                var modelResource = ModelResourceFor(enemyId, tier);
+                var prefab = Resources.Load<GameObject>(modelResource);
+                if (prefab == null)
                 {
-                    if (importedAvatar != null)
+                    return false;
+                }
+
+                model = Instantiate(prefab, visualRoot.transform);
+                model.name = "Enemy 3D Model";
+                model.transform.localPosition = ModelOffsetFor(modelResource);
+                model.transform.localRotation = Quaternion.identity;
+                model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
+
+                ApplyModelArtTreatment(model, enemyId, baseColor, accent, tier);
+
+                foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
+                {
+                    Destroy(modelCollider);
+                }
+
+                modelAnimator = model.GetComponentInChildren<Animator>();
+                if (modelAnimator == null)
+                {
+                    modelAnimator = model.AddComponent<Animator>();
+                }
+
+                if (modelAnimator.avatar == null)
+                {
+                    foreach (var importedAvatar in Resources.LoadAll<Avatar>(modelResource))
                     {
-                        modelAnimator.avatar = importedAvatar;
-                        break;
+                        if (importedAvatar != null)
+                        {
+                            modelAnimator.avatar = importedAvatar;
+                            break;
+                        }
                     }
                 }
-            }
 
-            var controller = Resources.Load<RuntimeAnimatorController>(AnimatorResourceFor(enemyId, tier));
-            if (controller != null)
-            {
-                modelAnimator.runtimeAnimatorController = controller;
+                var controller = Resources.Load<RuntimeAnimatorController>(AnimatorResourceFor(enemyId, tier));
+                if (controller != null)
+                {
+                    modelAnimator.runtimeAnimatorController = controller;
+                }
             }
 
             var motion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
@@ -457,7 +469,10 @@ namespace MmorpgPrototype
                 CreatePart("Relic Collar", PrimitiveType.Cylinder, new Vector3(0f, 0.58f, 0f), new Vector3(0.34f, 0.08f, 0.34f), new Color(0.76f, 0.5f, 0.18f));
                 if (tier == EnemyTier.Normal)
                 {
-                    CreatePart("Relic Scar", PrimitiveType.Cube, new Vector3(0f, 0.34f, -0.46f), new Vector3(0.24f, 0.06f, 0.05f), new Color(1f, 0.3f, 0.12f), Quaternion.Euler(0f, 0f, -24f));
+                    if (!usingOriginalArt)
+                    {
+                        CreatePart("Relic Scar", PrimitiveType.Cube, new Vector3(0f, 0.34f, -0.46f), new Vector3(0.24f, 0.06f, 0.05f), new Color(1f, 0.3f, 0.12f), Quaternion.Euler(0f, 0f, -24f));
+                    }
                     CreatePart("Relic Shard", PrimitiveType.Cylinder, new Vector3(0.26f, 0.64f, 0.08f), new Vector3(0.06f, 0.24f, 0.06f), accent, Quaternion.Euler(0f, 0f, -22f));
                 }
                 else if (tier == EnemyTier.Elite)

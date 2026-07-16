@@ -169,6 +169,10 @@ Estado actual (fases 1-5.65 entregadas en primera pasada; refinamientos 5.44,
   sobre los FBX actuales. Zona 1 usa Tribal, Orc y Orc_Skull por tier con
   tratamiento de reliquia. Falta como mejora posterior el arte propio o
   comercial de mayor fidelidad.
+- Fase 5.67: `OriginalArtVisualFactory` genera el primer arte propio low-poly
+  en runtime para Guerrero masculino y el mob normal de Zona 1. Son mallas
+  originales sin packs externos, con materiales compartidos y animacion
+  procedural. Faltan UVs, texturas atlas, rigs FBX y las otras siete variantes.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

@@ -15,6 +15,7 @@ namespace MmorpgPrototype
         private PlayerEquipment currentEquipment;
         private bool hasVisual;
         private bool usingImportedModel;
+        private bool usingOriginalArt;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
@@ -50,6 +51,7 @@ namespace MmorpgPrototype
             currentArtProfile = CharacterArtProfiles.Get(definition.Type, gender);
             hasVisual = true;
             usingImportedModel = false;
+            usingOriginalArt = false;
 
             if (visualRoot != null)
             {
@@ -110,6 +112,17 @@ namespace MmorpgPrototype
 
         private bool TryBuildCharacterModel(ClassDefinition definition, CharacterGender gender)
         {
+            if (definition.Type == CharacterClassType.Guerrero && gender == CharacterGender.Masculino)
+            {
+                var originalModel = OriginalArtVisualFactory.BuildWarriorMale(visualRoot.transform, currentArtProfile);
+                if (originalModel != null)
+                {
+                    usingOriginalArt = true;
+                    BindMotionAnimator();
+                    return true;
+                }
+            }
+
             var modelResource = definition.ModelResourceFor(gender);
             if (string.IsNullOrEmpty(modelResource))
             {
@@ -222,43 +235,46 @@ namespace MmorpgPrototype
             var armorColor = profile.ArmorColor;
             var trimColor = profile.TrimColor;
             var accentColor = profile.AccentColor;
-            CreatePart(armorRoot.transform, "Armor Chest", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.39f), new Vector3(0.56f, 0.24f, 0.1f), armorColor);
-            CreatePart(armorRoot.transform, "Armor Belt", PrimitiveType.Cube, new Vector3(0f, -0.17f, -0.36f), new Vector3(0.6f, 0.1f, 0.08f), trimColor);
-
-            if (profile.UseSkirt)
+            if (!usingOriginalArt)
             {
-                CreatePart(armorRoot.transform, "Armor Skirt", PrimitiveType.Cube, new Vector3(0f, -0.38f, 0f), new Vector3(0.58f, 0.22f, 0.42f), armorColor);
-            }
+                CreatePart(armorRoot.transform, "Armor Chest", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.39f), new Vector3(0.56f, 0.24f, 0.1f), armorColor);
+                CreatePart(armorRoot.transform, "Armor Belt", PrimitiveType.Cube, new Vector3(0f, -0.17f, -0.36f), new Vector3(0.6f, 0.1f, 0.08f), trimColor);
 
-            var shoulderWidth = profile.Style == ArmorVisualStyle.Assassin ? 0.42f : 0.5f;
-            var shoulderDepth = profile.Style == ArmorVisualStyle.Void ? 0.38f : 0.32f;
-            var shoulderSize = new Vector3(0.3f, 0.16f, shoulderDepth) * profile.ShoulderScale;
-            var shoulderPrimitive = profile.Style == ArmorVisualStyle.Assassin || profile.Style == ArmorVisualStyle.Spirit
-                ? PrimitiveType.Sphere
-                : PrimitiveType.Cube;
-            CreatePart(armorRoot.transform, "Armor Shoulder Left", shoulderPrimitive, new Vector3(-shoulderWidth, 0.5f, 0f), shoulderSize, accentColor);
-            CreatePart(armorRoot.transform, "Armor Shoulder Right", shoulderPrimitive, new Vector3(shoulderWidth, 0.5f, 0f), shoulderSize, accentColor);
+                if (profile.UseSkirt)
+                {
+                    CreatePart(armorRoot.transform, "Armor Skirt", PrimitiveType.Cube, new Vector3(0f, -0.38f, 0f), new Vector3(0.58f, 0.22f, 0.42f), armorColor);
+                }
 
-            switch (profile.Style)
-            {
-                case ArmorVisualStyle.Assassin:
-                    CreatePart(armorRoot.transform, "Armor Sash", PrimitiveType.Cube, new Vector3(0f, -0.04f, -0.45f), new Vector3(0.64f, 0.08f, 0.06f), new Color(0.08f, 0.08f, 0.12f));
-                    CreatePart(armorRoot.transform, "Armor Shoulder Strap", PrimitiveType.Cube, new Vector3(0f, 0.34f, -0.42f), new Vector3(0.08f, 0.42f, 0.06f), trimColor, Quaternion.Euler(0f, 0f, -22f));
-                    break;
-                case ArmorVisualStyle.Spirit:
-                    CreatePart(armorRoot.transform, "Armor Spirit Charm", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.46f), new Vector3(0.12f, 0.12f, 0.12f), trimColor);
-                    CreatePart(armorRoot.transform, "Armor Spirit Collar", PrimitiveType.Cube, new Vector3(0f, 0.58f, -0.22f), new Vector3(0.34f, 0.07f, 0.06f), accentColor);
-                    break;
-                case ArmorVisualStyle.Void:
-                    CreatePart(armorRoot.transform, "Armor Void Plate", PrimitiveType.Cube, new Vector3(0f, 0.45f, -0.42f), new Vector3(0.18f, 0.28f, 0.08f) * profile.ShoulderScale, trimColor);
-                    CreatePart(armorRoot.transform, "Armor Void Spine", PrimitiveType.Cube, new Vector3(0f, 0.12f, 0.38f), new Vector3(0.12f, 0.5f, 0.08f), new Color(0.08f, 0.04f, 0.14f));
-                    break;
-            }
+                var shoulderWidth = profile.Style == ArmorVisualStyle.Assassin ? 0.42f : 0.5f;
+                var shoulderDepth = profile.Style == ArmorVisualStyle.Void ? 0.38f : 0.32f;
+                var shoulderSize = new Vector3(0.3f, 0.16f, shoulderDepth) * profile.ShoulderScale;
+                var shoulderPrimitive = profile.Style == ArmorVisualStyle.Assassin || profile.Style == ArmorVisualStyle.Spirit
+                    ? PrimitiveType.Sphere
+                    : PrimitiveType.Cube;
+                CreatePart(armorRoot.transform, "Armor Shoulder Left", shoulderPrimitive, new Vector3(-shoulderWidth, 0.5f, 0f), shoulderSize, accentColor);
+                CreatePart(armorRoot.transform, "Armor Shoulder Right", shoulderPrimitive, new Vector3(shoulderWidth, 0.5f, 0f), shoulderSize, accentColor);
 
-            BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
-            if (usingImportedModel)
-            {
-                BuildClassSignature(armorRoot.transform, artProfile);
+                switch (profile.Style)
+                {
+                    case ArmorVisualStyle.Assassin:
+                        CreatePart(armorRoot.transform, "Armor Sash", PrimitiveType.Cube, new Vector3(0f, -0.04f, -0.45f), new Vector3(0.64f, 0.08f, 0.06f), new Color(0.08f, 0.08f, 0.12f));
+                        CreatePart(armorRoot.transform, "Armor Shoulder Strap", PrimitiveType.Cube, new Vector3(0f, 0.34f, -0.42f), new Vector3(0.08f, 0.42f, 0.06f), trimColor, Quaternion.Euler(0f, 0f, -22f));
+                        break;
+                    case ArmorVisualStyle.Spirit:
+                        CreatePart(armorRoot.transform, "Armor Spirit Charm", PrimitiveType.Sphere, new Vector3(0f, 0.42f, -0.46f), new Vector3(0.12f, 0.12f, 0.12f), trimColor);
+                        CreatePart(armorRoot.transform, "Armor Spirit Collar", PrimitiveType.Cube, new Vector3(0f, 0.58f, -0.22f), new Vector3(0.34f, 0.07f, 0.06f), accentColor);
+                        break;
+                    case ArmorVisualStyle.Void:
+                        CreatePart(armorRoot.transform, "Armor Void Plate", PrimitiveType.Cube, new Vector3(0f, 0.45f, -0.42f), new Vector3(0.18f, 0.28f, 0.08f) * profile.ShoulderScale, trimColor);
+                        CreatePart(armorRoot.transform, "Armor Void Spine", PrimitiveType.Cube, new Vector3(0f, 0.12f, 0.38f), new Vector3(0.12f, 0.5f, 0.08f), new Color(0.08f, 0.04f, 0.14f));
+                        break;
+                }
+
+                BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
+                if (usingImportedModel)
+                {
+                    BuildClassSignature(armorRoot.transform, artProfile);
+                }
             }
             BuildEquippedVisuals(trimColor);
         }

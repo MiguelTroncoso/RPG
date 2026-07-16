@@ -883,6 +883,24 @@ Criterio de exito: las ocho variantes se reconocen sin leer el HUD, mantienen
 las ranuras de equipamiento y funcionan en la prueba Android sin duplicar reglas
 de combate o persistencia; la Zona 1 presenta una familia de mobs 3D coherente.
 
+## Fase 5.67: Primer Arte Propio 3D
+
+Objetivo: validar una direccion artistica propia sin depender de geometria de
+packs externos para la referencia principal.
+
+- `OriginalArtVisualFactory` genera una malla low-poly propia para Guerrero
+  masculino con casco, armadura, capa, espada, gemas y extremidades animables.
+  [Implementado]
+- La criatura normal de Zona 1 usa una malla propia de bestia de reliquia con
+  cabeza, patas, cola, cicatriz, espina y ojos emisivos. [Implementado]
+- Las mallas no agregan colisionadores y comparten materiales para Android.
+  [Implementado]
+- UVs, texturas atlas, rigs FBX y las otras siete variantes propias quedan como
+  el siguiente bloque de arte. [Pendiente]
+
+Criterio de exito: el Guerrero y el mob propios se instancian, se ven en 3D,
+responden al movimiento/combate y no cambian las reglas de gameplay.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

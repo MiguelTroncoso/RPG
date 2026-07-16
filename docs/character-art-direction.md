@@ -54,6 +54,22 @@ Esta entrega cierra la primera vertical slice artistica 3D con assets CC0. El
 siguiente reemplazo de mayor calidad sera arte propio o comercial de los ocho
 personajes y de la familia de mobs, sin cambiar los contratos de gameplay.
 
+## Fase 5.67: Primer Arte Propio 3D
+
+`OriginalArtVisualFactory` genera mallas low-poly originales directamente con
+la API de Unity, sin reutilizar geometria externa:
+
+- Guerrero masculino: torso blindado, casco con cresta, hombreras, capa, botas,
+  espada, gema de pecho y extremidades que responden al movimiento procedural.
+- Mob normal de Zona 1: bestia de reliquia con cuerpo, cabeza, hocico, orejas,
+  cuatro patas, cola, cicatriz, espina y ojos emisivos.
+
+La geometria queda limitada a pocos vertices, materiales compartidos y cero
+colisionadores visuales para mantener el perfil `Performance` de Android. Esta
+es una referencia artistica propia lista para iterar; no se declara aun como
+arte final comercial porque faltan texturas atlas, UVs, rig FBX y las otras
+variantes de clase.
+
 ## Acceptance
 
 Antes de avanzar a los mobs de las siguientes zonas, las ocho variantes deben verse distintas
