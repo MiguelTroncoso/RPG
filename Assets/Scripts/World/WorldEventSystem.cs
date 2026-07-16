@@ -8,6 +8,7 @@ namespace MmorpgPrototype
         public PlayerProgression Progression;
         public InventorySystem Inventory;
         public PlayerQuestLog QuestLog;
+        public EventCalendarSystem Calendar;
         public PrototypeHud Hud;
         public CombatTelemetry Telemetry;
         public float RespawnDelay = 55f;
@@ -15,18 +16,42 @@ namespace MmorpgPrototype
         private readonly Vector3 spawnPosition = new Vector3(0f, 1f, -16f);
         private GameObject activeMonolith;
         private float nextSpawnTime;
+        private float nextScheduleNoticeTime;
 
         private void Start()
         {
-            SpawnMonolith();
+            nextSpawnTime = 0f;
         }
 
         private void Update()
         {
             if (activeMonolith == null && Time.time >= nextSpawnTime)
             {
-                SpawnMonolith();
+                TrySpawnMonolith();
             }
+        }
+
+        private void TrySpawnMonolith()
+        {
+            if (Calendar != null && Calendar.WorldBossDefeated)
+            {
+                nextSpawnTime = Time.time + 15f;
+                return;
+            }
+
+            if (Calendar != null && !Calendar.IsWorldBossWindow())
+            {
+                if (Time.time >= nextScheduleNoticeTime)
+                {
+                    Hud?.SetStatus(Localization.Tr("event.calendar_boss_waiting", Calendar.WorldBossHourUtc, Calendar.WorldBossMinuteUtc), 4f);
+                    nextScheduleNoticeTime = Time.time + 20f;
+                }
+
+                nextSpawnTime = Time.time + 5f;
+                return;
+            }
+
+            SpawnMonolith();
         }
 
         private void SpawnMonolith()

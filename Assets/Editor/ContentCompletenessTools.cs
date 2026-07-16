@@ -39,6 +39,7 @@ namespace MmorpgPrototype.Editor
                 AuditClasses(checks);
                 AuditVisualResources(checks);
                 AuditDailyEvent(checks);
+                AuditEventCalendar(checks);
                 AuditLongevity(checks);
 
                 temporaryCurve = ScriptableObject.CreateInstance<ExpCurveConfig>();
@@ -303,6 +304,20 @@ namespace MmorpgPrototype.Editor
                 $"Evento {DailyEventSystem.EventId}, objetivo {DailyEventSystem.TargetDefeats} derrotas"));
         }
 
+        private static void AuditEventCalendar(List<CheckResult> checks)
+        {
+            var save = new PlayerSaveData();
+            checks.Add(new CheckResult(
+                "Calendario diario y jefe mundial",
+                EventCalendarSystem.WorldBossWindowMinutes == 60
+                    && !string.IsNullOrWhiteSpace(EventCalendarSystem.DailyWorldBossId),
+                "7 actividades rotativas y jefe mundial diario con horario UTC variable"));
+            checks.Add(new CheckResult(
+                "Eventos de clan y todos contra todos",
+                save.GuildEvent != null && save.FreeForAllEvent != null,
+                "Contribucion de clan y contrato PvP listos para autoridad de servidor"));
+        }
+
         private static void AuditLongevity(List<CheckResult> checks)
         {
             var save = new PlayerSaveData();
@@ -312,8 +327,8 @@ namespace MmorpgPrototype.Editor
                 "3 contratos diarios rotativos por banda: normal, elite y material de mejora"));
             checks.Add(new CheckResult(
                 "Renacimiento y Renombre",
-                save.SchemaVersion == 15 && save.Contracts != null,
-                "Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 15"));
+                save.SchemaVersion == 16 && save.Contracts != null,
+                "Renacer al nivel 105 conserva progresion permanente y actualiza el guardado al esquema 16"));
             checks.Add(new CheckResult(
                 "Evento semanal",
                 WeeklyEventSystem.TargetDefeats == 30 && WeeklyEventSystem.TargetEliteDefeats == 3,

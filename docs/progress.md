@@ -6,13 +6,13 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-15
 
-- Avance global estimado hacia el MMORPG publicable: **83%**.
+- Avance global estimado hacia el MMORPG publicable: **84%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
-- Online persistente y preparado para produccion: **45%**.
+- Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
-- Eventos y temporadas offline: **70%**.
+- Eventos y temporadas offline: **82%**.
 - Arte final comercial, online y lanzamiento: **50%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
@@ -114,9 +114,13 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fase 5.63: temporada de 28 dias con 30 niveles, XP por combate/misiones/
   contratos/evento semanal, hitos de recompensa y Atuendo del eclipse al nivel
   final; el progreso se guarda en el esquema 15.
-- El reporte `docs/content-completeness.md` confirma 15/15 checks: 10 zonas,
+- Fase 5.64: calendario UTC con siete actividades rotativas y jefe mundial
+  diario con horario variable y ventana de recompensa de 60 minutos.
+- Fase 5.64: contribucion semanal de clan y contrato de resultados para todos
+  contra todos, preparados para autoridad de servidor sin falsear PvP local.
+- El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
-  personaje masculino/femenino disponibles. La auditoria actual pasa 15/15.
+  personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
 - APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
 - Cambios sincronizados en GitHub, rama `main`.
 
@@ -145,12 +149,15 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 12. Probar contratos diarios y Renacimiento con varios personajes antes de
     mover sus recompensas a autoridad del servidor.
 13. Probar cambio de lunes UTC, cambio de temporada, hitos 5/10/15/20/25/30
-    y persistencia de recompensas en Android.
+    calendario diario y persistencia de recompensas en Android.
+14. Validar en S-01 horarios del jefe, membresias de clan, ranking y resultados
+    del modo todos contra todos antes de habilitar recompensas online.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-15 | 5.64 | Calendario diario, jefe mundial, clan y todos contra todos preparados | 84% |
 | 2026-07-15 | 5.63 | Evento semanal, temporada de 28 dias y recompensas por hitos | 83% |
 | 2026-07-15 | 5.62 | Contratos diarios rotativos, Renacimiento y Renombre persistente | 82% |
 | 2026-07-15 | 5.61 | Auditoria funcional 1-105, mision normal de Bosque y reporte 11/11 | 80% |

@@ -19,8 +19,8 @@ ANTES DE TOCAR NADA lee, en este orden:
 5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
 6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.63 entregadas en primera pasada; refinamientos 5.44,
-5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62 y 5.63 completados en esta pasada; hoja de ruta A-K completa):
+Estado actual (fases 1-5.64 entregadas en primera pasada; refinamientos 5.44,
+5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63 y 5.64 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
 - 4 clases (Guerrero/Ninja/Chaman/Umbra) con stats de combate propios
@@ -124,9 +124,12 @@ Estado actual (fases 1-5.63 entregadas en primera pasada; refinamientos 5.44,
   cada lunes UTC (30 derrotas y 3 elites), y `SeasonProgressionSystem` ofrece
   una temporada de 28 dias y 30 niveles con hitos 5/10/15/20/25/30. La XP
   proviene de combate, misiones, contratos y el evento semanal; el nivel 30
-  desbloquea `void_outfit`. El progreso se guarda en esquema 15 y se muestra
-  en el menu de Misiones. Fecha, recompensas y cambio de temporada deben pasar
-  a autoridad del servidor antes de publicar.
+  desbloquea `void_outfit`. `EventCalendarSystem` agrega siete actividades
+  diarias y un jefe mundial con horario UTC variable y ventana de 60 minutos.
+  `GuildEventSystem` y `FreeForAllEventSystem` dejan contribucion y resultados
+  preparados para servidor, sin falsear PvP local. El progreso se guarda en
+  esquema 16 y se muestra en el menu de Misiones. Fecha, recompensas y cambio
+  de temporada deben pasar a autoridad del servidor antes de publicar.
 - Visual 3D: `VisualMaterialUtility` centraliza materiales compartidos con
   smoothness/metal/emision; `PrototypeBootstrap` configura luz calida, niebla
   lineal y camara sin HDR; `ZoneEnvironmentBuilder` agrega acentos de suelo
@@ -141,11 +144,11 @@ Estado actual (fases 1-5.63 entregadas en primera pasada; refinamientos 5.44,
 - Equipo y mundo: cada banda tiene doce piezas de equipo visibles por ranura,
   con rareza/tier, emblemas 3D por clase y landmark propio para cada una de las
   diez zonas.
-- Fase 5.61/5.62/5.63: `docs/content-completeness.md` pasa 15/15 checks y confirma
+- Fase 5.61/5.62/5.63/5.64: `docs/content-completeness.md` pasa 17/17 checks y confirma
   contenido funcional 1-105 completo: 10 zonas, 35 misiones, 162 items, 30
   tablas de loot, 120 piezas de set, 10 reliquias, contratos repetibles,
-  Renacimiento, eventos semanales, temporada y recursos 3D base. El guardado
-  local actual es esquema 15.
+  Renacimiento, eventos semanales, temporada, calendario diario, jefe mundial
+  y contratos base de clan/PvP. El guardado local actual es esquema 16.
 - Hetzner preflight: `Server/src/server.js` expone `/health`, limita payload,
   hace heartbeat y persiste al recibir senales de apagado. Falta crear la
   instancia, configurar dominio/Nginx/WSS, firewall, backups y probar dos APK.

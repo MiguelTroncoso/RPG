@@ -145,10 +145,15 @@ simple y autocontenido.
   las diez zonas.
 - Fase 5.60: el servidor tiene `/health`, payload maximo, heartbeat y apagado
   limpio; falta desplegar S-01 en Hetzner con dominio, Nginx/WSS y backups.
-- Fase 5.61/5.62/5.63: `docs/content-completeness.md` pasa 15/15 checks y confirma
+- Fase 5.61/5.62/5.63/5.64: `docs/content-completeness.md` pasa 17/17 checks y confirma
   cobertura funcional 1-105: 10 zonas, 35 misiones, 162 items, loot por tier,
   habilidades, contratos repetibles, Renacimiento, eventos diarios/semanales,
-  temporada y recursos 3D base.
+  temporada, calendario diario, jefe mundial y contratos base de clan/PvP,
+  ademas de recursos 3D base.
+- Fase 5.64: `EventCalendarSystem` rota actividades por dia UTC y calcula un
+  horario variable de jefe mundial con ventana de 60 minutos. `GuildEventSystem`
+  guarda contribucion semanal de clan y `FreeForAllEventSystem` conserva los
+  resultados que debe firmar el servidor. El guardado local pasa a esquema 16.
 - Telemetria de combate local y opcionalmente online: kills, muertes, dano y
   tiempo promedio para matar por zona.
 - Siguientes candidatos: reinstalar la APK corregida y registrar TEST; validar

@@ -812,6 +812,26 @@ Criterio de exito: una semana ofrece objetivos nuevos, una temporada ofrece
 progreso acumulativo y ninguna recompensa vuelve a entregarse al cerrar o
 reabrir la aplicacion.
 
+## Fase 5.64: Calendario Diario, Jefe Mundial Y Eventos Competitivos
+
+Objetivo: mantener actividad diaria variada y dejar definidos los eventos que
+requieren grupos reales sin falsear resultados en el cliente.
+
+- `EventCalendarSystem` rota siete actividades por dia UTC y persiste progreso
+  y recompensas sin cambiar el nivel maximo. [Implementado]
+- El jefe mundial tiene un horario UTC determinista distinto por dia y ventana
+  de 60 minutos; el cliente offline lo muestra y la recompensa queda lista para
+  validacion en S-01. [Implementado]
+- `GuildEventSystem` guarda clan, contribucion semanal y reset; pertenencia,
+  miembros y ranking deben llegar del servidor. [Implementado base]
+- `FreeForAllEventSystem` conserva contrato de partida, bajas, derrotas y
+  puntuacion recibidos desde servidor; no crea PvP falso offline. [Implementado base]
+- El menu de Misiones muestra calendario, jefe, clan y estado PvP. [Implementado]
+
+Criterio de exito: siete dias tienen una actividad legible, el jefe ofrece una
+ventana diaria consistente entre cliente y servidor, y los modos competitivos
+no pueden conceder recompensas por manipulacion local.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

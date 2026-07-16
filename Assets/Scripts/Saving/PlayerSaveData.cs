@@ -6,7 +6,7 @@ namespace MmorpgPrototype
     [Serializable]
     public sealed class PlayerSaveData
     {
-        public int SchemaVersion = 15;
+        public int SchemaVersion = 16;
         public string CharacterName;
         public string ClassName;
         public string GenderName;
@@ -29,6 +29,9 @@ namespace MmorpgPrototype
         public RepeatableContractSaveData Contracts = new RepeatableContractSaveData();
         public WeeklyEventSaveData WeeklyEvent = new WeeklyEventSaveData();
         public SeasonSaveData Season = new SeasonSaveData();
+        public EventCalendarSaveData EventCalendar = new EventCalendarSaveData();
+        public GuildEventSaveData GuildEvent = new GuildEventSaveData();
+        public FreeForAllEventSaveData FreeForAllEvent = new FreeForAllEventSaveData();
         public string ActivePetId = string.Empty;
         public string SelectedMountId = string.Empty;
         public string ActiveOutfitId = string.Empty;

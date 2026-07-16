@@ -902,6 +902,17 @@ Esta primera version es local para probar el ritmo. Antes de publicar, S-01
 debe convertirse en la autoridad de fechas, progreso, recompensas y cambios de
 temporada.
 
+## Fase 5.64: Calendario Diario Y Eventos Competitivos
+
+- El calendario UTC rota siete actividades: elites, forja, reliquias, tesoro,
+  guerra de clanes y todos contra todos, además de la Conquista semanal.
+- El jefe mundial aparece en el calendario todos los días a una hora UTC
+  variable y tiene una ventana de 60 minutos para su recompensa diaria.
+- El progreso de clan se guarda por semana y el modo todos contra todos acepta
+  resultados de una futura partida autoritativa.
+- La APK local muestra estos estados desde el menu `Mision`; antes de publicar,
+  S-01 debe validar horarios, membresias, rankings, recompensas y resultados PvP.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

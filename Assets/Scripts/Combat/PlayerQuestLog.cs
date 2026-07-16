@@ -16,6 +16,9 @@ namespace MmorpgPrototype
         public RepeatableContractSystem Contracts;
         public WeeklyEventSystem WeeklyEvent;
         public SeasonProgressionSystem Season;
+        public EventCalendarSystem EventCalendar;
+        public GuildEventSystem GuildEvent;
+        public FreeForAllEventSystem FreeForAllEvent;
 
         private readonly List<QuestDefinition> questLine = new List<QuestDefinition>();
         private readonly List<string> completedIds = new List<string>();
@@ -48,6 +51,7 @@ namespace MmorpgPrototype
         {
             WeeklyEvent?.RecordDefeat(tier, isWorldEvent);
             Season?.RecordDefeat(tier, isWorldEvent);
+            EventCalendar?.RecordDefeat(tier, isWorldEvent);
             if (isWorldEvent)
             {
                 Progress(QuestObjectiveType.DefeatWorldEvent, string.Empty, 1);
@@ -62,6 +66,7 @@ namespace MmorpgPrototype
 
         public void OnItemUpgraded()
         {
+            EventCalendar?.RecordUpgrade();
             Progress(QuestObjectiveType.UpgradeItem, string.Empty, 1);
         }
 
@@ -150,6 +155,27 @@ namespace MmorpgPrototype
                 builder.AppendLine();
                 builder.AppendLine();
                 builder.Append(Season.Summary());
+            }
+
+            if (EventCalendar != null)
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(EventCalendar.Summary());
+            }
+
+            if (GuildEvent != null)
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(GuildEvent.Summary());
+            }
+
+            if (FreeForAllEvent != null)
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(FreeForAllEvent.Summary());
             }
 
             return builder.ToString();

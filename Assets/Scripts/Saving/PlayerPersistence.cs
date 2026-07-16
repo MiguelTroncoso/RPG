@@ -31,6 +31,9 @@ namespace MmorpgPrototype
         public RepeatableContractSystem Contracts;
         public WeeklyEventSystem WeeklyEvent;
         public SeasonProgressionSystem Season;
+        public EventCalendarSystem EventCalendar;
+        public GuildEventSystem GuildEvent;
+        public FreeForAllEventSystem FreeForAllEvent;
 
         // Evita sobreescribir un guardado real con los valores por defecto
         // mientras el panel de creacion sigue abierto.
@@ -140,6 +143,9 @@ namespace MmorpgPrototype
             Contracts?.Restore(data.Contracts);
             WeeklyEvent?.Restore(data.WeeklyEvent);
             Season?.Restore(data.Season);
+            EventCalendar?.Restore(data.EventCalendar);
+            GuildEvent?.Restore(data.GuildEvent);
+            FreeForAllEvent?.Restore(data.FreeForAllEvent);
             Storage?.RestoreEntries(data.Storage);
 
             Cosmetics?.RestoreOwned(data.OwnedCosmeticIds);
@@ -267,6 +273,9 @@ namespace MmorpgPrototype
                 Contracts = Contracts != null ? Contracts.Export() : new RepeatableContractSaveData(),
                 WeeklyEvent = WeeklyEvent != null ? WeeklyEvent.Export() : new WeeklyEventSaveData(),
                 Season = Season != null ? Season.Export() : new SeasonSaveData(),
+                EventCalendar = EventCalendar != null ? EventCalendar.Export() : new EventCalendarSaveData(),
+                GuildEvent = GuildEvent != null ? GuildEvent.Export() : new GuildEventSaveData(),
+                FreeForAllEvent = FreeForAllEvent != null ? FreeForAllEvent.Export() : new FreeForAllEventSaveData(),
                 ActivePetId = Pets != null ? Pets.ActivePetId : string.Empty,
                 SelectedMountId = Mounts != null ? Mounts.SelectedMountId : string.Empty,
                 ActiveOutfitId = Cosmetics != null ? Cosmetics.ActiveOutfitId : string.Empty,

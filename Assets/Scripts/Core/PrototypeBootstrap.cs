@@ -237,6 +237,9 @@ namespace MmorpgPrototype
             player.AddComponent<RepeatableContractSystem>();
             player.AddComponent<WeeklyEventSystem>();
             player.AddComponent<SeasonProgressionSystem>();
+            player.AddComponent<EventCalendarSystem>();
+            player.AddComponent<GuildEventSystem>();
+            player.AddComponent<FreeForAllEventSystem>();
             player.AddComponent<EquipmentUpgradeSystem>();
             player.AddComponent<PlayerEquipment>();
             player.AddComponent<PetService>();
@@ -483,6 +486,7 @@ namespace MmorpgPrototype
             worldEvent.Progression = player.GetComponent<PlayerProgression>();
             worldEvent.Inventory = player.GetComponent<InventorySystem>();
             worldEvent.QuestLog = player.GetComponent<PlayerQuestLog>();
+            worldEvent.Calendar = player.GetComponent<EventCalendarSystem>();
             worldEvent.Hud = hud;
             worldEvent.Telemetry = player.GetComponent<CombatTelemetry>();
         }
@@ -679,6 +683,21 @@ namespace MmorpgPrototype
             season.Persistence = persistence;
             season.Hud = hud;
             season.Initialize();
+            var eventCalendar = player.GetComponent<EventCalendarSystem>();
+            eventCalendar.Progression = progression;
+            eventCalendar.Inventory = inventory;
+            eventCalendar.Persistence = persistence;
+            eventCalendar.Hud = hud;
+            var guildEvent = player.GetComponent<GuildEventSystem>();
+            guildEvent.Persistence = persistence;
+            guildEvent.Hud = hud;
+            var freeForAllEvent = player.GetComponent<FreeForAllEventSystem>();
+            freeForAllEvent.Persistence = persistence;
+            freeForAllEvent.Hud = hud;
+            eventCalendar.GuildEvents = guildEvent;
+            eventCalendar.Initialize();
+            guildEvent.Initialize();
+            freeForAllEvent.Initialize();
             weeklyEvent.Season = season;
             weeklyEvent.Initialize();
             contracts.Season = season;
@@ -686,9 +705,15 @@ namespace MmorpgPrototype
             questLog.Contracts = contracts;
             questLog.WeeklyEvent = weeklyEvent;
             questLog.Season = season;
+            questLog.EventCalendar = eventCalendar;
+            questLog.GuildEvent = guildEvent;
+            questLog.FreeForAllEvent = freeForAllEvent;
             persistence.Contracts = contracts;
             persistence.WeeklyEvent = weeklyEvent;
             persistence.Season = season;
+            persistence.EventCalendar = eventCalendar;
+            persistence.GuildEvent = guildEvent;
+            persistence.FreeForAllEvent = freeForAllEvent;
             hud.Bind(player.GetComponent<Health>(), player.GetComponent<PlayerClassController>(), player.GetComponent<PlayerCharacterIdentity>(), progression, skills, inventory, questLog, equipment, combat);
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
