@@ -121,6 +121,10 @@ simple y autocontenido.
 - Fase 5.65: `UiPerformanceSettings` mantiene `Quality`/`Performance` en
   PlayerPrefs, con `Performance` como valor inicial Android. La orientacion se
   fuerza a LandscapeRight y las autorrotaciones quedan desactivadas.
+- Fase 5.66 (partes 1 y 2): `docs/character-art-direction.md` fija fantasia
+  realista estilizada para Android y `CharacterArtProfiles` define ocho
+  combinaciones visuales. `PlayerAvatarVisual` aplica firmas Vanguard, Veil,
+  Spirit y Void a los FBX existentes sin romper equipo o animaciones.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

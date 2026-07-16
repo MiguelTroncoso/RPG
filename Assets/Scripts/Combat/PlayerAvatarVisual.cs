@@ -11,8 +11,15 @@ namespace MmorpgPrototype
         private CharacterClassType currentClass;
         private CharacterGender currentGender;
         private ClassDefinition currentDefinition;
+        private CharacterArtProfile currentArtProfile;
         private PlayerEquipment currentEquipment;
         private bool hasVisual;
+        private bool usingImportedModel;
+
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
+        private static readonly int MetallicId = Shader.PropertyToID("_Metallic");
+        private static readonly int SmoothnessId = Shader.PropertyToID("_Smoothness");
 
         private void Awake()
         {
@@ -40,7 +47,9 @@ namespace MmorpgPrototype
             currentClass = definition.Type;
             currentGender = gender;
             currentDefinition = definition;
+            currentArtProfile = CharacterArtProfiles.Get(definition.Type, gender);
             hasVisual = true;
+            usingImportedModel = false;
 
             if (visualRoot != null)
             {
@@ -51,12 +60,14 @@ namespace MmorpgPrototype
             visualRoot.transform.SetParent(transform, false);
             visualRoot.transform.localPosition = Vector3.zero;
             visualRoot.transform.localRotation = Quaternion.identity;
-            visualRoot.transform.localScale = gender == CharacterGender.Femenino
-                ? new Vector3(0.88f, 0.98f, 0.88f)
-                : new Vector3(1.02f, 1.04f, 1.02f);
+            visualRoot.transform.localScale = new Vector3(
+                currentArtProfile.ModelScale,
+                currentArtProfile.ModelScale * (gender == CharacterGender.Femenino ? 1.02f : 1.04f),
+                currentArtProfile.ModelScale);
 
             // Modelo real si el asset existe en Resources; procedural si no.
-            if (TryBuildCharacterModel(definition, gender))
+            usingImportedModel = TryBuildCharacterModel(definition, gender);
+            if (usingImportedModel)
             {
                 BuildArmorOverlay(definition, gender);
                 ApplyCosmetics(GetComponent<CosmeticService>());
@@ -148,6 +159,7 @@ namespace MmorpgPrototype
                 modelAnimator.runtimeAnimatorController = controller;
             }
 
+            ApplyModelArtTreatment(model, currentArtProfile);
             BindMotionAnimator(modelAnimator);
 
             return true;
@@ -206,6 +218,7 @@ namespace MmorpgPrototype
             armorRoot.transform.SetParent(visualRoot.transform, false);
 
             var profile = DefaultArmorVisualSets.Get(definition.Type, gender);
+            var artProfile = currentArtProfile ?? CharacterArtProfiles.Get(definition.Type, gender);
             var armorColor = profile.ArmorColor;
             var trimColor = profile.TrimColor;
             var accentColor = profile.AccentColor;
@@ -243,7 +256,66 @@ namespace MmorpgPrototype
             }
 
             BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
+            if (usingImportedModel)
+            {
+                BuildClassSignature(armorRoot.transform, artProfile);
+            }
             BuildEquippedVisuals(trimColor);
+        }
+
+        private void BuildClassSignature(Transform parent, CharacterArtProfile profile)
+        {
+            var shoulderWidth = profile.Silhouette == CharacterArtSilhouette.Vanguard ? 0.54f : 0.46f;
+            var shoulderSize = new Vector3(0.28f, 0.16f, 0.34f) * profile.ShoulderScale;
+            if (profile.Silhouette == CharacterArtSilhouette.Vanguard)
+            {
+                CreatePart(parent, "Vanguard Shoulder Left", PrimitiveType.Sphere, new Vector3(-shoulderWidth, 0.52f, 0f), shoulderSize, profile.MetalColor);
+                CreatePart(parent, "Vanguard Shoulder Right", PrimitiveType.Sphere, new Vector3(shoulderWidth, 0.52f, 0f), shoulderSize, profile.MetalColor);
+                CreatePart(parent, "Vanguard Crest", PrimitiveType.Cylinder, new Vector3(0f, 1.16f, -0.02f), new Vector3(0.14f, 0.24f, 0.14f), profile.GlowColor, Quaternion.Euler(0f, 0f, 45f));
+                CreatePart(parent, "Vanguard Chest Gem", PrimitiveType.Sphere, new Vector3(0f, 0.28f, -0.52f), new Vector3(0.1f, 0.1f, 0.06f), profile.GlowColor);
+            }
+            else if (profile.Silhouette == CharacterArtSilhouette.Veil)
+            {
+                CreatePart(parent, "Veil Hood", PrimitiveType.Sphere, new Vector3(0f, 0.94f, 0.02f), new Vector3(0.46f, 0.34f, 0.44f), profile.SecondaryColor);
+                CreatePart(parent, "Veil Mask", PrimitiveType.Cube, new Vector3(0f, 0.88f, -0.38f), new Vector3(0.3f, 0.09f, 0.05f), profile.GlowColor);
+                CreatePart(parent, "Veil Sash", PrimitiveType.Cube, new Vector3(0f, 0.03f, -0.5f), new Vector3(0.68f, 0.08f, 0.05f), profile.MetalColor);
+                CreatePart(parent, "Veil Dagger Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.04f, -0.3f), new Vector3(0.06f, 0.42f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, 28f));
+                CreatePart(parent, "Veil Dagger Right", PrimitiveType.Cube, new Vector3(0.5f, 0.04f, -0.3f), new Vector3(0.06f, 0.42f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, -28f));
+            }
+            else if (profile.Silhouette == CharacterArtSilhouette.Spirit)
+            {
+                CreatePart(parent, "Spirit Hood", PrimitiveType.Sphere, new Vector3(0f, 0.98f, 0.02f), new Vector3(0.48f, 0.34f, 0.46f), profile.SecondaryColor);
+                CreatePart(parent, "Spirit Crown", PrimitiveType.Cylinder, new Vector3(0f, 1.28f, 0f), new Vector3(0.12f, 0.18f, 0.12f), profile.GlowColor);
+                CreatePart(parent, "Spirit Orb", PrimitiveType.Sphere, new Vector3(0f, 0.37f, -0.53f), new Vector3(0.14f, 0.14f, 0.08f), profile.GlowColor);
+                CreatePart(parent, "Spirit Collar", PrimitiveType.Cube, new Vector3(0f, 0.58f, -0.32f), new Vector3(0.36f, 0.08f, 0.05f), profile.MetalColor);
+            }
+            else
+            {
+                CreatePart(parent, "Void Crown Left", PrimitiveType.Cube, new Vector3(-0.16f, 1.22f, 0f), new Vector3(0.08f, 0.34f, 0.08f), profile.GlowColor, Quaternion.Euler(0f, 0f, -28f));
+                CreatePart(parent, "Void Crown Right", PrimitiveType.Cube, new Vector3(0.16f, 1.22f, 0f), new Vector3(0.08f, 0.34f, 0.08f), profile.GlowColor, Quaternion.Euler(0f, 0f, 28f));
+                CreatePart(parent, "Void Chest Core", PrimitiveType.Sphere, new Vector3(0f, 0.28f, -0.53f), new Vector3(0.14f, 0.14f, 0.08f), profile.GlowColor);
+                CreatePart(parent, "Void Shoulder Left", PrimitiveType.Cube, new Vector3(-0.5f, 0.48f, 0f), new Vector3(0.26f, 0.18f, 0.4f), profile.MetalColor, Quaternion.Euler(0f, 0f, 18f));
+                CreatePart(parent, "Void Shoulder Right", PrimitiveType.Cube, new Vector3(0.5f, 0.48f, 0f), new Vector3(0.26f, 0.18f, 0.4f), profile.MetalColor, Quaternion.Euler(0f, 0f, -18f));
+            }
+
+            if (profile.UseCloak)
+            {
+                CreatePart(parent, "Class Cloak", PrimitiveType.Cube, new Vector3(0f, 0.14f, 0.38f), new Vector3(0.72f * profile.CloakScale, 0.76f, 0.06f), profile.SecondaryColor, Quaternion.Euler(8f, 0f, 0f));
+            }
+        }
+
+        private static void ApplyModelArtTreatment(GameObject model, CharacterArtProfile profile)
+        {
+            var block = new MaterialPropertyBlock();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+            {
+                renderer.GetPropertyBlock(block);
+                block.SetColor(BaseColorId, Color.Lerp(Color.white, profile.PrimaryColor, 0.06f));
+                block.SetColor(LegacyColorId, Color.Lerp(Color.white, profile.PrimaryColor, 0.06f));
+                block.SetFloat(MetallicId, 0.18f);
+                block.SetFloat(SmoothnessId, 0.42f);
+                renderer.SetPropertyBlock(block);
+            }
         }
 
         private void BuildClassEmblem(Transform parent, CharacterClassType classType, Color trimColor, Color accentColor)

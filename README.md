@@ -913,6 +913,19 @@ temporada.
 - La APK local muestra estos estados desde el menu `Mision`; antes de publicar,
   S-01 debe validar horarios, membresias, rankings, recompensas y resultados PvP.
 
+## Fase 5.66: Direccion Artistica Y Personajes
+
+La direccion visual queda fijada como fantasia realista estilizada y
+cinematografica, optimizada para Android. `CharacterArtProfiles` define las
+ocho combinaciones jugables con siluetas Vanguard, Veil, Spirit y Void.
+`PlayerAvatarVisual` aplica tratamiento de materiales, capas, accesorios y
+firmas de clase sobre los modelos FBX existentes sin romper animaciones,
+equipamiento, sexo, cosmeticos o jugadores remotos.
+
+La especificacion completa queda en `docs/character-art-direction.md`. La
+siguiente parte reemplazara estas firmas procedurales por meshes finales de la
+Zona 1 y luego extendera el pipeline a las diez zonas.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

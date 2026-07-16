@@ -857,6 +857,28 @@ Criterio de exito: el centro del combate queda libre, las ventanas no bloquean
 la interaccion tactil y la APK mantiene una lectura clara sin mostrar errores
 tecnicos durante una sesion offline o conectada.
 
+## Fase 5.66: Direccion Artistica Y Ocho Personajes Jugables
+
+Objetivo: reemplazar la sensacion de avatar generico por una identidad visual
+consistente para las cuatro clases y sus dos sexos antes de producir todos los
+mobs finales.
+
+- La direccion fija un estilo de fantasia realista estilizada, legible y
+  compatible con Android en `docs/character-art-direction.md`. [Implementado]
+- `CharacterArtProfiles` define ocho perfiles: Guerrero/Vanguard, Ninja/Veil,
+  Chaman/Spirit y Umbra/Void, cada uno con escala, paleta, metal, brillo y
+  silueta propios. [Implementado]
+- `PlayerAvatarVisual` aplica tratamiento de materiales y firmas visuales sobre
+  los modelos FBX existentes, conservando sexo, clase, animaciones, equipo,
+  cosmeticos y jugadores remotos. [Implementado]
+- La siguiente subfase debe sustituir progresivamente las firmas procedurales
+  por meshes finales propios o con licencia comercial, comenzando por la Zona 1.
+  [Pendiente]
+
+Criterio de exito: las ocho variantes se reconocen sin leer el HUD, mantienen
+las ranuras de equipamiento y funcionan en la prueba Android sin duplicar reglas
+de combate o persistencia.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.
