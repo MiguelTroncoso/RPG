@@ -29,18 +29,19 @@ El script crea:
 
 - `Assets/Resources/OriginalArt/Characters/*.fbx`: Guerrero, Ninja, Chaman
   y Umbra, cada uno en masculino y femenino.
-- `Assets/Resources/OriginalArt/Textures/OriginalArt_AlbedoAtlas.png`.
-- `Assets/Resources/OriginalArt/Textures/OriginalArt_NormalAtlas.png`.
+- `Assets/Resources/OriginalArt/Textures/OriginalArt_{Clase}_AlbedoAtlas_2K.png`.
+- `Assets/Resources/OriginalArt/Textures/OriginalArt_{Clase}_NormalAtlas_2K.png`.
 - `Assets/Art/Original/OriginalArt_Source.blend` como fuente editable.
 
 Cada FBX contiene un armature skinned, bind poses, pesos por hueso, materiales
 con albedo y normal, cuerpo y arma inicial separada como `Starter Weapon` en
 `LOD0`, `LOD1` y `LOD2`, y los clips `Idle`, `Run` y `Attack`. `LOD1` y `LOD2`
-se crean por decimacion geometrica real. Las texturas se enlazan con rutas
-relativas al atlas central para evitar ocho copias dentro del repositorio.
-El atlas actual es 1024x1024 con tiles 64x64; el normal atlas se genera offline
-desde alturas detalladas por material para reforzar metal, tela, cuero, runa,
-escama, piedra y hueso.
+se crean por decimacion geometrica real. Cada familia de clase tiene su propio
+atlas 2K de albedo y normal con tiles 256x256, enlazado por rutas relativas.
+El bake de normales se ejecuta en Blender desde una fuente high-poly temporal
+con subdivision y microdesplazamiento, proyectandose sobre el objetivo skinned
+con UVs de produccion. Las fuentes temporales se eliminan al terminar y el
+`.blend` conserva la escena authored editable.
 
 ## Generar los controllers de Unity
 
@@ -71,15 +72,17 @@ assimp info Assets/Resources/OriginalArt/Characters/Guerrero_Masculino.fbx
 
 La validacion de esta fase debe mostrar `Animations: 3`, huesos skinned,
 materiales con Diffuse y Normals, los nombres `LOD0`/`LOD1`/`LOD2` y el objeto
-`Starter Weapon`. Los atlas deben ser 1024x1024 y Unity debe regenerar tres
-clips por cada uno de los ocho controllers. La auditoria de contenido del juego
-sigue siendo independiente y debe conservar 17/17.
+`Starter Weapon`. Los ocho atlas deben ser 2048x2048; Unity los importa con
+mipmaps, filtro trilineal, normal map en espacio no color y ETC2_RGBA8 para
+Android, y debe regenerar tres clips por cada uno de los ocho controllers. La
+auditoria de contenido del juego sigue siendo independiente y debe conservar
+17/17.
 
 ## Siguiente mejora comercial
 
 Estos meshes son authored originales estilizados, optimizados para validar el
-pipeline y la lectura de clase en Android. El LOD geometrico base, el atlas 1K
-y las poses de cuerpo completo ya estan implementados. El siguiente salto
-artistico es reemplazar progresivamente sus formas por esculturas high-poly,
-retopologia manual, bake de normales desde esa escultura, atlas 2K por familia,
-LOD optimizado a mano y animaciones de combate de produccion.
+pipeline y la lectura de clase en Android. El bake high-poly actual es tecnico:
+la fuente de detalle se genera temporalmente en Blender y no sustituye una
+escultura manual hecha por un artista. El siguiente salto comercial es aportar
+esculturas high-poly manuales, retopologia/UV a mano, pintura 2K por familia,
+LOD optimizado artisticamente y animaciones profesionales de produccion.

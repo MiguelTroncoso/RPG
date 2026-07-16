@@ -1017,6 +1017,21 @@ la auditoria permanece en 17/17. Esto mejora el arte authored del prototipo;
 el arte comercial final aun requiere escultura high-poly, retopologia manual,
 bake desde esa escultura, atlas 2K por familia y animaciones profesionales.
 
+## Fase 5.73: Bake High-Poly Tecnico Y Atlas 2K Por Familia
+
+El pipeline de Blender ahora crea cuatro pares de atlas 2K, uno por clase, y
+ejecuta el bake real de normales desde una fuente high-poly temporal con
+subdivision y microdesplazamiento. El resultado se proyecta sobre los objetivos
+skinned de los ocho FBX y conserva `LOD0`/`LOD1`/`LOD2`, el arma inicial y los
+clips `Idle`, `Run` y `Attack`. Unity configura mipmaps, filtro trilineal,
+normal maps y ETC2_RGBA8 para Android; las fuentes temporales se eliminan
+despues del bake.
+
+Esta fase cierra el pipeline tecnico, pero no declara el arte comercial final:
+todavia faltan esculturas high-poly manuales, retopologia y UV de produccion,
+texturas pintadas 2K, animaciones profesionales y trasladar la misma calidad a
+mobs, jefes, NPC y accesorios.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

@@ -10,8 +10,8 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 CHARACTER_DIR = os.path.join(PROJECT_ROOT, "Assets/Resources/OriginalArt/Characters")
 TEXTURE_DIR = os.path.join(PROJECT_ROOT, "Assets/Resources/OriginalArt/Textures")
 SOURCE_DIR = os.path.join(PROJECT_ROOT, "Assets/Art/Original")
-ATLAS_SIZE = 1024
-TILE_SIZE = 64
+ATLAS_SIZE = 2048
+TILE_SIZE = 256
 TILES_PER_SIDE = ATLAS_SIZE // TILE_SIZE
 
 PALETTES = {
@@ -44,8 +44,10 @@ PALETTES = {
 PATTERN_NAMES = ("metal", "fabric", "leather", "rune", "skin", "bone", "scale", "stone")
 ATLAS_ENTRIES = {}
 MATERIAL_CACHE = {}
-ALBEDO_PIXELS = None
-NORMAL_PIXELS = None
+ALBEDO_PIXELS = {}
+NORMAL_PIXELS = {}
+ALBEDO_IMAGES = {}
+NORMAL_IMAGES = {}
 
 
 def clear_scene():
@@ -74,12 +76,11 @@ def atlas_key(class_name, pattern):
 def build_atlas_pixels():
     global ALBEDO_PIXELS, NORMAL_PIXELS
     ATLAS_ENTRIES.clear()
-    pixel_count = ATLAS_SIZE * ATLAS_SIZE * 4
-    ALBEDO_PIXELS = [0.0] * pixel_count
-    NORMAL_PIXELS = [0.5, 0.5, 1.0, 1.0] * (ATLAS_SIZE * ATLAS_SIZE)
-
-    slot = 0
     for class_name, palette in PALETTES.items():
+        pixel_count = ATLAS_SIZE * ATLAS_SIZE * 4
+        albedo_pixels = [0.0] * pixel_count
+        normal_pixels = [0.5, 0.5, 1.0, 1.0] * (ATLAS_SIZE * ATLAS_SIZE)
+        slot = 0
         for pattern in PATTERN_NAMES:
             tile_x = (slot % TILES_PER_SIDE) * TILE_SIZE
             tile_y = (slot // TILES_PER_SIDE) * TILE_SIZE
@@ -102,9 +103,11 @@ def build_atlas_pixels():
 
                     normal_x, normal_y = baked_normal(pattern, x, y)
 
-                    write_pixel(ALBEDO_PIXELS, tile_x + x, tile_y + y, pixel + [1.0])
-                    write_pixel(NORMAL_PIXELS, tile_x + x, tile_y + y, [normal_x, normal_y, 1.0, 1.0])
+                    write_pixel(albedo_pixels, tile_x + x, tile_y + y, pixel + [1.0])
+                    write_pixel(normal_pixels, tile_x + x, tile_y + y, [normal_x, normal_y, 1.0, 1.0])
             slot += 1
+        ALBEDO_PIXELS[class_name] = albedo_pixels
+        NORMAL_PIXELS[class_name] = normal_pixels
 
 
 def pattern_height(pattern, x, y):
@@ -169,28 +172,39 @@ def write_pixel(pixels, x, y, value):
     pixels[index:index + 4] = value
 
 
-def save_atlas_images():
+def save_atlas_images(albedo_images=None, normal_images=None, write_pixels=True):
+    global ALBEDO_IMAGES, NORMAL_IMAGES
     os.makedirs(TEXTURE_DIR, exist_ok=True)
-    albedo = bpy.data.images.get("OriginalArt_AlbedoAtlas")
-    normal = bpy.data.images.get("OriginalArt_NormalAtlas")
-    if albedo is not None and (albedo.size[0] != ATLAS_SIZE or albedo.size[1] != ATLAS_SIZE):
-        bpy.data.images.remove(albedo)
-        albedo = None
-    if normal is not None and (normal.size[0] != ATLAS_SIZE or normal.size[1] != ATLAS_SIZE):
-        bpy.data.images.remove(normal)
-        normal = None
-    albedo = albedo or bpy.data.images.new("OriginalArt_AlbedoAtlas", width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True)
-    normal = normal or bpy.data.images.new("OriginalArt_NormalAtlas", width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True)
-    albedo.pixels = ALBEDO_PIXELS
-    normal.pixels = NORMAL_PIXELS
-    albedo.filepath_raw = os.path.join(TEXTURE_DIR, "OriginalArt_AlbedoAtlas.png")
-    normal.filepath_raw = os.path.join(TEXTURE_DIR, "OriginalArt_NormalAtlas.png")
-    albedo.file_format = "PNG"
-    normal.file_format = "PNG"
-    albedo.save()
-    normal.save()
-    normal.colorspace_settings.name = "Non-Color"
-    return albedo, normal
+    albedo_images = albedo_images or {}
+    normal_images = normal_images or {}
+    for class_name in PALETTES:
+        albedo_name = f"OriginalArt_{class_name}_AlbedoAtlas_2K"
+        normal_name = f"OriginalArt_{class_name}_NormalAtlas_2K"
+        albedo = albedo_images.get(class_name) or bpy.data.images.get(albedo_name)
+        normal = normal_images.get(class_name) or bpy.data.images.get(normal_name)
+        if albedo is not None and (albedo.size[0] != ATLAS_SIZE or albedo.size[1] != ATLAS_SIZE):
+            bpy.data.images.remove(albedo)
+            albedo = None
+        if normal is not None and (normal.size[0] != ATLAS_SIZE or normal.size[1] != ATLAS_SIZE):
+            bpy.data.images.remove(normal)
+            normal = None
+        albedo = albedo or bpy.data.images.new(albedo_name, width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True)
+        normal = normal or bpy.data.images.new(normal_name, width=ATLAS_SIZE, height=ATLAS_SIZE, alpha=True)
+        if write_pixels:
+            albedo.pixels = ALBEDO_PIXELS[class_name]
+            normal.pixels = NORMAL_PIXELS[class_name]
+        albedo.filepath_raw = os.path.join(TEXTURE_DIR, f"OriginalArt_{class_name}_AlbedoAtlas_2K.png")
+        normal.filepath_raw = os.path.join(TEXTURE_DIR, f"OriginalArt_{class_name}_NormalAtlas_2K.png")
+        albedo.file_format = "PNG"
+        normal.file_format = "PNG"
+        normal.colorspace_settings.name = "Non-Color"
+        albedo.save()
+        normal.save()
+        albedo_images[class_name] = albedo
+        normal_images[class_name] = normal
+    ALBEDO_IMAGES = albedo_images
+    NORMAL_IMAGES = normal_images
+    return albedo_images, normal_images
 
 
 def create_material(class_name, pattern, albedo, normal):
@@ -342,6 +356,121 @@ def join_parts(parts, armature, name):
     return mesh
 
 
+def pattern_from_material(material):
+    if material is None:
+        return "stone"
+    name = material.name.lower()
+    for pattern in PATTERN_NAMES:
+        if pattern in name:
+            return pattern
+    return "stone"
+
+
+def create_highpoly_source(mesh, name):
+    highpoly = mesh.copy()
+    highpoly.data = mesh.data.copy()
+    highpoly.name = name
+    bpy.context.collection.objects.link(highpoly)
+    highpoly.parent = None
+    highpoly.matrix_world = mesh.matrix_world.copy()
+    for modifier in list(highpoly.modifiers):
+        highpoly.modifiers.remove(modifier)
+
+    subdiv = highpoly.modifiers.new("High Poly Surface", "SUBSURF")
+    subdiv.subdivision_type = "SIMPLE"
+    subdiv.levels = 1
+    subdiv.render_levels = 1
+    bpy.context.view_layer.objects.active = highpoly
+    highpoly.select_set(True)
+    bpy.ops.object.modifier_apply(modifier=subdiv.name)
+
+    detail_texture = bpy.data.textures.new(f"{name} Sculpt Detail", type="CLOUDS")
+    detail_texture.noise_scale = 0.12
+    detail_texture.noise_depth = 2
+    displace = highpoly.modifiers.new("Sculpt Surface Detail", "DISPLACE")
+    displace.texture = detail_texture
+    displace.texture_coords = "GLOBAL"
+    displace.direction = "NORMAL"
+    displace.strength = 0.008
+    displace.mid_level = 0.5
+    bpy.context.view_layer.objects.active = highpoly
+    bpy.ops.object.modifier_apply(modifier=displace.name)
+    highpoly.select_set(False)
+    source_material = bpy.data.materials.new(f"{name} Neutral Source")
+    highpoly.data.materials.clear()
+    highpoly.data.materials.append(source_material)
+    for polygon in highpoly.data.polygons:
+        polygon.material_index = 0
+    return highpoly, detail_texture, source_material
+
+
+def remap_uvs_to_atlas(mesh, class_name):
+    uv_layer = mesh.data.uv_layers.get("UVMap")
+    if uv_layer is None:
+        raise RuntimeError(f"Missing UVMap on {mesh.name}")
+    for polygon in mesh.data.polygons:
+        pattern = pattern_from_material(mesh.data.materials[polygon.material_index])
+        entry = ATLAS_ENTRIES[(class_name, pattern)]
+        for loop_index in polygon.loop_indices:
+            uv = uv_layer.data[loop_index].uv.copy()
+            uv_layer.data[loop_index].uv = (
+                entry[0] + uv.x * entry[2],
+                entry[1] + uv.y * entry[3],
+            )
+
+
+def bake_normal_atlas(mesh, class_name, normal_image):
+    highpoly, detail_texture, source_material = create_highpoly_source(mesh, f"{mesh.name}_HighPolyBake")
+    target = mesh.copy()
+    target.data = mesh.data.copy()
+    target.name = f"{mesh.name}_NormalBakeTarget"
+    bpy.context.collection.objects.link(target)
+    target.parent = None
+    target.matrix_world = mesh.matrix_world.copy()
+    for modifier in list(target.modifiers):
+        target.modifiers.remove(modifier)
+
+    bake_material = bpy.data.materials.new(f"{mesh.name}_NormalBakeMaterial")
+    bake_material.use_nodes = True
+    nodes = bake_material.node_tree.nodes
+    nodes.clear()
+    output = nodes.new("ShaderNodeOutputMaterial")
+    shader = nodes.new("ShaderNodeBsdfPrincipled")
+    image_texture = nodes.new("ShaderNodeTexImage")
+    image_texture.image = normal_image
+    image_texture.select = True
+    nodes.active = image_texture
+    bake_material.node_tree.links.new(shader.outputs["BSDF"], output.inputs["Surface"])
+    target.data.materials.clear()
+    target.data.materials.append(bake_material)
+    for polygon in target.data.polygons:
+        polygon.material_index = 0
+    remap_uvs_to_atlas(target, class_name)
+
+    scene = bpy.context.scene
+    previous_engine = scene.render.engine
+    bpy.ops.object.select_all(action="DESELECT")
+    highpoly.select_set(True)
+    target.select_set(True)
+    bpy.context.view_layer.objects.active = target
+    try:
+        scene.render.engine = "CYCLES"
+        scene.cycles.samples = 4
+        bpy.ops.object.bake(type="NORMAL", normal_space="TANGENT", margin=8, use_clear=False)
+        normal_image.update()
+        normal_image.save()
+        print(f"BAKED_NORMALS {class_name} {mesh.name}")
+    except Exception as error:
+        print(f"BAKE_NORMALS_FALLBACK {class_name} {mesh.name}: {error}")
+    finally:
+        scene.render.engine = previous_engine
+        bpy.data.objects.remove(highpoly, do_unlink=True)
+        bpy.data.objects.remove(target, do_unlink=True)
+        bpy.data.materials.remove(bake_material)
+        bpy.data.materials.remove(source_material)
+        bpy.data.textures.remove(detail_texture)
+
+
 def create_lod_mesh(source, armature, name, ratio):
     lod = source.copy()
     lod.data = source.data.copy()
@@ -454,11 +583,13 @@ def create_action(armature, name, mode):
 def build_character(class_name, gender):
     palette = PALETTES[class_name]
     female = gender == "Femenino"
-    armor = create_material(class_name, "metal", ALBEDO_IMAGE, NORMAL_IMAGE)
-    fabric = create_material(class_name, "fabric", ALBEDO_IMAGE, NORMAL_IMAGE)
-    leather = create_material(class_name, "leather", ALBEDO_IMAGE, NORMAL_IMAGE)
-    rune = create_material(class_name, "rune", ALBEDO_IMAGE, NORMAL_IMAGE)
-    skin = create_material(class_name, "skin", ALBEDO_IMAGE, NORMAL_IMAGE)
+    albedo = ALBEDO_IMAGES[class_name]
+    normal = NORMAL_IMAGES[class_name]
+    armor = create_material(class_name, "metal", albedo, normal)
+    fabric = create_material(class_name, "fabric", albedo, normal)
+    leather = create_material(class_name, "leather", albedo, normal)
+    rune = create_material(class_name, "rune", albedo, normal)
+    skin = create_material(class_name, "skin", albedo, normal)
     parts = []
     armature = make_armature()
     width = 0.42 if female else 0.50
@@ -491,6 +622,9 @@ def build_character(class_name, gender):
     weapon_mesh = None
     if weapon_parts:
         weapon_mesh = join_parts(weapon_parts, armature, "Starter Weapon LOD0")
+    bake_normal_atlas(mesh, class_name, normal)
+    if weapon_mesh is not None:
+        bake_normal_atlas(weapon_mesh, class_name, normal)
     lod_meshes = []
     for level, ratio in ((1, 0.55), (2, 0.28)):
         lod_meshes.append(create_lod_mesh(mesh, armature, f"Original_{class_name}_{gender}_LOD{level}", ratio))
@@ -517,7 +651,7 @@ def build_warrior(class_name, gender, armor, fabric, rune, female):
         parts.append(create_part("Tiara", "cone", (0, 1.16, -0.02), (0.30, 0.08, 0.22), rune, "Head", vertices=6))
     else:
         parts.append(create_part("Helmet Crest", "cone", (0, 1.28, -0.02), (0.12, 0.26, 0.12), rune, "Head", (0, 0, math.radians(45)), vertices=4))
-    parts += build_sword(armor, rune)
+    parts += build_sword(armor, rune, ALBEDO_IMAGES[class_name], NORMAL_IMAGES[class_name])
     return parts
 
 
@@ -570,11 +704,11 @@ def build_umbra(class_name, gender, armor, fabric, rune, female):
     return parts
 
 
-def build_sword(armor, rune):
+def build_sword(armor, rune, albedo, normal):
     return [
         create_part("Sword Blade", "cone", (0.52, 0.12, -0.18), (0.11, 0.11, 0.46), armor, "Hand.R", (0, 0, math.radians(-26)), vertices=4),
         create_part("Sword Guard", "cone", (0.40, -0.28, -0.18), (0.12, 0.12, 0.06), rune, "Hand.R", (0, 0, math.radians(-26)), vertices=6),
-        create_part("Sword Grip", "cone", (0.30, -0.39, -0.18), (0.055, 0.055, 0.14), create_material("Guerrero", "leather", ALBEDO_IMAGE, NORMAL_IMAGE), "Hand.R", (0, 0, math.radians(-26)), vertices=6),
+        create_part("Sword Grip", "cone", (0.30, -0.39, -0.18), (0.055, 0.055, 0.14), create_material("Guerrero", "leather", albedo, normal), "Hand.R", (0, 0, math.radians(-26)), vertices=6),
     ]
 
 
@@ -603,17 +737,19 @@ def export_character(class_name, gender, mesh, armature, weapon_mesh=None, lod_m
 
 
 def main():
-    global ALBEDO_IMAGE, NORMAL_IMAGE
+    global ALBEDO_IMAGES, NORMAL_IMAGES
     os.makedirs(SOURCE_DIR, exist_ok=True)
     os.makedirs(CHARACTER_DIR, exist_ok=True)
     os.makedirs(TEXTURE_DIR, exist_ok=True)
     build_atlas_pixels()
-    ALBEDO_IMAGE, NORMAL_IMAGE = save_atlas_images()
+    ALBEDO_IMAGES, NORMAL_IMAGES = save_atlas_images()
 
     for class_name in PALETTES:
         for gender in ("Masculino", "Femenino"):
             clear_scene()
             build_character(class_name, gender)
+
+    save_atlas_images(ALBEDO_IMAGES, NORMAL_IMAGES, write_pixels=False)
 
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(SOURCE_DIR, "OriginalArt_Source.blend"))
     print("ORIGINAL_ART_EXPORT_COMPLETE")

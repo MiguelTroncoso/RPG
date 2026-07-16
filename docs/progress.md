@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **96%**.
+- Avance global estimado hacia el MMORPG publicable: **97%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **99%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **83%**.
+- Arte final comercial, online y lanzamiento: **87%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -158,6 +158,12 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   biseles de tres segmentos y normales ponderadas para armadura. Las poses
   authored incorporan cuello/cabeza y conservan anticipacion, impacto y
   recuperacion en `Attack`; la APK queda en 141 MB y pasa target SDK 35.
+- Fase 5.73: cuatro familias de clase usan atlas propios 2K de albedo/normal;
+  Blender ejecuta 16 bakes reales desde fuentes high-poly temporales con
+  subdivision y microdesplazamiento sobre los objetivos skinned. Unity importa
+  mipmaps, normal maps y ETC2 para Android; se mantienen 8 FBX, LOD0/1/2, tres
+  clips por variante y 17/17 checks. La APK final queda en 39 MB, con target
+  SDK 35. Esto cierra el pipeline tecnico, no la escultura manual comercial.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -183,10 +189,9 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    con firewall, TLS/WSS y persistencia protegida.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Sustituir progresivamente los meshes authored estilizados por esculturas
-    high-poly, retopologia manual, bake desde escultura, atlas 2K por familia
-    y animaciones de combate producidas profesionalmente; el atlas 1K y el LOD
-    geometrico base ya estan implementados.
+10. Sustituir el bake tecnico por esculturas high-poly manuales, retopologia y
+    UV de produccion, texturas pintadas 2K por familia y animaciones profesionales;
+    aplicar el mismo tratamiento a mobs, jefes, NPC y accesorios.
 11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
 12. Probar contratos diarios y Renacimiento con varios personajes antes de
@@ -200,6 +205,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.73 | Bake normal tecnico desde high-poly temporal, atlas 2K por familia y compresion Android | 97% |
 | 2026-07-16 | 5.72 | Atlas 1K, normal detail offline, geometria densificada y poses de combate refinadas | 96% |
 | 2026-07-16 | 5.71 | LOD0/LOD1/LOD2 geometrico real, geometria suavizada y animaciones de combate de cuerpo completo | 95% |
 | 2026-07-16 | 5.70 | Blender, ocho FBX skinned authored, atlas, normals, clips y controllers Unity | 94% |

@@ -21,6 +21,7 @@ namespace MmorpgPrototype.Editor
         public static void Generate()
         {
             EnsureFolder("Assets/Resources/OriginalArt", "Controllers");
+            ConfigureAtlasImportSettings();
 
             foreach (var className in new[] { "Guerrero", "Ninja", "Chaman", "Umbra" })
             {
@@ -81,6 +82,37 @@ namespace MmorpgPrototype.Editor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        private static void ConfigureAtlasImportSettings()
+        {
+            foreach (var className in new[] { "Guerrero", "Ninja", "Chaman", "Umbra" })
+            {
+                ConfigureTextureImport($"Assets/Resources/OriginalArt/Textures/OriginalArt_{className}_AlbedoAtlas_2K.png", false);
+                ConfigureTextureImport($"Assets/Resources/OriginalArt/Textures/OriginalArt_{className}_NormalAtlas_2K.png", true);
+            }
+        }
+
+        private static void ConfigureTextureImport(string path, bool normalMap)
+        {
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null)
+            {
+                return;
+            }
+
+            importer.textureType = normalMap ? TextureImporterType.NormalMap : TextureImporterType.Default;
+            importer.sRGBTexture = !normalMap;
+            importer.mipmapEnabled = true;
+            importer.filterMode = FilterMode.Trilinear;
+            importer.anisoLevel = 2;
+
+            var android = importer.GetPlatformTextureSettings("Android");
+            android.overridden = true;
+            android.maxTextureSize = 2048;
+            android.format = TextureImporterFormat.ETC2_RGBA8;
+            importer.SetPlatformTextureSettings(android);
+            importer.SaveAndReimport();
         }
 
         private static AnimatorState AddState(AnimatorStateMachine stateMachine, string name, AnimationClip clip)

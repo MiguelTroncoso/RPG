@@ -1029,6 +1029,36 @@ retopologia manual, bake desde esa escultura a los LOD, atlas 2K por familia y
 animaciones finales creadas por un artista especializado o captura de
 movimiento.
 
+## Fase 5.73: Bake High-Poly Tecnico, Atlas 2K Por Familia Y Preparacion De Produccion
+
+Objetivo: cerrar el pipeline tecnico de materiales y preparar los assets para
+recibir escultura, texturizado y animacion de produccion sin cambiar el
+contrato del runtime Android.
+
+- Cada clase tiene un atlas propio de albedo y normal de 2048x2048 con tiles
+  256x256: Guerrero, Ninja, Chaman y Umbra. [Implementado]
+- Blender crea una fuente high-poly temporal con subdivision simple y
+  microdesplazamiento, ejecuta 16 bakes de normales sobre los objetivos skinned
+  y elimina las fuentes temporales al terminar. [Implementado]
+- Los ocho FBX mantienen cuerpo, arma, skinning, `LOD0`/`LOD1`/`LOD2` y los
+  clips authored `Idle`, `Run` y `Attack`; Unity conserva los ocho controllers.
+  [Implementado]
+- Unity importa albedo/normal con mipmaps y filtro trilineal; Android usa
+  ETC2_RGBA8 para evitar que el atlas 2K dispare el tamano de la APK.
+  [Implementado]
+- Assimp, Unity batch, APK Android y auditoria de contenido se validan en el
+  mismo corte. [Implementado]
+
+Criterio de exito: el bake no usa fallback, cada familia referencia sus
+texturas 2K, los ocho personajes conservan sus animaciones y LOD, la APK
+mantiene una carga razonable en Android y la auditoria sigue en 17/17.
+
+Nota de alcance: este bake es una preparacion tecnica desde detalle procedural
+temporal. Para declarar el arte comercial al 100% aun faltan esculturas
+high-poly manuales, retopologia y UV manual, texturas pintadas 2K por familia,
+animaciones profesionales y aplicar el mismo tratamiento a mobs, jefes,
+NPC y accesorios finales.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

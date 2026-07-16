@@ -19,7 +19,7 @@ ANTES DE TOCAR NADA lee, en este orden:
 5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
 6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.72 entregadas en primera pasada; refinamientos 5.44,
+Estado actual (fases 1-5.73 entregadas en primera pasada; refinamientos 5.44,
 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64 y 5.65 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
@@ -197,6 +197,12 @@ Estado actual (fases 1-5.72 entregadas en primera pasada; refinamientos 5.44,
   biseles y normales ponderadas; `Idle`, `Run` y `Attack` refinan cuello/cabeza
   y mantienen anticipacion, impacto y recuperacion. El siguiente paso es
   escultura high-poly, bake desde esa escultura y animacion profesional.
+- Fase 5.73: cuatro familias de clase usan atlas 2K independientes de albedo y
+  normal. Blender ejecuta 16 bakes desde fuentes high-poly temporales y los
+  proyecta sobre ocho FBX skinned con `LOD0`/`LOD1`/`LOD2`; Unity conserva tres
+  clips por variante y comprime los atlas Android con ETC2. El bake es tecnico,
+  no una escultura manual comercial; faltan retopologia, texturas pintadas y
+  animaciones profesionales.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
