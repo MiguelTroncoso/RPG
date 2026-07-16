@@ -13,6 +13,10 @@ SOURCE_DIR = os.path.join(PROJECT_ROOT, "Assets/Art/Original")
 ATLAS_SIZE = 2048
 TILE_SIZE = 256
 TILES_PER_SIDE = ATLAS_SIZE // TILE_SIZE
+ATLAS_PADDING = 12
+HIGH_POLY_SUBDIVISION = 2
+SCULPT_DETAIL_STRENGTH = 0.012
+MICRO_DETAIL_STRENGTH = 0.0035
 
 PALETTES = {
     "Guerrero": {
@@ -94,8 +98,7 @@ def build_atlas_pixels():
             for y in range(TILE_SIZE):
                 for x in range(TILE_SIZE):
                     height = pattern_height(pattern, x, y)
-                    wave = (height - 0.5) * 0.18
-                    pixel = [clamp(channel * (0.90 + wave)) for channel in color[:3]]
+                    pixel = painted_albedo(palette, pattern, x, y, color, height)
                     if height > 0.58:
                         pixel = blend(pixel, (1.0, 1.0, 1.0), min((height - 0.58) * 0.18, 0.10))
                     elif height < 0.42:
@@ -161,6 +164,32 @@ def pattern_color(palette, pattern):
     if pattern == "scale":
         return palette["primary"]
     return (0.24, 0.25, 0.28, 1.0)
+
+
+def painted_albedo(palette, pattern, x, y, color, height):
+    """Create a deterministic paint pass that reads as material, not flat color."""
+    u = (x + 0.5) / TILE_SIZE
+    v = (y + 0.5) / TILE_SIZE
+    broad = math.sin((u * 7.0 + v * 3.0) * math.pi) * 0.035
+    fine = math.sin((u * 47.0 - v * 31.0) * math.pi) * 0.018
+    variation = 0.91 + broad + fine
+    if pattern == "metal":
+        brushed = math.sin((u * 42.0 + v * 2.0) * math.pi) * 0.055
+        variation += brushed
+    elif pattern == "fabric":
+        weave = math.sin(u * math.pi * 86.0) * math.sin(v * math.pi * 74.0) * 0.035
+        variation += weave
+    elif pattern == "leather":
+        grain = math.sin((u * 19.0 + v * 13.0) * math.pi) * math.cos((u * 41.0 - v * 17.0) * math.pi) * 0.06
+        variation += grain
+    elif pattern == "skin":
+        blush = math.sin((u * 5.0 + v * 8.0) * math.pi) * 0.025
+        variation += blush
+    elif pattern == "rune":
+        variation += 0.10 + math.sin((u * 11.0 - v * 9.0) * math.pi) * 0.04
+    elif pattern == "bone":
+        variation += math.sin((u * 6.0 + v * 2.0) * math.pi) * 0.06
+    return [clamp(channel * variation + (height - 0.5) * 0.08) for channel in color[:3]]
 
 
 def blend(first, second, amount):
@@ -348,12 +377,29 @@ def join_parts(parts, armature, name):
     bpy.ops.object.join()
     mesh = bpy.context.object
     mesh.name = name
+    cleanup_retopology(mesh)
     modifier = mesh.modifiers.new("Original Rig Skin", "ARMATURE")
     modifier.object = armature
     mesh.parent = armature
     mesh["original_art"] = True
     mesh["rig_version"] = "1.0"
+    mesh["retopology_version"] = "authored_target_v2"
+    mesh["uv_layout"] = "family_atlas_2K_padded"
+    mesh["normal_bake_source"] = "high_poly_sculpt_pass_v2"
     return mesh
+
+
+def cleanup_retopology(mesh):
+    """Keep the export cage clean while preserving separate authored components."""
+    bpy.context.view_layer.objects.active = mesh
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.remove_doubles(threshold=0.0001)
+    bpy.ops.mesh.normals_make_consistent(inside=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for polygon in mesh.data.polygons:
+        polygon.use_smooth = True
+    mesh.data.update()
 
 
 def pattern_from_material(material):
@@ -376,32 +422,44 @@ def create_highpoly_source(mesh, name):
     for modifier in list(highpoly.modifiers):
         highpoly.modifiers.remove(modifier)
 
-    subdiv = highpoly.modifiers.new("High Poly Surface", "SUBSURF")
-    subdiv.subdivision_type = "SIMPLE"
-    subdiv.levels = 1
-    subdiv.render_levels = 1
+    subdiv = highpoly.modifiers.new("High Poly Sculpt Surface", "SUBSURF")
+    subdiv.subdivision_type = "CATMULL_CLARK"
+    subdiv.levels = HIGH_POLY_SUBDIVISION
+    subdiv.render_levels = HIGH_POLY_SUBDIVISION
     bpy.context.view_layer.objects.active = highpoly
     highpoly.select_set(True)
     bpy.ops.object.modifier_apply(modifier=subdiv.name)
 
     detail_texture = bpy.data.textures.new(f"{name} Sculpt Detail", type="CLOUDS")
-    detail_texture.noise_scale = 0.12
-    detail_texture.noise_depth = 2
+    detail_texture.noise_scale = 0.10
+    detail_texture.noise_depth = 3
     displace = highpoly.modifiers.new("Sculpt Surface Detail", "DISPLACE")
     displace.texture = detail_texture
     displace.texture_coords = "GLOBAL"
     displace.direction = "NORMAL"
-    displace.strength = 0.008
+    displace.strength = SCULPT_DETAIL_STRENGTH
     displace.mid_level = 0.5
     bpy.context.view_layer.objects.active = highpoly
     bpy.ops.object.modifier_apply(modifier=displace.name)
+    micro_texture = bpy.data.textures.new(f"{name} Micro Detail", type="CLOUDS")
+    micro_texture.noise_scale = 0.028
+    micro_texture.noise_depth = 2
+    micro = highpoly.modifiers.new("Sculpt Micro Detail", "DISPLACE")
+    micro.texture = micro_texture
+    micro.texture_coords = "GLOBAL"
+    micro.direction = "NORMAL"
+    micro.strength = MICRO_DETAIL_STRENGTH
+    micro.mid_level = 0.5
+    bpy.context.view_layer.objects.active = highpoly
+    bpy.ops.object.modifier_apply(modifier=micro.name)
     highpoly.select_set(False)
+    print(f"HIGH_POLY_SCULPT {name} vertices={len(highpoly.data.vertices)}")
     source_material = bpy.data.materials.new(f"{name} Neutral Source")
     highpoly.data.materials.clear()
     highpoly.data.materials.append(source_material)
     for polygon in highpoly.data.polygons:
         polygon.material_index = 0
-    return highpoly, detail_texture, source_material
+    return highpoly, (detail_texture, micro_texture), source_material
 
 
 def remap_uvs_to_atlas(mesh, class_name):
@@ -420,7 +478,7 @@ def remap_uvs_to_atlas(mesh, class_name):
 
 
 def bake_normal_atlas(mesh, class_name, normal_image):
-    highpoly, detail_texture, source_material = create_highpoly_source(mesh, f"{mesh.name}_HighPolyBake")
+    highpoly, detail_textures, source_material = create_highpoly_source(mesh, f"{mesh.name}_HighPolyBake")
     target = mesh.copy()
     target.data = mesh.data.copy()
     target.name = f"{mesh.name}_NormalBakeTarget"
@@ -468,7 +526,8 @@ def bake_normal_atlas(mesh, class_name, normal_image):
         bpy.data.objects.remove(target, do_unlink=True)
         bpy.data.materials.remove(bake_material)
         bpy.data.materials.remove(source_material)
-        bpy.data.textures.remove(detail_texture)
+        for detail_texture in detail_textures:
+            bpy.data.textures.remove(detail_texture)
 
 
 def create_lod_mesh(source, armature, name, ratio):

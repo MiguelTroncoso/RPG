@@ -39,9 +39,11 @@ con albedo y normal, cuerpo y arma inicial separada como `Starter Weapon` en
 se crean por decimacion geometrica real. Cada familia de clase tiene su propio
 atlas 2K de albedo y normal con tiles 256x256, enlazado por rutas relativas.
 El bake de normales se ejecuta en Blender desde una fuente high-poly temporal
-con subdivision y microdesplazamiento, proyectandose sobre el objetivo skinned
-con UVs de produccion. Las fuentes temporales se eliminan al terminar y el
-`.blend` conserva la escena authored editable.
+con subdivision Catmull-Clark de nivel 2, detalle de escultura y microdetalle
+separados, proyectandose sobre el objetivo skinned con UVs de produccion. La
+jaula objetivo pasa una limpieza de vertices duplicados y normales antes del
+bake; las fuentes temporales se eliminan al terminar y el `.blend` conserva la
+escena authored editable.
 
 ## Generar los controllers de Unity
 
@@ -81,8 +83,10 @@ auditoria de contenido del juego sigue siendo independiente y debe conservar
 ## Siguiente mejora comercial
 
 Estos meshes son authored originales estilizados, optimizados para validar el
-pipeline y la lectura de clase en Android. El bake high-poly actual es tecnico:
-la fuente de detalle se genera temporalmente en Blender y no sustituye una
-escultura manual hecha por un artista. El siguiente salto comercial es aportar
-esculturas high-poly manuales, retopologia/UV a mano, pintura 2K por familia,
-LOD optimizado artisticamente y animaciones profesionales de produccion.
+pipeline y la lectura de clase en Android. La Fase 5.74 eleva la fuente de
+detalle y la Fase 5.75 añade una pasada de retopologia objetivo, UV padding y
+pintura procedural de desgaste, grano y tejido por familia. El resultado sigue
+siendo un authored procedural avanzado: no sustituye una escultura manual
+hecha por un artista. El siguiente salto comercial es aportar esculturas
+high-poly manuales, retopologia/UV artística, LOD optimizado a mano y
+animaciones profesionales de produccion.

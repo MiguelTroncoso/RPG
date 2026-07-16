@@ -19,7 +19,7 @@ ANTES DE TOCAR NADA lee, en este orden:
 5. docs/content-completeness.md (ultimo resultado de la auditoria 1-105).
 6. El codigo existente relacionado con tu tarea.
 
-Estado actual (fases 1-5.73 entregadas en primera pasada; refinamientos 5.44,
+Estado actual (fases 1-5.75 entregadas en primera pasada; refinamientos 5.44,
 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64 y 5.65 completados en esta pasada; hoja de ruta A-K completa):
 - La escena se genera 100% en runtime desde
   Assets/Scripts/Core/PrototypeBootstrap.cs. No hay prefabs de escena.
@@ -203,6 +203,13 @@ Estado actual (fases 1-5.73 entregadas en primera pasada; refinamientos 5.44,
   clips por variante y comprime los atlas Android con ETC2. El bake es tecnico,
   no una escultura manual comercial; faltan retopologia, texturas pintadas y
   animaciones profesionales.
+- Fase 5.74: la fuente high-poly temporal sube a Catmull-Clark nivel 2 con
+  detalle de escultura y microdetalle; cada cuerpo llega a aproximadamente
+  36k-51k vertices antes del bake y las armas se procesan por separado.
+- Fase 5.75: la jaula objetivo limpia vertices duplicados, recalcula normales y
+  registra `authored_target_v2`; las UVs usan padding por tile y el albedo 2K
+  recibe pintura authored procedural por material. La siguiente mejora es
+  escultura/retopologia/textura manual de produccion.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

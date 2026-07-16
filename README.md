@@ -1032,6 +1032,23 @@ todavia faltan esculturas high-poly manuales, retopologia y UV de produccion,
 texturas pintadas 2K, animaciones profesionales y trasladar la misma calidad a
 mobs, jefes, NPC y accesorios.
 
+## Fase 5.74: Escultura High-Poly Authored V2
+
+La fuente temporal del bake sube a subdivision Catmull-Clark de nivel 2 y
+recibe dos capas de detalle: escultura de superficie y microdetalle. Los ocho
+personajes alcanzan aproximadamente 36k-51k vertices antes del bake y las armas
+se procesan por separado. El resultado no se exporta al APK; solo sus normales
+horneadas llegan a los FBX optimizados.
+
+## Fase 5.75: Retopologia Objetivo, UVs Y Pintura 2K
+
+La jaula exportada pasa limpieza de vertices duplicados y normales, registra su
+version de retopologia y conserva UVs padded por tile. Los atlas albedo 2K
+reciben una pasada de pintura procedural por material con desgaste, tejido,
+cuero, piel, hueso y runas; los normal atlas se regeneran desde la fuente
+high-poly. El arte sigue siendo authored procedural avanzado hasta que un
+artista aporte escultura, retopologia y texturas pintadas manuales.
+
 ## Fase 5.65: Interfaz Cinematografica Para Android
 
 - `UiThemeConfig` aplica un lenguaje visual comun de paneles oscuros, marcos,

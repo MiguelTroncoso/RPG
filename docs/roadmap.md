@@ -1059,6 +1059,46 @@ high-poly manuales, retopologia y UV manual, texturas pintadas 2K por familia,
 animaciones profesionales y aplicar el mismo tratamiento a mobs, jefes,
 NPC y accesorios finales.
 
+## Fase 5.74: Escultura High-Poly Authored V2
+
+Objetivo: elevar la fuente de detalle que alimenta el bake sin enviar geometria
+high-poly al APK.
+
+- La fuente temporal usa subdivision Catmull-Clark de nivel 2, con una capa de
+  detalle de escultura y otra de microdetalle. [Implementado]
+- Los personajes alcanzan aproximadamente 36k-51k vertices en la fuente de
+  bake y las armas reciben su propia pasada de detalle. [Implementado]
+- El bake normal se ejecuta para cuerpo y arma de las ocho variantes sin usar
+  fallback; el objetivo exportado conserva LOD0/LOD1/LOD2. [Implementado]
+
+Criterio de exito: el detalle high-poly cambia el mapa normal, no aumenta el
+presupuesto del modelo exportado y cada FBX mantiene skinning, arma y clips.
+
+Nota de alcance: esta es una escultura authored procedural avanzada. La
+escultura manual de producción queda como una fase comercial posterior.
+
+## Fase 5.75: Retopologia Objetivo, UVs Y Pintura 2K
+
+Objetivo: dejar una jaula de render limpia y atlas 2K con lectura material por
+familia, lista para sustituirla por texturas pintadas manualmente.
+
+- La jaula objetivo elimina vertices duplicados, recalcula normales y registra
+  la version de retopologia `authored_target_v2`. [Implementado]
+- Cada familia usa UVs padded en sus ocho tiles 256x256 para evitar bleed en el
+  bake y conservar una sola pareja albedo/normal por clase. [Implementado]
+- El albedo 2K recibe pintura procedural de desgaste, grano metalico, tejido,
+  cuero, piel, hueso y runas; el normal atlas se actualiza desde el high-poly.
+  [Implementado]
+- Unity conserva normal maps, mipmaps, filtro trilineal y ETC2_RGBA8 en Android;
+  Assimp mantiene tres clips por cada FBX. [Implementado]
+
+Criterio de exito: las ocho variantes cargan sin errores, las UVs no invaden
+familias vecinas, el material se lee a distancia y la APK mantiene un peso
+compatible con los telefonos de prueba.
+
+Pendiente comercial: reemplazar esta pintura procedural por texturas 2K
+manuales y repetir el tratamiento en mobs, jefes, NPC y accesorios.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **97%**.
+- Avance global estimado hacia el MMORPG publicable: **98%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **99%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **87%**.
+- Arte final comercial, online y lanzamiento: **90%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -164,6 +164,11 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   mipmaps, normal maps y ETC2 para Android; se mantienen 8 FBX, LOD0/1/2, tres
   clips por variante y 17/17 checks. La APK final queda en 39 MB, con target
   SDK 35. Esto cierra el pipeline tecnico, no la escultura manual comercial.
+- Fases 5.74-5.75: la fuente high-poly usa Catmull-Clark nivel 2, detalle de
+  escultura y microdetalle; el objetivo limpia vertices duplicados y normales,
+  conserva UVs padded y recibe pintura authored procedural de desgaste, grano,
+  tejido, cuero, piel, hueso y runas. Los ocho FBX mantienen tres clips y la
+  jaula exportada no incorpora la geometria high-poly.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -189,9 +194,9 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    con firewall, TLS/WSS y persistencia protegida.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Sustituir el bake tecnico por esculturas high-poly manuales, retopologia y
-    UV de produccion, texturas pintadas 2K por familia y animaciones profesionales;
-    aplicar el mismo tratamiento a mobs, jefes, NPC y accesorios.
+10. Sustituir el authored procedural por esculturas high-poly manuales,
+    retopologia y UV de produccion, texturas pintadas 2K y animaciones
+    profesionales; aplicar el mismo tratamiento a mobs, jefes, NPC y accesorios.
 11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
 12. Probar contratos diarios y Renacimiento con varios personajes antes de
@@ -205,6 +210,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.74-5.75 | High-poly authored V2, retopologia objetivo, UV padded y pintura 2K por material | 98% |
 | 2026-07-16 | 5.73 | Bake normal tecnico desde high-poly temporal, atlas 2K por familia y compresion Android | 97% |
 | 2026-07-16 | 5.72 | Atlas 1K, normal detail offline, geometria densificada y poses de combate refinadas | 96% |
 | 2026-07-16 | 5.71 | LOD0/LOD1/LOD2 geometrico real, geometria suavizada y animaciones de combate de cuerpo completo | 95% |
