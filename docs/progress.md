@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-16
 
-- Avance global estimado hacia el MMORPG publicable: **93%**.
+- Avance global estimado hacia el MMORPG publicable: **95%**.
 - Prototipo jugable offline: **100%**.
 - Vertical slice de una zona pulida: **98%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **76%**.
+- Arte final comercial, online y lanzamiento: **80%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -148,6 +148,11 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   skinned authored con atlas albedo/normal, objeto `Starter Weapon`, clips
   propios `Idle`/`Run`/`Attack` y ocho controllers de Unity. El runtime prioriza
   esos FBX, conserva fallback procedural y aplica culling `LODGroup`.
+- Fase 5.71: los ocho FBX ahora contienen cuerpo y arma en `LOD0`/`LOD1`/`LOD2`
+  con decimacion geometrica real; Unity agrupa los renderers authored con
+  umbrales de distancia 0.52/0.22/0.08. La geometria base tiene mas segmentos,
+  suavizado y bordes biselados, y los clips de idle/carrera/ataque animan el
+  cuerpo completo. Assimp, Unity batch y APK Android pasan la validacion.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
@@ -173,8 +178,9 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    con firewall, TLS/WSS y persistencia protegida.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Sustituir progresivamente los meshes low-poly authored por esculturas
-    finales, LOD geometrico real, normales horneadas y animaciones de combate.
+10. Sustituir progresivamente los meshes authored estilizados por esculturas
+    finales, normales horneadas, atlas 1024/2048 y animaciones de combate
+    producidas manualmente; el LOD geometrico base ya esta implementado.
 11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
 12. Probar contratos diarios y Renacimiento con varios personajes antes de
@@ -188,6 +194,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.71 | LOD0/LOD1/LOD2 geometrico real, geometria suavizada y animaciones de combate de cuerpo completo | 95% |
 | 2026-07-16 | 5.70 | Blender, ocho FBX skinned authored, atlas, normals, clips y controllers Unity | 94% |
 | 2026-07-16 | 5.69 | Atlas albedo/normal, skinning runtime, LOD y animacion articulada | 93% |
 | 2026-07-16 | 5.68 | Ocho variantes propias, UVs, microtexturas y rig modular runtime | 92% |

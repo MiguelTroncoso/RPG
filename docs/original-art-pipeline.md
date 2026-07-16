@@ -34,9 +34,10 @@ El script crea:
 - `Assets/Art/Original/OriginalArt_Source.blend` como fuente editable.
 
 Cada FBX contiene un armature skinned, bind poses, pesos por hueso, materiales
-con albedo y normal, arma inicial separada como `Starter Weapon`, y los clips
-`Idle`, `Run` y `Attack`. Las texturas se enlazan con rutas relativas al atlas
-central para evitar ocho copias dentro del repositorio.
+con albedo y normal, cuerpo y arma inicial separada como `Starter Weapon` en
+`LOD0`, `LOD1` y `LOD2`, y los clips `Idle`, `Run` y `Attack`. `LOD1` y `LOD2`
+se crean por decimacion geometrica real. Las texturas se enlazan con rutas
+relativas al atlas central para evitar ocho copias dentro del repositorio.
 
 ## Generar los controllers de Unity
 
@@ -66,13 +67,16 @@ assimp info Assets/Resources/OriginalArt/Characters/Guerrero_Masculino.fbx
 ```
 
 La validacion de esta fase debe mostrar `Animations: 3`, huesos skinned,
-materiales con Diffuse y Normals, y el objeto `Starter Weapon`. La auditoria
-de contenido del juego sigue siendo independiente y debe conservar 17/17.
+materiales con Diffuse y Normals, los nombres `LOD0`/`LOD1`/`LOD2` y el objeto
+`Starter Weapon`. Unity debe regenerar tres clips por cada uno de los ocho
+controllers. La auditoria de contenido del juego sigue siendo independiente y
+debe conservar 17/17.
 
 ## Siguiente mejora comercial
 
-Estos meshes son authored originales de prototipo, optimizados para validar
-el pipeline y la lectura de clase en Android. El siguiente salto artistico es
-reemplazar sus formas low-poly por esculturas finales, crear LOD geometrico
-real (ademas del culling runtime), atlas 1024/2048 por familia si el telefono
-lo permite, normales horneadas y animaciones de combate con mas poses.
+Estos meshes son authored originales estilizados, optimizados para validar el
+pipeline y la lectura de clase en Android. El LOD geometrico base y las poses
+de cuerpo completo ya estan implementados. El siguiente salto artistico es
+reemplazar progresivamente sus formas por esculturas finales, atlas 1024/2048
+por familia si el telefono lo permite, normales horneadas, LOD optimizado a
+mano y animaciones de combate de produccion.

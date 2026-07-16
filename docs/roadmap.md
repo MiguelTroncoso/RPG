@@ -937,7 +937,7 @@ arquitectura de combate, equipamiento y animacion.
 - Idle, carrera, ataque y balanceo de extremidades compatibles con
   `AvatarMotionAnimator`. [Implementado]
 - Exportacion FBX authored, atlas de alta resolucion, mapas normales de arte,
-  LOD geometrico y clips FBX finales. [Planificado]
+  LOD geometrico y clips FBX finales. [Implementado en Fase 5.70-5.71]
 
 Criterio de exito: el cuerpo propio se renderiza con un solo skin, el atlas no
 crea materiales por pieza, el mob y el jugador desaparecen correctamente a
@@ -969,6 +969,34 @@ contenido.
 Criterio de exito: las ocho combinaciones cargan el FBX authored, reproducen
 sus tres clips sin mezclarlos entre clases, ocultan el arma inicial al equipar,
 mantienen fallback funcional y no rompen el contrato de Android.
+
+## Fase 5.71: LOD Geometrico Y Animaciones De Combate
+
+Objetivo: mejorar el rendimiento a distancia y la lectura de combate sin
+abandonar el arte propio authored ni cambiar el contrato del runtime.
+
+- Cada uno de los ocho FBX contiene variantes de geometria reales `LOD0`,
+  `LOD1` y `LOD2` para cuerpo y arma. Las reducciones usan decimacion de
+  malla y no solo ocultamiento del renderer. [Implementado]
+- `OriginalArtVisualFactory` agrupa cuerpo y arma por nivel en un `LODGroup`
+  con umbrales 0.52, 0.22 y 0.08, manteniendo el arma inicial sincronizada
+  cuando se equipa otra pieza. [Implementado]
+- La geometria base usa mas segmentos, suavizado y bordes de armadura
+  biselados para reducir la apariencia de capsulas y cubos del prototipo.
+  [Implementado]
+- `Idle`, `Run` y `Attack` incluyen torso, hombros, antebrazos, manos, cadera,
+  piernas, pies y cabeza con poses mas expresivas. Unity regenera los ocho
+  controllers con tres clips authored por personaje. [Implementado]
+- Se valida la importacion con Assimp, Unity batch y APK Android target SDK 35;
+  la auditoria de contenido conserva 17/17 checks. [Implementado]
+
+Criterio de exito: los ocho personajes conservan rig, armas, cambio de equipo,
+animaciones y fallback; las mallas lejanas reducen geometria sin romper el
+combate multitactil ni la build Android.
+
+Siguiente salto comercial: esculturas menos estilizadas, normales horneadas,
+atlas 1024/2048, LOD artistico optimizado manualmente y animaciones finales
+producidas en Blender con captura o keyframe especializado.
 
 ## Fase 6: Lanzamiento Inicial
 

@@ -103,7 +103,39 @@ namespace MmorpgPrototype
                 animator.runtimeAnimatorController = controller;
             }
 
-            var renderers = model.GetComponentsInChildren<Renderer>(true);
+            var lod0Renderers = new List<Renderer>();
+            var lod1Renderers = new List<Renderer>();
+            var lod2Renderers = new List<Renderer>();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var rendererName = renderer.gameObject.name;
+                if (rendererName.Contains("_LOD2") || rendererName.Contains(" LOD2"))
+                {
+                    lod2Renderers.Add(renderer);
+                }
+                else if (rendererName.Contains("_LOD1") || rendererName.Contains(" LOD1"))
+                {
+                    lod1Renderers.Add(renderer);
+                }
+                else
+                {
+                    lod0Renderers.Add(renderer);
+                }
+            }
+
+            if (lod0Renderers.Count == 0)
+            {
+                lod0Renderers.AddRange(model.GetComponentsInChildren<Renderer>(true));
+            }
+            if (lod1Renderers.Count == 0)
+            {
+                lod1Renderers.AddRange(lod0Renderers);
+            }
+            if (lod2Renderers.Count == 0)
+            {
+                lod2Renderers.AddRange(lod1Renderers);
+            }
+
             var lodGroup = model.GetComponent<LODGroup>();
             if (lodGroup == null)
             {
@@ -112,8 +144,9 @@ namespace MmorpgPrototype
 
             lodGroup.SetLODs(new[]
             {
-                new LOD(0.42f, renderers),
-                new LOD(0.12f, new Renderer[0])
+                new LOD(0.52f, lod0Renderers.ToArray()),
+                new LOD(0.22f, lod1Renderers.ToArray()),
+                new LOD(0.08f, lod2Renderers.ToArray())
             });
             lodGroup.RecalculateBounds();
 
@@ -164,10 +197,13 @@ namespace MmorpgPrototype
 
         public static void SetStarterWeaponVisible(Transform root, bool visible)
         {
-            var weapon = FindDeepChild(root, "Starter Weapon");
-            if (weapon != null)
+            foreach (var weaponName in new[] { "Starter Weapon", "Starter Weapon LOD0", "Starter Weapon LOD1", "Starter Weapon LOD2" })
             {
-                weapon.gameObject.SetActive(visible);
+                var weapon = FindDeepChild(root, weaponName);
+                if (weapon != null)
+                {
+                    weapon.gameObject.SetActive(visible);
+                }
             }
         }
 

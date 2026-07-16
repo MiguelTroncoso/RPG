@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.68 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67 y 5.68 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.71 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67, 5.68, 5.70 y 5.71 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v15 (incluye posición, reclamos de POI, cosmeticos, eventos diarios/semanales, temporada, contratos diarios, Renombre, habilidades y cooldown final),
@@ -142,9 +142,13 @@ simple y autocontenido.
   skinning, atlas albedo/normal, `Starter Weapon` separado y clips
   `Idle`/`Run`/`Attack`. `OriginalArtAnimatorAssetGenerator` crea ocho
   controllers en Resources; el runtime prioriza estos modelos y mantiene
-  fallback procedural. El LOD authored actual es `LODGroup` con culling lejano;
-  el LOD geometrico real y las animaciones de combate de mayor fidelidad quedan
-  para el siguiente bloque comercial. Ver `docs/original-art-pipeline.md`.
+  fallback procedural. Ver `docs/original-art-pipeline.md`.
+- Fase 5.71: cada FBX authored contiene cuerpo y arma en `LOD0`/`LOD1`/`LOD2`,
+  con reduccion geometrica por decimacion y umbrales `LODGroup` 0.52/0.22/0.08.
+  La geometria usa mas segmentos, suavizado y bordes biselados; `Idle`, `Run` y
+  `Attack` animan la cadena de cuerpo completo. El siguiente bloque comercial
+  es escultura de mayor fidelidad, normales horneadas, atlas 1024/2048 y
+  animacion final de produccion.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

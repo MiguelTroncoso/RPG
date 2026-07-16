@@ -975,8 +975,28 @@ Unity genera los ocho controllers desde los clips importados con
 prioriza estos FBX authored y conserva el arte procedural como fallback. El
 pipeline completo, comandos de regeneracion y validacion queda documentado en
 `docs/original-art-pipeline.md`. El LOD actual usa `LODGroup` con culling
-lejano; el siguiente salto comercial sera crear LOD geometrico real y
-animaciones de combate con mas poses.
+lejano. La Fase 5.71 agrega variantes de malla `LOD0`/`LOD1`/`LOD2` reales,
+geometria base con mas segmentos y animaciones de combate con poses de cuerpo
+completo.
+
+## Fase 5.71: LOD Geometrico Y Animaciones De Combate
+
+Cada uno de los ocho FBX authored contiene cuerpo y arma en tres niveles de
+geometria: `LOD0`, `LOD1` y `LOD2`. `OriginalArtVisualFactory` los registra en
+un `LODGroup` con umbrales 0.52, 0.22 y 0.08, de modo que la distancia cambia la
+malla visible y no solo la activa/desactiva.
+
+El generador de Blender usa mas segmentos, suavizado y bordes biselados para
+reducir el aspecto de prototipo. Los clips `Idle`, `Run` y `Attack` ahora
+animan torso, hombros, antebrazos, manos, cadera, piernas, pies y cabeza. Unity
+regenera los ocho controllers y conserva el fallback procedural si falta un
+asset.
+
+Validacion de esta fase: Assimp confirma tres animaciones por FBX; Unity
+importa los ocho controladores con tres clips authored; la APK Android se
+genero con target SDK 35. El arte sigue siendo estilizado authored: el siguiente
+salto comercial son esculturas de mayor fidelidad, normales horneadas, atlas
+1024/2048 y animaciones finales producidas en Blender.
 
 ## Fase 5.65: Interfaz Cinematografica Para Android
 

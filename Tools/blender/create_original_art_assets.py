@@ -260,9 +260,9 @@ def make_armature():
 
 def create_part(name, primitive, location, scale, material, bone_name, rotation=(0, 0, 0), vertices=8):
     if primitive == "sphere":
-        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=1.0, location=location)
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=1.0, location=location)
     elif primitive == "cone":
-        bpy.ops.mesh.primitive_cone_add(vertices=vertices, radius1=1.0, radius2=0.7, depth=1.0, location=location)
+        bpy.ops.mesh.primitive_cone_add(vertices=max(vertices, 12), radius1=1.0, radius2=0.7, depth=1.0, location=location)
     else:
         bpy.ops.mesh.primitive_cube_add(size=1.0, location=location)
     obj = bpy.context.object
@@ -270,6 +270,16 @@ def create_part(name, primitive, location, scale, material, bone_name, rotation=
     obj.scale = scale
     obj.rotation_euler = rotation
     bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+    if primitive == "cube":
+        bevel = obj.modifiers.new("Soft Armor Edges", "BEVEL")
+        bevel.width = min(min(obj.dimensions) * 0.22, 0.055)
+        bevel.segments = 2
+        bevel.limit_method = "ANGLE"
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.modifier_apply(modifier=bevel.name)
+    if primitive in ("sphere", "cone"):
+        for polygon in obj.data.polygons:
+            polygon.use_smooth = True
     obj.data.materials.append(material)
     assign_uvs(obj)
     group = obj.vertex_groups.new(name=bone_name)
@@ -301,6 +311,32 @@ def join_parts(parts, armature, name):
     return mesh
 
 
+def create_lod_mesh(source, armature, name, ratio):
+    lod = source.copy()
+    lod.data = source.data.copy()
+    lod.name = name
+    bpy.context.collection.objects.link(lod)
+    lod.parent = armature
+    lod["original_art"] = True
+    lod["lod_level"] = int(name.rsplit("LOD", 1)[1])
+
+    for modifier in list(lod.modifiers):
+        lod.modifiers.remove(modifier)
+    armature_modifier = lod.modifiers.new("Original Rig Skin", "ARMATURE")
+    armature_modifier.object = armature
+    decimate = lod.modifiers.new("Geometry LOD", "DECIMATE")
+    decimate.ratio = ratio
+    decimate.use_collapse_triangulate = True
+
+    bpy.ops.object.select_all(action="DESELECT")
+    lod.select_set(True)
+    bpy.context.view_layer.objects.active = lod
+    while lod.modifiers.find(decimate.name) > 0:
+        bpy.ops.object.modifier_move_up(modifier=decimate.name)
+    bpy.ops.object.modifier_apply(modifier=decimate.name)
+    return lod
+
+
 def create_action(armature, name, mode):
     action = bpy.data.actions.new(name)
     action.use_fake_user = True
@@ -310,37 +346,68 @@ def create_action(armature, name, mode):
     strip = layer.strips.new(type="KEYFRAME")
     channelbag = strip.channelbag(slot, ensure=True)
     if mode == "idle":
-        frames = (1, 20, 40)
-        left_arm = (0.0, math.radians(4), 0.0)
-        right_arm = (0.0, math.radians(-4), 0.0)
-        left_leg = (0.0, 0.0, 0.0)
-        right_leg = (0.0, 0.0, 0.0)
+        frames = (1, 20, 40, 60, 80)
+        phases = (0.0, 1.0, 0.0, -1.0, 0.0)
+        targets = {
+            "Hips": (0.0, 0.0, math.radians(1.5)),
+            "Spine": (0.0, 0.0, math.radians(2.4)),
+            "Chest": (math.radians(1.5), 0.0, math.radians(-1.8)),
+            "Head": (0.0, 0.0, math.radians(1.8)),
+            "Shoulder.L": (0.0, 0.0, math.radians(-2.0)),
+            "Shoulder.R": (0.0, 0.0, math.radians(2.0)),
+            "UpperArm.L": (0.0, math.radians(4), math.radians(1.5)),
+            "UpperArm.R": (0.0, math.radians(-4), math.radians(-1.5)),
+            "LowerArm.L": (math.radians(2), 0.0, 0.0),
+            "LowerArm.R": (math.radians(-2), 0.0, 0.0),
+        }
     elif mode == "run":
         frames = (1, 6, 11, 16, 21)
-        left_arm = (math.radians(-24), 0.0, math.radians(8))
-        right_arm = (math.radians(24), 0.0, math.radians(-8))
-        left_leg = (math.radians(26), 0.0, 0.0)
-        right_leg = (math.radians(-26), 0.0, 0.0)
+        phases = (0.0, 1.0, 0.0, -1.0, 0.0)
+        targets = {
+            "Hips": (0.0, 0.0, math.radians(4.0)),
+            "Spine": (math.radians(-3.0), 0.0, math.radians(-3.0)),
+            "Chest": (math.radians(4.0), 0.0, math.radians(2.5)),
+            "Head": (math.radians(-2.0), 0.0, math.radians(-1.5)),
+            "Shoulder.L": (0.0, 0.0, math.radians(4.0)),
+            "Shoulder.R": (0.0, 0.0, math.radians(-4.0)),
+            "UpperArm.L": (math.radians(-30), 0.0, math.radians(10)),
+            "UpperArm.R": (math.radians(30), 0.0, math.radians(-10)),
+            "LowerArm.L": (math.radians(-12), 0.0, math.radians(3)),
+            "LowerArm.R": (math.radians(12), 0.0, math.radians(-3)),
+            "Hand.L": (math.radians(-8), 0.0, 0.0),
+            "Hand.R": (math.radians(8), 0.0, 0.0),
+            "Thigh.L": (math.radians(34), 0.0, 0.0),
+            "Thigh.R": (math.radians(-34), 0.0, 0.0),
+            "Foot.L": (math.radians(-18), 0.0, 0.0),
+            "Foot.R": (math.radians(18), 0.0, 0.0),
+        }
     else:
-        frames = (1, 5, 10, 15, 20)
-        left_arm = (math.radians(-48), 0.0, math.radians(18))
-        right_arm = (math.radians(62), 0.0, math.radians(-22))
-        left_leg = (math.radians(-8), 0.0, 0.0)
-        right_leg = (math.radians(8), 0.0, 0.0)
+        frames = (1, 5, 10, 16, 24, 32)
+        phases = (0.0, 0.35, 1.0, 0.55, 0.15, 0.0)
+        targets = {
+            "Hips": (math.radians(-4), 0.0, math.radians(-5)),
+            "Spine": (math.radians(10), 0.0, math.radians(-12)),
+            "Chest": (math.radians(14), 0.0, math.radians(-18)),
+            "Head": (math.radians(-8), 0.0, math.radians(8)),
+            "Shoulder.L": (math.radians(-10), 0.0, math.radians(-8)),
+            "Shoulder.R": (math.radians(18), 0.0, math.radians(12)),
+            "UpperArm.L": (math.radians(-54), 0.0, math.radians(18)),
+            "UpperArm.R": (math.radians(72), 0.0, math.radians(-26)),
+            "LowerArm.L": (math.radians(-28), 0.0, math.radians(8)),
+            "LowerArm.R": (math.radians(42), 0.0, math.radians(-12)),
+            "Hand.L": (math.radians(-20), 0.0, math.radians(6)),
+            "Hand.R": (math.radians(28), 0.0, math.radians(-8)),
+            "Thigh.L": (math.radians(-12), 0.0, 0.0),
+            "Thigh.R": (math.radians(16), 0.0, 0.0),
+            "Foot.L": (math.radians(8), 0.0, 0.0),
+            "Foot.R": (math.radians(-8), 0.0, 0.0),
+        }
 
-    curves = {
-        "UpperArm.L": left_arm,
-        "UpperArm.R": right_arm,
-        "Thigh.L": left_leg,
-        "Thigh.R": right_leg,
-    }
-    for bone_name, target in curves.items():
+    for bone_name, target in targets.items():
         for axis in range(3):
             curve = channelbag.fcurves.new(f'pose.bones["{bone_name}"].rotation_euler', index=axis, group_name=bone_name)
             for index, frame in enumerate(frames):
-                value = target[axis]
-                if len(frames) > 2 and index % 2 == 1:
-                    value *= -1.0
+                value = target[axis] * phases[index]
                 curve.keyframe_points.insert(frame, value)
             for point in curve.keyframe_points:
                 point.interpolation = "BEZIER"
@@ -386,10 +453,15 @@ def build_character(class_name, gender):
     weapon_keywords = ("Sword", "Dagger", "Staff", "Blade")
     weapon_parts = [part for part in parts if any(keyword in part.name for keyword in weapon_keywords)]
     body_parts = [part for part in parts if part not in weapon_parts]
-    mesh = join_parts(body_parts, armature, f"Original_{class_name}_{gender}")
+    mesh = join_parts(body_parts, armature, f"Original_{class_name}_{gender}_LOD0")
     weapon_mesh = None
     if weapon_parts:
-        weapon_mesh = join_parts(weapon_parts, armature, "Starter Weapon")
+        weapon_mesh = join_parts(weapon_parts, armature, "Starter Weapon LOD0")
+    lod_meshes = []
+    for level, ratio in ((1, 0.55), (2, 0.28)):
+        lod_meshes.append(create_lod_mesh(mesh, armature, f"Original_{class_name}_{gender}_LOD{level}", ratio))
+        if weapon_mesh is not None:
+            lod_meshes.append(create_lod_mesh(weapon_mesh, armature, f"Starter Weapon LOD{level}", ratio))
     for mode in ("idle", "run", "attack"):
         create_action(armature, f"Original_{class_name}_{gender}_{mode.title()}", mode)
 
@@ -397,7 +469,7 @@ def build_character(class_name, gender):
     armature["gender"] = gender
     mesh["class"] = class_name
     mesh["gender"] = gender
-    export_character(class_name, gender, mesh, armature, weapon_mesh)
+    export_character(class_name, gender, mesh, armature, weapon_mesh, lod_meshes)
 
 
 def build_warrior(class_name, gender, armor, fabric, rune, female):
@@ -472,12 +544,14 @@ def build_sword(armor, rune):
     ]
 
 
-def export_character(class_name, gender, mesh, armature, weapon_mesh=None):
+def export_character(class_name, gender, mesh, armature, weapon_mesh=None, lod_meshes=None):
     os.makedirs(CHARACTER_DIR, exist_ok=True)
     bpy.ops.object.select_all(action="DESELECT")
     mesh.select_set(True)
     if weapon_mesh is not None:
         weapon_mesh.select_set(True)
+    for lod_mesh in lod_meshes or []:
+        lod_mesh.select_set(True)
     armature.select_set(True)
     bpy.context.view_layer.objects.active = armature
     output = os.path.join(CHARACTER_DIR, f"{class_name}_{gender}.fbx")
