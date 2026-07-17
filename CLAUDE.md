@@ -177,6 +177,12 @@ simple y autocontenido.
   paleta, adornos, sombras, skinning movil y fallback procedural; los 16
   controllers de mobs se regeneran con impacto y muerte. El arte sigue siendo
   authored procedural avanzado hasta sustituirlo por escultura manual.
+- Fase 5.80: `MobileRuntimeDiagnostics` exporta snapshots JSON desde TEST con
+  FPS, memoria, safe area, perfil, dispositivo, enemigos y POI; la matriz de
+  prueba esta en `docs/android-qa.md`.
+- Fase 5.81: existen 30 FBX authored propios para normal/elite/jefe de las
+  diez zonas, con atlas 2K, skinning, LOD0/1/2 y cinco clips. Unity genera 30
+  controllers y `EnemyVisualController` los prioriza con fallback seguro.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

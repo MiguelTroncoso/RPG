@@ -1172,6 +1172,40 @@ no afirma que los modelos licenciados sean esculturas originales manuales. El
 siguiente salto comercial es sustituirlos por familias propias high-poly y
 repetir bake/retopologia/animacion con la misma auditoria.
 
+## Fase 5.80: QA Android Exportable
+
+Objetivo: convertir la prueba en teléfono real en datos comparables entre
+dispositivos y perfiles gráficos.
+
+- `MobileRuntimeDiagnostics` exporta snapshots JSON con FPS, memoria, safe area,
+  perfil, resolución, enemigos y POI. [Implementado]
+- La ventana `TEST` expone `EXPORTAR QA`. [Implementado]
+- La matriz de recorridos de las diez zonas queda en `docs/android-qa.md`.
+  [Implementado]
+- La validación de temperatura, consumo, multitáctil y comodidad todavía exige
+  un dispositivo Android físico. [Pendiente de dispositivo]
+
+Criterio de éxito: cada APK deja un reporte reproducible y se puede comparar
+`RENDIMIENTO` contra `CALIDAD` sin depender de la consola de Unity.
+
+## Fase 5.81: Mobs Authored De Las Diez Zonas
+
+Objetivo: que cada zona tenga modelos propios para sus tres tiers sin reutilizar
+la misma silueta base.
+
+- 30 FBX authored propios, normal/elite/jefe por zona, con atlas albedo/normal
+  2K compartido. [Implementado]
+- Skinning y geometría `LOD0`/`LOD1`/`LOD2` por modelo. [Implementado]
+- Clips authored `Idle`, `Run`, `Attack`, `Hit` y `Death`. [Implementado]
+- 30 controllers Unity y selección prioritaria en `EnemyVisualController`.
+  [Implementado]
+- Mantener Quaternius y el fallback procedural como red de seguridad. [Implementado]
+- La escultura manual high-poly y animación profesional siguen fuera de esta
+  fase hasta disponer de artista/presupuesto. [Pendiente comercial]
+
+Criterio de éxito: recorrer nivel 1-105 muestra una familia reconocible por zona
+y tier, sin romper combate, hitboxes, carga ni rendimiento Android.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

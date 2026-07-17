@@ -219,6 +219,13 @@ Estado actual (fases 1-5.75 entregadas en primera pasada; refinamientos 5.44,
 - Fase 5.79: las diez zonas y sus 30 spawns normal/elite/jefe conservan modelo
   3D, paleta, adornos, sombras y fallback authored; los 16 controllers de mobs
   agregan estados Hit/Death. Falta el reemplazo comercial por escultura manual.
+- Fase 5.80: `MobileRuntimeDiagnostics` exporta JSON desde `TEST` con FPS,
+  memoria, safe area, perfil, dispositivo, enemigos y POI. La matriz esta en
+  `docs/android-qa.md`.
+- Fase 5.81: `Tools/blender/create_original_mob_assets.py` genera 30 FBX
+  authored propios, normal/elite/jefe para las diez zonas, con atlas 2K,
+  skinning, LOD0/1/2 y cinco clips. Unity genera 30 controllers y el runtime
+  prioriza estos modelos con fallback Quaternius/procedural.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
@@ -324,6 +331,9 @@ Proximos objetivos sugeridos:
 - Fase 5.65: abrir `Servidor y conexion`, comprobar URL/diagnostico, alternar
   `HABILIDADES` y mejorar una ranura, cambiar `GRAFICOS` entre perfiles y
   verificar que el centro de combate queda despejado en 16:9 y 19.5:9.
+- Fases 5.80-5.81: reinstalar la APK, recorrer las diez zonas en ambos perfiles,
+  exportar JSON desde TEST y revisar escala, LOD, animaciones y memoria de los
+  30 modelos authored en telefono real.
 - Fase 5.48: abrir TEST y registrar FPS, memoria, carga, TTK, enemigos y POI
   activos en las diez zonas.
 - Fase 5.48: reinstalar la APK y medir TEST, TTK, memoria, minimapa y safe zone

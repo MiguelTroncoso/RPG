@@ -147,16 +147,27 @@ namespace MmorpgPrototype
 
         private bool TryBuildRealModel(string enemyId, EnemyTier tier, Color baseColor, Color accent)
         {
-            var originalModelRequested = tier == EnemyTier.Normal && enemyId == "valley_creature";
-            var model = originalModelRequested
-                ? OriginalArtVisualFactory.BuildValleyMob(visualRoot.transform, baseColor, accent)
+            var authoredResource = AuthoredMobResourceFor(enemyId, tier);
+            var authoredPrefab = Resources.Load<GameObject>(authoredResource);
+            var model = authoredPrefab != null
+                ? Instantiate(authoredPrefab, visualRoot.transform)
                 : null;
-            usingOriginalArt = model != null;
+            usingOriginalArt = false;
             Animator modelAnimator = null;
 
             if (model == null)
             {
-                var modelResource = ModelResourceFor(enemyId, tier);
+                var originalModelRequested = tier == EnemyTier.Normal && enemyId == "valley_creature";
+                model = originalModelRequested
+                    ? OriginalArtVisualFactory.BuildValleyMob(visualRoot.transform, baseColor, accent)
+                    : null;
+                usingOriginalArt = model != null;
+            }
+
+            var modelResource = authoredPrefab != null ? authoredResource : string.Empty;
+            if (model == null)
+            {
+                modelResource = ModelResourceFor(enemyId, tier);
                 var prefab = Resources.Load<GameObject>(modelResource);
                 if (prefab == null)
                 {
@@ -164,7 +175,16 @@ namespace MmorpgPrototype
                 }
 
                 model = Instantiate(prefab, visualRoot.transform);
-                model.name = "Enemy 3D Model";
+            }
+
+            if (model == null)
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(modelResource))
+            {
+                model.name = authoredPrefab != null ? "Authored Mob 3D Model" : "Enemy 3D Model";
                 model.transform.localPosition = ModelOffsetFor(modelResource);
                 model.transform.localRotation = Quaternion.identity;
                 model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
@@ -307,7 +327,7 @@ namespace MmorpgPrototype
         private static float ModelScaleFor(string enemyId, EnemyTier tier)
         {
             enemyId = (enemyId ?? string.Empty).ToLowerInvariant();
-            var scale = 0.85f;
+            var scale = enemyId.StartsWith("originalart/mobs/") ? 0.82f : 0.85f;
             if (enemyId.Contains("tribal"))
             {
                 scale = 0.92f;
@@ -339,6 +359,44 @@ namespace MmorpgPrototype
             }
 
             return scale;
+        }
+
+        private static string AuthoredMobResourceFor(string enemyId, EnemyTier tier)
+        {
+            var zone = ZoneKeyFor(enemyId);
+            if (string.IsNullOrWhiteSpace(zone))
+            {
+                return string.Empty;
+            }
+
+            return $"OriginalArt/Mobs/{zone}_{tier.ToString().ToLowerInvariant()}";
+        }
+
+        private static string AuthoredMobControllerResourceFor(string enemyId, EnemyTier tier)
+        {
+            var zone = ZoneKeyFor(enemyId);
+            if (string.IsNullOrWhiteSpace(zone))
+            {
+                return string.Empty;
+            }
+
+            return $"OriginalArt/Mobs/Controllers/{zone}_{tier.ToString().ToLowerInvariant()}";
+        }
+
+        private static string ZoneKeyFor(string enemyId)
+        {
+            enemyId = (enemyId ?? string.Empty).ToLowerInvariant();
+            if (enemyId.Contains("valley")) return "valley";
+            if (enemyId.Contains("forest")) return "forest";
+            if (enemyId.Contains("ash")) return "ash";
+            if (enemyId.Contains("crystal")) return "crystal";
+            if (enemyId.Contains("frost")) return "frost";
+            if (enemyId.Contains("sunken")) return "sunken";
+            if (enemyId.Contains("obsidian")) return "obsidian";
+            if (enemyId.Contains("astral")) return "astral";
+            if (enemyId.Contains("eclipse")) return "eclipse";
+            if (enemyId.Contains("throne")) return "throne";
+            return string.Empty;
         }
 
         private static string ModelResourceFor(string enemyId, EnemyTier tier)
@@ -418,6 +476,13 @@ namespace MmorpgPrototype
 
         private static string AnimatorResourceFor(string enemyId, EnemyTier tier)
         {
+            var authoredController = AuthoredMobControllerResourceFor(enemyId, tier);
+            if (!string.IsNullOrWhiteSpace(authoredController)
+                && Resources.Load<RuntimeAnimatorController>(authoredController) != null)
+            {
+                return authoredController;
+            }
+
             var modelResource = ModelResourceFor(enemyId, tier);
             if (modelResource.StartsWith("ThirdParty/Quaternius/UltimateMonsters/FBX/"))
             {

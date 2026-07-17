@@ -953,6 +953,9 @@ namespace MmorpgPrototype
             var musicUp = CreateRoundButton(window.transform, "Music Up", Localization.Tr("ui.mobile_music_up"), new Vector2(0.5f, 0.5f), new Vector2(48f, -30f), new Vector2(150f, 46f), new Color(0.2f, 0.5f, 0.34f), 17);
             musicUp.onClick.AddListener(() => controller.AdjustMusic(0.02f));
 
+            var exportButton = CreateRoundButton(window.transform, "Export Android QA", Localization.Tr("ui.mobile_export"), new Vector2(0.5f, 0.5f), new Vector2(0f, -88f), new Vector2(240f, 46f), new Color(0.58f, 0.36f, 0.14f), 17);
+            exportButton.onClick.AddListener(controller.ExportReport);
+
             var closeButton = CreateRoundButton(window.transform, "Close Mobile Test", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(170f, 42f), new Color(0.32f, 0.32f, 0.36f), 17);
             closeButton.onClick.AddListener(controller.Toggle);
 

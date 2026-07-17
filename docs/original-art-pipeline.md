@@ -107,3 +107,35 @@ siendo un authored procedural avanzado: no sustituye una escultura manual
 hecha por un artista. El siguiente salto comercial es aportar esculturas
 high-poly manuales, retopologia/UV artística, LOD optimizado a mano y
 animaciones profesionales de produccion.
+
+## Fases 5.80-5.81: QA Android Y Mobs Authored Por Zona
+
+`MobileRuntimeDiagnostics` exporta un snapshot JSON desde la ventana `TEST`.
+El archivo incluye el dispositivo, resolucion, safe area, perfil de rendimiento,
+FPS actual/promedio/minimo, memoria, enemigos y POI activos. La matriz de
+recorrido y los comandos ADB estan en `docs/android-qa.md`.
+
+`Tools/blender/create_original_mob_assets.py` genera 30 FBX propios en
+`Assets/Resources/OriginalArt/Mobs`: normal, elite y jefe para `valley`,
+`forest`, `ash`, `crystal`, `frost`, `sunken`, `obsidian`, `astral`, `eclipse`
+y `throne`. Cada FBX contiene armature skinned, `LOD0`/`LOD1`/`LOD2`, atlas
+albedo/normal 2K compartido y `Idle`/`Run`/`Attack`/`Hit`/`Death`.
+
+Regenerar los modelos:
+
+```bash
+blender --background --python Tools/blender/create_original_mob_assets.py
+```
+
+Regenerar los controllers despues de importar los FBX:
+
+```bash
+/Applications/Unity/Hub/Editor/6000.5.3f1/Unity.app/Contents/MacOS/Unity \
+  -batchmode -quit -projectPath "$PWD" \
+  -executeMethod MmorpgPrototype.Editor.OriginalMobAnimatorAssetGenerator.Generate
+```
+
+El runtime prueba primero el recurso authored de la zona/tier, luego el set
+Quaternius y finalmente el fallback procedural. El pipeline sigue siendo arte
+authored original estilizado; la escultura manual high-poly, retopologia
+artistica y animacion profesional siguen siendo una mejora comercial futura.

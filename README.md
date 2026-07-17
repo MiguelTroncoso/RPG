@@ -1059,13 +1059,31 @@ por familia y LOD0/1/2. Los ocho FBX exportan ahora `Idle`, `Run`, `Attack`,
 de ataque, impacto y muerte.
 
 Los 30 spawns de las diez zonas conservan modelo 3D, paleta y adornos propios
-por zona/tier. Los 16 controllers de monstruos aceptan impacto y muerte, y
+por zona/tier. Los controllers authored y los 16 controllers base de monstruos
+aceptan impacto y muerte, y
 `EnemyVisualController` aplica el acabado movil, sombras, skinning y fallback
 procedural sin cambiar hitboxes ni datos de progresion. El resultado cierra la
 integracion authored del prototipo; no declara arte comercial manual terminado.
-La siguiente prioridad es validar Android/Hetzner y, cuando haya presupuesto,
-sustituir por lotes las siluetas authored y mobs/jefes por esculturas high-poly
-manuales, retopologia, texturas 2K y animaciones profesionales.
+
+## Fase 5.80: QA Android Exportable
+
+`MobileRuntimeDiagnostics` registra y exporta desde `TEST` un JSON con
+dispositivo, resolucion, safe area, perfil, FPS actual/promedio/minimo,
+memoria, enemigos y POI. La matriz de recorrido y extraccion ADB se encuentra
+en `docs/android-qa.md`. La temperatura, consumo y multitactil siguen
+requiriendo prueba en un telefono fisico.
+
+## Fase 5.81: Mobs Authored Para Todas Las Zonas
+
+Blender genera 30 FBX propios: normal, elite y jefe para cada una de las diez
+zonas. Cada archivo incluye skinning, `LOD0`/`LOD1`/`LOD2`, atlas albedo/normal
+2K compartido y cinco clips (`Idle`, `Run`, `Attack`, `Hit`, `Death`). Unity
+genera 30 controllers y `EnemyVisualController` prioriza el modelo authored,
+manteniendo Quaternius y el fallback procedural como respaldo.
+
+Este salto cubre las diez zonas del nivel 1 al 105, pero sigue siendo arte
+authored original estilizado. La escultura high-poly manual, retopologia
+artistica y animaciones profesionales quedan como mejora comercial posterior.
 
 ## Fase 5.65: Interfaz Cinematografica Para Android
 

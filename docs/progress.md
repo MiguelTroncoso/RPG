@@ -4,7 +4,7 @@ Este porcentaje es una estimacion de producto, no un conteo de scripts. Un
 MMORPG completo tambien necesita arte final, contenido, servidores, pruebas,
 economia, seguridad, operacion y publicacion.
 
-## Corte Diario: 2026-07-16
+## Corte Diario: 2026-07-17
 
 - Avance global estimado hacia el MMORPG publicable: **98%**.
 - Prototipo jugable offline: **100%**.
@@ -183,11 +183,18 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   capa de presentacion por zona/tier: modelo 3D, paleta, adornos, sombras,
   skinning movil, culling y fallback procedural. Los 16 controllers de mobs
   quedan regenerados con estados de combate y muerte.
+- Fase 5.80: `MobileRuntimeDiagnostics` exporta snapshots JSON con dispositivo,
+  perfil, FPS, memoria, safe area, enemigos y POI; la ventana TEST incorpora
+  `EXPORTAR QA` y la matriz reproducible queda en `docs/android-qa.md`.
+- Fase 5.81: se generan 30 FBX authored propios, uno normal/elite/jefe por
+  zona, con atlas albedo/normal 2K compartido, skinning, LOD0/1/2 y cinco clips
+  de combate. `EnemyVisualController` los prioriza con fallback y Unity genera
+  30 controllers dedicados.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
-- APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`: 40 MB,
-  SHA-256 `a2d0c79c17843277638f422d44b0b3754240078e57db77988ddc4448514acba3`.
+- APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`: 42 MB,
+  SHA-256 `4da6efe55fe57ff1b789875a2836b95fb277d7e1c04bd6c913f13ccbe347cbf6`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
@@ -196,7 +203,8 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    camara, especialmente atravesando grupos de mobs.
 2. Confirmar que el campamento de la Zona 1 no contiene mobs y que la transicion
    al campo de combate se entiende visualmente.
-3. Registrar desde TEST FPS, memoria, carga y objetos activos en la Zona 1.
+3. Abrir TEST y pulsar `EXPORTAR QA` en cada perfil y recorrido de zona; seguir
+   la matriz de `docs/android-qa.md`.
 4. Ajustar cantidad de mobs, VFX, decoracion, TTK y radio del minimapa con datos
    del telefono real.
 5. Completar la vertical slice nivel 1-10 con modelos propios de elite/jefe,
@@ -231,6 +239,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-17 | 5.80-5.81 | QA Android exportable y 30 mobs/jefes authored propios para las 10 zonas, con atlas 2K, LOD y controllers | 98% |
 | 2026-07-16 | 5.76-5.79 | Heroes Guerrero/Ninja detallados, cinco clips, reacciones de combate y tratamiento de mobs/jefes 1-105 | 98% |
 | 2026-07-16 | 5.74-5.75 | High-poly authored V2, retopologia objetivo, UV padded y pintura 2K por material | 98% |
 | 2026-07-16 | 5.73 | Bake normal tecnico desde high-poly temporal, atlas 2K por familia y compresion Android | 97% |

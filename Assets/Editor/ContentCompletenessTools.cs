@@ -273,6 +273,9 @@ namespace MmorpgPrototype.Editor
                 "Ghost", "Ghost_Skull"
             };
             var monsterResources = monsterModels.Count(model => AssetExists($"Assets/Resources/ThirdParty/Quaternius/UltimateMonsters/FBX/{model}.fbx"));
+            var authoredMobModels = new[] { "valley", "forest", "ash", "crystal", "frost", "sunken", "obsidian", "astral", "eclipse", "throne" }
+                .SelectMany(zone => new[] { "normal", "elite", "boss" }.Select(tier => $"Assets/Resources/OriginalArt/Mobs/{zone}_{tier}.fbx"))
+                .Count(AssetExists);
             var classResources = new[]
             {
                 "Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/Knight.fbx",
@@ -288,8 +291,8 @@ namespace MmorpgPrototype.Editor
 
             checks.Add(new CheckResult(
                 "Mobs 3D y variantes de zona",
-                monsterResources == monsterModels.Length,
-                $"{monsterResources}/{monsterModels.Length} modelos de mobs disponibles"));
+                monsterResources == monsterModels.Length && authoredMobModels == 30,
+                $"{monsterResources}/{monsterModels.Length} modelos base y {authoredMobModels}/30 authored por zona/tier"));
             checks.Add(new CheckResult(
                 "Personajes 3D y animacion",
                 classResourceCount == classResources.Length && controllerCount == 4,

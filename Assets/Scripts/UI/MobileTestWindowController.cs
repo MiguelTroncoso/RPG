@@ -74,5 +74,16 @@ namespace MmorpgPrototype
 
             Refresh();
         }
+
+        public void ExportReport()
+        {
+            var path = Diagnostics != null
+                ? Diagnostics.ExportReport()
+                : string.Empty;
+            if (BodyText != null && !string.IsNullOrWhiteSpace(path))
+            {
+                BodyText.text += $"\n{Localization.Tr("mobile.report_exported", path)}";
+            }
+        }
     }
 }
