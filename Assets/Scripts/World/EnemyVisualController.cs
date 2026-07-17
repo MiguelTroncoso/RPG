@@ -26,6 +26,11 @@ namespace MmorpgPrototype
         public void Initialize(string enemyId, string displayName, EnemyTier tier, Color baseColor, float scale, Health enemyHealth)
         {
             health = enemyHealth;
+            if (health != null)
+            {
+                health.Damaged -= HandleDamaged;
+                health.Damaged += HandleDamaged;
+            }
             usingOriginalArt = false;
             visualRoot = new GameObject("Enemy Visual");
             visualRoot.transform.SetParent(transform, false);
@@ -86,7 +91,26 @@ namespace MmorpgPrototype
                 statusRoot.SetActive(false);
             }
 
+            GetComponent<AvatarMotionAnimator>()?.PlayDeath();
             deathRoutine = StartCoroutine(DeathAnimation());
+        }
+
+        private void HandleDamaged(Health damagedHealth, int amount)
+        {
+            if (damagedHealth == null || damagedHealth.IsDead)
+            {
+                return;
+            }
+
+            GetComponent<AvatarMotionAnimator>()?.PlayHit();
+        }
+
+        private void OnDestroy()
+        {
+            if (health != null)
+            {
+                health.Damaged -= HandleDamaged;
+            }
         }
 
         private void Update()
@@ -206,6 +230,13 @@ namespace MmorpgPrototype
                 block.SetFloat(SmoothnessId, tier == EnemyTier.Boss ? 0.5f : 0.36f);
                 block.SetColor(EmissionColorId, Color.Lerp(Color.black, accent, tier == EnemyTier.Boss ? 0.12f : 0.035f));
                 renderer.SetPropertyBlock(block);
+
+                renderer.receiveShadows = true;
+                if (renderer is SkinnedMeshRenderer skinned)
+                {
+                    skinned.quality = SkinQuality.Auto;
+                    skinned.updateWhenOffscreen = false;
+                }
             }
         }
 

@@ -1041,7 +1041,8 @@ contrato del runtime Android.
   microdesplazamiento, ejecuta 16 bakes de normales sobre los objetivos skinned
   y elimina las fuentes temporales al terminar. [Implementado]
 - Los ocho FBX mantienen cuerpo, arma, skinning, `LOD0`/`LOD1`/`LOD2` y los
-  clips authored `Idle`, `Run` y `Attack`; Unity conserva los ocho controllers.
+  clips authored `Idle`, `Run`, `Attack`, `Hit` y `Death`; Unity conserva los
+  ocho controllers.
   [Implementado]
 - Unity importa albedo/normal con mipmaps y filtro trilineal; Android usa
   ETC2_RGBA8 para evitar que el atlas 2K dispare el tamano de la APK.
@@ -1098,6 +1099,78 @@ compatible con los telefonos de prueba.
 
 Pendiente comercial: reemplazar esta pintura procedural por texturas 2K
 manuales y repetir el tratamiento en mobs, jefes, NPC y accesorios.
+
+## Fase 5.76: Escultura Authored De Guerrero Y Ninja
+
+Objetivo: dar a las dos clases mas visibles una silueta con mas lectura de
+produccion, manteniendo masculino/femenino, armas separadas y presupuesto
+compatible con Android.
+
+- Guerrero recibe placas de pecho, inlays, hebillas, guardas de antebrazo,
+  rodilleras y broche de capa. [Implementado]
+- Ninja recibe cintas de mascara, linea ocular, paneles de hombro, vendas,
+  bolsos de cadera, ornamento femenino y cresta masculina. [Implementado]
+- Las ocho variantes siguen saliendo del mismo generador Blender y conservan
+  `LOD0`/`LOD1`/`LOD2`, skinning y arma inicial independiente. [Implementado]
+
+Criterio de exito: Guerrero y Ninja se distinguen por silueta y detalles aun
+con la camara alejada, sin romper el rig ni elevar innecesariamente la APK.
+
+Nota: este es un salto authored procedural de alta fidelidad. La escultura
+manual de produccion requiere un artista 3D y una escultura high-poly externa.
+
+## Fase 5.77: Retopologia, UV Y Textura 2K De Heroes
+
+Objetivo: dejar Guerrero y Ninja listos para recibir sustituciones artisticas
+manuales sin cambiar el contrato de Unity.
+
+- Las cuatro variantes Guerrero/Ninja usan limpieza de jaula, normales
+  consistentes, UV padded por tile y atlas de albedo/normal 2K por familia.
+  [Implementado]
+- El bake conserva detalle authored de placas, tela, cuero, piel y runas en
+  el normal map, con ETC2, mipmaps y filtro trilineal para Android. [Implementado]
+- Los metadatos del mesh registran `sculpt_detail_retopology_uv_2K_v3` para
+  auditar que el asset proviene del pase objetivo correcto. [Implementado]
+
+Criterio de exito: cada variante carga con material y normal correctos, sin
+bleed visible entre tiles y con LOD funcional.
+
+## Fase 5.78: Animacion De Produccion Authored
+
+Objetivo: que el personaje y los enemigos tengan reacciones legibles durante
+combate, no solo idle/carrera/ataque.
+
+- Los ocho personajes exportan `Idle`, `Run`, `Attack`, `Hit` y `Death` con
+  curvas Bezier, anticipacion, recuperacion y descenso final. [Implementado]
+- Los controllers de personaje tienen parametros `Speed`, `Attack`, `Hit` y
+  `Death`; `AvatarMotionAnimator` puede disparar los cuatro eventos. [Implementado]
+- Los controllers de monstruos aceptan los mismos estados y el runtime dispara
+  impacto y muerte desde `Health`/`EnemyVisualController`. [Implementado]
+
+Criterio de exito: ataque, daño recibido y muerte no dejan al modelo congelado
+ni producen errores cuando falta un clip; el fallback procedural se conserva.
+
+## Fase 5.79: Tratamiento Authored Para Mobs Y Jefes 1-105
+
+Objetivo: aplicar una lectura visual coherente a los 30 spawns de las diez
+zonas: normal, elite y jefe.
+
+- Cada zona conserva su familia de modelo 3D, paleta, adornos, material y
+  silueta de tier; los diez jefes tienen identidad separada. [Implementado]
+- Los 16 controllers Quaternius usados por esas familias regeneran estados de
+  idle, movimiento, ataque, impacto y muerte. [Implementado]
+- `EnemyVisualController` aplica el acabado por zona/tier, recepción de sombras,
+  skinning movil, culling fuera de pantalla, adornos de elite/jefe y fallback
+  procedural si un recurso no existe. [Implementado]
+
+Criterio de exito: recorrer nivel 1-105 no vuelve a capsulas genericas cuando
+existe un modelo 3D, cada tier es reconocible y Android mantiene una carga
+razonable.
+
+Limite de alcance: 5.79 deja lista la integración y la dirección visual, pero
+no afirma que los modelos licenciados sean esculturas originales manuales. El
+siguiente salto comercial es sustituirlos por familias propias high-poly y
+repetir bake/retopologia/animacion con la misma auditoria.
 
 ## Fase 6: Lanzamiento Inicial
 

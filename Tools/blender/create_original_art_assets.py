@@ -559,6 +559,8 @@ def create_lod_mesh(source, armature, name, ratio):
 def create_action(armature, name, mode):
     action = bpy.data.actions.new(name)
     action.use_fake_user = True
+    action["animation_pass"] = "authored_production_v1"
+    action["suitable_for_android"] = True
     armature.animation_data_create()
     slot = action.slots.new("OBJECT", armature.name)
     layer = action.layers.new("Base")
@@ -579,6 +581,8 @@ def create_action(armature, name, mode):
             "UpperArm.R": (0.0, math.radians(-4), math.radians(-1.5)),
             "LowerArm.L": (math.radians(2), 0.0, 0.0),
             "LowerArm.R": (math.radians(-2), 0.0, 0.0),
+            "Hand.L": (0.0, math.radians(2), math.radians(1.2)),
+            "Hand.R": (0.0, math.radians(-2), math.radians(-1.2)),
         }
     elif mode == "run":
         frames = (1, 6, 11, 16, 21)
@@ -602,7 +606,7 @@ def create_action(armature, name, mode):
             "Foot.L": (math.radians(-18), 0.0, 0.0),
             "Foot.R": (math.radians(18), 0.0, 0.0),
         }
-    else:
+    elif mode == "attack":
         frames = (1, 5, 10, 16, 24, 32)
         phases = (0.0, 0.35, 1.0, 0.55, 0.15, 0.0)
         targets = {
@@ -624,6 +628,40 @@ def create_action(armature, name, mode):
             "Foot.L": (math.radians(8), 0.0, 0.0),
             "Foot.R": (math.radians(-8), 0.0, 0.0),
         }
+    elif mode == "hit":
+        frames = (1, 3, 7, 13)
+        phases = (0.0, 1.0, 0.45, 0.0)
+        targets = {
+            "Hips": (0.0, 0.0, math.radians(-8)),
+            "Spine": (0.0, 0.0, math.radians(12)),
+            "Chest": (math.radians(-8), 0.0, math.radians(10)),
+            "Neck": (math.radians(6), 0.0, math.radians(-6)),
+            "Head": (math.radians(8), 0.0, math.radians(-8)),
+            "Shoulder.L": (0.0, 0.0, math.radians(8)),
+            "Shoulder.R": (0.0, 0.0, math.radians(-8)),
+            "UpperArm.L": (math.radians(12), 0.0, math.radians(-8)),
+            "UpperArm.R": (math.radians(12), 0.0, math.radians(8)),
+        }
+    else:
+        frames = (1, 8, 16, 26, 38)
+        phases = (0.0, 0.35, 0.8, 1.0, 1.0)
+        targets = {
+            "Hips": (math.radians(18), 0.0, math.radians(8)),
+            "Spine": (math.radians(28), 0.0, math.radians(-12)),
+            "Chest": (math.radians(34), 0.0, math.radians(-18)),
+            "Neck": (math.radians(-18), 0.0, math.radians(12)),
+            "Head": (math.radians(-24), 0.0, math.radians(16)),
+            "Shoulder.L": (math.radians(-22), 0.0, math.radians(-12)),
+            "Shoulder.R": (math.radians(-22), 0.0, math.radians(12)),
+            "UpperArm.L": (math.radians(-34), 0.0, math.radians(18)),
+            "UpperArm.R": (math.radians(-38), 0.0, math.radians(-18)),
+            "LowerArm.L": (math.radians(-16), 0.0, math.radians(8)),
+            "LowerArm.R": (math.radians(-16), 0.0, math.radians(-8)),
+            "Thigh.L": (math.radians(-28), 0.0, 0.0),
+            "Thigh.R": (math.radians(-24), 0.0, 0.0),
+            "Foot.L": (math.radians(18), 0.0, 0.0),
+            "Foot.R": (math.radians(18), 0.0, 0.0),
+        }
 
     for bone_name, target in targets.items():
         for axis in range(3):
@@ -633,6 +671,13 @@ def create_action(armature, name, mode):
                 curve.keyframe_points.insert(frame, value)
             for point in curve.keyframe_points:
                 point.interpolation = "BEZIER"
+
+    if mode == "death":
+        location = channelbag.fcurves.new('pose.bones["Hips"].location', index=2, group_name="Hips")
+        for frame, value in zip(frames, (0.0, -0.03, -0.12, -0.30, -0.34)):
+            location.keyframe_points.insert(frame, value)
+        for point in location.keyframe_points:
+            point.interpolation = "BEZIER"
 
     armature.animation_data.action = action
     armature.animation_data.action_slot = slot
@@ -689,13 +734,17 @@ def build_character(class_name, gender):
         lod_meshes.append(create_lod_mesh(mesh, armature, f"Original_{class_name}_{gender}_LOD{level}", ratio))
         if weapon_mesh is not None:
             lod_meshes.append(create_lod_mesh(weapon_mesh, armature, f"Starter Weapon LOD{level}", ratio))
-    for mode in ("idle", "run", "attack"):
+    for mode in ("idle", "run", "attack", "hit", "death"):
         create_action(armature, f"Original_{class_name}_{gender}_{mode.title()}", mode)
 
     armature["class"] = class_name
     armature["gender"] = gender
+    armature["art_pass"] = "hero_detail_v3"
+    armature["animation_set"] = "locomotion_combat_reaction_death"
     mesh["class"] = class_name
     mesh["gender"] = gender
+    if class_name in ("Guerrero", "Ninja"):
+        mesh["hero_art_pass"] = "sculpt_detail_retopology_uv_2K_v3"
     export_character(class_name, gender, mesh, armature, weapon_mesh, lod_meshes)
 
 
@@ -703,6 +752,14 @@ def build_warrior(class_name, gender, armor, fabric, rune, female):
     parts = [
         create_part("Shoulder.L", "sphere", (-0.50, 0.42, 0), (0.30, 0.20, 0.28), armor, "Chest"),
         create_part("Shoulder.R", "sphere", (0.50, 0.42, 0), (0.30, 0.20, 0.28), armor, "Chest"),
+        create_part("Chest Plate", "cube", (0, 0.12, -0.37), (0.34, 0.26, 0.08), armor, "Chest"),
+        create_part("Chest Plate Inlay", "cube", (0, 0.14, -0.46), (0.09, 0.15, 0.025), rune, "Chest"),
+        create_part("Belt Buckle", "cube", (0, -0.22, -0.39), (0.13, 0.11, 0.05), rune, "Hips"),
+        create_part("Forearm Guard.L", "cone", (-0.53, -0.02, -0.07), (0.15, 0.18, 0.15), armor, "LowerArm.L", (0, 0, math.radians(16))),
+        create_part("Forearm Guard.R", "cone", (0.53, -0.02, -0.07), (0.15, 0.18, 0.15), armor, "LowerArm.R", (0, 0, math.radians(-16))),
+        create_part("Knee Guard.L", "cube", (-0.24, -0.49, -0.18), (0.20, 0.14, 0.08), armor, "Thigh.L"),
+        create_part("Knee Guard.R", "cube", (0.24, -0.49, -0.18), (0.20, 0.14, 0.08), armor, "Thigh.R"),
+        create_part("Cape Clasp", "sphere", (0, 0.40, -0.38), (0.10, 0.10, 0.07), rune, "Chest"),
         create_part("Chest Rune", "cone", (0, 0.18, -0.40), (0.12, 0.08, 0.08), rune, "Chest", (math.radians(90), 0, 0), 4),
         create_part("Cape", "cube", (0, 0.04, 0.34), (0.72, 0.76, 0.06), fabric, "Spine", (math.radians(8), 0, 0)),
     ]
@@ -718,10 +775,22 @@ def build_ninja(class_name, gender, armor, fabric, rune, female):
     parts = [
         create_part("Hood", "sphere", (0, 0.96, 0.02), (0.40, 0.36, 0.40), fabric, "Head"),
         create_part("Mask", "cube", (0, 0.86, -0.34), (0.28, 0.08, 0.05), rune, "Head"),
+        create_part("Mask Tie.L", "cone", (-0.24, 0.82, 0.05), (0.035, 0.035, 0.22), fabric, "Head", (math.radians(18), 0, math.radians(18)), vertices=5),
+        create_part("Mask Tie.R", "cone", (0.24, 0.82, 0.05), (0.035, 0.035, 0.22), fabric, "Head", (math.radians(18), 0, math.radians(-18)), vertices=5),
+        create_part("Eye Line", "cube", (0, 0.91, -0.38), (0.22, 0.028, 0.025), rune, "Head"),
+        create_part("Shoulder Panel.L", "cube", (-0.43, 0.36, -0.08), (0.20, 0.08, 0.22), armor, "Chest", (0, 0, math.radians(20))),
+        create_part("Shoulder Panel.R", "cube", (0.43, 0.36, -0.08), (0.20, 0.08, 0.22), armor, "Chest", (0, 0, math.radians(-20))),
+        create_part("Forearm Wrap.L", "cone", (-0.50, -0.04, -0.06), (0.13, 0.18, 0.13), fabric, "LowerArm.L", (0, 0, math.radians(16))),
+        create_part("Forearm Wrap.R", "cone", (0.50, -0.04, -0.06), (0.13, 0.18, 0.13), fabric, "LowerArm.R", (0, 0, math.radians(-16))),
+        create_part("Hip Pouch.L", "cube", (-0.32, -0.23, -0.34), (0.12, 0.10, 0.08), fabric, "Hips"),
+        create_part("Hip Pouch.R", "cube", (0.32, -0.23, -0.34), (0.12, 0.10, 0.08), fabric, "Hips"),
         create_part("Sash", "cube", (0, -0.02, -0.42), (0.52, 0.07, 0.05), armor, "Hips"),
     ]
     if female:
         parts.append(create_part("Hair Ribbon", "cone", (0.26, 0.64, 0), (0.05, 0.05, 0.26), rune, "Head", (0, 0, math.radians(-16)), vertices=5))
+        parts.append(create_part("Hair Ornament", "sphere", (0.26, 0.88, 0.08), (0.09, 0.09, 0.09), rune, "Head"))
+    else:
+        parts.append(create_part("Hood Crest", "cone", (0, 1.30, 0.02), (0.07, 0.18, 0.05), rune, "Head", (0, 0, math.radians(12)), vertices=5))
     parts += [
         create_part("Dagger.L", "cone", (-0.48, 0.02, -0.28), (0.07, 0.07, 0.30), armor, "Hand.L", (0, 0, math.radians(26)), vertices=4),
         create_part("Dagger.R", "cone", (0.48, 0.02, -0.28), (0.07, 0.07, 0.30), armor, "Hand.R", (0, 0, math.radians(-26)), vertices=4),

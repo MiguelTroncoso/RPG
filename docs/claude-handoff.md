@@ -210,6 +210,15 @@ Estado actual (fases 1-5.75 entregadas en primera pasada; refinamientos 5.44,
   registra `authored_target_v2`; las UVs usan padding por tile y el albedo 2K
   recibe pintura authored procedural por material. La siguiente mejora es
   escultura/retopologia/textura manual de produccion.
+- Fases 5.76-5.77: Guerrero y Ninja masculino/femenino reciben piezas authored
+  adicionales y conservan retopologia, UV padded, bake normal, atlas 2K y
+  LOD0/1/2. Los meshes Guerrero/Ninja registran `hero_art_pass`.
+- Fase 5.78: los ocho FBX contienen cinco clips (`Idle`, `Run`, `Attack`,
+  `Hit`, `Death`); controllers y `AvatarMotionAnimator` pueden disparar las
+  reacciones de combate.
+- Fase 5.79: las diez zonas y sus 30 spawns normal/elite/jefe conservan modelo
+  3D, paleta, adornos, sombras y fallback authored; los 16 controllers de mobs
+  agregan estados Hit/Death. Falta el reemplazo comercial por escultura manual.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

@@ -6,9 +6,13 @@ namespace MmorpgPrototype
     {
         private static readonly int SpeedHash = Animator.StringToHash("Speed");
         private static readonly int AttackHash = Animator.StringToHash("Attack");
+        private static readonly int HitHash = Animator.StringToHash("Hit");
+        private static readonly int DeathHash = Animator.StringToHash("Death");
         private static readonly int IdleStateHash = Animator.StringToHash("Base Layer.Idle");
         private static readonly int RunStateHash = Animator.StringToHash("Base Layer.Run");
         private static readonly int AttackStateHash = Animator.StringToHash("Base Layer.Attack");
+        private static readonly int HitStateHash = Animator.StringToHash("Base Layer.Hit");
+        private static readonly int DeathStateHash = Animator.StringToHash("Base Layer.Death");
 
         private Transform visualRoot;
         private Transform leftArm;
@@ -22,9 +26,13 @@ namespace MmorpgPrototype
         private float moveAmount;
         private bool hasSpeedParameter;
         private bool hasAttackParameter;
+        private bool hasHitParameter;
+        private bool hasDeathParameter;
         private bool hasIdleState;
         private bool hasRunState;
         private bool hasAttackState;
+        private bool hasHitState;
+        private bool hasDeathState;
         private bool modelIsMoving;
 
         private void Awake()
@@ -55,6 +63,40 @@ namespace MmorpgPrototype
             else if (modelAnimator != null && modelAnimator.runtimeAnimatorController != null && hasAttackState)
             {
                 modelAnimator.CrossFade(AttackStateHash, 0.05f);
+            }
+        }
+
+        public void PlayHit()
+        {
+            if (modelAnimator == null || modelAnimator.runtimeAnimatorController == null)
+            {
+                return;
+            }
+
+            if (hasHitParameter)
+            {
+                modelAnimator.SetTrigger(HitHash);
+            }
+            else if (hasHitState)
+            {
+                modelAnimator.CrossFade(HitStateHash, 0.04f);
+            }
+        }
+
+        public void PlayDeath()
+        {
+            if (modelAnimator == null || modelAnimator.runtimeAnimatorController == null)
+            {
+                return;
+            }
+
+            if (hasDeathParameter)
+            {
+                modelAnimator.SetTrigger(DeathHash);
+            }
+            else if (hasDeathState)
+            {
+                modelAnimator.CrossFade(DeathStateHash, 0.04f);
             }
         }
 
@@ -159,9 +201,13 @@ namespace MmorpgPrototype
         {
             hasSpeedParameter = false;
             hasAttackParameter = false;
+            hasHitParameter = false;
+            hasDeathParameter = false;
             hasIdleState = false;
             hasRunState = false;
             hasAttackState = false;
+            hasHitState = false;
+            hasDeathState = false;
             modelIsMoving = false;
 
             if (modelAnimator == null || modelAnimator.runtimeAnimatorController == null)
@@ -172,6 +218,8 @@ namespace MmorpgPrototype
             hasIdleState = modelAnimator.HasState(0, IdleStateHash);
             hasRunState = modelAnimator.HasState(0, RunStateHash);
             hasAttackState = modelAnimator.HasState(0, AttackStateHash);
+            hasHitState = modelAnimator.HasState(0, HitStateHash);
+            hasDeathState = modelAnimator.HasState(0, DeathStateHash);
 
             foreach (var parameter in modelAnimator.parameters)
             {
@@ -183,6 +231,16 @@ namespace MmorpgPrototype
                 if (parameter.nameHash == AttackHash && parameter.type == AnimatorControllerParameterType.Trigger)
                 {
                     hasAttackParameter = true;
+                }
+
+                if (parameter.nameHash == HitHash && parameter.type == AnimatorControllerParameterType.Trigger)
+                {
+                    hasHitParameter = true;
+                }
+
+                if (parameter.nameHash == DeathHash && parameter.type == AnimatorControllerParameterType.Trigger)
+                {
+                    hasDeathParameter = true;
                 }
             }
         }

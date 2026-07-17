@@ -1023,7 +1023,7 @@ El pipeline de Blender ahora crea cuatro pares de atlas 2K, uno por clase, y
 ejecuta el bake real de normales desde una fuente high-poly temporal con
 subdivision y microdesplazamiento. El resultado se proyecta sobre los objetivos
 skinned de los ocho FBX y conserva `LOD0`/`LOD1`/`LOD2`, el arma inicial y los
-clips `Idle`, `Run` y `Attack`. Unity configura mipmaps, filtro trilineal,
+clips `Idle`, `Run`, `Attack`, `Hit` y `Death`. Unity configura mipmaps, filtro trilineal,
 normal maps y ETC2_RGBA8 para Android; las fuentes temporales se eliminan
 despues del bake.
 
@@ -1048,6 +1048,24 @@ reciben una pasada de pintura procedural por material con desgaste, tejido,
 cuero, piel, hueso y runas; los normal atlas se regeneran desde la fuente
 high-poly. El arte sigue siendo authored procedural avanzado hasta que un
 artista aporte escultura, retopologia y texturas pintadas manuales.
+
+## Fases 5.76-5.79: Heroes, Reacciones Y Mobs 1-105
+
+Guerrero y Ninja masculino/femenino reciben detalles authored adicionales de
+placas, guardas, cintas, vendas, bolsos, ornamentos y crestas. Las cuatro
+variantes mantienen retopologia objetivo, UV padded, atlas 2K, normales horneadas
+por familia y LOD0/1/2. Los ocho FBX exportan ahora `Idle`, `Run`, `Attack`,
+`Hit` y `Death`; sus controllers y `AvatarMotionAnimator` exponen los eventos
+de ataque, impacto y muerte.
+
+Los 30 spawns de las diez zonas conservan modelo 3D, paleta y adornos propios
+por zona/tier. Los 16 controllers de monstruos aceptan impacto y muerte, y
+`EnemyVisualController` aplica el acabado movil, sombras, skinning y fallback
+procedural sin cambiar hitboxes ni datos de progresion. El resultado cierra la
+integracion authored del prototipo; no declara arte comercial manual terminado.
+La siguiente prioridad es validar Android/Hetzner y, cuando haya presupuesto,
+sustituir por lotes las siluetas authored y mobs/jefes por esculturas high-poly
+manuales, retopologia, texturas 2K y animaciones profesionales.
 
 ## Fase 5.65: Interfaz Cinematografica Para Android
 

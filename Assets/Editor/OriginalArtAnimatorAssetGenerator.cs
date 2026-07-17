@@ -50,11 +50,15 @@ namespace MmorpgPrototype.Editor
                     var controller = AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
                     controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
                     controller.AddParameter("Attack", AnimatorControllerParameterType.Trigger);
+                    controller.AddParameter("Hit", AnimatorControllerParameterType.Trigger);
+                    controller.AddParameter("Death", AnimatorControllerParameterType.Trigger);
 
                     var stateMachine = controller.layers[0].stateMachine;
                     var idle = AddState(stateMachine, "Idle", PickClip(clips, "idle") ?? clips[0]);
                     var run = AddState(stateMachine, "Run", PickClip(clips, "run", "walk") ?? clips[0]);
                     var attack = AddState(stateMachine, "Attack", PickClip(clips, "attack") ?? clips[0]);
+                    var hit = AddState(stateMachine, "Hit", PickClip(clips, "hit") ?? clips[0]);
+                    var death = AddState(stateMachine, "Death", PickClip(clips, "death") ?? clips[0]);
                     stateMachine.defaultState = idle;
 
                     var idleToRun = idle.AddTransition(run);
@@ -70,10 +74,25 @@ namespace MmorpgPrototype.Editor
                     anyToAttack.duration = 0.05f;
                     anyToAttack.AddCondition(AnimatorConditionMode.If, 0f, "Attack");
 
+                    var anyToHit = stateMachine.AddAnyStateTransition(hit);
+                    anyToHit.hasExitTime = false;
+                    anyToHit.duration = 0.04f;
+                    anyToHit.AddCondition(AnimatorConditionMode.If, 0f, "Hit");
+
+                    var anyToDeath = stateMachine.AddAnyStateTransition(death);
+                    anyToDeath.hasExitTime = false;
+                    anyToDeath.duration = 0.04f;
+                    anyToDeath.AddCondition(AnimatorConditionMode.If, 0f, "Death");
+
                     var attackToIdle = attack.AddTransition(idle);
                     attackToIdle.hasExitTime = true;
                     attackToIdle.exitTime = 0.9f;
                     attackToIdle.duration = 0.1f;
+
+                    var hitToIdle = hit.AddTransition(idle);
+                    hitToIdle.hasExitTime = true;
+                    hitToIdle.exitTime = 0.92f;
+                    hitToIdle.duration = 0.12f;
 
                     EditorUtility.SetDirty(controller);
                     Debug.Log($"OriginalArtAnimatorAssetGenerator: {className}_{gender} uses {clips.Count} authored clips");

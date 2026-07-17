@@ -13,7 +13,8 @@ economia, seguridad, operacion y publicacion.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte final comercial, online y lanzamiento: **90%**.
+- Arte authored integrado y listo para iteracion: **94%**.
+- Arte manual comercial, online y lanzamiento: **78%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -167,12 +168,26 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Fases 5.74-5.75: la fuente high-poly usa Catmull-Clark nivel 2, detalle de
   escultura y microdetalle; el objetivo limpia vertices duplicados y normales,
   conserva UVs padded y recibe pintura authored procedural de desgaste, grano,
-  tejido, cuero, piel, hueso y runas. Los ocho FBX mantienen tres clips y la
+  tejido, cuero, piel, hueso y runas. Los ocho FBX mantienen cinco clips y la
   jaula exportada no incorpora la geometria high-poly.
+- Fase 5.76: Guerrero y Ninja masculino/femenino reciben una pasada authored
+  de mayor lectura con placas, inlays, hebillas, guardas, rodilleras, cintas,
+  vendas, bolsos, ornamentos y crestas por variante.
+- Fase 5.77: las cuatro variantes de Guerrero/Ninja conservan retopologia
+  objetivo, UV padded, bake normal y atlas 2K por familia; Unity mantiene
+  mipmaps, ETC2 y LOD0/1/2 para Android.
+- Fase 5.78: los ocho personajes exportan cinco clips authored (`Idle`, `Run`,
+  `Attack`, `Hit`, `Death`); los controllers de personajes y mobs exponen
+  `Speed`, `Attack`, `Hit` y `Death`, y el runtime dispara impacto/muerte.
+- Fase 5.79: las diez zonas y sus 30 spawns normal/elite/jefe reciben la misma
+  capa de presentacion por zona/tier: modelo 3D, paleta, adornos, sombras,
+  skinning movil, culling y fallback procedural. Los 16 controllers de mobs
+  quedan regenerados con estados de combate y muerte.
 - El reporte `docs/content-completeness.md` confirma 17/17 checks: 10 zonas,
   35 misiones, 162 items, 30 tablas de loot, 15 modelos de mobs y modelos de
   personaje masculino/femenino disponibles. La auditoria actual pasa 17/17.
-- APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`.
+- APK Android recompilada y validada con Unity 6000.5.3f1 y `aapt2`: 40 MB,
+  SHA-256 `a2d0c79c17843277638f422d44b0b3754240078e57db77988ddc4448514acba3`.
 - Cambios sincronizados en GitHub, rama `main`.
 
 ## Siguiente Corte
@@ -194,22 +209,29 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    con firewall, TLS/WSS y persistencia protegida.
 9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Sustituir el authored procedural por esculturas high-poly manuales,
-    retopologia y UV de produccion, texturas pintadas 2K y animaciones
-    profesionales; aplicar el mismo tratamiento a mobs, jefes, NPC y accesorios.
-11. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
+10. Validar en un telefono real las nuevas reacciones `Hit`/`Death`, el peso de
+    los cinco clips y la lectura de Guerrero/Ninja a distancia.
+11. Prioridad de lanzamiento: levantar S-01 en Hetzner con firewall, TLS/WSS,
+    persistencia protegida, backups y dos clientes Android antes de publicar.
+12. Sustituir por encargo artistico las siluetas authored y los modelos base de
+    mobs/jefes por esculturas high-poly manuales, retopologia, UV, atlas 2K y
+    animaciones profesionales cuando el presupuesto de arte este aprobado.
+13. Aplicar esa sustitucion por lotes: Zona 1 primero, luego zonas 2-4 y por
+    ultimo 5-10; conservar contratos de nombres, LOD, hitboxes y controllers.
+14. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
-12. Probar contratos diarios y Renacimiento con varios personajes antes de
+15. Probar contratos diarios y Renacimiento con varios personajes antes de
     mover sus recompensas a autoridad del servidor.
-13. Probar cambio de lunes UTC, cambio de temporada, hitos 5/10/15/20/25/30
+16. Probar cambio de lunes UTC, cambio de temporada, hitos 5/10/15/20/25/30
     calendario diario y persistencia de recompensas en Android.
-14. Validar en S-01 horarios del jefe, membresias de clan, ranking y resultados
+17. Validar en S-01 horarios del jefe, membresias de clan, ranking y resultados
     del modo todos contra todos antes de habilitar recompensas online.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-16 | 5.76-5.79 | Heroes Guerrero/Ninja detallados, cinco clips, reacciones de combate y tratamiento de mobs/jefes 1-105 | 98% |
 | 2026-07-16 | 5.74-5.75 | High-poly authored V2, retopologia objetivo, UV padded y pintura 2K por material | 98% |
 | 2026-07-16 | 5.73 | Bake normal tecnico desde high-poly temporal, atlas 2K por familia y compresion Android | 97% |
 | 2026-07-16 | 5.72 | Atlas 1K, normal detail offline, geometria densificada y poses de combate refinadas | 96% |

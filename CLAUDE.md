@@ -168,6 +168,15 @@ simple y autocontenido.
   normales y metadatos de retopologia; el albedo 2K recibe una pasada authored
   de desgaste, grano, tejido y runas por material. Sigue pendiente la version
   manual comercial y el mismo tratamiento para mobs, jefes y accesorios.
+- Fases 5.76-5.77: Guerrero y Ninja masculino/femenino reciben una pasada
+  authored de detalle y conservan retopologia objetivo, UV padded, bake normal,
+  atlas 2K y LOD0/1/2. La fuente registra `hero_art_pass` para auditar el pase.
+- Fase 5.78: los ocho FBX exportan `Idle`, `Run`, `Attack`, `Hit` y `Death`;
+  controllers y `AvatarMotionAnimator` soportan Speed/Attack/Hit/Death.
+- Fase 5.79: los 30 spawns normal/elite/jefe de las diez zonas mantienen modelo,
+  paleta, adornos, sombras, skinning movil y fallback procedural; los 16
+  controllers de mobs se regeneran con impacto y muerte. El arte sigue siendo
+  authored procedural avanzado hasta sustituirlo por escultura manual.
 - Guardado local en esquema v15 incluye reclamos de puntos de interes,
   cosmeticos/companeros/monturas desbloqueados y progreso del evento diario;
   tambien conserva contratos diarios, eventos semanales, temporada y Renombre;

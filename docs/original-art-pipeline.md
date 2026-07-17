@@ -35,7 +35,8 @@ El script crea:
 
 Cada FBX contiene un armature skinned, bind poses, pesos por hueso, materiales
 con albedo y normal, cuerpo y arma inicial separada como `Starter Weapon` en
-`LOD0`, `LOD1` y `LOD2`, y los clips `Idle`, `Run` y `Attack`. `LOD1` y `LOD2`
+`LOD0`, `LOD1` y `LOD2`, y los clips `Idle`, `Run`, `Attack`, `Hit` y `Death`.
+`LOD1` y `LOD2`
 se crean por decimacion geometrica real. Cada familia de clase tiene su propio
 atlas 2K de albedo y normal con tiles 256x256, enlazado por rutas relativas.
 El bake de normales se ejecuta en Blender desde una fuente high-poly temporal
@@ -72,13 +73,29 @@ Para comprobar que un FBX conserva la estructura esperada:
 assimp info Assets/Resources/OriginalArt/Characters/Guerrero_Masculino.fbx
 ```
 
-La validacion de esta fase debe mostrar `Animations: 3`, huesos skinned,
+La validacion de esta fase debe mostrar `Animations: 5`, huesos skinned,
 materiales con Diffuse y Normals, los nombres `LOD0`/`LOD1`/`LOD2` y el objeto
 `Starter Weapon`. Los ocho atlas deben ser 2048x2048; Unity los importa con
 mipmaps, filtro trilineal, normal map en espacio no color y ETC2_RGBA8 para
-Android, y debe regenerar tres clips por cada uno de los ocho controllers. La
+Android, y debe regenerar cinco clips por cada uno de los ocho controllers. La
 auditoria de contenido del juego sigue siendo independiente y debe conservar
 17/17.
+
+## Fases 5.76-5.79
+
+Guerrero y Ninja tienen una pasada authored de mayor detalle en masculino y
+femenino. Sus placas, guardas, cintas, vendas, bolsos, ornamentos y crestas
+son piezas separadas antes del join skinned, por lo que se pueden sustituir
+por meshes manuales sin tocar el runtime. Los controllers de mobs y jefes
+tambien exponen reacciones `Hit` y `Death`; `EnemyVisualController` las dispara
+desde los eventos de `Health` y mantiene el acabado de zona/tier en las diez
+zonas.
+
+El pipeline sigue siendo authored procedural avanzado, no una escultura manual
+de artista. Para el salto comercial se debe aportar un high-poly esculpido a
+mano, retopologia/UV manual, texturas 2K pintadas y animaciones profesionales,
+empezando por Zona 1 y reutilizando este contrato de nombres, materiales,
+LOD, hitboxes y controllers.
 
 ## Siguiente mejora comercial
 
