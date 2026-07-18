@@ -2038,6 +2038,7 @@ namespace MmorpgPrototype
             serverLabel.color = new Color(0.48f, 0.9f, 0.84f);
             SetRect(serverLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(460f, 24f), new Vector2(0f, 72f));
 
+            Text selectedServerText = null;
             var serverButtons = new Button[serverProfiles.Length];
             for (var i = 0; i < serverProfiles.Length; i++)
             {
@@ -2055,7 +2056,7 @@ namespace MmorpgPrototype
                 serverButtons[i] = serverButton;
             }
 
-            var selectedServerText = CreateText(loginView.transform, "Selected Server", string.Empty, 14, TextAnchor.MiddleCenter);
+            selectedServerText = CreateText(loginView.transform, "Selected Server", string.Empty, 14, TextAnchor.MiddleCenter);
             selectedServerText.color = new Color(0.76f, 0.84f, 0.91f);
             SetRect(selectedServerText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(480f, 24f), new Vector2(0f, -5f));
 
