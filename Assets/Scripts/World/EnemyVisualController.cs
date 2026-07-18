@@ -155,6 +155,18 @@ namespace MmorpgPrototype
 
         private bool TryBuildRealModel(string enemyId, EnemyTier tier, Color baseColor, Color accent)
         {
+            if (enemyId.Contains("valley"))
+            {
+                var valleyModel = BuildValleyAuthoredModel(tier, baseColor, accent);
+                if (valleyModel != null)
+                {
+                    usingOriginalArt = false;
+                    var valleyMotion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
+                    valleyMotion.SetVisualRoot(valleyModel.transform, null);
+                    return true;
+                }
+            }
+
             var authoredResource = AuthoredMobResourceFor(enemyId, tier);
             var authoredPrefab = PreferExperimentalOriginalArt
                 ? Resources.Load<GameObject>(authoredResource)
@@ -236,6 +248,95 @@ namespace MmorpgPrototype
             var motion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
             motion.SetVisualRoot(model.transform, modelAnimator);
             return true;
+        }
+
+        private GameObject BuildValleyAuthoredModel(EnemyTier tier, Color baseColor, Color accent)
+        {
+            var root = new GameObject(tier == EnemyTier.Boss ? "Valley Relic Guardian" : tier == EnemyTier.Elite ? "Valley Corrupted Wolf Elite" : "Valley Corrupted Wolf");
+            root.transform.SetParent(visualRoot.transform, false);
+
+            var fur = tier == EnemyTier.Boss
+                ? new Color(0.2f, 0.12f, 0.1f)
+                : Color.Lerp(new Color(0.12f, 0.07f, 0.06f), baseColor, 0.3f);
+            var furDark = Color.Lerp(fur, Color.black, 0.38f);
+            var relicMetal = tier == EnemyTier.Boss
+                ? new Color(0.72f, 0.46f, 0.16f)
+                : new Color(0.38f, 0.28f, 0.18f);
+            var eyeColor = tier == EnemyTier.Boss ? new Color(1f, 0.72f, 0.16f) : new Color(1f, 0.18f, 0.08f);
+
+            var large = tier == EnemyTier.Boss;
+            var bodySize = large ? new Vector3(1.18f, 0.82f, 1.5f) : new Vector3(0.82f, 0.62f, 1.14f);
+            var bodyPosition = large ? new Vector3(0f, 0.42f, 0f) : new Vector3(0f, 0.26f, 0f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Faceted Body", bodyPosition, bodySize, fur, 10, 5, false, 0.04f, 0.28f);
+
+            var shoulderSize = large ? new Vector3(0.82f, 0.58f, 0.74f) : new Vector3(0.58f, 0.46f, 0.62f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Neck", large ? new Vector3(0f, 0.72f, 0.5f) : new Vector3(0f, 0.53f, 0.38f), shoulderSize, furDark, 9, 4, false, 0.04f, 0.28f);
+
+            var headPosition = large ? new Vector3(0f, 1.02f, 0.88f) : new Vector3(0f, 0.7f, 0.62f);
+            var headSize = large ? new Vector3(0.74f, 0.62f, 0.76f) : new Vector3(0.56f, 0.46f, 0.58f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Faceted Head", headPosition, headSize, fur, 9, 4, false, 0.04f, 0.28f);
+
+            var muzzlePosition = large ? new Vector3(0f, 0.84f, 1.2f) : new Vector3(0f, 0.55f, 0.93f);
+            var muzzleSize = large ? new Vector3(0.4f, 0.26f, 0.42f) : new Vector3(0.28f, 0.2f, 0.3f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Muzzle", muzzlePosition, muzzleSize, furDark, 8, 3, false, 0.04f, 0.25f);
+
+            var earY = large ? 1.43f : 1.02f;
+            var earZ = large ? 0.76f : 0.56f;
+            var earHeight = large ? 0.58f : 0.38f;
+            RuntimeArtMeshFactory.CreateCone(root.transform, "Wolf Ear L", new Vector3(large ? -0.3f : -0.22f, earY, earZ), large ? 0.17f : 0.13f, 0.015f, earHeight, relicMetal, 7, 15f, false, 0.28f, 0.42f);
+            RuntimeArtMeshFactory.CreateCone(root.transform, "Wolf Ear R", new Vector3(large ? 0.3f : 0.22f, earY, earZ), large ? 0.17f : 0.13f, 0.015f, earHeight, relicMetal, 7, 42f, false, 0.28f, 0.42f);
+
+            var legHeight = large ? 0.8f : 0.58f;
+            var legY = large ? -0.02f : -0.12f;
+            var legRadius = large ? 0.16f : 0.11f;
+            var legTopRadius = large ? 0.2f : 0.14f;
+            var legX = large ? 0.42f : 0.27f;
+            var legZ = large ? 0.52f : 0.35f;
+            CreateValleyLeg(root.transform, "Wolf Leg Front L", new Vector3(-legX, legY, legZ), legRadius, legTopRadius, legHeight, furDark);
+            CreateValleyLeg(root.transform, "Wolf Leg Front R", new Vector3(legX, legY, legZ), legRadius, legTopRadius, legHeight, furDark);
+            CreateValleyLeg(root.transform, "Wolf Leg Back L", new Vector3(-legX, legY, -legZ), legRadius, legTopRadius, legHeight, furDark);
+            CreateValleyLeg(root.transform, "Wolf Leg Back R", new Vector3(legX, legY, -legZ), legRadius, legTopRadius, legHeight, furDark);
+
+            var pawY = large ? -0.4f : -0.42f;
+            var pawSize = large ? new Vector3(0.32f, 0.16f, 0.38f) : new Vector3(0.22f, 0.12f, 0.26f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Paw Front L", new Vector3(-legX, pawY, legZ + 0.04f), pawSize, furDark, 8, 3, false, 0.02f, 0.24f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Paw Front R", new Vector3(legX, pawY, legZ + 0.04f), pawSize, furDark, 8, 3, false, 0.02f, 0.24f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Paw Back L", new Vector3(-legX, pawY, -legZ - 0.02f), pawSize, furDark, 8, 3, false, 0.02f, 0.24f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Paw Back R", new Vector3(legX, pawY, -legZ - 0.02f), pawSize, furDark, 8, 3, false, 0.02f, 0.24f);
+
+            var eyeY = large ? 1.04f : 0.72f;
+            var eyeZ = large ? 1.25f : 0.9f;
+            var eyeSize = large ? new Vector3(0.09f, 0.08f, 0.05f) : new Vector3(0.065f, 0.06f, 0.04f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Eye L", new Vector3(large ? -0.14f : -0.1f, eyeY, eyeZ), eyeSize, eyeColor, 7, 3, true, 0.05f, 0.36f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Eye R", new Vector3(large ? 0.14f : 0.1f, eyeY, eyeZ), eyeSize, eyeColor, 7, 3, true, 0.05f, 0.36f);
+
+            var tailPosition = large ? new Vector3(0f, 0.62f, -0.75f) : new Vector3(0f, 0.42f, -0.58f);
+            RuntimeArtMeshFactory.CreateCone(root.transform, "Wolf Relic Tail", tailPosition, large ? 0.2f : 0.14f, 0.035f, large ? 0.95f : 0.72f, furDark, 8, 0f, false, 0.04f, 0.25f).transform.localRotation = Quaternion.Euler(-38f, 0f, 0f);
+
+            var platePosition = large ? new Vector3(0f, 0.55f, 1.18f) : new Vector3(0f, 0.4f, 0.78f);
+            var plateSize = large ? new Vector3(0.92f, 0.42f, 0.12f) : new Vector3(0.56f, 0.26f, 0.08f);
+            RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Relic Chest Plate", platePosition, plateSize, relicMetal, 8, 3, false, 0.58f, 0.46f);
+
+            if (tier == EnemyTier.Elite || tier == EnemyTier.Boss)
+            {
+                var guardSize = large ? new Vector3(1.04f, 0.24f, 0.5f) : new Vector3(0.68f, 0.18f, 0.34f);
+                RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Wolf Elite Mantle", large ? new Vector3(0f, 0.78f, 0.34f) : new Vector3(0f, 0.55f, 0.24f), guardSize, accent, 8, 3, false, 0.38f, 0.44f);
+                RuntimeArtMeshFactory.CreateCone(root.transform, "Wolf Relic Spike L", new Vector3(large ? -0.48f : -0.34f, large ? 0.82f : 0.58f, 0.18f), large ? 0.14f : 0.1f, 0.01f, large ? 0.5f : 0.34f, accent, 6, 22f, true, 0.16f, 0.42f);
+                RuntimeArtMeshFactory.CreateCone(root.transform, "Wolf Relic Spike R", new Vector3(large ? 0.48f : 0.34f, large ? 0.82f : 0.58f, 0.18f), large ? 0.14f : 0.1f, 0.01f, large ? 0.5f : 0.34f, accent, 6, 52f, true, 0.16f, 0.42f);
+            }
+
+            if (tier == EnemyTier.Boss)
+            {
+                RuntimeArtMeshFactory.CreateCone(root.transform, "Guardian Relic Crown", new Vector3(0f, 1.65f, 0.74f), 0.22f, 0.02f, 0.56f, accent, 8, 22f, true, 0.3f, 0.46f);
+                RuntimeArtMeshFactory.CreateEllipsoid(root.transform, "Guardian Relic Core", new Vector3(0f, 0.74f, 1.26f), new Vector3(0.3f, 0.3f, 0.1f), eyeColor, 8, 3, true, 0.18f, 0.46f);
+            }
+
+            return root;
+        }
+
+        private static void CreateValleyLeg(Transform parent, string name, Vector3 position, float bottomRadius, float topRadius, float height, Color color)
+        {
+            RuntimeArtMeshFactory.CreateCone(parent, name, position, bottomRadius, topRadius, height, color, 7, 18f, false, 0.03f, 0.24f);
         }
 
         private static void ApplyModelArtTreatment(GameObject model, string enemyId, Color baseColor, Color accent, EnemyTier tier)

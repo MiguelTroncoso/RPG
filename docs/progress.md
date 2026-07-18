@@ -322,6 +322,24 @@ despues se replica el pipeline a las nueve zonas restantes.
 - El marco 9-slice comun recibe un borde mas legible para reutilizarlo despues
   en seleccion de personaje, inventario, tienda y ventanas de combate.
 
+## Fase 5.97: Siluetas Authored de Personajes y Zona 1
+
+- Se incorpora un pequeno factory de meshes authored runtime para crear conos,
+  placas facetadas, elipsoides y hojas sin colliders ni dependencias externas.
+- Guerrero, Ninja, Chaman y Umbra reciben detalles de clase con una silueta mas
+  clara: placas, hombreras, capucha, mascara, coronas, nucleos y armas.
+- La variante femenina conserva la misma identidad de clase y escala visual,
+  preparada para recibir los meshes skinned finales sin cambiar el contrato de
+  equipamiento.
+- Los mobs de Valle dejan de usar el mapeo visual generico de orcos. Zona 1
+  presenta ahora lobos corruptos facetados, elite blindada y un guardian de
+  reliquia con placas, ojos emisivos, orejas, cola y coronas diferenciadas.
+- La geometria es una pasada authored de transicion optimizada para Android;
+  no sustituye aun la escultura high-poly, retopologia, UV, atlas 2K y rigging
+  profesional de produccion.
+- La siguiente validacion debe comprobar escala, suelo, colision visual,
+  lectura a distancia, animacion procedural y rendimiento con grupos de mobs.
+
 ## Prioridad Recomendada
 
 1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades
@@ -331,7 +349,8 @@ despues se replica el pipeline a las nueve zonas restantes.
 4. Superar `docs/offline-beta-qa.md`; despues preparar S-01 privado en
    OVHcloud Hillsboro o Hetzner tras comparar latencia real desde Chile, antes
    de convertir recompensas, inventario y compras en autoridad online.
-5. Sustituir por lotes el authored estilizado mediante arte manual comercial:
+5. Validar la nueva silueta authored de Zona 1 en Unity y Android; despues
+   sustituir por lotes el authored estilizado mediante arte manual comercial:
    kit de cada clase, luego normal/elite/jefe de cada banda.
 6. Al levantar S-01 online, sustituir `OfflineAccountStore` por cuentas de
    backend con hash de contrasena fuerte, tokens de sesion, rate limiting,
@@ -379,6 +398,7 @@ despues se replica el pipeline a las nueve zonas restantes.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 5.97 | Siluetas authored de las cuatro clases y lobos/guardian de reliquia en Zona 1; validacion Unity/Android pendiente | 60% beta offline |
 | 2026-07-18 | 5.92 | HUD compacto, spawns por zona, suelo de bioma y campamento offline; APK requiere build desde Unity Hub | 60% beta offline |
 | 2026-07-18 | 5.91 | Atlas offline 1-10, teletransporte de QA y acceso cinematografico; APK pendiente por licencia Unity | 98% |
 | 2026-07-18 | 5.89-5.90 | Pase offline audiovisual, splash propio, grounding por tier y feedback de combate; APK pendiente por licencia Unity | 98% |

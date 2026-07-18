@@ -296,10 +296,7 @@ namespace MmorpgPrototype
                 }
 
                 BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
-                if (usingImportedModel)
-                {
-                    BuildClassSignature(armorRoot.transform, artProfile);
-                }
+                BuildClassSignature(armorRoot.transform, artProfile);
             }
             if (usingOriginalArt)
             {
@@ -362,9 +359,53 @@ namespace MmorpgPrototype
                 }
             }
 
+            BuildAuthoredClassDetails(parent, profile, classWeaponBuilt);
+
             if (profile.UseCloak)
             {
                 CreatePart(parent, "Class Cloak", PrimitiveType.Cube, new Vector3(0f, 0.14f, 0.38f), new Vector3(0.72f * profile.CloakScale, 0.76f, 0.06f), profile.SecondaryColor, Quaternion.Euler(8f, 0f, 0f));
+            }
+        }
+
+        private static void BuildAuthoredClassDetails(Transform parent, CharacterArtProfile profile, bool classWeaponBuilt)
+        {
+            switch (profile.Silhouette)
+            {
+                case CharacterArtSilhouette.Vanguard:
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Vanguard Chest", new Vector3(0f, 0.28f, -0.48f), new Vector3(0.62f, 0.36f, 0.13f), profile.MetalColor, 8, 4, false, 0.48f, 0.52f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Vanguard Shoulder L", new Vector3(-0.54f, 0.52f, 0f), new Vector3(0.4f, 0.22f, 0.4f), profile.MetalColor, 8, 4, false, 0.5f, 0.5f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Vanguard Shoulder R", new Vector3(0.54f, 0.52f, 0f), new Vector3(0.4f, 0.22f, 0.4f), profile.MetalColor, 8, 4, false, 0.5f, 0.5f);
+                    RuntimeArtMeshFactory.CreateCone(parent, "Authored Vanguard Crest", new Vector3(0f, 1.2f, -0.06f), 0.1f, 0.015f, 0.32f, profile.GlowColor, 6, 30f, true, 0.18f, 0.42f);
+                    if (!classWeaponBuilt)
+                    {
+                        RuntimeArtMeshFactory.CreateBlade(parent, "Authored Vanguard Blade", new Vector3(0.48f, 0.16f, -0.24f), new Vector3(0.16f, 0.82f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, -26f));
+                    }
+                    break;
+
+                case CharacterArtSilhouette.Veil:
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Veil Hood", new Vector3(0f, 0.98f, 0.04f), new Vector3(0.5f, 0.38f, 0.44f), profile.SecondaryColor, 9, 4, false, 0.12f, 0.34f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Veil Mask", new Vector3(0f, 0.88f, -0.4f), new Vector3(0.32f, 0.09f, 0.055f), profile.GlowColor, 8, 3, true, 0.08f, 0.3f);
+                    RuntimeArtMeshFactory.CreateBlade(parent, "Authored Veil Dagger L", new Vector3(-0.5f, 0.03f, -0.3f), new Vector3(0.1f, 0.5f, 0.045f), profile.MetalColor, Quaternion.Euler(0f, 0f, 28f), false, 0.62f, 0.52f);
+                    RuntimeArtMeshFactory.CreateBlade(parent, "Authored Veil Dagger R", new Vector3(0.5f, 0.03f, -0.3f), new Vector3(0.1f, 0.5f, 0.045f), profile.MetalColor, Quaternion.Euler(0f, 0f, -28f), false, 0.62f, 0.52f);
+                    break;
+
+                case CharacterArtSilhouette.Spirit:
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Spirit Hood", new Vector3(0f, 1f, 0.04f), new Vector3(0.5f, 0.4f, 0.46f), profile.SecondaryColor, 9, 4, false, 0.12f, 0.34f);
+                    RuntimeArtMeshFactory.CreateCone(parent, "Authored Spirit Crown", new Vector3(0f, 1.28f, 0f), 0.13f, 0.025f, 0.28f, profile.GlowColor, 7, 18f, true, 0.14f, 0.4f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Spirit Orb", new Vector3(0f, 0.38f, -0.54f), new Vector3(0.16f, 0.16f, 0.08f), profile.GlowColor, 8, 3, true, 0.1f, 0.36f);
+                    break;
+
+                default:
+                    RuntimeArtMeshFactory.CreateCone(parent, "Authored Void Crown L", new Vector3(-0.16f, 1.22f, 0f), 0.08f, 0.012f, 0.38f, profile.GlowColor, 6, 20f, true, 0.16f, 0.42f);
+                    RuntimeArtMeshFactory.CreateCone(parent, "Authored Void Crown R", new Vector3(0.16f, 1.22f, 0f), 0.08f, 0.012f, 0.38f, profile.GlowColor, 6, 50f, true, 0.16f, 0.42f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Void Core", new Vector3(0f, 0.28f, -0.54f), new Vector3(0.18f, 0.18f, 0.08f), profile.GlowColor, 8, 3, true, 0.14f, 0.4f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Void Shoulder L", new Vector3(-0.5f, 0.5f, 0f), new Vector3(0.38f, 0.24f, 0.44f), profile.MetalColor, 8, 4, false, 0.42f, 0.48f);
+                    RuntimeArtMeshFactory.CreateEllipsoid(parent, "Authored Void Shoulder R", new Vector3(0.5f, 0.5f, 0f), new Vector3(0.38f, 0.24f, 0.44f), profile.MetalColor, 8, 4, false, 0.42f, 0.48f);
+                    if (!classWeaponBuilt)
+                    {
+                        RuntimeArtMeshFactory.CreateBlade(parent, "Authored Void Blade", new Vector3(0.52f, 0.16f, 0.08f), new Vector3(0.18f, 0.9f, 0.06f), profile.MetalColor, Quaternion.Euler(0f, 0f, -24f), false, 0.7f, 0.56f);
+                    }
+                    break;
             }
         }
 
