@@ -76,6 +76,9 @@ namespace MmorpgPrototype
                 BuildBossIdentity(id, baseColor, accent);
             }
 
+            var anchorY = usingOriginalArt ? -0.02f : 0.01f;
+            var anchorRadius = tier == EnemyTier.Boss ? 1.22f : tier == EnemyTier.Elite ? 1.02f : 0.82f;
+            ArtPresentationUtility.AttachGroundAnchor(visualRoot.transform, anchorY, anchorRadius, accent, tier != EnemyTier.Normal);
             BuildStatusDisplay(displayName, tier, accent);
         }
 

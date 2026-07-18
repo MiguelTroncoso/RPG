@@ -238,6 +238,14 @@ Estado actual (fases 1-5.75 entregadas en primera pasada; refinamientos 5.44,
   incluyendo atlas 2K, normales, skinning, LOD y clips base. Sigue pendiente
   la sustitucion comercial manual por esculturas high-poly, retopologia, bake
   de normales y animaciones profesionales, ademas de QA visual en Android.
+- Fases 5.89-5.90 offline: `ArtPresentationUtility` ancla personajes y mobs
+  al terreno con sombra/aura por tier; `OfflinePresentationDirector` añade
+  cielo procedural y atmosfera ligera; `CombatFeedbackVfx` añade anillos para
+  impactos, telegraph, habilidades, nivel y ultimate; el audio separa
+  telegraph y ultimate. El splash propio usa
+  `Resources/Art/Generated/valle-reliquias-splash-v2.png` y el splash generico
+  de Unity queda desactivado. La APK nueva queda pendiente de regenerar por
+  una perdida temporal del servicio de licencia de Unity Hub.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
@@ -351,6 +359,10 @@ Proximos objetivos sugeridos:
   Calidad/Rendimiento. Registrar FPS, memoria, carga y safe area en 16:9 y
   19.5:9; despues revisar los 30 modelos en las diez zonas y separar defectos
   de arte authored de problemas de runtime.
+- Prioridad offline 5.89-5.90: regenerar la APK con Unity Hub licenciado,
+  comprobar el splash propio, recorrer las diez zonas, validar sombras/aura,
+  VFX de telegraph/ultimate y revisar el audio en un telefono real antes de
+  abrir el trabajo de servidor S-01.
 - Siguiente bloque online: preparar servidor autoritativo S-01 en Hetzner,
   autenticacion, persistencia, seguridad anti-cheat, despliegue y pruebas de
   reconexion antes de abrir una beta externa.

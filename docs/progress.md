@@ -4,7 +4,7 @@ Este porcentaje es una estimacion de producto, no un conteo de scripts. Un
 MMORPG completo tambien necesita arte final, contenido, servidores, pruebas,
 economia, seguridad, operacion y publicacion.
 
-## Corte Diario: 2026-07-17
+## Corte Diario: 2026-07-18
 
 - Avance global estimado hacia el MMORPG publicable: **98%**.
 - Prototipo jugable offline: **100%**.
@@ -197,6 +197,11 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   SHA-256 `4da6efe55fe57ff1b789875a2836b95fb277d7e1c04bd6c913f13ccbe347cbf6`.
 - Cambios sincronizados en GitHub, rama `main`.
 
+- Fases 5.89-5.90: pase offline audiovisual con anclajes de sombra/aura por
+  tier, cielo y atmosfera, splash propio, anillos de combate y audio separado.
+  La implementacion queda lista en codigo; falta regenerar la APK por la
+  perdida temporal del servicio de licencia de Unity Hub.
+
 ## Cierre De Fases 5.83-5.86
 
 - Fase 5.83: HUD con EXP visible, nombre/nivel separados, objetivo
@@ -212,6 +217,21 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - APK Android recompilada: 77 MB, target SDK 35, SHA-256
   7d925d27c941a611f2fd1b5503d361c042b016e45d00619547b82b83e869d52b.
 - Auditoria regenerada: 17/17 checks sin errores.
+
+## Cierre De Fases 5.89-5.90
+
+- Fase 5.89: personajes y mobs authored de las diez zonas reciben anclaje de
+  sombra/aura por tier, cielo procedural, atmosfera movil y una presentacion
+  mas consistente para la prueba offline.
+- Fase 5.90: splash propio de Valle de las Reliquias, Unity splash oculto,
+  anillos VFX para impactos/habilidades/ultimate/telegraph y audio separado
+  para las acciones de combate.
+- La nueva APK debe regenerarse cuando Unity Hub vuelva a tener licencia; la
+  ultima APK validada continua siendo la de 77 MB con SHA-256
+  `7d925d27c941a611f2fd1b5503d361c042b016e45d00619547b82b83e869d52b`.
+- El arte high-poly manual comercial y la QA fisica en Android siguen siendo
+  pendientes honestos, mientras la cobertura authored tecnica permanece en las
+  ocho variantes y 30 mobs/jefes.
 
 ## Prioridad Recomendada
 
@@ -266,6 +286,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 5.89-5.90 | Pase offline audiovisual, splash propio, grounding por tier y feedback de combate; APK pendiente por licencia Unity | 98% |
 | 2026-07-17 | 5.83-5.86 | HUD contextual, menus visuales, nodos de habilidades y cobertura authored 3D en las 10 zonas; APK 77 MB | 98% |
 | 2026-07-17 | 5.80-5.81 | QA Android exportable y 30 mobs/jefes authored propios para las 10 zonas, con atlas 2K, LOD y controllers | 98% |
 | 2026-07-16 | 5.76-5.79 | Heroes Guerrero/Ninja detallados, cinco clips, reacciones de combate y tratamiento de mobs/jefes 1-105 | 98% |

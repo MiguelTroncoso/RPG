@@ -72,6 +72,7 @@ namespace MmorpgPrototype
             if (usingImportedModel)
             {
                 BuildArmorOverlay(definition, gender);
+                ArtPresentationUtility.AttachGroundAnchor(visualRoot.transform, -1.02f, 0.86f, currentArtProfile.GlowColor, false);
                 ApplyCosmetics(GetComponent<CosmeticService>());
                 return;
             }
@@ -106,6 +107,7 @@ namespace MmorpgPrototype
             }
 
             BuildArmorOverlay(definition, gender);
+            ArtPresentationUtility.AttachGroundAnchor(visualRoot.transform, -1.02f, 0.86f, currentArtProfile.GlowColor, false);
             BindMotionAnimator();
             ApplyCosmetics(GetComponent<CosmeticService>());
         }

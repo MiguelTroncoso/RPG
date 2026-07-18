@@ -145,6 +145,7 @@ namespace MmorpgPrototype
             DamagePopup.Spawn(transform.position + Vector3.up * 2.35f, "!", new Color(1f, 0.58f, 0.18f), 1.35f);
             PrototypePulseAndDestroy.Spawn(Target.position + Vector3.up * 1.05f, new Color(1f, 0.28f, 0.16f));
             CombatFeedbackVfx.SpawnEnemyTelegraph(transform.position + Vector3.up * 0.1f, new Color(1f, 0.42f, 0.12f));
+            Target.GetComponent<CombatFeedbackAudio>()?.PlayTelegraph();
         }
 
         private void ResolveAttack()

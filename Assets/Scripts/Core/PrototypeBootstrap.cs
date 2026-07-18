@@ -30,6 +30,7 @@ namespace MmorpgPrototype
 
             var player = CreatePlayer();
             CreateCamera(player.transform);
+            CreateOfflinePresentation(player.transform);
             var zones = LoadZones();
             ZoneBalanceResolver.LogReports(zones);
             var commerceZone = zones.Find(zone => zone != null && zone.HasSafeZone);
@@ -158,6 +159,12 @@ namespace MmorpgPrototype
             RenderSettings.fogColor = new Color(0.09f, 0.12f, 0.16f);
             RenderSettings.fogStartDistance = 52f;
             RenderSettings.fogEndDistance = 170f;
+        }
+
+        private void CreateOfflinePresentation(Transform player)
+        {
+            var presentation = gameObject.AddComponent<OfflinePresentationDirector>();
+            presentation.Initialize(player, Camera.main);
         }
 
         private static void CreateGround()
@@ -1450,8 +1457,26 @@ namespace MmorpgPrototype
             StretchToParent(rect);
 
             var background = splashObject.AddComponent<Image>();
-            background.color = new Color(0.03f, 0.035f, 0.045f, 0.92f);
+            var splashTexture = Resources.Load<Texture2D>("Art/Generated/valle-reliquias-splash-v2");
+            if (splashTexture != null)
+            {
+                background.sprite = Sprite.Create(
+                    splashTexture,
+                    new Rect(0f, 0f, splashTexture.width, splashTexture.height),
+                    new Vector2(0.5f, 0.5f));
+                background.type = Image.Type.Simple;
+                background.preserveAspect = false;
+                background.color = Color.white;
+            }
+            else
+            {
+                background.color = new Color(0.03f, 0.035f, 0.045f, 0.92f);
+            }
             background.raycastTarget = false;
+
+            var shade = CreatePanel(splashObject.transform, "Cinematic Shade", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.015f, 0.025f, 0.035f, 0.34f));
+            StretchToParent(shade.rectTransform);
+            shade.raycastTarget = false;
 
             var group = splashObject.AddComponent<CanvasGroup>();
             group.blocksRaycasts = false;

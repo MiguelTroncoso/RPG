@@ -1124,6 +1124,14 @@ texturas pintadas, VFX/audio por familia, QA en telefono real y animaciones
 profesionales. La integracion esta preparada para sustituir los assets sin
 cambiar la logica de juego.
 
+## Fases 5.89-5.90: Pase Offline Audiovisual
+
+La prueba offline ahora incorpora sombras y auras por tier, cielo procedural,
+atmosfera movil, anillos de impacto/telegraph/habilidad/ultimate y audio
+separado para esas acciones. El splash generico de Unity se reemplaza por un
+paisaje propio de Valle de las Reliquias. La APK nueva queda pendiente de
+regenerar cuando Unity Hub recupere la licencia del editor.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

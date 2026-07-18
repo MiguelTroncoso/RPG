@@ -20,6 +20,8 @@ namespace MmorpgPrototype
         private AudioClip damageClip;
         private AudioClip levelUpClip;
         private AudioClip skillClip;
+        private AudioClip telegraphClip;
+        private AudioClip ultimateClip;
         private AudioClip musicClip;
 
         private void Awake()
@@ -42,6 +44,8 @@ namespace MmorpgPrototype
             damageClip = LoadOrCreate("Audio/Kenney/dropLeather", "damage", 110f, 0.16f, 0.18f);
             levelUpClip = LoadOrCreate("Audio/Kenney/handleCoins", "level_up", 520f, 0.3f, 0.2f);
             skillClip = LoadOrCreate("Audio/Kenney/bookOpen", "skill", 430f, 0.16f, 0.16f);
+            telegraphClip = LoadOrCreate("Audio/Kenney/metalPot2", "telegraph", 240f, 0.22f, 0.13f);
+            ultimateClip = LoadOrCreate("Audio/Kenney/handleCoins", "ultimate", 760f, 0.42f, 0.2f);
             musicClip = Resources.Load<AudioClip>("Audio/Kenney/ambient_preview") ?? CreateMusicLoop();
             if (MusicEnabled)
             {
@@ -56,6 +60,8 @@ namespace MmorpgPrototype
         public void PlayPlayerDamage() => Play(damageClip, 0.88f);
         public void PlayLevelUp() => Play(levelUpClip, 1f);
         public void PlaySkill() => Play(skillClip, 1.08f);
+        public void PlayTelegraph() => Play(telegraphClip, 0.78f);
+        public void PlayUltimate() => Play(ultimateClip, 0.92f);
 
         public void ToggleMusic()
         {

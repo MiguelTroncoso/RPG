@@ -262,7 +262,7 @@ namespace MmorpgPrototype
                 nextSkill[slot] = Time.time + CooldownFor(slot);
             }
 
-            PlaySkillMotion();
+            PlaySkillMotion(slot);
 
             switch (slot)
             {
@@ -453,11 +453,21 @@ namespace MmorpgPrototype
             Hud?.RefreshClass();
         }
 
-        private void PlaySkillMotion()
+        private void PlaySkillMotion(int slot)
         {
             GetComponent<AvatarMotionAnimator>()?.PlayAttack();
-            GetComponent<CombatFeedbackAudio>()?.PlaySkill();
-            CombatFeedbackVfx.SpawnSkill(transform.position + Vector3.up * 0.85f, classController.Definition.SkillColor);
+            var audio = GetComponent<CombatFeedbackAudio>();
+            var position = transform.position + Vector3.up * 0.85f;
+            if (slot == UltimateSlot)
+            {
+                audio?.PlayUltimate();
+                CombatFeedbackVfx.SpawnUltimate(position, classController.Definition.SkillColor);
+            }
+            else
+            {
+                audio?.PlaySkill();
+                CombatFeedbackVfx.SpawnSkill(position, classController.Definition.SkillColor);
+            }
         }
 
         private int DamageFor(int slot, int baseDamage)

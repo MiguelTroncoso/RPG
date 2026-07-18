@@ -1282,6 +1282,44 @@ las Reliquias hasta Trono del Vacio.
 Criterio de exito: recorrer niveles 1-105 muestra siluetas distinguibles por
 zona/tier sin degradar FPS, memoria, hitboxes ni lectura de combate.
 
+## Fase 5.89: Pase Artistico Offline Para Personajes Y Mobs
+
+Objetivo: mejorar la lectura visual de las ocho variantes de personaje y los
+30 mobs normal/elite/jefe de las diez zonas en una partida sin backend.
+
+- Anclaje de sombra y aura por tier para evitar que los modelos parezcan
+  flotando sobre el terreno. [Implementado]
+- Cobertura authored conservada para personajes, armaduras, armas y mobs de
+  las zonas 1-10, con paletas, adornos, LOD y controllers ya conectados.
+  [Implementado tecnico]
+- Atmosfera movil, cielo procedural, niebla y decoracion ligera compartida
+  para mantener una lectura cinematografica sin postprocesado pesado.
+  [Implementado]
+- La escultura high-poly manual, retopologia y texturas comerciales pintadas
+  siguen siendo una produccion artistica externa. [Pendiente comercial]
+
+Criterio de exito: el recorrido offline muestra personajes y enemigos
+anclados, distinguibles por clase/zona/tier y sin una caida importante de FPS.
+
+## Fase 5.90: Feedback Audiovisual Y Splash Offline
+
+Objetivo: que el combate y el arranque tengan una respuesta clara sin
+depender de red ni servicios externos.
+
+- Splash propio de Valle de las Reliquias con paisaje original generado y
+  sombreado para lectura del titulo. [Implementado en recursos]
+- Unity splash desactivado para que el arranque muestre la identidad propia.
+  [Implementado]
+- Impactos, habilidades, ultimate, subida de nivel y telegraph con anillos
+  expansivos y particulas diferenciadas. [Implementado]
+- Audio separado para skill, telegraph y ultimate, con fallback procedural y
+  recursos CC0 existentes. [Implementado]
+- APK offline nueva y QA de telefono real quedan pendientes de ejecutar cuando
+  Unity Hub recupere la licencia del editor. [Pendiente de validacion]
+
+Criterio de exito: el jugador identifica ataque, peligro, habilidad y ultimate
+por imagen y sonido, y el arranque no muestra la pantalla generica de Unity.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

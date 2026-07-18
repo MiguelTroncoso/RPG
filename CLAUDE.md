@@ -82,6 +82,17 @@ simple y autocontenido.
 - La escultura high-poly manual, texturas pintadas, VFX/audio profesional y
   animaciones finales siguen pendientes; no declarar arte comercial 100%.
 
+## Estado Offline 5.89-5.90
+
+- Sombras y auras por tier anclan personajes y mobs al terreno; cielo
+  procedural y atmosfera ligera mejoran la lectura de las diez zonas.
+- Impactos, telegraph, habilidades, ultimate y subida de nivel tienen anillos
+  expansivos y audio diferenciado.
+- El splash propio usa un paisaje de Valle de las Reliquias y el splash
+  generico de Unity queda desactivado.
+- La APK debe regenerarse y validarse en telefono cuando Unity Hub recupere la
+  licencia del editor.
+
 ## Cómo probar
 
 - Abrir `Assets/Scenes/Prototype.unity` y dar Play.
