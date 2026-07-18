@@ -1496,7 +1496,7 @@ namespace MmorpgPrototype
             var inputObject = CreateUiObject(name, parent);
             var image = inputObject.AddComponent<Image>();
             UiThemeConfig.Runtime.StylePanel(image);
-            image.color = new Color(0.03f, 0.04f, 0.05f, 0.78f);
+            image.color = new Color(0.03f, 0.04f, 0.05f, 0.52f);
             image.raycastTarget = true;
             SetRect(inputObject.GetComponent<RectTransform>(), anchor, new Vector2(0.5f, 0.5f), size, position);
 
@@ -2020,7 +2020,7 @@ namespace MmorpgPrototype
             var loginView = CreateUiObject("Offline Account Login View", overlay.transform);
             StretchToParent(loginView.GetComponent<RectTransform>());
 
-            var loginCard = CreatePanel(loginView.transform, "Offline Account Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(590f, 520f), new Vector2(0f, -26f), new Color(0.006f, 0.014f, 0.024f, 0.86f));
+            var loginCard = CreatePanel(loginView.transform, "Offline Account Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(590f, 520f), new Vector2(0f, -26f), new Color(0.006f, 0.014f, 0.024f, 0.5f));
             loginCard.raycastTarget = false;
             var loginAccent = CreatePanel(loginView.transform, "Offline Account Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(540f, 4f), new Vector2(0f, 215f), new Color(0.25f, 0.78f, 0.78f, 0.94f));
             loginAccent.raycastTarget = false;
