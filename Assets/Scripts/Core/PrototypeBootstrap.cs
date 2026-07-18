@@ -1766,7 +1766,8 @@ namespace MmorpgPrototype
             var overlay = CreateUiObject("Polished Character Access Overlay", parent);
             StretchToParent(overlay.GetComponent<RectTransform>());
             var overlayImage = overlay.AddComponent<Image>();
-            var accessTexture = Resources.Load<Texture2D>("Art/Generated/valle-reliquias-access-hall-v1");
+            var accessTexture = Resources.Load<Texture2D>("Art/Generated/valle-reliquias-access-roster-v1")
+                ?? Resources.Load<Texture2D>("Art/Generated/valle-reliquias-access-hall-v1");
             if (accessTexture != null)
             {
                 overlayImage.sprite = Sprite.Create(accessTexture, new Rect(0f, 0f, accessTexture.width, accessTexture.height), new Vector2(0.5f, 0.5f));
@@ -2002,17 +2003,6 @@ namespace MmorpgPrototype
             });
             backButton.gameObject.SetActive(savedData != null);
 
-            var serverPanel = CreatePanel(overlay.transform, "Server Selector Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(550f, 128f), new Vector2(-280f, -196f), new Color(0.025f, 0.037f, 0.048f, 1f));
-            serverPanel.raycastTarget = false;
-            var serverTitle = CreateText(overlay.transform, "Server Title", "MUNDO DE JUEGO", 15, TextAnchor.MiddleLeft);
-            serverTitle.fontStyle = FontStyle.Bold;
-            serverTitle.color = new Color(0.52f, 0.8f, 0.86f);
-            SetRect(serverTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(220f, 24f), new Vector2(-500f, -159f));
-            var serverStatus = CreateText(overlay.transform, "Server Status", string.Empty, 13, TextAnchor.MiddleRight);
-            serverStatus.color = new Color(0.48f, 0.86f, 0.64f);
-            SetRect(serverStatus.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(250f, 24f), new Vector2(-125f, -159f));
-            serverStatus.text = $"{serverProfiles[selectedServerIndex].Id}  ·  MODO OFFLINE";
-
             if (network != null)
             {
                 network.ServerUrl = selectedServerUrl;
@@ -2021,51 +2011,6 @@ namespace MmorpgPrototype
                     network.UrlInput.text = selectedServerUrl;
                 }
             }
-
-            var serverButtons = new Button[serverProfiles.Length];
-            var serverImages = new Image[serverProfiles.Length];
-            for (var i = 0; i < serverProfiles.Length; i++)
-            {
-                var index = i;
-                var profile = serverProfiles[i];
-                var selected = i == selectedServerIndex;
-                serverButtons[i] = CreateRoundButton(overlay.transform, $"Server {profile.Id} Button", profile.Label, new Vector2(0.5f, 0.5f), new Vector2(-450f + i * 160f, -207f), new Vector2(148f, 46f), selected ? new Color(0.12f, 0.48f, 0.38f) : new Color(0.16f, 0.19f, 0.23f), 12);
-                serverImages[i] = serverButtons[i].GetComponent<Image>();
-                serverButtons[i].interactable = profile.Enabled;
-                serverButtons[i].onClick.AddListener(() =>
-                {
-                    if (!profile.Enabled)
-                    {
-                        return;
-                    }
-
-                    selectedServerIndex = index;
-                    selectedServerUrl = profile.Url;
-                    serverStatus.text = $"{profile.Id}  ·  MODO OFFLINE";
-                    if (network != null)
-                    {
-                        network.ServerUrl = selectedServerUrl;
-                        if (network.UrlInput != null)
-                        {
-                            network.UrlInput.text = selectedServerUrl;
-                        }
-                    }
-                    PlayerPrefs.SetInt("mmorpg.server.profile", selectedServerIndex);
-                    PlayerPrefs.SetString("mmorpg.server.url", selectedServerUrl);
-                    PlayerPrefs.Save();
-
-                    for (var buttonIndex = 0; buttonIndex < serverImages.Length; buttonIndex++)
-                    {
-                        serverImages[buttonIndex].color = buttonIndex == index
-                            ? new Color(0.12f, 0.48f, 0.38f)
-                            : new Color(0.16f, 0.19f, 0.23f);
-                    }
-                });
-            }
-
-            var futureServers = CreateText(overlay.transform, "Future Servers", Localization.Tr("server.coming_soon"), 13, TextAnchor.MiddleCenter);
-            futureServers.color = new Color(0.55f, 0.62f, 0.69f);
-            SetRect(futureServers.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 24f), new Vector2(-280f, -252f));
 
             if (savedData != null)
             {

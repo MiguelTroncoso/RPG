@@ -262,6 +262,18 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   Ninja Rogue/Rogue Hooded, Chaman Mage y Umbra Barbarian en ambas variantes;
   sexo, paleta y accesorios siguen diferenciados por `CharacterArtProfile`.
 
+## Fase 5.94: Reemplazo Artistico
+
+- El acceso offline elimina por completo el selector de mundos; la eleccion de
+  servidor queda reservada para la configuracion online futura.
+- Se inicia el reemplazo de arte del prototipo con una direccion original de
+  fantasia oscura oriental para personajes, mobs, equipamiento, zonas, UI y
+  pantallas de acceso. La implementacion tecnica no sustituye la escultura,
+  retopologia, texturas PBR y animaciones que deben producirse en Blender.
+- El acceso usa ahora `valle-reliquias-access-roster-v1`, una ilustracion
+  cinematografica original con los cuatro arquetipos; su composicion reserva
+  el centro para la seleccion de personaje.
+
 ## Fase 5.91: Beta Offline Integrada
 
 - El acceso y seleccion de personaje usan una escena propia de reliquiario;
