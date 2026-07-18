@@ -51,8 +51,8 @@ namespace MmorpgPrototype
             image.type = Image.Type.Sliced;
             image.raycastTarget = false;
             var outline = image.GetComponent<Outline>() ?? image.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(PanelLine.r, PanelLine.g, PanelLine.b, strong ? 0.8f : 0.42f);
-            outline.effectDistance = new Vector2(1.5f, -1.5f);
+            outline.effectColor = new Color(PanelLine.r, PanelLine.g, PanelLine.b, strong ? 0.94f : 0.62f);
+            outline.effectDistance = new Vector2(2f, -2f);
             outline.useGraphicAlpha = true;
             var shadow = image.GetComponent<Shadow>() ?? image.gameObject.AddComponent<Shadow>();
             shadow.effectColor = new Color(0f, 0f, 0f, 0.48f);
@@ -79,8 +79,8 @@ namespace MmorpgPrototype
             button.colors = colors;
 
             var outline = image.GetComponent<Outline>() ?? image.gameObject.AddComponent<Outline>();
-            outline.effectColor = new Color(PanelLine.r, PanelLine.g, PanelLine.b, 0.58f);
-            outline.effectDistance = new Vector2(1f, -1f);
+            outline.effectColor = new Color(PanelLine.r, PanelLine.g, PanelLine.b, 0.72f);
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
         }
 
         public void StyleCard(Image image, Color accent)
@@ -126,15 +126,18 @@ namespace MmorpgPrototype
 
         private static Sprite CreateFrameSprite()
         {
-            const int size = 32;
+            const int size = 48;
             var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
             for (var y = 0; y < size; y++)
             {
                 for (var x = 0; x < size; x++)
                 {
-                    var edge = x < 4 || y < 4 || x >= size - 4 || y >= size - 4;
-                    var alpha = edge ? 1f : 0.92f;
-                    texture.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+                    var edgeDistance = Mathf.Min(Mathf.Min(x, y), Mathf.Min(size - 1 - x, size - 1 - y));
+                    var border = edgeDistance < 4f;
+                    var highlight = edgeDistance < 1f || (x > 8 && x < size - 9 && y == size - 5);
+                    var alpha = border ? 1f : 0.9f;
+                    var value = highlight ? 1f : border ? 0.88f : 0.96f;
+                    texture.SetPixel(x, y, new Color(value, value, value, alpha));
                 }
             }
 

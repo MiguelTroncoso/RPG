@@ -298,6 +298,15 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   dispositivo. No reemplaza autenticacion, recuperacion de cuenta ni seguridad
   de servidor para una beta publica.
 
+## Fase 5.96: Refinamiento Visual del Acceso
+
+- El formulario de acceso gana una jerarquia mas clara entre mundo de juego,
+  servidor, cuenta y acciones principales.
+- Se ajustan escala, espaciado, bordes, sombras y estados de botones para que
+  el panel no parezca un bloque tecnico sobre la ilustracion.
+- El marco 9-slice comun recibe un borde mas legible para reutilizarlo despues
+  en seleccion de personaje, inventario, tienda y ventanas de combate.
+
 ## Prioridad Recomendada
 
 1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades

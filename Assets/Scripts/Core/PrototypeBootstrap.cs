@@ -2020,23 +2020,23 @@ namespace MmorpgPrototype
             var loginView = CreateUiObject("Offline Account Login View", overlay.transform);
             StretchToParent(loginView.GetComponent<RectTransform>());
 
-            var loginCard = CreatePanel(loginView.transform, "Offline Account Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(540f, 476f), new Vector2(0f, -28f), new Color(0.006f, 0.014f, 0.024f, 0.8f));
+            var loginCard = CreatePanel(loginView.transform, "Offline Account Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(590f, 520f), new Vector2(0f, -26f), new Color(0.006f, 0.014f, 0.024f, 0.86f));
             loginCard.raycastTarget = false;
-            var loginAccent = CreatePanel(loginView.transform, "Offline Account Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(494f, 4f), new Vector2(0f, 186f), new Color(0.25f, 0.78f, 0.78f, 0.94f));
+            var loginAccent = CreatePanel(loginView.transform, "Offline Account Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(540f, 4f), new Vector2(0f, 215f), new Color(0.25f, 0.78f, 0.78f, 0.94f));
             loginAccent.raycastTarget = false;
 
-            var loginTitle = CreateText(loginView.transform, "Login Title", "ACCESO AL VALLE", 34, TextAnchor.MiddleCenter);
+            var loginTitle = CreateText(loginView.transform, "Login Title", "ACCESO AL VALLE", 32, TextAnchor.MiddleCenter);
             loginTitle.fontStyle = FontStyle.Bold;
-            SetRect(loginTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 46f), new Vector2(0f, 145f));
+            SetRect(loginTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 46f), new Vector2(0f, 174f));
 
             var loginSubtitle = CreateText(loginView.transform, "Login Subtitle", "Selecciona un servidor e inicia sesion", 16, TextAnchor.MiddleCenter);
             loginSubtitle.color = new Color(0.7f, 0.8f, 0.88f);
-            SetRect(loginSubtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 30f), new Vector2(0f, 112f));
+            SetRect(loginSubtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 30f), new Vector2(0f, 140f));
 
-            var serverLabel = CreateText(loginView.transform, "Server Label", "SERVIDOR", 14, TextAnchor.MiddleCenter);
+            var serverLabel = CreateText(loginView.transform, "Server Label", "MUNDO DE JUEGO", 13, TextAnchor.MiddleCenter);
             serverLabel.fontStyle = FontStyle.Bold;
             serverLabel.color = new Color(0.48f, 0.9f, 0.84f);
-            SetRect(serverLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(460f, 24f), new Vector2(0f, 72f));
+            SetRect(serverLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(500f, 24f), new Vector2(0f, 101f));
 
             Text selectedServerText = null;
             var serverButtons = new Button[serverProfiles.Length];
@@ -2045,7 +2045,7 @@ namespace MmorpgPrototype
                 var profileIndex = i;
                 var profile = serverProfiles[i];
                 var buttonColor = profile.Enabled ? new Color(0.05f, 0.28f, 0.25f) : new Color(0.13f, 0.16f, 0.2f);
-                var serverButton = CreateRoundButton(loginView.transform, $"Login {profile.Id} Button", profile.Label, new Vector2(0.5f, 0.5f), new Vector2(-174f + i * 174f, 31f), new Vector2(160f, 48f), buttonColor, 13);
+                var serverButton = CreateRoundButton(loginView.transform, $"Login {profile.Id} Button", profile.Label, new Vector2(0.5f, 0.5f), new Vector2(-178f + i * 178f, 57f), new Vector2(166f, 46f), buttonColor, 13);
                 serverButton.interactable = profile.Enabled;
                 serverButton.onClick.AddListener(() =>
                 {
@@ -2058,33 +2058,36 @@ namespace MmorpgPrototype
 
             selectedServerText = CreateText(loginView.transform, "Selected Server", string.Empty, 14, TextAnchor.MiddleCenter);
             selectedServerText.color = new Color(0.76f, 0.84f, 0.91f);
-            SetRect(selectedServerText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(480f, 24f), new Vector2(0f, -5f));
+            SetRect(selectedServerText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(500f, 24f), new Vector2(0f, 18f));
 
-            var accountLabel = CreateText(loginView.transform, "Account Label", "CUENTA", 14, TextAnchor.MiddleLeft);
+            var serverRule = CreatePanel(loginView.transform, "Server Rule", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 2f), new Vector2(0f, -4f), new Color(0.28f, 0.62f, 0.66f, 0.52f));
+            serverRule.raycastTarget = false;
+
+            var accountLabel = CreateText(loginView.transform, "Account Label", "USUARIO", 13, TextAnchor.MiddleLeft);
             accountLabel.fontStyle = FontStyle.Bold;
             accountLabel.color = new Color(0.7f, 0.8f, 0.88f);
-            SetRect(accountLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(360f, 24f), new Vector2(0f, -43f));
+            SetRect(accountLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(400f, 24f), new Vector2(0f, -28f));
 
-            var accountInput = CreateInputField(loginView.transform, "Account Input", OfflineAccountStore.CurrentAccount, "nombre de cuenta", new Vector2(0.5f, 0.5f), new Vector2(0f, -76f), new Vector2(360f, 44f));
+            var accountInput = CreateInputField(loginView.transform, "Account Input", OfflineAccountStore.CurrentAccount, "nombre de cuenta", new Vector2(0.5f, 0.5f), new Vector2(0f, -61f), new Vector2(400f, 42f));
             accountInput.characterLimit = 16;
 
-            var passwordLabel = CreateText(loginView.transform, "Password Label", "CONTRASENA", 14, TextAnchor.MiddleLeft);
+            var passwordLabel = CreateText(loginView.transform, "Password Label", "CONTRASENA", 13, TextAnchor.MiddleLeft);
             passwordLabel.fontStyle = FontStyle.Bold;
             passwordLabel.color = new Color(0.7f, 0.8f, 0.88f);
-            SetRect(passwordLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(360f, 24f), new Vector2(0f, -117f));
+            SetRect(passwordLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(400f, 24f), new Vector2(0f, -106f));
 
-            var passwordInput = CreateInputField(loginView.transform, "Password Input", string.Empty, "contrasena", new Vector2(0.5f, 0.5f), new Vector2(0f, -150f), new Vector2(360f, 44f));
+            var passwordInput = CreateInputField(loginView.transform, "Password Input", string.Empty, "contrasena", new Vector2(0.5f, 0.5f), new Vector2(0f, -139f), new Vector2(400f, 42f));
             passwordInput.contentType = InputField.ContentType.Password;
             passwordInput.characterLimit = 64;
 
             var loginFeedback = CreateText(loginView.transform, "Login Feedback", "Cuenta local: tus personajes se guardan por usuario.", 14, TextAnchor.MiddleCenter);
             loginFeedback.color = new Color(0.62f, 0.72f, 0.8f);
-            SetRect(loginFeedback.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 32f), new Vector2(0f, -195f));
+            SetRect(loginFeedback.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(500f, 32f), new Vector2(0f, -188f));
 
-            var loginButton = CreateRoundButton(loginView.transform, "Login Button", "ENTRAR", new Vector2(0.5f, 0.5f), new Vector2(-101f, -245f), new Vector2(190f, 48f), new Color(0.12f, 0.34f, 0.72f), 18);
+            var loginButton = CreateRoundButton(loginView.transform, "Login Button", "ENTRAR", new Vector2(0.5f, 0.5f), new Vector2(-110f, -244f), new Vector2(210f, 48f), new Color(0.12f, 0.34f, 0.72f), 18);
             loginButton.onClick.AddListener(() => TryEnterAccount(false));
 
-            var registerButton = CreateRoundButton(loginView.transform, "Register Button", "CREAR CUENTA", new Vector2(0.5f, 0.5f), new Vector2(101f, -245f), new Vector2(190f, 48f), new Color(0.12f, 0.48f, 0.34f), 17);
+            var registerButton = CreateRoundButton(loginView.transform, "Register Button", "REGISTRAR", new Vector2(0.5f, 0.5f), new Vector2(110f, -244f), new Vector2(210f, 48f), new Color(0.12f, 0.48f, 0.34f), 17);
             registerButton.onClick.AddListener(() => TryEnterAccount(true));
 
             void RefreshSelectedServer()
