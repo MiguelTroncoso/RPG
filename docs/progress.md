@@ -237,6 +237,19 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   pendientes honestos, mientras la cobertura authored tecnica permanece en las
   ocho variantes y 30 mobs/jefes.
 
+## Fase 5.92: Beta Offline Legible
+
+- HUD compacto y coherente en editor/Android con referencia horizontal unica;
+  chat y acciones secundarias ya no ocupan la partida al iniciar.
+- Spawners acotados por zona: maximo de 4-5 normales y un elite activo,
+  activacion a 46 unidades y jefe contextual al landmark. Esto evita que las
+  diez zonas se mezclen visualmente en una sola captura.
+- Superficie de suelo con variacion por bioma, marcos ambientales para las diez
+  zonas y campamento comercial del Valle. Los nombres de POI salen del mundo y
+  permanecen en minimapa/objetivos.
+- Particulas reordenadas para que Unity no inicie el sistema antes de asignar
+  duracion. APK y medicion en Android: en compilacion.
+
 ## Fase 5.91: Beta Offline Integrada
 
 - El acceso y seleccion de personaje usan una escena propia de reliquiario;
@@ -303,6 +316,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 5.92 | HUD compacto, spawns por zona, suelo de bioma y campamento offline; APK requiere build desde Unity Hub | 60% beta offline |
 | 2026-07-18 | 5.91 | Atlas offline 1-10, teletransporte de QA y acceso cinematografico; APK pendiente por licencia Unity | 98% |
 | 2026-07-18 | 5.89-5.90 | Pase offline audiovisual, splash propio, grounding por tier y feedback de combate; APK pendiente por licencia Unity | 98% |
 | 2026-07-17 | 5.83-5.86 | HUD contextual, menus visuales, nodos de habilidades y cobertura authored 3D en las 10 zonas; APK 77 MB | 98% |

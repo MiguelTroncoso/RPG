@@ -372,6 +372,10 @@ Proximos objetivos sugeridos:
   comprobar el splash propio, recorrer las diez zonas, validar sombras/aura,
   VFX de telegraph/ultimate y revisar el audio en un telefono real antes de
   abrir el trabajo de servidor S-01.
+- Fase 5.92: HUD compacto igual en editor/Android, chat y acciones secundarias
+  cerrados, spawns por zona limitados, jefe contextual, superficie de bioma y
+  campamento seguro. Validar la APK generada y ejecutar `offline-beta-qa.md`
+  antes de abrir S-01 real.
 - Siguiente bloque online: preparar servidor autoritativo S-01 en Hetzner,
   autenticacion, persistencia, seguridad anti-cheat, despliegue y pruebas de
   reconexion antes de abrir una beta externa.

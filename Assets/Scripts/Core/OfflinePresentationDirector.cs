@@ -73,12 +73,13 @@ namespace MmorpgPrototype
         private void CreateAtmosphere()
         {
             var objectRoot = new GameObject("Offline Valley Atmosphere");
+            objectRoot.SetActive(false);
             objectRoot.transform.SetParent(transform, false);
             atmosphere = objectRoot.AddComponent<ParticleSystem>();
 
             var main = atmosphere.main;
             main.loop = true;
-            main.playOnAwake = true;
+            main.playOnAwake = false;
             main.duration = 8f;
             main.startLifetime = new ParticleSystem.MinMaxCurve(5f, 8f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(0.015f, 0.05f);
@@ -99,6 +100,7 @@ namespace MmorpgPrototype
             renderer.renderMode = ParticleSystemRenderMode.Billboard;
             renderer.material = VisualMaterialUtility.Create(
                 new Color(0.45f, 0.92f, 0.78f), true, 0f, 0.08f);
+            objectRoot.SetActive(true);
             atmosphere.Play();
         }
     }

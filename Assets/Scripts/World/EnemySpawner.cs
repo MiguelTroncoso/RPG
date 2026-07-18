@@ -17,7 +17,10 @@ namespace MmorpgPrototype
         public CombatTelemetry Telemetry;
         public DailyEventSystem DailyEvents;
         public float RespawnDelay = 4.5f;
-        public float ActivationDistance = 112f;
+        // Zones are seventy units apart. Keeping a small activation radius stops
+        // multiple biomes and their enemies from filling the same camera view.
+        public float ActivationDistance = 46f;
+        public float BossActivationDistance = 24f;
 
         private readonly List<GameObject> normals = new List<GameObject>();
         private readonly List<GameObject> elites = new List<GameObject>();
@@ -47,9 +50,8 @@ namespace MmorpgPrototype
 
         private void SpawnZone()
         {
-            var mobile = Application.platform == RuntimePlatform.Android;
-            var normalCount = ZoneBalanceResolver.NormalCountFor(Zone, mobile);
-            var eliteCount = ZoneBalanceResolver.EliteCountFor(Zone, mobile);
+            var normalCount = DesiredNormalCount();
+            var eliteCount = DesiredEliteCount();
 
             for (var i = 0; i < normalCount; i++)
             {
@@ -61,7 +63,10 @@ namespace MmorpgPrototype
                 SpawnElite();
             }
 
-            SpawnBoss();
+            if (CanShowBoss())
+            {
+                SpawnBoss();
+            }
             lastEliteCount = elites.Count;
         }
 
@@ -138,7 +143,7 @@ namespace MmorpgPrototype
         {
             normals.RemoveAll(enemy => enemy == null);
 
-            var normalTarget = ZoneBalanceResolver.NormalCountFor(Zone, Application.platform == RuntimePlatform.Android);
+            var normalTarget = DesiredNormalCount();
             if (normals.Count >= normalTarget || Time.time < nextNormalSpawn)
             {
                 return;
@@ -159,7 +164,7 @@ namespace MmorpgPrototype
 
             lastEliteCount = elites.Count;
 
-            var eliteTarget = ZoneBalanceResolver.EliteCountFor(Zone, Application.platform == RuntimePlatform.Android);
+            var eliteTarget = DesiredEliteCount();
             if (elites.Count < eliteTarget && Time.time >= nextEliteSpawn)
             {
                 SpawnElite();
@@ -169,6 +174,18 @@ namespace MmorpgPrototype
 
         private void BossTick()
         {
+            if (!CanShowBoss())
+            {
+                if (boss != null)
+                {
+                    Destroy(boss);
+                    boss = null;
+                }
+
+                bossAlive = false;
+                return;
+            }
+
             if (boss == null && bossAlive)
             {
                 bossAlive = false;
@@ -185,7 +202,7 @@ namespace MmorpgPrototype
 
         private void SpawnNormal()
         {
-            var position = RandomInArea(Zone.NormalAreaCenter, Zone.NormalAreaRadius);
+            var position = RandomInArea(Zone.NormalAreaCenter, Zone.NormalAreaRadius, normals, 2.35f);
             var enemy = SpawnCustomEnemy(
                 $"{Zone.NormalName} {normals.Count + 1}", position, 1f, Zone.NormalColor,
                 Zone.NormalHealth, Zone.NormalDamage, Zone.NormalDefense, Zone.NormalMoveSpeed,
@@ -196,7 +213,7 @@ namespace MmorpgPrototype
 
         private void SpawnElite()
         {
-            var position = RandomInArea(Zone.EliteAreaCenter, Zone.EliteAreaRadius);
+            var position = RandomInArea(Zone.EliteAreaCenter, Zone.EliteAreaRadius, elites, 3.4f);
             var elite = SpawnCustomEnemy(
                 $"{Zone.EliteName} (Elite)", position, 1.25f, new Color(0.5f, 0.2f, 0.62f),
                 Zone.EliteHealth, Zone.EliteDamage, Zone.EliteDefense, 2.45f,
@@ -208,6 +225,11 @@ namespace MmorpgPrototype
 
         private void SpawnBoss()
         {
+            if (boss != null || !CanShowBoss())
+            {
+                return;
+            }
+
             boss = SpawnCustomEnemy(
                 $"{Zone.BossName} (Jefe)", Zone.BossPosition, 1.7f, new Color(0.55f, 0.12f, 0.1f),
                 Zone.BossHealth, Zone.BossDamage, Zone.BossDefense, 1.9f,
@@ -217,19 +239,55 @@ namespace MmorpgPrototype
             bossAlive = true;
         }
 
-        private Vector3 RandomInArea(Vector3 center, float radius)
+        private int DesiredNormalCount()
+        {
+            var mobile = Application.platform == RuntimePlatform.Android;
+            return Mathf.Min(ZoneBalanceResolver.NormalCountFor(Zone, mobile), mobile ? 4 : 5);
+        }
+
+        private int DesiredEliteCount()
+        {
+            var mobile = Application.platform == RuntimePlatform.Android;
+            return Mathf.Min(ZoneBalanceResolver.EliteCountFor(Zone, mobile), 1);
+        }
+
+        private bool CanShowBoss()
+        {
+            return Target == null || Vector3.Distance(Target.position, Zone.BossPosition) <= BossActivationDistance;
+        }
+
+        private Vector3 RandomInArea(Vector3 center, float radius, List<GameObject> occupied, float minimumDistance)
         {
             for (var attempt = 0; attempt < 16; attempt++)
             {
                 var offset = Random.insideUnitCircle * radius;
                 var position = center + new Vector3(offset.x, 0f, offset.y);
-                if (Zone == null || !Zone.IsInsideSafeZone(position))
+                if ((Zone == null || !Zone.IsInsideSafeZone(position)) && IsFarFromOccupied(position, occupied, minimumDistance))
                 {
                     return position;
                 }
             }
 
             return center;
+        }
+
+        private static bool IsFarFromOccupied(Vector3 position, List<GameObject> occupied, float minimumDistance)
+        {
+            if (occupied == null)
+            {
+                return true;
+            }
+
+            var minimumDistanceSquared = minimumDistance * minimumDistance;
+            foreach (var existing in occupied)
+            {
+                if (existing != null && (existing.transform.position - position).sqrMagnitude < minimumDistanceSquared)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private GameObject SpawnCustomEnemy(string enemyName, Vector3 position, float scale, Color color,

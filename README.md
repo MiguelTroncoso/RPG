@@ -1141,6 +1141,28 @@ zona para QA sin modificar la progresion normal de campana. El recorrido de
 telefono esta documentado en `docs/offline-beta-qa.md`; la APK nueva queda
 pendiente hasta recuperar la licencia del editor.
 
+## Fase 5.92: Pase De Lectura Para Beta Offline
+
+Este pase convierte la presentacion de alpha en una beta offline mas legible:
+
+- Editor y Android usan la misma referencia horizontal `1600x900`, de modo que
+  una captura del editor representa la APK.
+- El HUD inicial queda compacto: barras, nivel, oro, mision, minimapa, joystick
+  y habilidades no invaden el centro de combate. Chat y acciones secundarias
+  comienzan cerrados en todas las plataformas.
+- Las habilidades muestran tecla, nivel o enfriamiento, no textos largos dentro
+  de circulos pequenos. Los cambios de clase de depuracion salen del HUD.
+- Cada spawner se activa cerca de su propia zona, limita normales/elites y
+  separa posiciones. Los jefes aparecen solo al acercarse a su landmark.
+- Las diez zonas reciben suelo con detalle, marco de bioma y landmarks; el
+  Valle incorpora un campamento comercial visible y los nombres tecnicos de
+  POI ya no flotan por el mundo.
+- Las particulas se configuran antes de activarse para eliminar el aviso de
+  Unity sobre cambiar la duracion mientras el sistema se reproduce.
+
+El salto comercial que queda despues de esta beta requiere modelos high-poly
+finales, texturas pintadas, animaciones de estudio y QA en telefonos reales.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

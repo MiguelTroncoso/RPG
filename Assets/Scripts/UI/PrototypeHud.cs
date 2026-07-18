@@ -150,33 +150,31 @@ namespace MmorpgPrototype
 
             var definition = classController.Definition;
             var damage = combat != null ? combat.TotalAttackDamage : definition.BaseDamage;
-            var maxHealth = playerHealth != null ? playerHealth.MaxHealth : definition.MaxHealth;
-            var identityLabel = identity != null ? $"{identity.CharacterName}  {identity.GenderLabel}" : definition.DisplayName;
-            ClassText.text = $"{identityLabel}  {definition.DisplayName}  DMG {damage}  HP {maxHealth}";
+            ClassText.text = $"{definition.DisplayName}  DMG {damage}";
 
             if (SkillOneText != null)
             {
-                SkillOneText.text = skills != null ? skills.DisplayLabel(0) : $"Q {definition.SkillOneName}";
+                SkillOneText.text = CompactSkillLabel(0, 0f);
             }
 
             if (SkillTwoText != null)
             {
-                SkillTwoText.text = skills != null ? skills.DisplayLabel(1) : $"E {definition.SkillTwoName}";
+                SkillTwoText.text = CompactSkillLabel(1, 0f);
             }
 
             if (SkillThreeText != null)
             {
-                SkillThreeText.text = skills != null ? skills.DisplayLabel(2) : $"R {definition.SkillThreeName}";
+                SkillThreeText.text = CompactSkillLabel(2, 0f);
             }
 
             if (SkillFourText != null)
             {
-                SkillFourText.text = skills != null ? skills.DisplayLabel(3) : $"F {definition.SkillFourName}";
+                SkillFourText.text = CompactSkillLabel(3, 0f);
             }
 
             if (UltimateSkillText != null)
             {
-                UltimateSkillText.text = skills != null ? skills.DisplayLabel(4) : $"G {definition.UltimateSkillName}";
+                UltimateSkillText.text = CompactSkillLabel(4, 0f);
             }
         }
 
@@ -187,17 +185,11 @@ namespace MmorpgPrototype
                 return;
             }
 
-            var bonusLabel = progression.ExperienceMultiplier > 1.001f
-                ? Localization.Tr("hud.exp_bonus_suffix", ((progression.ExperienceMultiplier - 1f) * 100f).ToString("0"))
-                : string.Empty;
-            var rebirthLabel = progression.RebirthCount > 0
-                ? Localization.Tr("hud.rebirth", progression.RebirthCount, progression.Renown)
-                : string.Empty;
             var expLabel = progression.IsMaxLevel
-                ? Localization.Tr("hud.exp_max")
-                : Localization.Tr("hud.exp", progression.Experience, progression.NextLevelExperience);
-            var pointsLabel = progression.AttributePoints > 0 ? Localization.Tr("hud.points_suffix", progression.AttributePoints) : string.Empty;
-            ProgressionText.text = Localization.Tr("hud.progression", progression.Level, expLabel, progression.Gold, pointsLabel, rebirthLabel + bonusLabel);
+                ? "MAX"
+                : $"{progression.Experience}/{progression.NextLevelExperience}";
+            var pointsLabel = progression.AttributePoints > 0 ? $"  P {progression.AttributePoints}" : string.Empty;
+            ProgressionText.text = $"Nv {progression.Level}  EXP {expLabel}  Oro {progression.Gold}{pointsLabel}";
         }
 
         public void RefreshInventory()
@@ -239,27 +231,27 @@ namespace MmorpgPrototype
 
             if (SkillOneText != null)
             {
-                SkillOneText.text = skills.DisplayLabel(0, skillOneRemaining);
+                SkillOneText.text = CompactSkillLabel(0, skillOneRemaining);
             }
 
             if (SkillTwoText != null)
             {
-                SkillTwoText.text = skills.DisplayLabel(1, skillTwoRemaining);
+                SkillTwoText.text = CompactSkillLabel(1, skillTwoRemaining);
             }
 
             if (SkillThreeText != null)
             {
-                SkillThreeText.text = skills.DisplayLabel(2, skillThreeRemaining);
+                SkillThreeText.text = CompactSkillLabel(2, skillThreeRemaining);
             }
 
             if (SkillFourText != null)
             {
-                SkillFourText.text = skills.DisplayLabel(3, skillFourRemaining);
+                SkillFourText.text = CompactSkillLabel(3, skillFourRemaining);
             }
 
             if (UltimateSkillText != null)
             {
-                UltimateSkillText.text = skills.DisplayLabel(4, ultimateRemaining);
+                UltimateSkillText.text = CompactSkillLabel(4, ultimateRemaining);
             }
 
             if (SkillCooldowns != null)
@@ -296,6 +288,25 @@ namespace MmorpgPrototype
             {
                 PlayerHealthText.text = Localization.Tr("hud.player_hp", playerHealth.CurrentHealth, playerHealth.MaxHealth);
             }
+        }
+
+        private string CompactSkillLabel(int slot, float remaining)
+        {
+            var keys = new[] { "Q", "E", "R", "F", "G" };
+            var key = slot >= 0 && slot < keys.Length ? keys[slot] : "?";
+            if (skills == null)
+            {
+                return key;
+            }
+
+            if (!skills.IsSkillUnlocked(slot))
+            {
+                return $"{key}\nNv{skills.UnlockLevelFor(slot)}";
+            }
+
+            return remaining > 0.05f
+                ? $"{key}\n{Mathf.CeilToInt(remaining)}s"
+                : $"{key}\nNv{skills.SkillLevelFor(slot)}";
         }
 
         private void UpdatePlayerExperience()

@@ -69,11 +69,15 @@ namespace MmorpgPrototype
         private static void SpawnBurst(string name, Vector3 position, Color color, short count, float speed, float lifetime)
         {
             var effect = new GameObject(name);
+            // Adding ParticleSystem to an active object can start it before its
+            // duration is configured, producing Unity's "still playing" warning.
+            effect.SetActive(false);
             effect.transform.position = position;
             var particleSystem = effect.AddComponent<ParticleSystem>();
             var main = particleSystem.main;
             main.duration = lifetime;
             main.loop = false;
+            main.playOnAwake = false;
             main.startLifetime = lifetime;
             main.startSpeed = speed;
             main.startSize = 0.07f;
@@ -91,6 +95,7 @@ namespace MmorpgPrototype
 
             var renderer = effect.GetComponent<ParticleSystemRenderer>();
             renderer.material = MaterialFor(color);
+            effect.SetActive(true);
             particleSystem.Play();
             Object.Destroy(effect, lifetime + 0.25f);
         }

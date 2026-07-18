@@ -37,6 +37,11 @@ namespace MmorpgPrototype
             BuildCombatAreaMarker(root.transform, zone);
             BuildGroundAccents(root.transform, zone, random);
             BuildZoneSignature(root.transform, zone);
+            BuildBiomeFrame(root.transform, zone);
+            if ((zone.ZoneId ?? string.Empty).ToLowerInvariant().Contains("valley"))
+            {
+                BuildValleyCamp(root.transform, zone);
+            }
         }
 
         private static void BuildNavigation(Transform parent, ZoneDefinition zone)
@@ -219,6 +224,60 @@ namespace MmorpgPrototype
             CreatePart(parent, "Throne Crown", PrimitiveType.Cube, center + Vector3.up * 3.5f, new Vector3(3.2f, 0.3f, 0.5f), Color.Lerp(accent, Color.white, 0.2f));
         }
 
+        private static void BuildBiomeFrame(Transform parent, ZoneDefinition zone)
+        {
+            var accent = AccentFor(zone);
+            var center = zone.GroundCenter;
+            var edge = 33f;
+            for (var i = 0; i < 12; i++)
+            {
+                var angle = i / 12f * Mathf.PI * 2f;
+                var position = center + new Vector3(Mathf.Cos(angle) * edge, 0f, Mathf.Sin(angle) * edge);
+                var scale = 1.2f + (i % 3) * 0.34f;
+                if ((zone.ZoneId ?? string.Empty).ToLowerInvariant().Contains("forest") || (zone.ZoneId ?? string.Empty).ToLowerInvariant().Contains("valley"))
+                {
+                    BuildTree(parent, position, zone.GroundColor, i % 4 == 0);
+                }
+                else
+                {
+                    CreatePart(parent, "Biome Border Rock", PrimitiveType.Sphere, position + Vector3.up * scale * 0.45f,
+                        new Vector3(scale * 1.1f, scale * 0.9f, scale), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
+                    if (i % 3 == 0)
+                    {
+                        CreatePart(parent, "Biome Border Rune", PrimitiveType.Cylinder, position + Vector3.up * (scale + 0.08f),
+                            new Vector3(0.16f, 0.34f, 0.16f), accent);
+                    }
+                }
+            }
+        }
+
+        private static void BuildValleyCamp(Transform parent, ZoneDefinition zone)
+        {
+            var center = zone.SafeZoneCenter;
+            var wood = new Color(0.28f, 0.16f, 0.07f);
+            var cloth = new Color(0.12f, 0.42f, 0.32f);
+            var stone = new Color(0.18f, 0.22f, 0.25f);
+            var positions = new[]
+            {
+                center + new Vector3(-5.2f, 0f, 2.2f),
+                center + new Vector3(5.2f, 0f, 2.2f)
+            };
+
+            for (var i = 0; i < positions.Length; i++)
+            {
+                var stall = positions[i];
+                CreatePart(parent, "Camp Stall Counter", PrimitiveType.Cube, stall + new Vector3(0f, 0.72f, 0f), new Vector3(2.6f, 1.1f, 0.76f), wood);
+                CreatePart(parent, "Camp Stall Roof", PrimitiveType.Cube, stall + new Vector3(0f, 2.25f, 0f), new Vector3(3.4f, 0.18f, 2.2f), cloth, Quaternion.Euler(0f, i == 0 ? 9f : -9f, 0f));
+                CreatePart(parent, "Camp Stall Post L", PrimitiveType.Cylinder, stall + new Vector3(-1.35f, 1.15f, 0.72f), new Vector3(0.13f, 1.15f, 0.13f), wood);
+                CreatePart(parent, "Camp Stall Post R", PrimitiveType.Cylinder, stall + new Vector3(1.35f, 1.15f, 0.72f), new Vector3(0.13f, 1.15f, 0.13f), wood);
+                CreatePart(parent, "Camp Crate", PrimitiveType.Cube, stall + new Vector3(i == 0 ? -1.7f : 1.7f, 0.38f, -0.56f), new Vector3(0.72f, 0.72f, 0.72f), Color.Lerp(wood, Color.white, 0.08f));
+            }
+
+            CreatePart(parent, "Camp Fire Ring", PrimitiveType.Cylinder, center + new Vector3(0f, 0.06f, -2.6f), new Vector3(2.4f, 0.1f, 2.4f), stone);
+            CreatePart(parent, "Camp Fire", PrimitiveType.Sphere, center + new Vector3(0f, 0.58f, -2.6f), new Vector3(0.65f, 1.12f, 0.65f), new Color(1f, 0.3f, 0.05f));
+            CreatePart(parent, "Camp Fire Core", PrimitiveType.Sphere, center + new Vector3(0f, 0.7f, -2.6f), new Vector3(0.32f, 0.62f, 0.32f), new Color(1f, 0.82f, 0.22f));
+        }
+
         private static Color AccentFor(ZoneDefinition zone)
         {
             var id = (zone != null ? zone.ZoneId : string.Empty).ToLowerInvariant();
@@ -268,17 +327,9 @@ namespace MmorpgPrototype
             point.Reward = reward;
             point.ClaimId = claimId;
 
-            var labelObject = new GameObject("POI Label");
-            labelObject.transform.SetParent(pointObject.transform, false);
-            labelObject.transform.localPosition = Vector3.up * 3.1f;
-            var label = labelObject.AddComponent<TextMesh>();
-            label.text = name;
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            label.fontSize = 26;
-            label.characterSize = 0.035f;
-            label.anchor = TextAnchor.MiddleCenter;
-            label.alignment = TextAlignment.Center;
-            label.color = Color.Lerp(Color.white, Color.yellow, 0.25f);
+            // POI names are shown through the minimap, mission feed and the
+            // interaction prompt. Keeping them out of world-space avoids text
+            // crossing the camera at arbitrary angles on mobile.
         }
 
         private static void BuildLandmark(Transform parent, string name, Vector3 position, Color accent, float scale)

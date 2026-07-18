@@ -27,9 +27,22 @@ APK que contenga la Fase 5.91 debe probarse en horizontal y con el perfil
 5. En cada zona: mover con joystick, girar camara con el dedo, atacar y lanzar
    Q/E/R/F/G simultaneamente cuando corresponda. No deben aparecer saltos de
    orientacion ni bloquearse los controles.
-6. Entrar al campamento de Zona 1: no debe permitir combate ni contener mobs.
-7. Recibir dano y alejarse: la regeneracion debe iniciar solo tras el periodo
+6. Confirmar que al entrar a una zona no se ven mobs ni jefes de zonas vecinas;
+   el jefe de esa zona debe aparecer solo al acercarse a su landmark.
+7. Entrar al campamento de Zona 1: no debe permitir combate ni contener mobs.
+8. Recibir dano y alejarse: la regeneracion debe iniciar solo tras el periodo
    sin recibir dano.
+
+## Lectura Visual
+
+1. Al inicio, `CHAT` y `MAS` deben permanecer cerrados; el centro de pantalla
+   queda reservado al personaje y al combate.
+2. Verificar que las habilidades muestran solo Q/E/R/F/G con nivel o segundos
+   de enfriamiento, sin nombres largos desbordados.
+3. Revisar que cada zona tenga suelo con detalle, borde de bioma y landmark;
+   Zona 1 debe mostrar el campamento comercial y su fogata.
+4. Usar `MAS` para abrir los sistemas cuando se necesiten y cerrarlos antes de
+   continuar la prueba de combate.
 
 ## Sistemas
 

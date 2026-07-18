@@ -1340,6 +1340,65 @@ backend.
 Criterio de exito: un telefono puede crear/recuperar personaje, recorrer las
 diez zonas desde `MAPA`, usar la interfaz tactil y exportar QA sin bloqueos.
 
+## Fase 5.92: Pase De Lectura Offline
+
+Objetivo: que una partida offline se entienda y se pueda probar como beta, sin
+elementos de depuracion, zonas superpuestas ni ruido visual innecesario.
+
+- HUD unico para editor y Android, referencia `1600x900`, centro de combate
+  libre y controles primarios persistentes. [Implementado]
+- Chat y acciones secundarias colapsados; selector de clase retirado del HUD
+  de partida. [Implementado]
+- Habilidades compactas con nivel/enfriamiento y mascara radial. [Implementado]
+- Activacion y densidad de spawners limitada por zona; jefes contextuales y
+  separacion minima entre enemigos. [Implementado]
+- Suelo con detalle procedural, marco de bioma y campamento seguro de Valle.
+  [Implementado]
+- APK Android, FPS, memoria y recorrido de diez zonas. [En validacion]
+
+Criterio de exito: una captura de Zona 1 deja visible al personaje, el camino,
+el objetivo, el minimapa y los botones de combate sin mobs de zonas vecinas ni
+paneles tecnicos abiertos.
+
+## Fase 5.93: Validacion De Beta Offline En Dispositivo
+
+Objetivo: convertir el corte funcional en una beta reproducible en telefonos
+Android reales, primero sin backend.
+
+- Compilar desde Unity Hub con licencia activa y reinstalar sobre una instalacion
+  limpia. [Pendiente]
+- Recorrer las diez zonas en `RENDIMIENTO` y `CALIDAD`, exportar diagnosticos y
+  registrar FPS, memoria, carga, temperatura y objetos activos. [Pendiente]
+- Corregir solo bloqueadores: cierre, pantalla negra, guardado roto, input
+  multitactil, UI que oculte combate, mobs superpuestos o FPS menor a 30.
+  [Pendiente]
+- Definir la lista exacta de dispositivos de beta externa y su nivel minimo.
+  [Pendiente]
+
+## Fase 5.94: Vertical Slice De Contenido Offline
+
+Objetivo: pulir completamente la experiencia nivel 1-10 antes de ampliar el
+resto de 1-105 con el mismo estandar.
+
+- Revisar tutorial, primer NPC, primer contrato, primer elite, primer jefe,
+  tienda y recompensa de Zona 1. [Pendiente]
+- Ajustar TTK, drops, oro, potion, equipo inicial y legibilidad de cada mob.
+  [Pendiente]
+- Crear una matriz de fallos por zona y resolver primero lo que impida jugar.
+  [Pendiente]
+
+## Fase 5.95: Produccion Artistica Comercial
+
+Objetivo: reemplazar el arte authored/procedural por assets finales sin alterar
+las reglas del juego.
+
+- Esculturas high-poly, retopologia, UV, mapas PBR y animacion de estudio para
+  las 8 variantes de jugador. [Produccion externa]
+- Mismo tratamiento para normal, elite y jefe de las diez zonas. [Produccion
+  externa]
+- LOD, atlas, compresion, VFX y audio finales validados sobre los dispositivos
+  de beta. [Pendiente]
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.
