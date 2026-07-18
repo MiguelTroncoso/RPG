@@ -173,7 +173,9 @@ namespace MmorpgPrototype
             ground.name = "Training Field";
             ground.transform.localScale = new Vector3(7f, 1f, 7f);
 
-            var material = VisualMaterialUtility.Create(new Color(0.22f, 0.34f, 0.24f), false, 0.02f, 0.12f);
+            // Zone 1 reuses this base plane, so it must receive the same
+            // authored surface material as the rest of the world.
+            var material = OfflineWorldSurfaceArt.MaterialFor(null);
             ground.GetComponent<Renderer>().sharedMaterial = material;
 
             var collision = new GameObject("Training Field Collision");
