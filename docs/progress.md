@@ -270,9 +270,9 @@ despues se replica el pipeline a las nueve zonas restantes.
 - La pantalla de acceso offline conserva `S-01` como mundo local, pero ya no
   muestra URL WebSocket ni estado tecnico de red. Entrar al valle no abre una
   conexion automatica; la configuracion queda dentro de `Datos` para QA online.
-- Los FBX generated `OriginalArt` quedan como fallback tecnico. Personajes y
-  mobs de las diez zonas priorizan los meshes curados KayKit y Quaternius, con
-  siluetas mas claras para la camara movil.
+- Los FBX authored `OriginalArt` pasan a ser la presentacion primaria de
+  personajes y mobs de las diez zonas. KayKit/Quaternius queda como fallback
+  tecnico para recursos faltantes o contenido legacy.
 - El arma legacy deja de duplicarse sobre el avatar. Guerrero usa Knight,
   Ninja Rogue/Rogue Hooded, Chaman Mage y Umbra Barbarian en ambas variantes;
   sexo, paleta y accesorios siguen diferenciados por `CharacterArtProfile`.
@@ -340,6 +340,19 @@ despues se replica el pipeline a las nueve zonas restantes.
 - La siguiente validacion debe comprobar escala, suelo, colision visual,
   lectura a distancia, animacion procedural y rendimiento con grupos de mobs.
 
+## Fase 5.98: FBX Skinned Authored Primarios
+
+- Las ocho variantes de personaje y los 30 mobs/jefes de las diez zonas pasan
+  a instanciarse primero desde `Resources/OriginalArt`.
+- Personajes y mobs conservan armature skinned, cinco clips (`Idle`, `Run`,
+  `Attack`, `Hit`, `Death`), atlas 2K de albedo/normal y LOD0/LOD1/LOD2.
+- Los mobs ahora reciben `LODGroup` real al instanciar sus FBX; KayKit,
+  Quaternius y el factory procedural quedan como fallback de compatibilidad.
+- Este corte activa el pipeline FBX authored dentro del juego, pero sigue
+  siendo un arte original estilizado de producción técnica. La escultura
+  manual high-poly, retopologia artística y animaciones profesionales siguen
+  siendo el siguiente salto comercial.
+
 ## Prioridad Recomendada
 
 1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades
@@ -398,6 +411,7 @@ despues se replica el pipeline a las nueve zonas restantes.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 5.98 | FBX skinned authored primarios: 8 personajes, 30 mobs/jefes, controllers de cinco clips y LODGroup de mobs; validacion Unity/Android pendiente | 61% beta offline |
 | 2026-07-18 | 5.97 | Siluetas authored de las cuatro clases y lobos/guardian de reliquia en Zona 1; validacion Unity/Android pendiente | 60% beta offline |
 | 2026-07-18 | 5.92 | HUD compacto, spawns por zona, suelo de bioma y campamento offline; APK requiere build desde Unity Hub | 60% beta offline |
 | 2026-07-18 | 5.91 | Atlas offline 1-10, teletransporte de QA y acceso cinematografico; APK pendiente por licencia Unity | 98% |

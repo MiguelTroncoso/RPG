@@ -62,8 +62,9 @@ En modo batch:
 ```
 
 El resultado son ocho controllers en
-`Assets/Resources/OriginalArt/Controllers`. El runtime busca primero el FBX
-authored y conserva el generador procedural como fallback si falta un asset.
+`Assets/Resources/OriginalArt/Controllers`. El runtime usa ahora primero el
+FBX authored y conserva KayKit/Quaternius y el generador procedural como
+fallback de compatibilidad si falta un asset.
 
 ## Validacion
 
@@ -135,7 +136,8 @@ Regenerar los controllers despues de importar los FBX:
   -executeMethod MmorpgPrototype.Editor.OriginalMobAnimatorAssetGenerator.Generate
 ```
 
-El runtime prueba primero el recurso authored de la zona/tier, luego el set
-Quaternius y finalmente el fallback procedural. El pipeline sigue siendo arte
-authored original estilizado; la escultura manual high-poly, retopologia
-artistica y animacion profesional siguen siendo una mejora comercial futura.
+El runtime usa primero el recurso authored de la zona/tier, configura su
+`LODGroup` y controller, luego prueba el set Quaternius y finalmente el
+fallback procedural. El pipeline sigue siendo arte authored original
+estilizado; la escultura manual high-poly, retopologia artistica y animacion
+profesional siguen siendo una mejora comercial futura.

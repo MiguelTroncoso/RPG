@@ -23,10 +23,10 @@ namespace MmorpgPrototype
         private Coroutine deathRoutine;
         private bool usingOriginalArt;
 
-        // Generated OriginalArt FBX mobs stay available as a fallback. For the
-        // beta we prioritize the curated Quaternius families already included
-        // in the project, giving each zone a clearer readable silhouette.
-        private static bool PreferExperimentalOriginalArt => false;
+        // The authored FBX set is the primary mob presentation for every zone
+        // and tier. Quaternius/procedural visuals remain a safe fallback when
+        // a future content pack has not been imported yet.
+        private static bool PreferExperimentalOriginalArt => true;
 
         public void Initialize(string enemyId, string displayName, EnemyTier tier, Color baseColor, float scale, Health enemyHealth)
         {
@@ -155,18 +155,6 @@ namespace MmorpgPrototype
 
         private bool TryBuildRealModel(string enemyId, EnemyTier tier, Color baseColor, Color accent)
         {
-            if (enemyId.Contains("valley"))
-            {
-                var valleyModel = BuildValleyAuthoredModel(tier, baseColor, accent);
-                if (valleyModel != null)
-                {
-                    usingOriginalArt = false;
-                    var valleyMotion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
-                    valleyMotion.SetVisualRoot(valleyModel.transform, null);
-                    return true;
-                }
-            }
-
             var authoredResource = AuthoredMobResourceFor(enemyId, tier);
             var authoredPrefab = PreferExperimentalOriginalArt
                 ? Resources.Load<GameObject>(authoredResource)
@@ -174,11 +162,13 @@ namespace MmorpgPrototype
             var model = authoredPrefab != null
                 ? Instantiate(authoredPrefab, visualRoot.transform)
                 : null;
-            usingOriginalArt = false;
+            usingOriginalArt = authoredPrefab != null;
             Animator modelAnimator = null;
 
             if (model == null)
             {
+                // Keep the authored runtime silhouette as a fallback only for
+                // legacy content that predates the exported FBX pack.
                 var originalModelRequested = PreferExperimentalOriginalArt
                     && tier == EnemyTier.Normal
                     && enemyId == "valley_creature";
@@ -214,6 +204,10 @@ namespace MmorpgPrototype
                 model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
 
                 ApplyModelArtTreatment(model, enemyId, baseColor, accent, tier);
+                if (authoredPrefab != null)
+                {
+                    ConfigureImportedLodGroup(model);
+                }
 
                 foreach (var modelCollider in model.GetComponentsInChildren<Collider>())
                 {
@@ -248,6 +242,58 @@ namespace MmorpgPrototype
             var motion = GetComponent<AvatarMotionAnimator>() ?? gameObject.AddComponent<AvatarMotionAnimator>();
             motion.SetVisualRoot(model.transform, modelAnimator);
             return true;
+        }
+
+        private static void ConfigureImportedLodGroup(GameObject model)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            var lod0 = new List<Renderer>();
+            var lod1 = new List<Renderer>();
+            var lod2 = new List<Renderer>();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var rendererName = renderer.gameObject.name;
+                if (rendererName.Contains("_LOD2") || rendererName.Contains(" LOD2"))
+                {
+                    lod2.Add(renderer);
+                }
+                else if (rendererName.Contains("_LOD1") || rendererName.Contains(" LOD1"))
+                {
+                    lod1.Add(renderer);
+                }
+                else
+                {
+                    lod0.Add(renderer);
+                }
+            }
+
+            if (lod0.Count == 0)
+            {
+                lod0.AddRange(model.GetComponentsInChildren<Renderer>(true));
+            }
+
+            if (lod1.Count == 0)
+            {
+                lod1.AddRange(lod0);
+            }
+
+            if (lod2.Count == 0)
+            {
+                lod2.AddRange(lod1);
+            }
+
+            var lodGroup = model.GetComponent<LODGroup>() ?? model.AddComponent<LODGroup>();
+            lodGroup.SetLODs(new[]
+            {
+                new LOD(0.52f, lod0.ToArray()),
+                new LOD(0.22f, lod1.ToArray()),
+                new LOD(0.08f, lod2.ToArray())
+            });
+            lodGroup.RecalculateBounds();
         }
 
         private GameObject BuildValleyAuthoredModel(EnemyTier tier, Color baseColor, Color accent)

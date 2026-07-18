@@ -17,10 +17,10 @@ namespace MmorpgPrototype
         private bool usingImportedModel;
         private bool usingOriginalArt;
 
-        // The generated OriginalArt FBX set remains a lightweight fallback. The
-        // offline beta presents the curated character meshes first because their
-        // silhouettes are clearer at mobile camera distance.
-        private static bool PreferExperimentalOriginalArt => false;
+        // The authored FBX set is now the primary character presentation. The
+        // KayKit model remains available as a compatibility fallback while
+        // older saves or missing resources are encountered.
+        private static bool PreferExperimentalOriginalArt => true;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
