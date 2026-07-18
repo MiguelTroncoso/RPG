@@ -17,6 +17,11 @@ namespace MmorpgPrototype
         private bool usingImportedModel;
         private bool usingOriginalArt;
 
+        // The generated OriginalArt FBX set remains a lightweight fallback. The
+        // offline beta presents the curated character meshes first because their
+        // silhouettes are clearer at mobile camera distance.
+        private static bool PreferExperimentalOriginalArt => false;
+
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
         private static readonly int MetallicId = Shader.PropertyToID("_Metallic");
@@ -114,22 +119,25 @@ namespace MmorpgPrototype
 
         private bool TryBuildCharacterModel(ClassDefinition definition, CharacterGender gender)
         {
-            var authoredModel = OriginalArtVisualFactory.BuildAuthoredCharacter(visualRoot.transform, currentArtProfile);
-            if (authoredModel != null)
+            if (PreferExperimentalOriginalArt)
             {
-                usingOriginalArt = true;
-                var authoredAnimator = authoredModel.GetComponentInChildren<Animator>();
-                ApplyModelArtTreatment(authoredModel, currentArtProfile);
-                BindMotionAnimator(authoredAnimator);
-                return true;
-            }
+                var authoredModel = OriginalArtVisualFactory.BuildAuthoredCharacter(visualRoot.transform, currentArtProfile);
+                if (authoredModel != null)
+                {
+                    usingOriginalArt = true;
+                    var authoredAnimator = authoredModel.GetComponentInChildren<Animator>();
+                    ApplyModelArtTreatment(authoredModel, currentArtProfile);
+                    BindMotionAnimator(authoredAnimator);
+                    return true;
+                }
 
-            var originalModel = OriginalArtVisualFactory.BuildCharacter(visualRoot.transform, currentArtProfile);
-            if (originalModel != null)
-            {
-                usingOriginalArt = true;
-                BindMotionAnimator();
-                return true;
+                var originalModel = OriginalArtVisualFactory.BuildCharacter(visualRoot.transform, currentArtProfile);
+                if (originalModel != null)
+                {
+                    usingOriginalArt = true;
+                    BindMotionAnimator();
+                    return true;
+                }
             }
 
             var modelResource = definition.ModelResourceFor(gender);
@@ -141,7 +149,15 @@ namespace MmorpgPrototype
             var prefab = Resources.Load<GameObject>(modelResource);
             if (prefab == null)
             {
-                return false;
+                var fallback = OriginalArtVisualFactory.BuildCharacter(visualRoot.transform, currentArtProfile);
+                if (fallback == null)
+                {
+                    return false;
+                }
+
+                usingOriginalArt = true;
+                BindMotionAnimator();
+                return true;
             }
 
             var model = Instantiate(prefab, visualRoot.transform);

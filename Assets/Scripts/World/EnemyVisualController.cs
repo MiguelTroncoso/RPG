@@ -23,6 +23,11 @@ namespace MmorpgPrototype
         private Coroutine deathRoutine;
         private bool usingOriginalArt;
 
+        // Generated OriginalArt FBX mobs stay available as a fallback. For the
+        // beta we prioritize the curated Quaternius families already included
+        // in the project, giving each zone a clearer readable silhouette.
+        private static bool PreferExperimentalOriginalArt => false;
+
         public void Initialize(string enemyId, string displayName, EnemyTier tier, Color baseColor, float scale, Health enemyHealth)
         {
             health = enemyHealth;
@@ -151,7 +156,9 @@ namespace MmorpgPrototype
         private bool TryBuildRealModel(string enemyId, EnemyTier tier, Color baseColor, Color accent)
         {
             var authoredResource = AuthoredMobResourceFor(enemyId, tier);
-            var authoredPrefab = Resources.Load<GameObject>(authoredResource);
+            var authoredPrefab = PreferExperimentalOriginalArt
+                ? Resources.Load<GameObject>(authoredResource)
+                : null;
             var model = authoredPrefab != null
                 ? Instantiate(authoredPrefab, visualRoot.transform)
                 : null;
@@ -160,7 +167,9 @@ namespace MmorpgPrototype
 
             if (model == null)
             {
-                var originalModelRequested = tier == EnemyTier.Normal && enemyId == "valley_creature";
+                var originalModelRequested = PreferExperimentalOriginalArt
+                    && tier == EnemyTier.Normal
+                    && enemyId == "valley_creature";
                 model = originalModelRequested
                     ? OriginalArtVisualFactory.BuildValleyMob(visualRoot.transform, baseColor, accent)
                     : null;

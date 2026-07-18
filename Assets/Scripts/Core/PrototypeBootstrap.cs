@@ -1746,13 +1746,14 @@ namespace MmorpgPrototype
             var network = player.GetComponent<MmorpgNetworkClient>();
             var persistence = player.GetComponent<PlayerPersistence>();
             var savedData = persistence != null ? persistence.LoadOrNull() : null;
-            InputField accessUrlInput = null;
             var serverProfiles = DefaultServerProfiles.Create();
             var selectedServerIndex = Mathf.Clamp(PlayerPrefs.GetInt("mmorpg.server.profile", 0), 0, serverProfiles.Length - 1);
             if (!serverProfiles[selectedServerIndex].Enabled)
             {
                 selectedServerIndex = 0;
             }
+
+            var selectedServerUrl = PlayerPrefs.GetString("mmorpg.server.url", serverProfiles[selectedServerIndex].Url);
 
             var selectedClass = CharacterClassType.Guerrero;
             var selectedGender = CharacterGender.Masculino;
@@ -1791,7 +1792,7 @@ namespace MmorpgPrototype
             brand.color = new Color(0.9f, 0.94f, 1f);
             SetRect(brand.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 38f), new Vector2(0f, 298f));
 
-            var accessLabel = CreateText(overlay.transform, "Access Label", "ACCESO LOCAL  •  PROTOTIPO ANDROID", 16, TextAnchor.MiddleCenter);
+            var accessLabel = CreateText(overlay.transform, "Access Label", "BETA OFFLINE  •  AVENTURA LOCAL", 16, TextAnchor.MiddleCenter);
             accessLabel.color = new Color(0.46f, 0.79f, 0.8f);
             SetRect(accessLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 26f), new Vector2(0f, 270f));
 
@@ -2001,22 +2002,23 @@ namespace MmorpgPrototype
             });
             backButton.gameObject.SetActive(savedData != null);
 
-            var serverPanel = CreatePanel(overlay.transform, "Server Selector Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(530f, 92f), new Vector2(-340f, -192f), new Color(0.025f, 0.037f, 0.048f, 1f));
+            var serverPanel = CreatePanel(overlay.transform, "Server Selector Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(550f, 128f), new Vector2(-280f, -196f), new Color(0.025f, 0.037f, 0.048f, 1f));
             serverPanel.raycastTarget = false;
-            var serverTitle = CreateText(overlay.transform, "Server Title", Localization.Tr("server.title"), 16, TextAnchor.MiddleLeft);
+            var serverTitle = CreateText(overlay.transform, "Server Title", "MUNDO DE JUEGO", 15, TextAnchor.MiddleLeft);
             serverTitle.fontStyle = FontStyle.Bold;
-            SetRect(serverTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(120f, 24f), new Vector2(-565f, -165f));
-            var serverStatus = CreateText(overlay.transform, "Server Status", Localization.Tr("server.active_profile"), 14, TextAnchor.MiddleLeft);
+            serverTitle.color = new Color(0.52f, 0.8f, 0.86f);
+            SetRect(serverTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(220f, 24f), new Vector2(-500f, -159f));
+            var serverStatus = CreateText(overlay.transform, "Server Status", string.Empty, 13, TextAnchor.MiddleRight);
             serverStatus.color = new Color(0.48f, 0.86f, 0.64f);
-            SetRect(serverStatus.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(430f, 24f), new Vector2(-390f, -219f));
+            SetRect(serverStatus.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(250f, 24f), new Vector2(-125f, -159f));
+            serverStatus.text = $"{serverProfiles[selectedServerIndex].Id}  ·  MODO OFFLINE";
 
-            var savedServerUrl = PlayerPrefs.GetString("mmorpg.server.url", serverProfiles[selectedServerIndex].Url);
             if (network != null)
             {
-                network.ServerUrl = savedServerUrl;
+                network.ServerUrl = selectedServerUrl;
                 if (network.UrlInput != null)
                 {
-                    network.UrlInput.text = savedServerUrl;
+                    network.UrlInput.text = selectedServerUrl;
                 }
             }
 
@@ -2027,7 +2029,7 @@ namespace MmorpgPrototype
                 var index = i;
                 var profile = serverProfiles[i];
                 var selected = i == selectedServerIndex;
-                serverButtons[i] = CreateRoundButton(overlay.transform, $"Server {profile.Id} Button", profile.Label, new Vector2(0.5f, 0.5f), new Vector2(-505f + i * 165f, -188f), new Vector2(152f, 48f), selected ? new Color(0.12f, 0.48f, 0.38f) : new Color(0.16f, 0.19f, 0.23f), 13);
+                serverButtons[i] = CreateRoundButton(overlay.transform, $"Server {profile.Id} Button", profile.Label, new Vector2(0.5f, 0.5f), new Vector2(-450f + i * 160f, -207f), new Vector2(148f, 46f), selected ? new Color(0.12f, 0.48f, 0.38f) : new Color(0.16f, 0.19f, 0.23f), 12);
                 serverImages[i] = serverButtons[i].GetComponent<Image>();
                 serverButtons[i].interactable = profile.Enabled;
                 serverButtons[i].onClick.AddListener(() =>
@@ -2038,10 +2040,18 @@ namespace MmorpgPrototype
                     }
 
                     selectedServerIndex = index;
-                    accessUrlInput.text = profile.Url;
-                    serverStatus.text = $"{profile.Id} {profile.DisplayName}";
+                    selectedServerUrl = profile.Url;
+                    serverStatus.text = $"{profile.Id}  ·  MODO OFFLINE";
+                    if (network != null)
+                    {
+                        network.ServerUrl = selectedServerUrl;
+                        if (network.UrlInput != null)
+                        {
+                            network.UrlInput.text = selectedServerUrl;
+                        }
+                    }
                     PlayerPrefs.SetInt("mmorpg.server.profile", selectedServerIndex);
-                    PlayerPrefs.SetString("mmorpg.server.url", profile.Url);
+                    PlayerPrefs.SetString("mmorpg.server.url", selectedServerUrl);
                     PlayerPrefs.Save();
 
                     for (var buttonIndex = 0; buttonIndex < serverImages.Length; buttonIndex++)
@@ -2053,24 +2063,9 @@ namespace MmorpgPrototype
                 });
             }
 
-            var futureServers = CreateText(overlay.transform, "Future Servers", Localization.Tr("server.coming_soon"), 13, TextAnchor.MiddleLeft);
+            var futureServers = CreateText(overlay.transform, "Future Servers", Localization.Tr("server.coming_soon"), 13, TextAnchor.MiddleCenter);
             futureServers.color = new Color(0.55f, 0.62f, 0.69f);
-            SetRect(futureServers.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 24f), new Vector2(-340f, -244f));
-
-            var serverAddressLabel = CreateText(overlay.transform, "Server Address Label", Localization.Tr("server.address_label"), 13, TextAnchor.MiddleLeft);
-            serverAddressLabel.color = new Color(0.55f, 0.62f, 0.69f);
-            SetRect(serverAddressLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(140f, 24f), new Vector2(-565f, -273f));
-            accessUrlInput = CreateInputField(overlay.transform, "Access Server Url Input", savedServerUrl, Localization.Tr("net.url_placeholder"), new Vector2(0.5f, 0.5f), new Vector2(-280f, -286f), new Vector2(500f, 38f));
-            accessUrlInput.characterLimit = 160;
-
-            var accessConnectionLabel = CreateText(overlay.transform, "Access Connection Label", Localization.Tr("server.connection_status"), 14, TextAnchor.MiddleLeft);
-            accessConnectionLabel.color = new Color(0.55f, 0.62f, 0.69f);
-            SetRect(accessConnectionLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(130f, 24f), new Vector2(100f, -273f));
-            var accessConnectionStatus = CreateText(overlay.transform, "Access Connection Status", network != null ? network.CurrentStatus : Localization.Tr("net.status_offline"), 14, TextAnchor.MiddleLeft);
-            SetRect(accessConnectionStatus.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(380f, 34f), new Vector2(320f, -286f));
-            var statusView = overlay.AddComponent<ServerConnectionStatusView>();
-            statusView.Client = network;
-            statusView.Label = accessConnectionStatus;
+            SetRect(futureServers.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(520f, 24f), new Vector2(-280f, -252f));
 
             if (savedData != null)
             {
@@ -2098,7 +2093,9 @@ namespace MmorpgPrototype
                     return;
                 }
 
-                var address = accessUrlInput != null ? accessUrlInput.text.Trim() : serverProfiles[selectedServerIndex].Url;
+                var address = string.IsNullOrWhiteSpace(selectedServerUrl)
+                    ? serverProfiles[selectedServerIndex].Url
+                    : selectedServerUrl;
                 if (string.IsNullOrWhiteSpace(address))
                 {
                     return;
@@ -2113,7 +2110,9 @@ namespace MmorpgPrototype
                 PlayerPrefs.SetInt("mmorpg.server.profile", selectedServerIndex);
                 PlayerPrefs.SetString("mmorpg.server.url", address);
                 PlayerPrefs.Save();
-                network.Connect();
+
+                // The offline beta never opens a socket automatically. Network setup remains
+                // available from Datos once an online backend is ready for a controlled test.
             }
 
             void RefreshPreview()

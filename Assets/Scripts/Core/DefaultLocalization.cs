@@ -396,7 +396,7 @@ namespace MmorpgPrototype
                 { "character.back_button", "VOLVER" },
                 { "server.title", "Servidor" },
                 { "server.active_profile", "S-01 activo para esta prueba" },
-                { "server.coming_soon", "S-02 y S-03 quedaran disponibles con el backend online." },
+                { "server.coming_soon", "Nuevos mundos estaran disponibles proximamente." },
                 { "server.address_label", "Direccion de prueba" },
                 { "server.connection_status", "Estado de conexion" },
                 { "character.created", "Personaje creado: {0}" },

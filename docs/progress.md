@@ -250,6 +250,15 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Particulas reordenadas para que Unity no inicie el sistema antes de asignar
   duracion. APK y medicion en Android: en compilacion.
 
+## Fase 5.93: Acceso Offline Y Modelos Legibles
+
+- La pantalla de acceso offline conserva `S-01` como mundo local, pero ya no
+  muestra URL WebSocket ni estado tecnico de red. Entrar al valle no abre una
+  conexion automatica; la configuracion queda dentro de `Datos` para QA online.
+- Los FBX generated `OriginalArt` quedan como fallback tecnico. Personajes y
+  mobs de las diez zonas priorizan los meshes curados KayKit y Quaternius, con
+  siluetas mas claras para la camara movil.
+
 ## Fase 5.91: Beta Offline Integrada
 
 - El acceso y seleccion de personaje usan una escena propia de reliquiario;
