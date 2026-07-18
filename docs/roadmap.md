@@ -1206,6 +1206,82 @@ la misma silueta base.
 Criterio de éxito: recorrer nivel 1-105 muestra una familia reconocible por zona
 y tier, sin romper combate, hitboxes, carga ni rendimiento Android.
 
+## Fase 5.83: HUD Cinematografico Contextual
+
+Objetivo: reducir la densidad visual durante el combate y dejar libres el
+personaje, los enemigos y la zona de juego.
+
+- El HUD separa nombre, nivel, clase, vida, energia y EXP. [Implementado]
+- El objetivo solo se muestra cuando existe un enemigo seleccionado.
+  [Implementado]
+- Las habilidades usan una mascara radial de cooldown y contador compacto.
+  [Implementado]
+- El chat inicia colapsado en Android; la URL y los errores tecnicos quedan
+  en la ventana de servidor. [Implementado]
+- El panel de acciones reduce su opacidad y mantiene joystick, camara, ataque
+  y habilidades compatibles con multitactil. [Implementado]
+
+Criterio de exito: una captura de combate 16:9 o 19.5:9 mantiene el centro
+legible, permite atacar mientras se mueve y no muestra diagnostico tecnico.
+
+## Fase 5.84: Menus Visuales Y Perfiles Android
+
+Objetivo: que las pantallas secundarias se lean como interfaces de juego y no
+como bloques de texto de desarrollo.
+
+- Inventario con tarjetas de categoria, rareza, cantidad y codigo visual.
+  [Implementado]
+- Equipo con trece ranuras visuales, mejora y estado vacio por pieza.
+  [Implementado]
+- Misiones y eventos con tarjetas separadas de campana y actividad.
+  [Implementado]
+- Habilidades con nodos conectados, requisitos de nivel, nivel actual y
+  accion de mejora. [Implementado]
+- UiThemeConfig centraliza colores de tarjetas, bordes, marcos y estados.
+  [Implementado]
+- UiPerformanceSettings mantiene Calidad/Rendimiento y Android inicia en
+  Rendimiento. [Implementado]
+
+Criterio de exito: abrir y cerrar MENU/HABILIDADES no bloquea el combate,
+respeta safe area y conserva la informacion funcional de inventario/equipo.
+
+## Fase 5.85: Arte Final De Personajes
+
+Objetivo: preparar las ocho variantes jugables para sustitucion comercial
+sin cambiar sus contratos de gameplay.
+
+- Guerrero, Ninja, Chaman y Umbra masculino/femenino ya tienen FBX authored,
+  skinning, normales, atlas 2K, LOD y cinco clips. [Implementado tecnico]
+- PlayerAvatarVisual y CharacterArtProfiles permiten reemplazar mesh,
+  material, arma y controller sin tocar clases ni hitboxes. [Implementado]
+- La escultura high-poly manual, retopologia artistica, texturas pintadas y
+  animacion profesional quedan como trabajo comercial externo. [Pendiente]
+- Alas, mascotas, monturas, armas y armaduras conservan slots visuales para
+  recibir meshes finales. [Implementado tecnico]
+
+Criterio de exito: entregar un paquete final por clase/sexo con albedo/normal
+2K, LOD validado, clips de locomocion/combate y licencia comercial documentada.
+
+## Fase 5.86: Arte Final De Mobs Y Jefes 1-105
+
+Objetivo: aplicar el tratamiento de personajes a las 10 zonas, desde Valle de
+las Reliquias hasta Trono del Vacio.
+
+- Existen 30 FBX authored: normal, elite y jefe por cada zona. [Implementado]
+- Cada modelo conserva atlas 2K, skinning, LOD0/1/2, cinco clips y controller
+  dedicado. [Implementado]
+- EnemyVisualController selecciona primero el asset de zona/tier y mantiene
+  fallback Quaternius/procedural. [Implementado]
+- VFX, audio, ataques y muertes ya tienen base funcional; falta producir
+  pases profesionales por familia y validar el TTK real en dispositivo.
+  [Pendiente]
+- La escultura high-poly manual de los 30 modelos y sus texturas comerciales
+  queda para producción por lotes: zonas 1, luego 2-4 y finalmente 5-10.
+  [Pendiente comercial]
+
+Criterio de exito: recorrer niveles 1-105 muestra siluetas distinguibles por
+zona/tier sin degradar FPS, memoria, hitboxes ni lectura de combate.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

@@ -134,6 +134,21 @@ namespace MmorpgPrototype
             return IsValidSlot(slot) && slot == UltimateSlot ? UltimateMaxSkillLevel : MaxSkillLevel;
         }
 
+        public float CooldownDurationFor(int slot)
+        {
+            if (!IsValidSlot(slot))
+            {
+                return 1f;
+            }
+
+            return slot == UltimateSlot ? UltimateCooldown : CooldownFor(slot);
+        }
+
+        public string SkillNameForDisplay(int slot)
+        {
+            return IsValidSlot(slot) ? SkillNameFor(slot) : string.Empty;
+        }
+
         public string DisplayLabel(int slot, float remaining = 0f)
         {
             if (!IsValidSlot(slot) || classController == null || classController.Definition == null)

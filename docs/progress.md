@@ -197,6 +197,33 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   SHA-256 `4da6efe55fe57ff1b789875a2836b95fb277d7e1c04bd6c913f13ccbe347cbf6`.
 - Cambios sincronizados en GitHub, rama `main`.
 
+## Cierre De Fases 5.83-5.86
+
+- Fase 5.83: HUD con EXP visible, nombre/nivel separados, objetivo
+  contextual, cooldown radial, chat cerrado por defecto en Android y estado
+  S-01 discreto.
+- Fase 5.84: inventario, equipo y misiones convertidos a tarjetas visuales;
+  habilidades con nodos conectados y estados de desbloqueo/mejora.
+- Fases 5.85-5.86: cobertura verificada para las 8 variantes jugables y los
+  30 mobs normal/elite/jefe de las 10 zonas, con atlas 2K, normales, skinning,
+  LOD y cinco clips.
+- El arte manual high-poly, texturas pintadas, VFX/audio profesional y
+  animaciones finales siguen pendientes como salto comercial.
+- APK Android recompilada: 77 MB, target SDK 35, SHA-256
+  7d925d27c941a611f2fd1b5503d361c042b016e45d00619547b82b83e869d52b.
+- Auditoria regenerada: 17/17 checks sin errores.
+
+## Prioridad Recomendada
+
+1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades
+   y chat colapsado en Android.
+2. Probar joystick + ataque + camara + habilidades simultaneamente.
+3. Exportar QA en ambos perfiles y recorrer las diez zonas.
+4. Iniciar S-01 en Hetzner antes de convertir recompensas, inventario y
+   compras en autoridad online.
+5. Sustituir por lotes el authored estilizado mediante arte manual comercial:
+   kit de cada clase, luego normal/elite/jefe de cada banda.
+
 ## Siguiente Corte
 
 1. Reinstalar el APK y probar durante varios minutos joystick + ataque + giro de
@@ -239,6 +266,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-17 | 5.83-5.86 | HUD contextual, menus visuales, nodos de habilidades y cobertura authored 3D en las 10 zonas; APK 77 MB | 98% |
 | 2026-07-17 | 5.80-5.81 | QA Android exportable y 30 mobs/jefes authored propios para las 10 zonas, con atlas 2K, LOD y controllers | 98% |
 | 2026-07-16 | 5.76-5.79 | Heroes Guerrero/Ninja detallados, cinco clips, reacciones de combate y tratamiento de mobs/jefes 1-105 | 98% |
 | 2026-07-16 | 5.74-5.75 | High-poly authored V2, retopologia objetivo, UV padded y pintura 2K por material | 98% |

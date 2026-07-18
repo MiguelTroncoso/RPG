@@ -363,6 +363,8 @@ namespace MmorpgPrototype
                 { "hud.progression", "Nivel {0}  {1}  Oro {2}{3}{4}" },
                 { "hud.exp", "EXP {0}/{1}" },
                 { "hud.exp_max", "EXP MAX" },
+                { "hud.level_short", "Nv {0}" },
+                { "hud.level_max", "Nv {0} MAX" },
                 { "hud.points_suffix", "  Puntos {0}" },
                 { "hud.exp_bonus_suffix", "  (+{0}% EXP)" },
 

@@ -17,6 +17,8 @@ namespace MmorpgPrototype
         public Color Energy = new Color(0.18f, 0.64f, 0.94f);
         public Color Danger = new Color(0.9f, 0.24f, 0.2f);
         public Color Disabled = new Color(0.18f, 0.22f, 0.26f);
+        public Color Card = new Color(0.045f, 0.065f, 0.082f, 0.96f);
+        public Color CardHighlight = new Color(0.1f, 0.22f, 0.25f, 0.96f);
         public Font Font;
 
         private static UiThemeConfig runtime;
@@ -79,6 +81,24 @@ namespace MmorpgPrototype
             var outline = image.GetComponent<Outline>() ?? image.gameObject.AddComponent<Outline>();
             outline.effectColor = new Color(PanelLine.r, PanelLine.g, PanelLine.b, 0.58f);
             outline.effectDistance = new Vector2(1f, -1f);
+        }
+
+        public void StyleCard(Image image, Color accent)
+        {
+            if (image == null)
+            {
+                return;
+            }
+
+            image.sprite = FrameSprite;
+            image.type = Image.Type.Sliced;
+            image.color = Card;
+            image.raycastTarget = false;
+
+            var outline = image.GetComponent<Outline>() ?? image.gameObject.AddComponent<Outline>();
+            outline.effectColor = new Color(accent.r, accent.g, accent.b, 0.82f);
+            outline.effectDistance = new Vector2(2f, -2f);
+            outline.useGraphicAlpha = true;
         }
 
         public Sprite CircleSprite => circleSprite ?? (circleSprite = CreateCircleSprite());

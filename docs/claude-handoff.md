@@ -226,6 +226,18 @@ Estado actual (fases 1-5.75 entregadas en primera pasada; refinamientos 5.44,
   authored propios, normal/elite/jefe para las diez zonas, con atlas 2K,
   skinning, LOD0/1/2 y cinco clips. Unity genera 30 controllers y el runtime
   prioriza estos modelos con fallback Quaternius/procedural.
+- Fases 5.83-5.84: `PrototypeHud` ya usa HUD contextual con vida, EXP, nombre y
+  nivel separados, objetivo ocultable, minimapa, estado S-01 discreto, chat
+  colapsado en Android y overlays radiales para enfriamientos. Inventario,
+  equipo, misiones y eventos usan tarjetas visuales; habilidades muestran
+  nodos, requisitos y estado de mejora. La APK de validacion es
+  `Builds/Android/valle-reliquias-debug.apk` (77 MB, SHA-256
+  `7d925d27c941a611f2fd1b5503d361c042b016e45d00619547b82b83e869d52b`).
+- Fases 5.85-5.86: la cobertura tecnica authored esta completa para las 8
+  variantes de personaje y los 30 mobs normal/elite/jefe de las 10 zonas,
+  incluyendo atlas 2K, normales, skinning, LOD y clips base. Sigue pendiente
+  la sustitucion comercial manual por esculturas high-poly, retopologia, bake
+  de normales y animaciones profesionales, ademas de QA visual en Android.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona
@@ -334,6 +346,14 @@ Proximos objetivos sugeridos:
 - Fases 5.80-5.81: reinstalar la APK, recorrer las diez zonas en ambos perfiles,
   exportar JSON desde TEST y revisar escala, LOD, animaciones y memoria de los
   30 modelos authored en telefono real.
+- Prioridad inmediata 5.83-5.86: reinstalar la APK y validar en Android el HUD
+  tactil, las tarjetas, los nodos de habilidades, el minimapa y los perfiles
+  Calidad/Rendimiento. Registrar FPS, memoria, carga y safe area en 16:9 y
+  19.5:9; despues revisar los 30 modelos en las diez zonas y separar defectos
+  de arte authored de problemas de runtime.
+- Siguiente bloque online: preparar servidor autoritativo S-01 en Hetzner,
+  autenticacion, persistencia, seguridad anti-cheat, despliegue y pruebas de
+  reconexion antes de abrir una beta externa.
 - Fase 5.48: abrir TEST y registrar FPS, memoria, carga, TTK, enemigos y POI
   activos en las diez zonas.
 - Fase 5.48: reinstalar la APK y medir TEST, TTK, memoria, minimapa y safe zone

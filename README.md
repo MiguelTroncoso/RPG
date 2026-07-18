@@ -1105,6 +1105,25 @@ La APK de esta fase se genero con Unity 6000.5.3f1, se valido como ZIP Android
 sin errores y queda lista para reinstalar en el telefono. Falta medir FPS,
 memoria y carga en varios formatos de pantalla reales.
 
+## Fases 5.83-5.86: Interfaz Y Cobertura 3D Completa
+
+El HUD ahora muestra nombre, nivel, vida, energia y EXP por separado, oculta el
+objetivo cuando no existe, usa cooldown radial en habilidades, mantiene S-01
+como estado discreto y abre el chat bajo demanda. Inventario, equipo y misiones
+usan tarjetas visuales con rareza, categoria, cantidades, ranuras y mejoras;
+la ventana de habilidades muestra nodos conectados con requisitos y niveles.
+
+Las ocho variantes jugables y los 30 mobs normal/elite/jefe de las diez zonas
+mantienen el pipeline authored de atlas 2K, normales, skinning, LOD y clips.
+La APK Android se recompilo con estos cambios: 77 MB, target SDK 35,
+SHA-256 7d925d27c941a611f2fd1b5503d361c042b016e45d00619547b82b83e869d52b.
+La auditoria de contenido continua en 17/17 checks.
+
+Este corte no declara arte comercial final: faltan escultura high-poly manual,
+texturas pintadas, VFX/audio por familia, QA en telefono real y animaciones
+profesionales. La integracion esta preparada para sustituir los assets sin
+cambiar la logica de juego.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

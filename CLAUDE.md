@@ -13,7 +13,7 @@ por rango de nivel) pero con **identidad, nombres, historia y contenido 100 %
 originales**. Preparado para multijugador: hay un servidor WebSocket Node.js
 en `Server/`.
 
-Estado: prototipo con fases 1–5.75 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67, 5.68, 5.70, 5.71, 5.72, 5.73, 5.74 y 5.75 (movimiento, combate, 4 clases
+Estado: prototipo con fases 1–5.75 entregadas en primera pasada y refinamientos activos de 5.44, 5.45, 5.49, 5.58, 5.59, 5.60, 5.61, 5.62, 5.63, 5.64, 5.65, 5.66, 5.67, 5.68, 5.70, 5.71, 5.72, 5.73, 5.74, 5.75, 5.80, 5.81, 5.83, 5.84, 5.85 y 5.86 (movimiento, combate, 4 clases
 Guerrero/Ninja/Chamán/Umbra, EXP/oro/loot, online local con chat, misión,
 mercader, mejora de equipo, Android-ready a 60 FPS, creación de personaje,
 avatar procedural, persistencia local vía `ISaveStorage` + JSON esquema v15 (incluye posición, reclamos de POI, cosmeticos, eventos diarios/semanales, temporada, contratos diarios, Renombre, habilidades y cooldown final),
@@ -70,6 +70,17 @@ simple y autocontenido.
 12. **Al cerrar cada fase, actualizar `docs/claude-handoff.md`** (estado,
     esquema de guardado y próximos objetivos) además del README y este
     contrato.
+
+## Estado Visual 5.83-5.86
+
+- El HUD separa nombre, nivel, vida, energia y EXP, oculta el objetivo sin
+  enemigo, usa cooldown radial y mantiene S-01 discreto.
+- Inventario, equipo y misiones usan tarjetas visuales; habilidades muestran
+  nodos conectados con requisitos y niveles.
+- Las 8 variantes jugables y los 30 mobs de las 10 zonas tienen cobertura
+  authored con atlas 2K, normales, skinning, LOD y cinco clips.
+- La escultura high-poly manual, texturas pintadas, VFX/audio profesional y
+  animaciones finales siguen pendientes; no declarar arte comercial 100%.
 
 ## Cómo probar
 

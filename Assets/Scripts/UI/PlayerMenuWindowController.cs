@@ -5,7 +5,7 @@ namespace MmorpgPrototype
 {
     public sealed class PlayerMenuWindowController : MonoBehaviour
     {
-        private enum MenuTab
+        public enum MenuTab
         {
             Inventory,
             Equipment,
@@ -21,6 +21,10 @@ namespace MmorpgPrototype
         public PlayerQuestLog QuestLog;
         public StatsWindowController StatsWindow;
         public TelemetryWindowController TelemetryWindow;
+        public PlayerMenuVisualContent VisualContent;
+
+        public MenuTab ActiveTab => activeTab;
+        public event System.Action VisualRefreshRequested;
 
         private MenuTab activeTab = MenuTab.Inventory;
 
@@ -107,6 +111,8 @@ namespace MmorpgPrototype
                     ContentText.text = Inventory != null ? Inventory.DetailedSummary() : Localization.Tr("inv.empty");
                     break;
             }
+
+            VisualRefreshRequested?.Invoke();
         }
 
         private void OpenAndRefresh()

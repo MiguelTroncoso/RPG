@@ -11,9 +11,14 @@ namespace MmorpgPrototype
         public Text PlayerHealthText;
         public Image PlayerEnergyFill;
         public Text PlayerEnergyText;
+        public Image PlayerExperienceFill;
+        public Text PlayerNameText;
+        public Text PlayerLevelText;
         public Image EnemyHealthFill;
         public Text EnemyHealthText;
         public Text EnemyNameText;
+        public GameObject TargetPanel;
+        public GameObject[] TargetElements;
         public Text StatusText;
         public Text ClassText;
         public Text ProgressionText;
@@ -26,6 +31,7 @@ namespace MmorpgPrototype
         public Text QuestText;
         public Text EquipmentText;
         public Text FeedText;
+        public UiCooldownOverlay[] SkillCooldowns;
         public event Action SummaryChanged;
 
         private readonly List<string> feedLines = new List<string>();
@@ -65,6 +71,7 @@ namespace MmorpgPrototype
             var energy = player.GetComponent<PlayerEnergySystem>();
             UpdatePlayerEnergy(energy);
             UpdatePlayerHealth();
+            UpdatePlayerExperience();
             UpdateEnemyHealth();
             RefreshClass();
             RefreshProgression();
@@ -94,6 +101,7 @@ namespace MmorpgPrototype
         {
             UpdatePlayerHealth();
             UpdatePlayerEnergy(playerHealth != null ? playerHealth.GetComponent<PlayerEnergySystem>() : null);
+            UpdatePlayerExperience();
             UpdateEnemyHealth();
             RefreshSkillCooldowns(
                 skills != null ? skills.SkillOneRemaining : 0f,
@@ -253,6 +261,23 @@ namespace MmorpgPrototype
             {
                 UltimateSkillText.text = skills.DisplayLabel(4, ultimateRemaining);
             }
+
+            if (SkillCooldowns != null)
+            {
+                var remaining = new[]
+                {
+                    skillOneRemaining,
+                    skillTwoRemaining,
+                    skillThreeRemaining,
+                    skillFourRemaining,
+                    ultimateRemaining
+                };
+
+                for (var i = 0; i < SkillCooldowns.Length && i < remaining.Length; i++)
+                {
+                    SkillCooldowns[i]?.SetRemaining(remaining[i], skills.CooldownDurationFor(i));
+                }
+            }
         }
 
         private void UpdatePlayerHealth()
@@ -273,9 +298,48 @@ namespace MmorpgPrototype
             }
         }
 
+        private void UpdatePlayerExperience()
+        {
+            if (progression == null)
+            {
+                return;
+            }
+
+            if (PlayerExperienceFill != null)
+            {
+                PlayerExperienceFill.fillAmount = progression.IsMaxLevel
+                    ? 1f
+                    : Mathf.Clamp01(progression.Experience / (float)Mathf.Max(1, progression.NextLevelExperience));
+            }
+
+            if (PlayerNameText != null && identity != null)
+            {
+                PlayerNameText.text = identity.CharacterName;
+            }
+
+            if (PlayerLevelText != null)
+            {
+                PlayerLevelText.text = progression.IsMaxLevel
+                    ? Localization.Tr("hud.level_max", progression.Level)
+                    : Localization.Tr("hud.level_short", progression.Level);
+            }
+        }
+
         private void UpdateEnemyHealth()
         {
             var hasEnemy = watchedEnemy != null && !watchedEnemy.IsDead;
+
+            if (TargetElements != null && TargetElements.Length > 0)
+            {
+                for (var i = 0; i < TargetElements.Length; i++)
+                {
+                    TargetElements[i]?.SetActive(hasEnemy);
+                }
+            }
+            else if (TargetPanel != null)
+            {
+                TargetPanel.SetActive(hasEnemy);
+            }
 
             if (EnemyHealthFill != null)
             {
