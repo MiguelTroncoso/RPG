@@ -246,6 +246,15 @@ Estado actual (fases 1-5.75 entregadas en primera pasada; refinamientos 5.44,
   `Resources/Art/Generated/valle-reliquias-splash-v2.png` y el splash generico
   de Unity queda desactivado. La APK nueva queda pendiente de regenerar por
   una perdida temporal del servicio de licencia de Unity Hub.
+- Fase 5.91 beta offline: `OfflineZoneTravelController` alimenta `MAS > MAPA`
+  con las diez zonas, rangos, mob, elite, jefe y reliquia. Modo campana respeta
+  nivel; modo prueba teletransporta a cada zona para QA sin depender del
+  backend. El acceso usa `valle-reliquias-access-hall-v1.png` y el Atlas usa
+  `valle-reliquias-world-atlas-v1.png`. Recorrido: `docs/offline-beta-qa.md`.
+- Online recomendado despues del QA offline: beta S-01 en OVHcloud Hillsboro,
+  primero 2 vCore/4 GB y luego 2 vCore/8 GB con PostgreSQL; la guia es
+  `docs/online-beta-runbook.md`. Hetzner Hillsboro/Ashburn queda como alternativa
+  costo/rendimiento y Contabo como staging, no S-01 publico inicial.
 - Mundo: `ZoneEnvironmentBuilder` genera decoracion determinista para las
   zonas 1-10, cubriendo nivel 1-105. Caminos, obstaculos y puntos de interes
   y landmarks base ya estan generados; hay cuatro obstaculos solidos por zona

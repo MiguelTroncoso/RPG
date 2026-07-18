@@ -1132,6 +1132,15 @@ separado para esas acciones. El splash generico de Unity se reemplaza por un
 paisaje propio de Valle de las Reliquias. La APK nueva queda pendiente de
 regenerar cuando Unity Hub recupere la licencia del editor.
 
+## Fase 5.91: Beta Offline Integrada
+
+El acceso y la seleccion de personaje ahora usan un fondo cinematografico
+propio. Desde `MAS > MAPA`, el Atlas del Valle muestra las diez zonas con sus
+rangos, mobs, elite, jefe y reliquia. `MODO PRUEBA` permite viajar a cualquier
+zona para QA sin modificar la progresion normal de campana. El recorrido de
+telefono esta documentado en `docs/offline-beta-qa.md`; la APK nueva queda
+pendiente hasta recuperar la licencia del editor.
+
 ## Clases Iniciales
 
 Los nombres pueden cambiar durante el desarrollo. Se recomienda evitar copiar nombres, enemigos, efectos o sistemas exactos de otros juegos.

@@ -1320,6 +1320,26 @@ depender de red ni servicios externos.
 Criterio de exito: el jugador identifica ataque, peligro, habilidad y ultimate
 por imagen y sonido, y el arranque no muestra la pantalla generica de Unity.
 
+## Fase 5.91: Beta Offline Integrada
+
+Objetivo: dejar un corte de telefono que permita evaluar acceso, personaje,
+interfaz, accesorios, mundo, mobs, jefes y las diez zonas sin depender del
+backend.
+
+- Acceso y seleccion de personaje con fondos cinematograficos propios,
+  conservando tarjeta de guardado, crear personaje y servidores. [Implementado
+  en codigo]
+- Atlas offline con diez zonas, rangos, mobs, elite, jefe y reliquia.
+  [Implementado en codigo]
+- Modo campana con requisitos y modo prueba explicito para teletransportar al
+  jugador a zonas 1-10 durante QA. [Implementado en codigo]
+- Recorrido Android definido en `docs/offline-beta-qa.md`. [Implementado]
+- Compilacion de APK y recorrido fisico pendientes de recuperar la licencia de
+  Unity Hub. [Pendiente de validacion]
+
+Criterio de exito: un telefono puede crear/recuperar personaje, recorrer las
+diez zonas desde `MAPA`, usar la interfaz tactil y exportar QA sin bloqueos.
+
 ## Fase 6: Lanzamiento Inicial
 
 Objetivo: publicar una version pequena y mantenerla.

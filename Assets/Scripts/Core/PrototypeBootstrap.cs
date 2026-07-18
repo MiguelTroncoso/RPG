@@ -744,7 +744,7 @@ namespace MmorpgPrototype
             questLog.Initialize(LoadQuestLine());
             inventory.AddItem(DefaultGameItems.MinorPotion, 2);
             inventory.AddItem(DefaultGameItems.RecruitSword);
-            CreateShopButtons(uiRoot, player, shop, blacksmith, storage, cosmetics);
+            CreateShopButtons(uiRoot, player, shop, blacksmith, storage, cosmetics, zones);
             CreateNetworkPanel(uiRoot, player);
 
             var helpKey = Application.isMobilePlatform ? "hud.touch_help" : "hud.controls_help";
@@ -755,7 +755,7 @@ namespace MmorpgPrototype
             return hud;
         }
 
-        private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage, CosmeticService cosmetics)
+        private static void CreateShopButtons(Transform parent, GameObject player, ShopNpc shop, BlacksmithNpc blacksmith, StorageNpc storage, CosmeticService cosmetics, System.Collections.Generic.List<ZoneDefinition> zones)
         {
             var equipment = player.GetComponent<EquipmentUpgradeSystem>();
             var skills = player.GetComponent<PlayerSkills>();
@@ -769,6 +769,7 @@ namespace MmorpgPrototype
             var menuWindow = CreatePlayerMenuWindow(parent, player, statsWindow, telemetryWindow);
             var skillsWindow = CreateSkillsWindow(parent, player, skills);
             var graphicsWindow = CreateGraphicsWindow(parent);
+            var zoneAtlasWindow = CreateZoneAtlasWindow(parent, player, zones);
             var menuButton = CreateRoundButton(parent, "Mobile Menu Button", Localization.Tr("ui.menu"), new Vector2(0f, 0f), new Vector2(322f, 348f), new Vector2(128f, 42f), new Color(0.34f, 0.3f, 0.48f), 17);
             menuButton.onClick.AddListener(menuWindow.Toggle);
 
@@ -821,6 +822,9 @@ namespace MmorpgPrototype
 
             var graphicsButton = CreateRoundButton(actionParent, "Graphics Button", Localization.Tr("ui.graphics"), new Vector2(0f, 1f), new Vector2(932f, -444f), new Vector2(128f, 42f), new Color(0.18f, 0.42f, 0.52f), 15);
             graphicsButton.onClick.AddListener(graphicsWindow.Toggle);
+
+            var worldMapButton = CreateRoundButton(actionParent, "World Atlas Button", "MAPA", new Vector2(0f, 1f), new Vector2(1072f, -444f), new Vector2(128f, 42f), new Color(0.2f, 0.48f, 0.52f), 16);
+            worldMapButton.onClick.AddListener(zoneAtlasWindow.Toggle);
 
             var mobileWindow = CreateMobileTestWindow(parent, player);
             var mobileButton = CreateRoundButton(actionParent, "Mobile Test Button", Localization.Tr("ui.mobile_test"), new Vector2(0f, 1f), new Vector2(792f, -396f), new Vector2(128f, 42f), new Color(0.16f, 0.5f, 0.46f), 17);
@@ -925,6 +929,90 @@ namespace MmorpgPrototype
                 case 3: return "F";
                 default: return "G";
             }
+        }
+
+        private static OfflineZoneTravelController CreateZoneAtlasWindow(Transform parent, GameObject player, System.Collections.Generic.List<ZoneDefinition> zones)
+        {
+            var window = CreateUiObject("Offline World Atlas", parent);
+            SetRect(window.GetComponent<RectTransform>(), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1400f, 780f), Vector2.zero);
+            window.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(1400f, 780f);
+
+            var background = window.AddComponent<Image>();
+            var atlasTexture = Resources.Load<Texture2D>("Art/Generated/valle-reliquias-world-atlas-v1");
+            if (atlasTexture != null)
+            {
+                background.sprite = Sprite.Create(atlasTexture, new Rect(0f, 0f, atlasTexture.width, atlasTexture.height), new Vector2(0.5f, 0.5f));
+                background.type = Image.Type.Simple;
+                background.preserveAspect = false;
+                background.color = Color.white;
+            }
+            else
+            {
+                background.color = new Color(0.025f, 0.04f, 0.052f, 0.98f);
+            }
+            background.raycastTarget = true;
+
+            var shade = CreatePanel(window.transform, "Atlas Cinematic Shade", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.006f, 0.012f, 0.018f, 0.48f));
+            StretchToParent(shade.rectTransform);
+            shade.raycastTarget = false;
+
+            var titlePanel = CreatePanel(window.transform, "Atlas Title Panel", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1050f, 62f), new Vector2(0f, -18f), new Color(0.01f, 0.022f, 0.03f, 0.88f));
+            titlePanel.raycastTarget = false;
+            var controller = window.AddComponent<OfflineZoneTravelController>();
+            controller.Panel = window;
+            controller.Player = player.transform;
+            controller.Progression = player.GetComponent<PlayerProgression>();
+            controller.Combat = player.GetComponent<PlayerCombat>();
+            controller.Hud = parent.GetComponentInParent<PrototypeHud>();
+            controller.TitleText = CreateText(window.transform, "Atlas Title", "Atlas del Valle", 28, TextAnchor.MiddleCenter);
+            controller.TitleText.fontStyle = FontStyle.Bold;
+            SetRect(controller.TitleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(1010f, 44f), new Vector2(0f, -28f));
+
+            var detailPanel = CreatePanel(window.transform, "Atlas Detail Panel", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1120f, 132f), new Vector2(0f, 118f), new Color(0.01f, 0.024f, 0.032f, 0.9f));
+            detailPanel.raycastTarget = false;
+            controller.DetailsText = CreateText(window.transform, "Atlas Details", string.Empty, 17, TextAnchor.UpperLeft);
+            controller.DetailsText.color = new Color(0.82f, 0.9f, 0.94f);
+            SetRect(controller.DetailsText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(1060f, 94f), new Vector2(0f, 126f));
+
+            controller.ModeText = CreateText(window.transform, "Atlas Mode", string.Empty, 15, TextAnchor.MiddleCenter);
+            controller.ModeText.color = new Color(0.52f, 0.9f, 0.78f);
+            SetRect(controller.ModeText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(900f, 28f), new Vector2(0f, 48f));
+
+            var reviewButton = CreateRoundButton(window.transform, "Atlas Review Mode", "MODO PRUEBA", new Vector2(0f, 0f), new Vector2(128f, 34f), new Vector2(220f, 48f), new Color(0.26f, 0.4f, 0.56f), 15);
+            reviewButton.onClick.AddListener(controller.ToggleReviewMode);
+            var travelButton = CreateRoundButton(window.transform, "Atlas Travel", "VIAJAR", new Vector2(1f, 0f), new Vector2(-128f, 34f), new Vector2(220f, 48f), new Color(0.18f, 0.56f, 0.36f), 18);
+            controller.TravelButton = travelButton;
+            controller.TravelLabel = travelButton.GetComponentInChildren<Text>();
+            travelButton.onClick.AddListener(controller.TravelToSelected);
+            var closeButton = CreateRoundButton(window.transform, "Close World Atlas", Localization.Tr("ui.close"), new Vector2(0.5f, 0f), new Vector2(0f, 34f), new Vector2(170f, 46f), new Color(0.28f, 0.3f, 0.36f), 16);
+            closeButton.onClick.AddListener(controller.Toggle);
+
+            var zoneCount = zones != null ? zones.Count : 0;
+            controller.Zones = new ZoneDefinition[zoneCount];
+            if (zones != null)
+            {
+                zones.CopyTo(controller.Zones);
+            }
+
+            controller.ZoneButtons = new Button[zoneCount];
+            controller.ZoneImages = new Image[zoneCount];
+            controller.ZoneLabels = new Text[zoneCount];
+            for (var i = 0; i < zoneCount; i++)
+            {
+                var index = i;
+                var column = i % 5;
+                var row = i / 5;
+                var position = new Vector2(-480f + column * 240f, 176f - row * 92f);
+                var zone = zones[i];
+                var zoneButton = CreateRoundButton(window.transform, $"Atlas Zone {i + 1}", string.Empty, new Vector2(0.5f, 0.5f), position, new Vector2(220f, 72f), zone != null ? zone.GroundColor : new Color(0.16f, 0.2f, 0.24f), 14);
+                controller.ZoneButtons[i] = zoneButton;
+                controller.ZoneImages[i] = zoneButton.GetComponent<Image>();
+                controller.ZoneLabels[i] = zoneButton.GetComponentInChildren<Text>();
+                zoneButton.onClick.AddListener(() => controller.SelectZone(index));
+            }
+
+            window.SetActive(false);
+            return controller;
         }
 
         private static GraphicsWindowController CreateGraphicsWindow(Transform parent)
@@ -1683,8 +1771,23 @@ namespace MmorpgPrototype
             var overlay = CreateUiObject("Polished Character Access Overlay", parent);
             StretchToParent(overlay.GetComponent<RectTransform>());
             var overlayImage = overlay.AddComponent<Image>();
-            overlayImage.color = new Color(0.008f, 0.012f, 0.018f, 0.95f);
+            var accessTexture = Resources.Load<Texture2D>("Art/Generated/valle-reliquias-access-hall-v1");
+            if (accessTexture != null)
+            {
+                overlayImage.sprite = Sprite.Create(accessTexture, new Rect(0f, 0f, accessTexture.width, accessTexture.height), new Vector2(0.5f, 0.5f));
+                overlayImage.type = Image.Type.Simple;
+                overlayImage.preserveAspect = false;
+                overlayImage.color = Color.white;
+            }
+            else
+            {
+                overlayImage.color = new Color(0.008f, 0.012f, 0.018f, 0.95f);
+            }
             overlayImage.raycastTarget = true;
+
+            var accessShade = CreatePanel(overlay.transform, "Access Cinematic Shade", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.004f, 0.008f, 0.014f, 0.58f));
+            StretchToParent(accessShade.rectTransform);
+            accessShade.raycastTarget = false;
 
             var accent = CreatePanel(overlay.transform, "Access Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1260f, 6f), new Vector2(0f, 334f), new Color(0.2f, 0.72f, 0.72f, 0.95f));
             accent.raycastTarget = false;
@@ -1698,12 +1801,12 @@ namespace MmorpgPrototype
             accessLabel.color = new Color(0.46f, 0.79f, 0.8f);
             SetRect(accessLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 26f), new Vector2(0f, 270f));
 
-            var frame = CreatePanel(overlay.transform, "Access Frame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1260f, 660f), new Vector2(0f, -14f), new Color(0.035f, 0.05f, 0.065f, 0.98f));
+            var frame = CreatePanel(overlay.transform, "Access Frame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1260f, 660f), new Vector2(0f, -14f), new Color(0.015f, 0.028f, 0.04f, 0.78f));
             frame.gameObject.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(1260f, 660f);
 
-            var leftPanel = CreatePanel(overlay.transform, "Access Left Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(530f, 560f), new Vector2(-340f, -14f), new Color(0.055f, 0.075f, 0.095f, 0.98f));
+            var leftPanel = CreatePanel(overlay.transform, "Access Left Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(530f, 560f), new Vector2(-340f, -14f), new Color(0.025f, 0.045f, 0.06f, 0.9f));
             leftPanel.raycastTarget = false;
-            var rightPanel = CreatePanel(overlay.transform, "Access Right Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(650f, 560f), new Vector2(260f, -14f), new Color(0.045f, 0.06f, 0.078f, 0.98f));
+            var rightPanel = CreatePanel(overlay.transform, "Access Right Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(650f, 560f), new Vector2(260f, -14f), new Color(0.02f, 0.038f, 0.052f, 0.9f));
             rightPanel.raycastTarget = false;
 
             var savedView = CreateUiObject("Saved Character View", overlay.transform);

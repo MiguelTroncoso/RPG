@@ -93,6 +93,16 @@ simple y autocontenido.
 - La APK debe regenerarse y validarse en telefono cuando Unity Hub recupere la
   licencia del editor.
 
+## Beta Offline 5.91
+
+- `OfflineZoneTravelController` y `MAPA` permiten revisar las diez zonas desde
+  Android: muestra nivel, mob, elite, jefe y reliquia, y teletransporta al
+  jugador. El modo campana respeta requisitos; el modo prueba existe para QA.
+- El acceso/seleccion usa `valle-reliquias-access-hall-v1.png`; el Atlas usa
+  `valle-reliquias-world-atlas-v1.png`, ambos en `Resources/Art/Generated`.
+- La validacion manual completa vive en `docs/offline-beta-qa.md`. El siguiente
+  trabajo online y la decision de cloud estan en `docs/online-beta-runbook.md`.
+
 ## Cómo probar
 
 - Abrir `Assets/Scenes/Prototype.unity` y dar Play.

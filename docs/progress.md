@@ -201,6 +201,10 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   tier, cielo y atmosfera, splash propio, anillos de combate y audio separado.
   La implementacion queda lista en codigo; falta regenerar la APK por la
   perdida temporal del servicio de licencia de Unity Hub.
+- Fase 5.91: Atlas offline con las diez zonas, requisitos de nivel, jefe,
+  reliquia y modo de prueba para teletransportar el personaje. El acceso y la
+  seleccion de personaje usan fondos cinematograficos propios; falta la APK de
+  validacion por el mismo bloqueo temporal de licencia.
 
 ## Cierre De Fases 5.83-5.86
 
@@ -233,14 +237,27 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   pendientes honestos, mientras la cobertura authored tecnica permanece en las
   ocho variantes y 30 mobs/jefes.
 
+## Fase 5.91: Beta Offline Integrada
+
+- El acceso y seleccion de personaje usan una escena propia de reliquiario;
+  conservan tarjeta de guardado, crear personaje y selector S-01/S-02/S-03.
+- `MAPA` abre el Atlas del Valle: presenta las diez zonas, nivel, mobs, elite,
+  jefe y reliquia; en modo campana respeta nivel y en modo prueba permite QA
+  directo de los mapas 1-10 sin falsear la progresion normal.
+- La guia reproducible queda en `docs/offline-beta-qa.md`.
+- La APK de este corte sigue pendiente de compilar: Unity Hub perdio el canal
+  de licencia antes de importar scripts y recursos, por lo que no hay una
+  validacion falsa de Android.
+
 ## Prioridad Recomendada
 
 1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades
    y chat colapsado en Android.
 2. Probar joystick + ataque + camara + habilidades simultaneamente.
 3. Exportar QA en ambos perfiles y recorrer las diez zonas.
-4. Iniciar S-01 en Hetzner antes de convertir recompensas, inventario y
-   compras en autoridad online.
+4. Superar `docs/offline-beta-qa.md`; despues preparar S-01 privado en
+   OVHcloud Hillsboro o Hetzner tras comparar latencia real desde Chile, antes
+   de convertir recompensas, inventario y compras en autoridad online.
 5. Sustituir por lotes el authored estilizado mediante arte manual comercial:
    kit de cada clase, luego normal/elite/jefe de cada banda.
 
@@ -286,6 +303,7 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 5.91 | Atlas offline 1-10, teletransporte de QA y acceso cinematografico; APK pendiente por licencia Unity | 98% |
 | 2026-07-18 | 5.89-5.90 | Pase offline audiovisual, splash propio, grounding por tier y feedback de combate; APK pendiente por licencia Unity | 98% |
 | 2026-07-17 | 5.83-5.86 | HUD contextual, menus visuales, nodos de habilidades y cobertura authored 3D en las 10 zonas; APK 77 MB | 98% |
 | 2026-07-17 | 5.80-5.81 | QA Android exportable y 30 mobs/jefes authored propios para las 10 zonas, con atlas 2K, LOD y controllers | 98% |
