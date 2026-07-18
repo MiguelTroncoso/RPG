@@ -205,6 +205,21 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   reliquia y modo de prueba para teletransportar el personaje. El acceso y la
   seleccion de personaje usan fondos cinematograficos propios; falta la APK de
   validacion por el mismo bloqueo temporal de licencia.
+- Fase 5.92: primera pasada de reemplazo artistico del entorno de Zona 1. Se
+  integra una textura original de suelo con reliquias enterradas, musgo, roca y
+  trazas magicas, junto con pinos, monolitos y ruinas ligeras de malla propia.
+  Esta pasada mejora lectura y atmosfera, pero no sustituye todavia los FBX
+  high-poly comerciales de personajes y mobs.
+
+## Estado Real Del Arte
+
+La interfaz y la direccion visual ya tienen una base cinematografica, pero los
+modelos jugables siguen siendo una mezcla de assets CC0 y meshes authored de
+transicion. Para llegar a una calidad comparable a MU Online o Metin2 faltan
+modelado manual, texturas PBR pintadas, rigging y animaciones profesionales.
+La siguiente prioridad artistica es completar la vertical slice de Zona 1 con
+un Guerrero, un Ninja, el lobo corrupto y el jefe usando activos 3D finales;
+despues se replica el pipeline a las nueve zonas restantes.
 
 ## Cierre De Fases 5.83-5.86
 

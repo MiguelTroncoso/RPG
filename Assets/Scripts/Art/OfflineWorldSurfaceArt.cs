@@ -18,16 +18,21 @@ namespace MmorpgPrototype
                 return cached;
             }
 
-            var texture = BuildTexture(zoneId, zone != null ? zone.GroundColor : new Color(0.2f, 0.34f, 0.28f));
+            var texture = zoneId.ToLowerInvariant().Contains("valley")
+                ? Resources.Load<Texture2D>("Art/Generated/zone1-valley-ground-v1")
+                : null;
+            texture = texture != null
+                ? texture
+                : BuildTexture(zoneId, zone != null ? zone.GroundColor : new Color(0.2f, 0.34f, 0.28f));
             var material = VisualMaterialUtility.CreateTextured(Color.white, texture, false, 0.015f, 0.18f);
             if (material.HasProperty("_MainTex"))
             {
-                material.SetTextureScale("_MainTex", new Vector2(5.5f, 5.5f));
+                material.SetTextureScale("_MainTex", new Vector2(2.65f, 2.65f));
             }
 
             if (material.HasProperty("_BaseMap"))
             {
-                material.SetTextureScale("_BaseMap", new Vector2(5.5f, 5.5f));
+                material.SetTextureScale("_BaseMap", new Vector2(2.65f, 2.65f));
             }
 
             Materials[zoneId] = material;

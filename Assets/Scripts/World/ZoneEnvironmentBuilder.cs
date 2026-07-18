@@ -40,8 +40,69 @@ namespace MmorpgPrototype
             BuildBiomeFrame(root.transform, zone);
             if ((zone.ZoneId ?? string.Empty).ToLowerInvariant().Contains("valley"))
             {
+                BuildValleyArtPass(root.transform, zone, random);
                 BuildValleyCamp(root.transform, zone);
             }
+        }
+
+        // Zone 1 gets a more authored silhouette pass while the final
+        // production environment meshes are being created in Blender. These
+        // meshes are intentionally small and material-light for Android.
+        private static void BuildValleyArtPass(Transform parent, ZoneDefinition zone, System.Random random)
+        {
+            var center = zone.GroundCenter;
+            var forestColor = new Color(0.11f, 0.24f, 0.16f);
+            var barkColor = new Color(0.18f, 0.1f, 0.055f);
+            var relicStone = new Color(0.24f, 0.28f, 0.31f);
+            var relicTrim = new Color(0.52f, 0.36f, 0.18f);
+            var spirit = new Color(0.22f, 0.78f, 0.7f);
+
+            var pinePositions = new[]
+            {
+                center + new Vector3(-25f, 0f, -1f),
+                center + new Vector3(24f, 0f, 3f),
+                center + new Vector3(-27f, 0f, 15f),
+                center + new Vector3(27f, 0f, 24f),
+                center + new Vector3(11f, 0f, 30f),
+                center + new Vector3(-10f, 0f, 31f)
+            };
+
+            for (var i = 0; i < pinePositions.Length; i++)
+            {
+                var scale = 0.82f + (float)random.NextDouble() * 0.3f;
+                BuildValleyPine(parent, pinePositions[i], scale, forestColor, barkColor, i % 3 == 0);
+            }
+
+            BuildRelicMonolith(parent, center + new Vector3(-8f, 0f, 9f), 1.05f, relicStone, relicTrim, spirit);
+            BuildRelicMonolith(parent, center + new Vector3(8f, 0f, 11f), 0.8f, relicStone, relicTrim, spirit);
+            BuildRelicRuin(parent, center + new Vector3(-18f, 0f, 7f), relicStone, relicTrim);
+            BuildRelicRuin(parent, center + new Vector3(19f, 0f, 12f), relicStone, relicTrim);
+        }
+
+        private static void BuildValleyPine(Transform parent, Vector3 position, float scale, Color foliage, Color bark, bool spiritTree)
+        {
+            CreateCone(parent, "Valley Pine Trunk", position + Vector3.up * (0.7f * scale), 0.22f * scale, 0.14f * scale, 1.4f * scale, bark);
+            CreateCone(parent, "Valley Pine Lower Crown", position + Vector3.up * (1.25f * scale), 0.86f * scale, 0.18f * scale, 1.25f * scale, foliage);
+            CreateCone(parent, "Valley Pine Upper Crown", position + Vector3.up * (2.05f * scale), 0.64f * scale, 0.08f * scale, 1.1f * scale, Color.Lerp(foliage, Color.black, 0.12f));
+            if (spiritTree)
+            {
+                CreateCone(parent, "Valley Pine Spirit Tip", position + Vector3.up * (2.82f * scale), 0.18f * scale, 0.02f, 0.42f * scale, new Color(0.24f, 0.72f, 0.62f));
+            }
+        }
+
+        private static void BuildRelicMonolith(Transform parent, Vector3 position, float scale, Color stone, Color trim, Color spirit)
+        {
+            CreateCone(parent, "Relic Monolith", position + Vector3.up * (1.25f * scale), 0.62f * scale, 0.34f * scale, 2.5f * scale, stone, 7, 0.12f);
+            CreateCone(parent, "Relic Monolith Crown", position + Vector3.up * (2.75f * scale), 0.43f * scale, 0.05f, 0.4f * scale, trim, 6, -0.08f);
+            CreatePart(parent, "Relic Monolith Rune", PrimitiveType.Cube, position + new Vector3(0f, 1.55f * scale, -0.38f * scale), new Vector3(0.12f, 0.56f, 0.035f) * scale, spirit, Quaternion.Euler(0f, 0f, 18f));
+        }
+
+        private static void BuildRelicRuin(Transform parent, Vector3 position, Color stone, Color trim)
+        {
+            CreateCone(parent, "Broken Relic Pillar", position + Vector3.up * 0.82f, 0.44f, 0.25f, 1.64f, stone, 7, 0.2f);
+            CreateCone(parent, "Broken Relic Cap", position + Vector3.up * 1.7f, 0.46f, 0.18f, 0.28f, trim, 6, 0.08f);
+            var shard = CreateCone(parent, "Fallen Relic Shard", position + new Vector3(0.72f, 0.18f, 0.35f), 0.2f, 0.03f, 0.75f, stone, 6, 0.18f);
+            shard.transform.rotation = Quaternion.Euler(22f, 28f, -38f);
         }
 
         private static void BuildNavigation(Transform parent, ZoneDefinition zone)
@@ -436,6 +497,66 @@ namespace MmorpgPrototype
             CreatePart(parent, "Entry Pillar R", PrimitiveType.Cube, position + new Vector3(2.2f, 1.2f, 0f), new Vector3(0.34f, 2.4f, 0.34f), Color.Lerp(zone.GroundColor, Color.black, 0.2f));
             CreatePart(parent, "Entry Arch", PrimitiveType.Cube, position + Vector3.up * 2.35f, new Vector3(4.7f, 0.28f, 0.34f), Color.Lerp(zone.GroundColor, Color.white, 0.2f));
             CreatePointOfInterest(parent, "Zone Entry", position, Localization.Tr("poi.entry", zone.DisplayName), ZonePointOfInterestType.Entry, RewardFor(zone, ZonePointOfInterestType.Entry), ClaimIdFor(zone, ZonePointOfInterestType.Entry));
+        }
+
+        private static GameObject CreateCone(Transform parent, string name, Vector3 position, float bottomRadius, float topRadius, float height, Color color)
+        {
+            return CreateCone(parent, name, position, bottomRadius, topRadius, height, color, 8, 0f);
+        }
+
+        private static GameObject CreateCone(Transform parent, string name, Vector3 position, float bottomRadius, float topRadius, float height, Color color, int sides, float rotationDegrees)
+        {
+            sides = Mathf.Clamp(sides, 5, 12);
+            var mesh = new Mesh { name = $"{name} Mesh" };
+            var vertices = new Vector3[sides * 2 + 2];
+            var triangles = new int[sides * 12];
+            var rotation = rotationDegrees * Mathf.Deg2Rad;
+            var bottomCenter = sides * 2;
+            var topCenter = bottomCenter + 1;
+
+            for (var i = 0; i < sides; i++)
+            {
+                var angle = Mathf.PI * 2f * i / sides + rotation;
+                var direction = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                vertices[i] = direction * bottomRadius;
+                vertices[sides + i] = new Vector3(direction.x * topRadius, height, direction.z * topRadius);
+            }
+
+            vertices[bottomCenter] = Vector3.zero;
+            vertices[topCenter] = Vector3.up * height;
+            var index = 0;
+            for (var i = 0; i < sides; i++)
+            {
+                var next = (i + 1) % sides;
+                triangles[index++] = i;
+                triangles[index++] = next;
+                triangles[index++] = sides + i;
+                triangles[index++] = sides + i;
+                triangles[index++] = next;
+                triangles[index++] = sides + next;
+                triangles[index++] = bottomCenter;
+                triangles[index++] = next;
+                triangles[index++] = i;
+                triangles[index++] = topCenter;
+                triangles[index++] = sides + i;
+                triangles[index++] = sides + next;
+            }
+
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            var part = new GameObject(name);
+            part.transform.SetParent(parent, true);
+            part.transform.position = position;
+            part.AddComponent<MeshFilter>().sharedMesh = mesh;
+            part.AddComponent<MeshRenderer>().sharedMaterial = VisualMaterialUtility.Create(
+                color,
+                VisualMaterialUtility.ShouldGlow(name),
+                color.r < 0.35f ? 0.08f : 0.02f,
+                0.28f);
+            return part;
         }
 
         private static GameObject CreatePart(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)
