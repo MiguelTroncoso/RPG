@@ -258,6 +258,9 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - Los FBX generated `OriginalArt` quedan como fallback tecnico. Personajes y
   mobs de las diez zonas priorizan los meshes curados KayKit y Quaternius, con
   siluetas mas claras para la camara movil.
+- El arma legacy deja de duplicarse sobre el avatar. Guerrero usa Knight,
+  Ninja Rogue/Rogue Hooded, Chaman Mage y Umbra Barbarian en ambas variantes;
+  sexo, paleta y accesorios siguen diferenciados por `CharacterArtProfile`.
 
 ## Fase 5.91: Beta Offline Integrada
 

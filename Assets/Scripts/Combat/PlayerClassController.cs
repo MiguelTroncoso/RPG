@@ -65,6 +65,15 @@ namespace MmorpgPrototype
             if (weaponVisual != null)
             {
                 Destroy(weaponVisual);
+                weaponVisual = null;
+            }
+
+            // PlayerAvatarVisual owns class weapons and their anchor points.
+            // Keeping this legacy visual here would duplicate the weapon over
+            // the imported mesh and make the silhouette look malformed.
+            if (GetComponent<PlayerAvatarVisual>() != null)
+            {
+                return;
             }
 
             var prefab = Resources.Load<GameObject>(resourcePath);
