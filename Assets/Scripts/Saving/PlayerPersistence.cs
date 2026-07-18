@@ -11,7 +11,7 @@ namespace MmorpgPrototype
     // servidor mas adelante.
     public sealed class PlayerPersistence : MonoBehaviour
     {
-        private const string SlotName = "player";
+        private const string GuestSlotName = "player";
         private const float AutoSaveIntervalSeconds = 30f;
 
         public PlayerCharacterIdentity Identity;
@@ -42,6 +42,10 @@ namespace MmorpgPrototype
         private ISaveStorage storage;
         private float autoSaveTimer;
         private readonly HashSet<string> claimedPointOfInterestIds = new HashSet<string>();
+
+        private string SlotName => OfflineAccountStore.HasActiveSession
+            ? $"player_{OfflineAccountStore.CurrentStorageKey}"
+            : GuestSlotName;
 
         private void Awake()
         {

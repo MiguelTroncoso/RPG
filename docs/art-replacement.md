@@ -55,8 +55,9 @@ muerte y telegraph propios; los jefes agregan una silueta y VFX reconocibles.
 - UI: paneles de obsidiana y metal, marcos 9-slice, iconos originales,
   cooldown radial y tipografia legible. Nada de botones rectangulares planos
   como presentacion final.
-- Acceso: ilustracion cinematografica, selector de personaje y botones claros;
-  ningun selector de servidor, URL o mensaje tecnico durante la beta offline.
+- Acceso: ilustracion cinematografica, seleccion de servidor, cuenta local y
+  despues selector de personaje. La URL y los errores tecnicos siguen fuera
+  de la portada; S-02 y S-03 se habilitaran con el backend online.
 
 ## Orden de produccion
 

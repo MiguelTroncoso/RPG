@@ -286,6 +286,18 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   de licencia antes de importar scripts y recursos, por lo que no hay una
   validacion falsa de Android.
 
+## Fase 5.95: Acceso de Cuenta para Beta Offline
+
+- La portada deja que la ilustracion cinematografica sea visible: la
+  seleccion de personaje se concentra en una tarjeta inferior compacta.
+- El flujo ahora es `servidor -> cuenta -> seleccion/creacion de personaje`.
+  S-01 funciona para la beta local; S-02 y S-03 quedan visibles pero bloqueados
+  hasta que exista backend.
+- Las cuentas locales validan usuario y contrasena sin guardar la contrasena
+  en texto plano. Cada cuenta usa un archivo de personaje independiente en el
+  dispositivo. No reemplaza autenticacion, recuperacion de cuenta ni seguridad
+  de servidor para una beta publica.
+
 ## Prioridad Recomendada
 
 1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades
@@ -297,6 +309,9 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
    de convertir recompensas, inventario y compras en autoridad online.
 5. Sustituir por lotes el authored estilizado mediante arte manual comercial:
    kit de cada clase, luego normal/elite/jefe de cada banda.
+6. Al levantar S-01 online, sustituir `OfflineAccountStore` por cuentas de
+   backend con hash de contrasena fuerte, tokens de sesion, rate limiting,
+   verificacion de correo y recuperacion de cuenta.
 
 ## Siguiente Corte
 

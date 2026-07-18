@@ -1781,73 +1781,78 @@ namespace MmorpgPrototype
             }
             overlayImage.raycastTarget = true;
 
-            var accessShade = CreatePanel(overlay.transform, "Access Cinematic Shade", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.004f, 0.008f, 0.014f, 0.58f));
+            // The roster artwork is the hero of this screen. UI only occupies the lower
+            // centre so the four class silhouettes and the moonlit valley stay visible.
+            var accessShade = CreatePanel(overlay.transform, "Access Cinematic Shade", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero, new Color(0.004f, 0.008f, 0.014f, 0.24f));
             StretchToParent(accessShade.rectTransform);
             accessShade.raycastTarget = false;
 
-            var accent = CreatePanel(overlay.transform, "Access Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1260f, 6f), new Vector2(0f, 334f), new Color(0.2f, 0.72f, 0.72f, 0.95f));
+            var characterSelectionLayer = CreateUiObject("Character Selection Layer", overlay.transform);
+            StretchToParent(characterSelectionLayer.GetComponent<RectTransform>());
+
+            var accent = CreatePanel(characterSelectionLayer.transform, "Access Accent", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(650f, 4f), new Vector2(0f, -42f), new Color(0.25f, 0.78f, 0.78f, 0.95f));
             accent.raycastTarget = false;
 
-            var brand = CreateText(overlay.transform, "Access Brand", Localization.Tr("ui.game_title").ToUpperInvariant(), 26, TextAnchor.MiddleCenter);
+            var brand = CreateText(characterSelectionLayer.transform, "Access Brand", Localization.Tr("ui.game_title").ToUpperInvariant(), 38, TextAnchor.MiddleCenter);
             brand.fontStyle = FontStyle.Bold;
             brand.color = new Color(0.9f, 0.94f, 1f);
-            SetRect(brand.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 38f), new Vector2(0f, 298f));
+            SetRect(brand.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(760f, 48f), new Vector2(0f, -66f));
 
-            var accessLabel = CreateText(overlay.transform, "Access Label", "BETA OFFLINE  •  AVENTURA LOCAL", 16, TextAnchor.MiddleCenter);
+            var accessLabel = CreateText(characterSelectionLayer.transform, "Access Label", "BETA OFFLINE  •  AVENTURA LOCAL", 15, TextAnchor.MiddleCenter);
             accessLabel.color = new Color(0.46f, 0.79f, 0.8f);
-            SetRect(accessLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(760f, 26f), new Vector2(0f, 270f));
+            SetRect(accessLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(760f, 26f), new Vector2(0f, -102f));
 
-            var frame = CreatePanel(overlay.transform, "Access Frame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(1260f, 660f), new Vector2(0f, -14f), new Color(0.015f, 0.028f, 0.04f, 0.78f));
-            frame.gameObject.AddComponent<ResponsivePanelScaler>().ReferenceSize = new Vector2(1260f, 660f);
+            var actionDeck = CreatePanel(characterSelectionLayer.transform, "Access Action Deck", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(850f, 310f), new Vector2(0f, 26f), new Color(0.008f, 0.015f, 0.024f, 0.76f));
+            actionDeck.raycastTarget = false;
+            var deckAccent = CreatePanel(characterSelectionLayer.transform, "Access Deck Accent", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(810f, 3f), new Vector2(0f, 326f), new Color(0.26f, 0.78f, 0.78f, 0.9f));
+            deckAccent.raycastTarget = false;
 
-            var leftPanel = CreatePanel(overlay.transform, "Access Left Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(530f, 560f), new Vector2(-340f, -14f), new Color(0.025f, 0.045f, 0.06f, 0.9f));
-            leftPanel.raycastTarget = false;
-            var rightPanel = CreatePanel(overlay.transform, "Access Right Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(650f, 560f), new Vector2(260f, -14f), new Color(0.02f, 0.038f, 0.052f, 0.9f));
-            rightPanel.raycastTarget = false;
-
-            var savedView = CreateUiObject("Saved Character View", overlay.transform);
+            var savedView = CreateUiObject("Saved Character View", characterSelectionLayer.transform);
             StretchToParent(savedView.GetComponent<RectTransform>());
 
-            var savedTitle = CreateText(savedView.transform, "Saved Title", Localization.Tr("character.select_title"), 32, TextAnchor.MiddleCenter);
+            var savedTitle = CreateText(savedView.transform, "Saved Title", "TU AVENTURA", 22, TextAnchor.MiddleCenter);
             savedTitle.fontStyle = FontStyle.Bold;
-            SetRect(savedTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(480f, 48f), new Vector2(-340f, 226f));
+            SetRect(savedTitle.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 36f), new Vector2(-210f, 260f));
 
-            var savedSubtitle = CreateText(savedView.transform, "Saved Subtitle", Localization.Tr("character.select_subtitle"), 18, TextAnchor.MiddleCenter);
+            var savedSubtitle = CreateText(savedView.transform, "Saved Subtitle", "Personaje local disponible", 15, TextAnchor.MiddleCenter);
             savedSubtitle.color = new Color(0.72f, 0.81f, 0.88f);
-            SetRect(savedSubtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(480f, 34f), new Vector2(-340f, 190f));
+            SetRect(savedSubtitle.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 28f), new Vector2(-210f, 232f));
 
-            var savedCard = CreatePanel(savedView.transform, "Saved Character Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 250f), new Vector2(-340f, 35f), new Color(0.025f, 0.037f, 0.048f, 1f));
+            var savedCard = CreatePanel(savedView.transform, "Saved Character Card", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 114f), new Vector2(-210f, 102f), new Color(0.024f, 0.045f, 0.062f, 0.86f));
             savedCard.raycastTarget = false;
-            var savedAccent = CreatePanel(savedView.transform, "Saved Character Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 6f), new Vector2(-340f, 156f), new Color(0.22f, 0.72f, 0.72f, 1f));
+            var savedAccent = CreatePanel(savedView.transform, "Saved Character Accent", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 4f), new Vector2(-210f, 157f), new Color(0.22f, 0.72f, 0.72f, 1f));
             savedAccent.raycastTarget = false;
 
-            var savedBadge = CreateText(savedView.transform, "Saved Badge", Localization.Tr("character.saved_label"), 16, TextAnchor.MiddleCenter);
+            var savedBadge = CreateText(savedView.transform, "Saved Badge", "PERSONAJE", 13, TextAnchor.MiddleLeft);
             savedBadge.fontStyle = FontStyle.Bold;
             savedBadge.color = new Color(0.46f, 0.9f, 0.65f);
-            SetRect(savedBadge.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(180f, 30f), new Vector2(-472f, 118f));
+            SetRect(savedBadge.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(290f, 24f), new Vector2(-182f, 136f));
 
-            var savedCharacterText = CreateText(savedView.transform, "Saved Character Text", string.Empty, 23, TextAnchor.MiddleLeft);
+            var savedCharacterText = CreateText(savedView.transform, "Saved Character Text", string.Empty, 22, TextAnchor.MiddleLeft);
             savedCharacterText.fontStyle = FontStyle.Bold;
-            SetRect(savedCharacterText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(350f, 104f), new Vector2(-300f, 50f));
+            SetRect(savedCharacterText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(290f, 54f), new Vector2(-182f, 97f));
 
-            var savedHint = CreateText(savedView.transform, "Saved Hint", Localization.Tr("character.local_save_note"), 16, TextAnchor.MiddleCenter);
+            var savedHint = CreateText(savedView.transform, "Saved Hint", "Progreso guardado en este dispositivo", 14, TextAnchor.MiddleCenter);
             savedHint.color = new Color(0.6f, 0.69f, 0.75f);
-            SetRect(savedHint.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(450f, 42f), new Vector2(-340f, -90f));
+            SetRect(savedHint.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 26f), new Vector2(-210f, 77f));
 
-            var readyTitle = CreateText(savedView.transform, "Ready Title", Localization.Tr("character.ready_title"), 32, TextAnchor.MiddleCenter);
+            var readyTitle = CreateText(savedView.transform, "Ready Title", "LISTO PARA ENTRAR", 22, TextAnchor.MiddleCenter);
             readyTitle.fontStyle = FontStyle.Bold;
-            SetRect(readyTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(580f, 48f), new Vector2(260f, 226f));
+            SetRect(readyTitle.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 36f), new Vector2(220f, 260f));
 
-            var readySubtitle = CreateText(savedView.transform, "Ready Subtitle", Localization.Tr("character.ready_subtitle"), 19, TextAnchor.MiddleCenter);
+            var readySubtitle = CreateText(savedView.transform, "Ready Subtitle", "Retoma tu expedición en el Valle", 15, TextAnchor.MiddleCenter);
             readySubtitle.color = new Color(0.72f, 0.81f, 0.88f);
-            SetRect(readySubtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 72f), new Vector2(260f, 164f));
+            SetRect(readySubtitle.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 28f), new Vector2(220f, 232f));
 
-            var savedDetails = CreateText(savedView.transform, "Saved Details", string.Empty, 22, TextAnchor.MiddleCenter);
+            var savedDetails = CreateText(savedView.transform, "Saved Details", string.Empty, 18, TextAnchor.MiddleCenter);
             savedDetails.color = new Color(1f, 0.88f, 0.55f);
-            SetRect(savedDetails.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(560f, 82f), new Vector2(260f, 78f));
+            SetRect(savedDetails.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(350f, 40f), new Vector2(220f, 180f));
 
-            var createView = CreateUiObject("Create Character View", overlay.transform);
+            var createView = CreateUiObject("Create Character View", characterSelectionLayer.transform);
             StretchToParent(createView.GetComponent<RectTransform>());
+
+            var createDeck = CreatePanel(createView.transform, "Create Character Deck", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(900f, 540f), new Vector2(0f, -28f), new Color(0.008f, 0.016f, 0.026f, 0.76f));
+            createDeck.raycastTarget = false;
 
             var createTitle = CreateText(createView.transform, "Create Title", Localization.Tr("character.new_title"), 32, TextAnchor.MiddleCenter);
             createTitle.fontStyle = FontStyle.Bold;
@@ -1946,7 +1951,7 @@ namespace MmorpgPrototype
                 ConnectToSelectedServer();
             });
 
-            var continueButton = CreateRoundButton(savedView.transform, "Continue Character Button", Localization.Tr("character.enter_button"), new Vector2(0.5f, 0.5f), new Vector2(260f, -170f), new Vector2(360f, 60f), new Color(0.16f, 0.42f, 0.72f), 22);
+            var continueButton = CreateRoundButton(savedView.transform, "Continue Character Button", Localization.Tr("character.enter_button"), new Vector2(0.5f, 0f), new Vector2(220f, 106f), new Vector2(310f, 54f), new Color(0.16f, 0.42f, 0.72f), 20);
             continueButton.onClick.AddListener(() =>
             {
                 if (savedData == null)
@@ -1963,7 +1968,7 @@ namespace MmorpgPrototype
                 ConnectToSelectedServer();
             });
 
-            var newCharacterButton = CreateRoundButton(savedView.transform, "New Character Button", Localization.Tr("character.new_button"), new Vector2(0.5f, 0.5f), new Vector2(260f, -244f), new Vector2(360f, 48f), new Color(0.25f, 0.3f, 0.38f), 18);
+            var newCharacterButton = CreateRoundButton(savedView.transform, "New Character Button", Localization.Tr("character.new_button"), new Vector2(0.5f, 0f), new Vector2(220f, 52f), new Vector2(310f, 40f), new Color(0.25f, 0.3f, 0.38f), 16);
             newCharacterButton.onClick.AddListener(() =>
             {
                 selectedClass = CharacterClassType.Guerrero;
@@ -2012,24 +2017,170 @@ namespace MmorpgPrototype
                 }
             }
 
-            if (savedData != null)
+            var loginView = CreateUiObject("Offline Account Login View", overlay.transform);
+            StretchToParent(loginView.GetComponent<RectTransform>());
+
+            var loginCard = CreatePanel(loginView.transform, "Offline Account Card", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(540f, 476f), new Vector2(0f, -28f), new Color(0.006f, 0.014f, 0.024f, 0.8f));
+            loginCard.raycastTarget = false;
+            var loginAccent = CreatePanel(loginView.transform, "Offline Account Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(494f, 4f), new Vector2(0f, 186f), new Color(0.25f, 0.78f, 0.78f, 0.94f));
+            loginAccent.raycastTarget = false;
+
+            var loginTitle = CreateText(loginView.transform, "Login Title", "ACCESO AL VALLE", 34, TextAnchor.MiddleCenter);
+            loginTitle.fontStyle = FontStyle.Bold;
+            SetRect(loginTitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 46f), new Vector2(0f, 145f));
+
+            var loginSubtitle = CreateText(loginView.transform, "Login Subtitle", "Selecciona un servidor e inicia sesion", 16, TextAnchor.MiddleCenter);
+            loginSubtitle.color = new Color(0.7f, 0.8f, 0.88f);
+            SetRect(loginSubtitle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 30f), new Vector2(0f, 112f));
+
+            var serverLabel = CreateText(loginView.transform, "Server Label", "SERVIDOR", 14, TextAnchor.MiddleCenter);
+            serverLabel.fontStyle = FontStyle.Bold;
+            serverLabel.color = new Color(0.48f, 0.9f, 0.84f);
+            SetRect(serverLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(460f, 24f), new Vector2(0f, 72f));
+
+            var serverButtons = new Button[serverProfiles.Length];
+            for (var i = 0; i < serverProfiles.Length; i++)
             {
-                var savedClassDefinition = ClassDefinition.Create(selectedClass);
-                savedCharacterText.text = $"{savedData.CharacterName}\n{ClassDisplayName(selectedClass)}  •  {GenderDisplayName(selectedGender)}";
-                savedDetails.text = Localization.Tr("character.level_details", savedData.Level, savedData.Experience, savedData.Gold);
-                savedAccent.color = savedClassDefinition.BodyColor;
-                savedBadge.color = Color.Lerp(savedClassDefinition.BodyColor, Color.white, 0.35f);
-            }
-            else
-            {
-                savedView.SetActive(false);
+                var profileIndex = i;
+                var profile = serverProfiles[i];
+                var buttonColor = profile.Enabled ? new Color(0.05f, 0.28f, 0.25f) : new Color(0.13f, 0.16f, 0.2f);
+                var serverButton = CreateRoundButton(loginView.transform, $"Login {profile.Id} Button", profile.Label, new Vector2(0.5f, 0.5f), new Vector2(-174f + i * 174f, 31f), new Vector2(160f, 48f), buttonColor, 13);
+                serverButton.interactable = profile.Enabled;
+                serverButton.onClick.AddListener(() =>
+                {
+                    selectedServerIndex = profileIndex;
+                    selectedServerUrl = serverProfiles[selectedServerIndex].Url;
+                    RefreshSelectedServer();
+                });
+                serverButtons[i] = serverButton;
             }
 
-            createView.SetActive(savedData == null);
-            identity.ApplySelection(nameInput.text, selectedGender);
-            classController.ApplyClass(selectedClass);
-            RefreshPreview();
+            var selectedServerText = CreateText(loginView.transform, "Selected Server", string.Empty, 14, TextAnchor.MiddleCenter);
+            selectedServerText.color = new Color(0.76f, 0.84f, 0.91f);
+            SetRect(selectedServerText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(480f, 24f), new Vector2(0f, -5f));
+
+            var accountLabel = CreateText(loginView.transform, "Account Label", "CUENTA", 14, TextAnchor.MiddleLeft);
+            accountLabel.fontStyle = FontStyle.Bold;
+            accountLabel.color = new Color(0.7f, 0.8f, 0.88f);
+            SetRect(accountLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(360f, 24f), new Vector2(0f, -43f));
+
+            var accountInput = CreateInputField(loginView.transform, "Account Input", OfflineAccountStore.CurrentAccount, "nombre de cuenta", new Vector2(0.5f, 0.5f), new Vector2(0f, -76f), new Vector2(360f, 44f));
+            accountInput.characterLimit = 16;
+
+            var passwordLabel = CreateText(loginView.transform, "Password Label", "CONTRASENA", 14, TextAnchor.MiddleLeft);
+            passwordLabel.fontStyle = FontStyle.Bold;
+            passwordLabel.color = new Color(0.7f, 0.8f, 0.88f);
+            SetRect(passwordLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(360f, 24f), new Vector2(0f, -117f));
+
+            var passwordInput = CreateInputField(loginView.transform, "Password Input", string.Empty, "contrasena", new Vector2(0.5f, 0.5f), new Vector2(0f, -150f), new Vector2(360f, 44f));
+            passwordInput.contentType = InputField.ContentType.Password;
+            passwordInput.characterLimit = 64;
+
+            var loginFeedback = CreateText(loginView.transform, "Login Feedback", "Cuenta local: tus personajes se guardan por usuario.", 14, TextAnchor.MiddleCenter);
+            loginFeedback.color = new Color(0.62f, 0.72f, 0.8f);
+            SetRect(loginFeedback.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 32f), new Vector2(0f, -195f));
+
+            var loginButton = CreateRoundButton(loginView.transform, "Login Button", "ENTRAR", new Vector2(0.5f, 0.5f), new Vector2(-101f, -245f), new Vector2(190f, 48f), new Color(0.12f, 0.34f, 0.72f), 18);
+            loginButton.onClick.AddListener(() => TryEnterAccount(false));
+
+            var registerButton = CreateRoundButton(loginView.transform, "Register Button", "CREAR CUENTA", new Vector2(0.5f, 0.5f), new Vector2(101f, -245f), new Vector2(190f, 48f), new Color(0.12f, 0.48f, 0.34f), 17);
+            registerButton.onClick.AddListener(() => TryEnterAccount(true));
+
+            void RefreshSelectedServer()
+            {
+                for (var i = 0; i < serverButtons.Length; i++)
+                {
+                    var image = serverButtons[i].GetComponent<Image>();
+                    if (image != null)
+                    {
+                        image.color = i == selectedServerIndex
+                            ? new Color(0.12f, 0.55f, 0.45f)
+                            : serverProfiles[i].Enabled ? new Color(0.05f, 0.28f, 0.25f) : new Color(0.13f, 0.16f, 0.2f);
+                    }
+                }
+
+                selectedServerText.text = $"{serverProfiles[selectedServerIndex].Id}  •  {serverProfiles[selectedServerIndex].DisplayName}  •  BETA OFFLINE";
+            }
+
+            void TryEnterAccount(bool createAccount)
+            {
+                string message;
+                bool success;
+                if (createAccount)
+                {
+                    success = OfflineAccountStore.TryRegister(accountInput.text, passwordInput.text, out message);
+                }
+                else
+                {
+                    success = OfflineAccountStore.TrySignIn(accountInput.text, passwordInput.text, out message);
+                }
+
+                loginFeedback.text = message;
+                loginFeedback.color = success ? new Color(0.42f, 0.94f, 0.63f) : new Color(1f, 0.45f, 0.4f);
+                if (!success)
+                {
+                    return;
+                }
+
+                selectedServerUrl = serverProfiles[selectedServerIndex].Url;
+                if (network != null)
+                {
+                    network.PlayerName = OfflineAccountStore.CurrentAccount;
+                    network.ServerUrl = selectedServerUrl;
+                    if (network.UrlInput != null)
+                    {
+                        network.UrlInput.text = selectedServerUrl;
+                    }
+                }
+
+                SyncCharacterSelection();
+                loginView.SetActive(false);
+                characterSelectionLayer.SetActive(true);
+            }
+
+            RefreshSelectedServer();
+            SyncCharacterSelection();
+            characterSelectionLayer.SetActive(false);
             Time.timeScale = 0f;
+
+            void SyncCharacterSelection()
+            {
+                savedData = persistence != null ? persistence.LoadOrNull() : null;
+                if (savedData != null)
+                {
+                    if (System.Enum.TryParse(savedData.ClassName, out CharacterClassType restoredClass))
+                    {
+                        selectedClass = restoredClass;
+                    }
+
+                    if (System.Enum.TryParse(savedData.GenderName, out CharacterGender restoredGender))
+                    {
+                        selectedGender = restoredGender;
+                    }
+
+                    nameInput.text = savedData.CharacterName;
+                    var savedClassDefinition = ClassDefinition.Create(selectedClass);
+                    savedCharacterText.text = $"{savedData.CharacterName}\n{ClassDisplayName(selectedClass)}  •  {GenderDisplayName(selectedGender)}";
+                    savedDetails.text = Localization.Tr("character.level_details", savedData.Level, savedData.Experience, savedData.Gold);
+                    savedAccent.color = savedClassDefinition.BodyColor;
+                    savedBadge.color = Color.Lerp(savedClassDefinition.BodyColor, Color.white, 0.35f);
+                    savedView.SetActive(true);
+                    createView.SetActive(false);
+                }
+                else
+                {
+                    selectedClass = CharacterClassType.Guerrero;
+                    selectedGender = CharacterGender.Masculino;
+                    nameInput.text = Localization.Tr("identity.default_name");
+                    savedView.SetActive(false);
+                    createView.SetActive(true);
+                }
+
+                backButton.gameObject.SetActive(savedData != null);
+                identity.ApplySelection(nameInput.text, selectedGender);
+                classController.ApplyClass(selectedClass);
+                RefreshPreview();
+            }
 
             void ConnectToSelectedServer()
             {
