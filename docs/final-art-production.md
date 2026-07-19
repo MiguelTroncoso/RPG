@@ -97,6 +97,22 @@ con criterio de produccion. Para cerrar el lote se necesita una fuente externa
 de modelos con licencia comercial compatible o trabajo de un artista 3D. El
 repositorio no debe fingir que ese trabajo ya existe.
 
+## Fuente recomendada para iniciar la produccion
+
+La fuente elegida como base de personajes es la **MMORPG Characters - Mega
+Collection - Warriors, Archers, Mages** de Ida Faber. La decision y su alcance
+estan documentados en `docs/art-source-decision.md`.
+
+La coleccion aporta una familia modular de personajes, rig humanoide, armas y
+materiales PBR preparados para Unity. No es un reemplazo automatico: Guerrero,
+Ninja, Chaman y Umbra necesitan una pasada de identidad propia, optimizacion
+Android, LOD, animaciones y sidecars de licencia. Tampoco incluye por si sola
+mobs, NPC, entorno, VFX ni audio.
+
+El paquete no esta instalado en este checkout. Hasta que se descargue desde la
+cuenta con licencia, el estado correcto continua siendo `0/8` personajes y
+`0/30` mobs comerciales aprobados.
+
 ## Orden de trabajo
 
 1. Aprobar concept sheet y siluetas de las cuatro clases.

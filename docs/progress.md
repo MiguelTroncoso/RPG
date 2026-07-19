@@ -40,6 +40,21 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
 - El runtime conserva la presentacion estable anterior y no activa los FBX
   tecnicos solo para aparentar una mejora visual.
 
+## Fase 6.05: Seleccion de fuente comercial para el elenco
+
+- Se elige la `MMORPG Characters - Mega Collection - Warriors, Archers, Mages`
+  de Ida Faber como familia base para la produccion real de personajes.
+- La eleccion prioriza coherencia de elenco, variantes modulares, rig humanoide,
+  armas, materiales PBR y entrega preparada para Unity.
+- Se define el mapeo de las cuatro clases: Warrior para Guerrero, base Archer
+  transformada para Ninja, Mage para Chaman y mezcla Mage/Warrior para Umbra.
+- El paquete no esta descargado aun. No se activan sus assets, no se inventa
+  una aprobacion y los FBX tecnicos permanecen fuera del runtime final.
+- El siguiente paso tangible es importar localmente el primer lote de Zona 1:
+  ocho variantes jugables, Mercader, Almacen, Herrero y la familia normal/elite/
+  jefe de mobs, con el mismo criterio de materiales y licencia.
+- Arte comercial manual: **0% aprobado** hasta recibir y auditar el paquete.
+
 ## Hecho En Este Corte
 
 - Fase 5.42: entrada multitactil estable para mover y atacar en Android.
