@@ -369,6 +369,38 @@ despues se replica el pipeline a las nueve zonas restantes.
   SHA-256 `788f6ec5108ab3c37e11c3d663a728ee20221a97c228e7f612525fac05a3a1f0`.
   Falta instalarla y completar el QA visual/rendimiento en un Android real.
 
+## Fase 6.00: Identidad Visual De Clase Corregida
+
+- El FBX authored ya no omite la capa visual de clase. Guerrero, Ninja,
+  Chaman y Umbra reciben siempre su kit de identidad sobre el cuerpo animado:
+  armadura, capucha/mascara, robe, orbes, coronas, hombreras, nucleos y armas
+  de lectura inmediata.
+- El Chaman deja de depender de un cuerpo metalico generico: ahora muestra
+  robe, mantle, hood, totems, orbe espiritual y baston cuando entra con el
+  modelo authored.
+- Esta correccion mejora la lectura en Android, pero no se declara como
+  escultura high-poly final. El modelo base FBX sigue siendo una fase authored
+  estilizada de transicion y debe sustituirse por meshes comerciales skinned.
+
+## Fase 6.01: NPCs De Zona 1 Con Rol Visual
+
+- Mercader, Herrero y Almacenero dejan de crearse como cilindro/cubo.
+- Cada NPC usa un humanoide 3D, tintado por rol, y props reconocibles: satchel
+  y lanterna para el mercader, delantal/mazo/yunque para el herrero, y cofre,
+  cerradura y llave para el almacen.
+- La capa de interaccion, misiones y servicios permanece intacta; solo cambia
+  la presentacion visual y la posicion de la etiqueta para que acompañe al
+  nuevo cuerpo.
+
+## Validacion De Este Corte
+
+- Auditoria funcional 1-105: 17/17 checks sin errores.
+- APK: `Builds/Android/valle-reliquias-debug.apk`, 46 MB, target SDK 35.
+- SHA-256: `0fec313ccb214bcf0f8820854c0e8ab04c180970d4163b82a9d2bca4b1d58459`.
+- Falta la comprobacion visual en un Android real: probar las cuatro clases,
+  acercarse a los tres NPC y revisar que el kit no atraviese el cuerpo durante
+  idle, carrera y ataque.
+
 ## Prioridad Recomendada
 
 1. Generar la APK nueva desde `MMORPG > Android > Build Debug APK` y confirmar

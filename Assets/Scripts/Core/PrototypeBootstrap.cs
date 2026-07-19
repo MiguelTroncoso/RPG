@@ -427,13 +427,10 @@ namespace MmorpgPrototype
 
         private static ShopNpc CreateShopNpc(GameObject player)
         {
-            var npc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            var npc = new GameObject("Mercader del Valle");
             npc.name = "Mercader del Valle";
-            npc.transform.position = new Vector3(-3.2f, 1f, -2.5f);
-            npc.transform.localScale = new Vector3(0.7f, 1.05f, 0.7f);
-
-            var material = VisualMaterialUtility.Create(new Color(0.93f, 0.7f, 0.28f), false, 0.16f, 0.34f);
-            npc.GetComponent<Renderer>().sharedMaterial = material;
+            npc.transform.position = new Vector3(-3.2f, 0f, -2.5f);
+            NpcVisualFactory.BuildMerchant(npc.transform);
 
             var shop = npc.AddComponent<ShopNpc>();
             shop.Player = player.transform;
@@ -441,45 +438,39 @@ namespace MmorpgPrototype
             shop.Inventory = player.GetComponent<InventorySystem>();
             shop.QuestLog = player.GetComponent<PlayerQuestLog>();
 
-            CreateWorldLabel(npc.transform, Localization.Tr("world.shop_label"), new Color(1f, 0.92f, 0.55f), 1.55f);
+            CreateWorldLabel(npc.transform, Localization.Tr("world.shop_label"), new Color(1f, 0.92f, 0.55f), 2.45f);
             return shop;
         }
 
         private static BlacksmithNpc CreateBlacksmithNpc(GameObject player)
         {
-            var npc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            var npc = new GameObject("Herrero del Campamento");
             npc.name = "Herrero del Campamento";
-            npc.transform.position = new Vector3(3.6f, 1f, -3.4f);
-            npc.transform.localScale = new Vector3(0.75f, 1.05f, 0.75f);
-
-            var material = VisualMaterialUtility.Create(new Color(0.5f, 0.5f, 0.56f), false, 0.2f, 0.38f);
-            npc.GetComponent<Renderer>().sharedMaterial = material;
+            npc.transform.position = new Vector3(3.6f, 0f, -3.4f);
+            NpcVisualFactory.BuildBlacksmith(npc.transform);
 
             var blacksmith = npc.AddComponent<BlacksmithNpc>();
             blacksmith.Player = player.transform;
             blacksmith.Equipment = player.GetComponent<EquipmentUpgradeSystem>();
             blacksmith.QuestLog = player.GetComponent<PlayerQuestLog>();
 
-            CreateWorldLabel(npc.transform, Localization.Tr("world.smith_label"), new Color(0.8f, 0.85f, 0.95f), 1.55f);
+            CreateWorldLabel(npc.transform, Localization.Tr("world.smith_label"), new Color(0.8f, 0.85f, 0.95f), 2.45f);
             return blacksmith;
         }
 
         private static StorageNpc CreateStorageNpc(GameObject player)
         {
-            var npc = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var npc = new GameObject("Almacen del Campamento");
             npc.name = "Almacen del Campamento";
-            npc.transform.position = new Vector3(0.4f, 0.7f, -4.8f);
-            npc.transform.localScale = new Vector3(1.2f, 1.4f, 1.2f);
-
-            var material = VisualMaterialUtility.Create(new Color(0.55f, 0.42f, 0.22f), false, 0.08f, 0.24f);
-            npc.GetComponent<Renderer>().sharedMaterial = material;
+            npc.transform.position = new Vector3(0.4f, 0f, -4.8f);
+            NpcVisualFactory.BuildStorageKeeper(npc.transform);
 
             var storageService = player.GetComponent<StorageService>();
             var storage = npc.AddComponent<StorageNpc>();
             storage.Player = player.transform;
             storage.Storage = storageService;
 
-            CreateWorldLabel(npc.transform, Localization.Tr("world.storage_label"), new Color(0.95f, 0.85f, 0.6f), 1.35f);
+            CreateWorldLabel(npc.transform, Localization.Tr("world.storage_label"), new Color(0.95f, 0.85f, 0.6f), 2.45f);
             return storage;
         }
 
