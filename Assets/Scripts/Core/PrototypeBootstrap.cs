@@ -185,12 +185,11 @@ namespace MmorpgPrototype
 
             for (var i = 0; i < 16; i++)
             {
-                var marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                marker.name = "Field Stone";
-                marker.transform.position = new Vector3(Random.Range(-28f, 28f), 0.18f, Random.Range(-28f, 28f));
-                marker.transform.localScale = new Vector3(Random.Range(0.7f, 1.6f), 0.35f, Random.Range(0.7f, 1.6f));
-
                 var stoneMaterial = VisualMaterialUtility.Create(new Color(0.28f, 0.28f, 0.3f), false, 0.08f, 0.28f);
+                var stonePosition = new Vector3(Random.Range(-28f, 28f), 0.18f, Random.Range(-28f, 28f));
+                var stoneSize = new Vector3(Random.Range(0.7f, 1.6f), Random.Range(0.24f, 0.42f), Random.Range(0.7f, 1.6f));
+                var marker = RuntimeArtMeshFactory.CreateEllipsoid(null, "Field Stone", stonePosition, stoneSize, new Color(0.28f, 0.28f, 0.3f), 7, 3, false, 0.08f, 0.28f);
+                marker.transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), Random.Range(-8f, 8f));
                 marker.GetComponent<Renderer>().sharedMaterial = stoneMaterial;
             }
         }

@@ -155,10 +155,18 @@ namespace MmorpgPrototype
             }
 
             var center = zone.SafeZoneCenter + Vector3.up * 0.035f;
-            var markerColor = new Color(0.16f, 0.72f, 0.48f);
-            CreatePart(parent, "Safe Commerce Zone", PrimitiveType.Cylinder, center, new Vector3(zone.SafeZoneRadius * 2f, 0.018f, zone.SafeZoneRadius * 2f), Color.Lerp(zone.GroundColor, markerColor, 0.42f));
-            CreatePart(parent, "Safe Zone Marker L", PrimitiveType.Cube, center + new Vector3(-zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
-            CreatePart(parent, "Safe Zone Marker R", PrimitiveType.Cube, center + new Vector3(zone.SafeZoneRadius, 0.6f, 0f), new Vector3(0.18f, 1.2f, 0.18f), markerColor);
+            var markerColor = new Color(0.18f, 0.72f, 0.5f);
+            var ringColor = Color.Lerp(zone.GroundColor, markerColor, 0.58f);
+            CreateRing(parent, "Safe Commerce Zone Ring", center, zone.SafeZoneRadius - 0.18f, zone.SafeZoneRadius, 0.035f, ringColor);
+
+            var postRadius = zone.SafeZoneRadius * 0.82f;
+            for (var i = 0; i < 4; i++)
+            {
+                var angle = i * 90f * Mathf.Deg2Rad;
+                var postPosition = center + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * postRadius;
+                CreateCone(parent, "Safe Zone Waystone", postPosition, 0.16f, 0.06f, 0.85f, Color.Lerp(markerColor, Color.black, 0.18f), 6, 18f);
+                CreatePart(parent, "Safe Zone Waystone Light", PrimitiveType.Sphere, postPosition + Vector3.up * 0.98f, new Vector3(0.18f, 0.18f, 0.18f), markerColor);
+            }
             CreatePointOfInterest(parent, "Safe Commerce Zone", zone.SafeZoneCenter, Localization.Tr("poi.safe", zone.DisplayName), ZonePointOfInterestType.SafeCommerce, RewardFor(zone, ZonePointOfInterestType.SafeCommerce), ClaimIdFor(zone, ZonePointOfInterestType.SafeCommerce));
         }
 
@@ -170,18 +178,18 @@ namespace MmorpgPrototype
             }
 
             var center = new Vector3(zone.NormalAreaCenter.x, 0.028f, zone.NormalAreaCenter.z);
-            var areaColor = new Color(0.72f, 0.22f, 0.16f, 0.9f);
-            CreatePart(parent, "Combat Area Marker", PrimitiveType.Cylinder, center,
-                new Vector3(zone.NormalAreaRadius * 2f, 0.012f, zone.NormalAreaRadius * 2f),
-                Color.Lerp(zone.GroundColor, areaColor, 0.2f));
+            var areaColor = new Color(0.72f, 0.28f, 0.18f);
+            CreateRing(parent, "Combat Area Boundary", center, zone.NormalAreaRadius - 0.14f, zone.NormalAreaRadius + 0.06f, 0.04f,
+                Color.Lerp(zone.GroundColor, areaColor, 0.6f));
 
             var markerRadius = zone.NormalAreaRadius + 0.7f;
             for (var i = 0; i < 4; i++)
             {
                 var angle = i * 90f * Mathf.Deg2Rad;
                 var markerPosition = center + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * markerRadius;
-                CreatePart(parent, "Combat Area Marker Post", PrimitiveType.Cube,
-                    markerPosition + Vector3.up * 0.45f, new Vector3(0.16f, 0.9f, 0.16f), areaColor);
+                CreateCone(parent, "Combat Area Marker Post", markerPosition, 0.15f, 0.04f, 0.78f, Color.Lerp(areaColor, Color.black, 0.18f), 6, 18f);
+                CreatePart(parent, "Combat Area Marker Cloth", PrimitiveType.Cube, markerPosition + Vector3.up * 0.74f,
+                    new Vector3(0.42f, 0.24f, 0.04f), areaColor, Quaternion.Euler(0f, i * 90f, 0f));
             }
         }
 
@@ -196,11 +204,18 @@ namespace MmorpgPrototype
                 var radius = 5f + (float)random.NextDouble() * 20f;
                 var position = center + new Vector3(Mathf.Cos(angle) * radius, 0.025f, Mathf.Sin(angle) * radius);
                 var size = 0.45f + (float)random.NextDouble() * 0.45f;
-                CreatePart(parent, "Zone Accent Rune", PrimitiveType.Cylinder, position, new Vector3(size, 0.025f, size), Color.Lerp(zone.GroundColor, accent, 0.6f), Quaternion.Euler(0f, i * 21f, 0f));
+                if ((zone.ZoneId ?? string.Empty).ToLowerInvariant().Contains("valley"))
+                {
+                    CreateRing(parent, "Zone Accent Rune", position, size * 0.28f, size * 0.5f, 0.025f, Color.Lerp(zone.GroundColor, accent, 0.62f), 7);
+                }
+                else
+                {
+                    CreatePart(parent, "Zone Accent Rune", PrimitiveType.Cylinder, position, new Vector3(size, 0.025f, size), Color.Lerp(zone.GroundColor, accent, 0.6f), Quaternion.Euler(0f, i * 21f, 0f));
+                }
 
                 if (i % 2 == 0)
                 {
-                    CreatePart(parent, "Zone Accent Shard", PrimitiveType.Cube, position + Vector3.up * 0.22f, new Vector3(0.08f, 0.42f, 0.08f), accent, Quaternion.Euler(0f, i * 33f, 24f));
+                    CreateCone(parent, "Zone Accent Shard", position + Vector3.up * 0.03f, 0.08f, 0.015f, 0.42f, accent, 6, i * 33f);
                 }
             }
         }
@@ -327,16 +342,18 @@ namespace MmorpgPrototype
             for (var i = 0; i < positions.Length; i++)
             {
                 var stall = positions[i];
-                CreatePart(parent, "Camp Stall Counter", PrimitiveType.Cube, stall + new Vector3(0f, 0.72f, 0f), new Vector3(2.6f, 1.1f, 0.76f), wood);
-                CreatePart(parent, "Camp Stall Roof", PrimitiveType.Cube, stall + new Vector3(0f, 2.25f, 0f), new Vector3(3.4f, 0.18f, 2.2f), cloth, Quaternion.Euler(0f, i == 0 ? 9f : -9f, 0f));
-                CreatePart(parent, "Camp Stall Post L", PrimitiveType.Cylinder, stall + new Vector3(-1.35f, 1.15f, 0.72f), new Vector3(0.13f, 1.15f, 0.13f), wood);
-                CreatePart(parent, "Camp Stall Post R", PrimitiveType.Cylinder, stall + new Vector3(1.35f, 1.15f, 0.72f), new Vector3(0.13f, 1.15f, 0.13f), wood);
-                CreatePart(parent, "Camp Crate", PrimitiveType.Cube, stall + new Vector3(i == 0 ? -1.7f : 1.7f, 0.38f, -0.56f), new Vector3(0.72f, 0.72f, 0.72f), Color.Lerp(wood, Color.white, 0.08f));
+                CreatePart(parent, "Camp Stall Counter", PrimitiveType.Cube, stall + new Vector3(0f, 0.62f, 0f), new Vector3(2.35f, 0.72f, 0.7f), wood);
+                CreateCone(parent, "Camp Stall Awning", stall + Vector3.up * 1.55f, 1.62f, 0.08f, 0.82f, cloth, 6, i == 0 ? 30f : -30f);
+                CreateCone(parent, "Camp Stall Post L", stall + new Vector3(-1.18f, 0f, 0.56f), 0.1f, 0.055f, 1.65f, wood, 6, 12f);
+                CreateCone(parent, "Camp Stall Post R", stall + new Vector3(1.18f, 0f, 0.56f), 0.1f, 0.055f, 1.65f, wood, 6, 12f);
+                CreatePart(parent, "Camp Stall Banner", PrimitiveType.Cube, stall + new Vector3(0f, 1.72f, 0.84f), new Vector3(0.66f, 0.62f, 0.035f), Color.Lerp(cloth, Color.white, 0.12f), Quaternion.Euler(0f, 0f, i == 0 ? 3f : -3f));
+                CreatePart(parent, "Camp Crate", PrimitiveType.Cube, stall + new Vector3(i == 0 ? -1.55f : 1.55f, 0.32f, -0.54f), new Vector3(0.58f, 0.58f, 0.58f), Color.Lerp(wood, Color.white, 0.08f), Quaternion.Euler(0f, i * 17f, 0f));
             }
 
-            CreatePart(parent, "Camp Fire Ring", PrimitiveType.Cylinder, center + new Vector3(0f, 0.06f, -2.6f), new Vector3(2.4f, 0.1f, 2.4f), stone);
-            CreatePart(parent, "Camp Fire", PrimitiveType.Sphere, center + new Vector3(0f, 0.58f, -2.6f), new Vector3(0.65f, 1.12f, 0.65f), new Color(1f, 0.3f, 0.05f));
-            CreatePart(parent, "Camp Fire Core", PrimitiveType.Sphere, center + new Vector3(0f, 0.7f, -2.6f), new Vector3(0.32f, 0.62f, 0.32f), new Color(1f, 0.82f, 0.22f));
+            var firePosition = center + new Vector3(0f, 0.04f, -2.6f);
+            CreateRing(parent, "Camp Fire Ring", firePosition, 0.86f, 1.2f, 0.16f, stone, 8);
+            CreateCone(parent, "Camp Fire", firePosition, 0.46f, 0.08f, 1.18f, new Color(1f, 0.25f, 0.04f), 7, 15f);
+            CreateCone(parent, "Camp Fire Core", firePosition + Vector3.up * 0.08f, 0.24f, 0.02f, 0.76f, new Color(1f, 0.82f, 0.18f), 6, 0f);
         }
 
         private static Color AccentFor(ZoneDefinition zone)
@@ -438,14 +455,13 @@ namespace MmorpgPrototype
 
         private static void BuildTree(Transform parent, Vector3 position, Color groundColor, bool flowering)
         {
-            var trunk = CreatePart(parent, "Tree Trunk", PrimitiveType.Cylinder, position + Vector3.up * 1.1f, new Vector3(0.32f, 1.1f, 0.32f), Color.Lerp(groundColor, new Color(0.25f, 0.12f, 0.06f), 0.65f));
-            trunk.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-            var canopyColor = Color.Lerp(groundColor, new Color(0.14f, 0.5f, 0.2f), 0.58f);
-            CreatePart(parent, "Tree Canopy", PrimitiveType.Sphere, position + Vector3.up * 2.45f, new Vector3(1.35f, 1.15f, 1.35f), canopyColor);
+            var foliage = Color.Lerp(groundColor, new Color(0.05f, 0.24f, 0.14f), 0.62f);
+            var bark = Color.Lerp(groundColor, new Color(0.22f, 0.1f, 0.045f), 0.72f);
+            BuildValleyPine(parent, position, 0.72f + (flowering ? 0.12f : 0f), foliage, bark, flowering);
 
             if (flowering)
             {
-                CreatePart(parent, "Tree Flower", PrimitiveType.Sphere, position + Vector3.up * 2.72f + Vector3.forward * 0.58f, new Vector3(0.22f, 0.22f, 0.22f), new Color(0.92f, 0.55f, 0.2f));
+                CreatePart(parent, "Tree Spirit Bloom", PrimitiveType.Sphere, position + Vector3.up * 2.15f + Vector3.forward * 0.28f, new Vector3(0.16f, 0.16f, 0.16f), new Color(0.92f, 0.55f, 0.2f));
             }
         }
 
@@ -555,6 +571,84 @@ namespace MmorpgPrototype
                 color,
                 VisualMaterialUtility.ShouldGlow(name),
                 color.r < 0.35f ? 0.08f : 0.02f,
+                0.28f);
+            return part;
+        }
+
+        private static GameObject CreateRing(Transform parent, string name, Vector3 position, float innerRadius, float outerRadius, float height, Color color, int sides = 48)
+        {
+            sides = Mathf.Clamp(sides, 8, 64);
+            innerRadius = Mathf.Max(0.02f, innerRadius);
+            outerRadius = Mathf.Max(innerRadius + 0.01f, outerRadius);
+            height = Mathf.Max(0.008f, height);
+
+            var mesh = new Mesh { name = $"{name} Mesh" };
+            var vertices = new Vector3[sides * 4];
+            var triangles = new int[sides * 24];
+            for (var i = 0; i < sides; i++)
+            {
+                var angle = Mathf.PI * 2f * i / sides;
+                var direction = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                vertices[i] = direction * outerRadius;
+                vertices[sides + i] = direction * innerRadius;
+                vertices[sides * 2 + i] = direction * outerRadius + Vector3.down * height;
+                vertices[sides * 3 + i] = direction * innerRadius + Vector3.down * height;
+            }
+
+            var triangleIndex = 0;
+            for (var i = 0; i < sides; i++)
+            {
+                var next = (i + 1) % sides;
+                var outer = i;
+                var inner = sides + i;
+                var outerNext = next;
+                var innerNext = sides + next;
+                triangles[triangleIndex++] = outer;
+                triangles[triangleIndex++] = inner;
+                triangles[triangleIndex++] = outerNext;
+                triangles[triangleIndex++] = outerNext;
+                triangles[triangleIndex++] = inner;
+                triangles[triangleIndex++] = innerNext;
+
+                var bottomOuter = sides * 2 + i;
+                var bottomInner = sides * 3 + i;
+                var bottomOuterNext = sides * 2 + next;
+                var bottomInnerNext = sides * 3 + next;
+                triangles[triangleIndex++] = bottomOuter;
+                triangles[triangleIndex++] = bottomOuterNext;
+                triangles[triangleIndex++] = bottomInner;
+                triangles[triangleIndex++] = bottomOuterNext;
+                triangles[triangleIndex++] = bottomInnerNext;
+                triangles[triangleIndex++] = bottomInner;
+
+                triangles[triangleIndex++] = outer;
+                triangles[triangleIndex++] = outerNext;
+                triangles[triangleIndex++] = bottomOuter;
+                triangles[triangleIndex++] = outerNext;
+                triangles[triangleIndex++] = bottomOuterNext;
+                triangles[triangleIndex++] = bottomOuter;
+
+                triangles[triangleIndex++] = inner;
+                triangles[triangleIndex++] = bottomInner;
+                triangles[triangleIndex++] = innerNext;
+                triangles[triangleIndex++] = innerNext;
+                triangles[triangleIndex++] = bottomInner;
+                triangles[triangleIndex++] = bottomInnerNext;
+            }
+
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            var part = new GameObject(name);
+            part.transform.SetParent(parent, true);
+            part.transform.position = position;
+            part.AddComponent<MeshFilter>().sharedMesh = mesh;
+            part.AddComponent<MeshRenderer>().sharedMaterial = VisualMaterialUtility.Create(
+                color,
+                VisualMaterialUtility.ShouldGlow(name),
+                0.04f,
                 0.28f);
             return part;
         }

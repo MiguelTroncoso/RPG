@@ -6,14 +6,14 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-18
 
-- Avance global estimado hacia el MMORPG publicable: **64%**.
+- Avance global estimado hacia el MMORPG publicable: **65%**.
 - Prototipo jugable offline: **100%**.
-- Vertical slice de una zona pulida: **62%**.
+- Vertical slice de una zona pulida: **68%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte authored integrado como base tecnica: **62%**.
+- Arte authored integrado como base tecnica: **64%**.
 - Arte manual comercial, online y lanzamiento: **18%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
@@ -408,19 +408,41 @@ despues se replica el pipeline a las nueve zonas restantes.
   la presentacion visual y la posicion de la etiqueta para que acompañe al
   nuevo cuerpo.
 
+## Fase 6.03: Vertical Slice Visual De Zona 1
+
+- Se reemplazan los arboles de esfera por coniferas ligeras de silueta escalonada,
+  con tronco, tres copas y punta espiritual opcional para que la vegetacion tenga
+  lectura de bosque fantastico desde la camara de juego.
+- Las rocas del campo base dejan de ser cubos flotantes y pasan a ser elipsoides
+  low-poly irregulares, sin collider extra, reduciendo la apariencia de bloque y
+  manteniendo el coste adecuado para Android.
+- La zona segura y el area de combate ya no usan discos de color solido: ahora
+  tienen anillos geometricos, waystones, banderas y una lectura mas discreta que
+  no invade el espacio jugable.
+- El campamento de comercio recibe toldos volumetricos, postes afilados, banderas,
+  cajas rotadas y una fogata con llama por capas; conserva la regla de que no
+  aparecen mobs dentro de la zona segura.
+- Los acentos de suelo de la Zona 1 pasan a usar anillos y fragmentos estrechos,
+  y se conserva la navegacion, los POI, los spawns y las colisiones existentes.
+- Es una mejora real de la presentacion de la vertical slice, no un reclamo de
+  arte comercial final: los personajes y mobs todavia usan la base KayKit/Quaternius
+  mientras se prepara la produccion externa de FBX skinned high-poly.
+
 ## Validacion De Este Corte
 
 - Auditoria funcional 1-105: 17/17 checks sin errores.
-- APK: `Builds/Android/valle-reliquias-debug.apk`, 46 MB, target SDK 35.
-- SHA-256: `0fec313ccb214bcf0f8820854c0e8ab04c180970d4163b82a9d2bca4b1d58459`.
+- APK: `Builds/Android/valle-reliquias-debug.apk`, 49.9 MB, target SDK 35.
+- SHA-256: `4f87a2139c8fd8671408ffe8add05b021b8ba0cb4164307682f6e6b34a1c91d5`.
+- Compilacion Unity batch completada sin errores de C# ni fallos de build.
 - Falta la comprobacion visual en un Android real: probar las cuatro clases,
-  acercarse a los tres NPC y revisar que el kit no atraviese el cuerpo durante
-  idle, carrera y ataque.
+  recorrer el campamento, entrar al area de combate y revisar que los anillos,
+  banderas y coniferas no oculten al personaje durante idle, carrera y ataque.
 
 ## Prioridad Recomendada
 
-1. Generar la APK nueva desde `MMORPG > Android > Build Debug APK` y confirmar
-   que el menu abre sin errores de compilación.
+1. Instalar la APK nueva desde `Builds/Android/valle-reliquias-debug.apk` y
+   confirmar visualmente el campamento, las coniferas, las rocas y los limites
+   de combate en Android.
 2. Generar `MMORPG > QA > Generate Content Completeness Report` y exigir los
    17/17 checks, incluyendo 8 personajes y 30 mobs authored.
 3. Probar joystick + ataque + camara + habilidades simultaneamente y recorrer
@@ -478,6 +500,8 @@ despues se replica el pipeline a las nueve zonas restantes.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 6.03 | Vertical slice visual de Zona 1: coniferas low-poly, rocas redondeadas, anillos de zonas, campamento con toldos y fogata propia; APK Android generada y auditoria 17/17 | 65% |
+| 2026-07-18 | 6.02 | Correccion de regresion visual: KayKit/Quaternius legibles, materiales originales, sin cubos importados ni kits duplicados | 64% |
 | 2026-07-18 | 5.99 | Auditoria 17/17 con 8 FBX y 8 controllers de personajes, 30 FBX y 30 controllers de mobs; APK limpia generada, instalacion y QA Android pendientes | 62% beta offline |
 | 2026-07-18 | 5.98 | FBX skinned authored primarios: 8 personajes, 30 mobs/jefes, controllers de cinco clips y LODGroup de mobs; validacion Unity/Android pendiente | 61% beta offline |
 | 2026-07-18 | 5.97 | Siluetas authored de las cuatro clases y lobos/guardian de reliquia en Zona 1; validacion Unity/Android pendiente | 60% beta offline |
