@@ -353,13 +353,30 @@ despues se replica el pipeline a las nueve zonas restantes.
   manual high-poly, retopologia artística y animaciones profesionales siguen
   siendo el siguiente salto comercial.
 
+## Fase 5.99: Gate De Validacion Authored Y Hotfix De Compilacion
+
+- La auditoria de recursos visuales ahora exige los ocho FBX y ocho controllers
+  de personajes, además de los 30 FBX y 30 controllers de mobs por zona/tier.
+  Ya no basta con que existan únicamente los assets fallback de KayKit o
+  Quaternius.
+- Se corrigió el warning de API obsoleta de `ZonePointOfInterest` y el error de
+  compilación del selector de servidor causado por la inicialización tardía de
+  `selectedServerText`. El Asset Pipeline de Unity volvió a completar la
+  compilación sin errores nuevos.
+- La APK disponible antes de este corte sigue siendo anterior a la activación
+  primaria de FBX. La validación visual y de rendimiento en Android queda
+  pendiente de generar una APK nueva desde Unity y recorrer las diez zonas.
+
 ## Prioridad Recomendada
 
-1. Reinstalar la APK 5.83-5.84 y validar HUD, tarjetas, nodos de habilidades
-   y chat colapsado en Android.
-2. Probar joystick + ataque + camara + habilidades simultaneamente.
-3. Exportar QA en ambos perfiles y recorrer las diez zonas.
-4. Superar `docs/offline-beta-qa.md`; despues preparar S-01 privado en
+1. Generar la APK nueva desde `MMORPG > Android > Build Debug APK` y confirmar
+   que el menu abre sin errores de compilación.
+2. Generar `MMORPG > QA > Generate Content Completeness Report` y exigir los
+   17/17 checks, incluyendo 8 personajes y 30 mobs authored.
+3. Probar joystick + ataque + camara + habilidades simultaneamente y recorrer
+   las diez zonas en Android.
+4. Exportar QA en los perfiles Calidad y Rendimiento y superar
+   `docs/offline-beta-qa.md`; despues preparar S-01 privado en
    OVHcloud Hillsboro o Hetzner tras comparar latencia real desde Chile, antes
    de convertir recompensas, inventario y compras en autoridad online.
 5. Validar la nueva silueta authored de Zona 1 en Unity y Android; despues

@@ -23,7 +23,7 @@ namespace MmorpgPrototype
 
         public static void InteractNearest(Transform actor)
         {
-            var hud = FindFirstObjectByType<PrototypeHud>();
+            var hud = FindAnyObjectByType<PrototypeHud>();
             if (actor == null)
             {
                 hud?.SetStatus(Localization.Tr("poi.no_target"));

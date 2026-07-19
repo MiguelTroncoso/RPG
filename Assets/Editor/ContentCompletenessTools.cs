@@ -276,6 +276,18 @@ namespace MmorpgPrototype.Editor
             var authoredMobModels = new[] { "valley", "forest", "ash", "crystal", "frost", "sunken", "obsidian", "astral", "eclipse", "throne" }
                 .SelectMany(zone => new[] { "normal", "elite", "boss" }.Select(tier => $"Assets/Resources/OriginalArt/Mobs/{zone}_{tier}.fbx"))
                 .Count(AssetExists);
+            var authoredCharacterModels = new[] { "Guerrero", "Ninja", "Chaman", "Umbra" }
+                .SelectMany(className => new[] { "Masculino", "Femenino" }
+                    .Select(gender => $"Assets/Resources/OriginalArt/Characters/{className}_{gender}.fbx"))
+                .Count(AssetExists);
+            var authoredCharacterControllers = new[] { "Guerrero", "Ninja", "Chaman", "Umbra" }
+                .SelectMany(className => new[] { "Masculino", "Femenino" }
+                    .Select(gender => $"Assets/Resources/OriginalArt/Controllers/{className}_{gender}.controller"))
+                .Count(AssetExists);
+            var authoredMobControllers = new[] { "valley", "forest", "ash", "crystal", "frost", "sunken", "obsidian", "astral", "eclipse", "throne" }
+                .SelectMany(zone => new[] { "normal", "elite", "boss" }
+                    .Select(tier => $"Assets/Resources/OriginalArt/Mobs/Controllers/{zone}_{tier}.controller"))
+                .Count(AssetExists);
             var classResources = new[]
             {
                 "Assets/Resources/ThirdParty/KayKit/Adventurers/Characters/Knight.fbx",
@@ -295,8 +307,12 @@ namespace MmorpgPrototype.Editor
                 $"{monsterResources}/{monsterModels.Length} modelos base y {authoredMobModels}/30 authored por zona/tier"));
             checks.Add(new CheckResult(
                 "Personajes 3D y animacion",
-                classResourceCount == classResources.Length && controllerCount == 4,
-                $"{classResourceCount}/{classResources.Length} modelos de clase y {controllerCount}/4 controladores"));
+                classResourceCount == classResources.Length
+                    && controllerCount == 4
+                    && authoredCharacterModels == 8
+                    && authoredCharacterControllers == 8
+                    && authoredMobControllers == 30,
+                $"{authoredCharacterModels}/8 FBX de personaje, {authoredCharacterControllers}/8 controllers de personaje y {authoredMobControllers}/30 controllers de mobs"));
         }
 
         private static void AuditDailyEvent(List<CheckResult> checks)

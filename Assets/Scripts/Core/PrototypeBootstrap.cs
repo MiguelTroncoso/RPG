@@ -2040,7 +2040,10 @@ namespace MmorpgPrototype
             serverLabel.color = new Color(0.48f, 0.9f, 0.84f);
             SetRect(serverLabel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(500f, 24f), new Vector2(0f, 101f));
 
-            Text selectedServerText = null;
+            var selectedServerText = CreateText(loginView.transform, "Selected Server", string.Empty, 14, TextAnchor.MiddleCenter);
+            selectedServerText.color = new Color(0.76f, 0.84f, 0.91f);
+            SetRect(selectedServerText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(500f, 24f), new Vector2(0f, 18f));
+
             var serverButtons = new Button[serverProfiles.Length];
             for (var i = 0; i < serverProfiles.Length; i++)
             {
@@ -2057,10 +2060,6 @@ namespace MmorpgPrototype
                 });
                 serverButtons[i] = serverButton;
             }
-
-            selectedServerText = CreateText(loginView.transform, "Selected Server", string.Empty, 14, TextAnchor.MiddleCenter);
-            selectedServerText.color = new Color(0.76f, 0.84f, 0.91f);
-            SetRect(selectedServerText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(500f, 24f), new Vector2(0f, 18f));
 
             var serverRule = CreatePanel(loginView.transform, "Server Rule", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(470f, 2f), new Vector2(0f, -4f), new Color(0.28f, 0.62f, 0.66f, 0.52f));
             serverRule.raycastTarget = false;
