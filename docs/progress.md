@@ -4,22 +4,41 @@ Este porcentaje es una estimacion de producto, no un conteo de scripts. Un
 MMORPG completo tambien necesita arte final, contenido, servidores, pruebas,
 economia, seguridad, operacion y publicacion.
 
-## Corte Diario: 2026-07-18
+## Corte Diario: 2026-07-19
 
-- Avance global estimado hacia el MMORPG publicable: **65%**.
+- Avance global estimado hacia el MMORPG publicable: **58%**.
 - Prototipo jugable offline: **100%**.
-- Vertical slice de una zona pulida: **68%**.
+- Vertical slice de una zona pulida: **45%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
 - Arte authored integrado como base tecnica: **64%**.
-- Arte manual comercial, online y lanzamiento: **18%**.
+- Arte manual comercial: **0% de lotes aprobados**. Hay pipeline y prototipos
+  tecnicos, pero ningun personaje, NPC o mob cumple todavia el contrato de
+  produccion final.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
 operacion real. La referencia principal es la vertical slice: una zona con
 personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
+
+## Fase 6.04: Produccion artistica real y auditoria honesta
+
+- Se separa formalmente el arte tecnico procedural de la produccion comercial.
+  Los 8 personajes y 30 mobs existentes ya no se presentan como modelos
+  finales; sirven para validar rig, LOD, importacion y gameplay.
+- Se agrega `Tools/blender/validate_production_fbx.py`, que valida skinning,
+  UV, LOD0/1/2, clips, PBR, texturas autocontenidas, meshes semanticos y
+  procedencia de artista/licencia mediante sidecar `.production.json`.
+- Se agrega `docs/final-art-production.md` con el contrato de salida, el lote
+  inicial de Zona 1 y el orden para replicar el lenguaje visual a las diez
+  zonas.
+- `docs/production-art-audit.md` sera la fuente de verdad para aprobar cada
+  FBX. Hasta contar con una fuente externa comercial o un artista 3D, el
+  resultado correcto es `0/8` personajes y `0/30` mobs aprobados.
+- El runtime conserva la presentacion estable anterior y no activa los FBX
+  tecnicos solo para aparentar una mejora visual.
 
 ## Hecho En Este Corte
 

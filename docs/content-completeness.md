@@ -1,6 +1,6 @@
 # Auditoria de contenido 1-105
 
-> Generado por `MMORPG > QA > Generate Content Completeness Report` el 2026-07-18 23:38.
+> Generado por `MMORPG > QA > Generate Content Completeness Report` el 2026-07-19 09:36.
 
 ## Estado
 
@@ -19,8 +19,8 @@
 | PASS | Materiales, equipo y reliquias | 162 items: 10 bandas x 2 materiales x 12 piezas + reliquia, mas set inicial |
 | PASS | Loot por zona y tier | 30 tablas runtime, equipo en elite/jefe y reliquia garantizada por jefe |
 | PASS | Clases, sexo y habilidades | 4 clases, modelo masculino/femenino y 4 habilidades mas final por clase |
-| PASS | Mobs 3D y variantes de zona | 15/15 modelos base y 30/30 authored por zona/tier |
-| PASS | Personajes 3D y animacion | 8/8 FBX de personaje, 8/8 controllers de personaje y 30/30 controllers de mobs |
+| PASS | Mobs 3D y variantes de zona | 15/15 modelos base y 30/30 FBX tecnicos por zona/tier; no equivale a arte comercial final |
+| PASS | Personajes 3D y animacion | 8/8 FBX tecnicos, 8/8 controllers de personaje y 30/30 controllers de mobs; revisar auditoria de arte comercial |
 | PASS | Eventos diarios | Evento daily_relic_hunt, objetivo 5 derrotas |
 | PASS | Calendario diario y jefe mundial | 7 actividades rotativas y jefe mundial diario con horario UTC variable |
 | PASS | Eventos de clan y todos contra todos | Contribucion de clan y contrato PvP listos para autoridad de servidor |

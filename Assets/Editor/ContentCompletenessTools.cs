@@ -304,7 +304,7 @@ namespace MmorpgPrototype.Editor
             checks.Add(new CheckResult(
                 "Mobs 3D y variantes de zona",
                 monsterResources == monsterModels.Length && authoredMobModels == 30,
-                $"{monsterResources}/{monsterModels.Length} modelos base y {authoredMobModels}/30 authored por zona/tier"));
+                $"{monsterResources}/{monsterModels.Length} modelos base y {authoredMobModels}/30 FBX tecnicos por zona/tier; no equivale a arte comercial final"));
             checks.Add(new CheckResult(
                 "Personajes 3D y animacion",
                 classResourceCount == classResources.Length
@@ -312,7 +312,7 @@ namespace MmorpgPrototype.Editor
                     && authoredCharacterModels == 8
                     && authoredCharacterControllers == 8
                     && authoredMobControllers == 30,
-                $"{authoredCharacterModels}/8 FBX de personaje, {authoredCharacterControllers}/8 controllers de personaje y {authoredMobControllers}/30 controllers de mobs"));
+                $"{authoredCharacterModels}/8 FBX tecnicos, {authoredCharacterControllers}/8 controllers de personaje y {authoredMobControllers}/30 controllers de mobs; revisar auditoria de arte comercial"));
         }
 
         private static void AuditDailyEvent(List<CheckResult> checks)
