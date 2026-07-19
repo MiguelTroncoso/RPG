@@ -22,6 +22,12 @@ namespace MmorpgPrototype
 
         private void Build()
         {
+            if (IsoPrototypeRuntime.Enabled)
+            {
+                gameObject.AddComponent<IsoPrototypeRuntime>().Build();
+                return;
+            }
+
             Localization.Initialize(Resources.Load<LocalizationTable>("Game/LocalizationTable"));
             ConfigureRuntime();
             EnsureEventSystem();

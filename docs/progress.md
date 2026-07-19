@@ -55,6 +55,24 @@ personajes, mobs y HUD suficientemente pulidos para ensenar el juego.
   jefe de mobs, con el mismo criterio de materiales y licencia.
 - Arte comercial manual: **0% aprobado** hasta recibir y auditar el paquete.
 
+## Fase 6.06: Pivot 2D Isometrico Gratuito
+
+- Se decide abandonar la compra de un paquete 3D como requisito de la beta y
+  adoptar una presentacion 2D isometrica/pixel coherente con MMORPG clasico.
+- Se agrega `IsoPrototypeRuntime` con camara ortografica, tablero de Zona 1,
+  campamento seguro, NPC, minimapa, joystick, toque para moverse, ataque,
+  regeneracion progresiva y feed de actividad.
+- El avatar y tres criaturas de Zona 1 usan sprites CC0 de Puny Characters,
+  con frames importados y animados en runtime. Los guardianes siguen siendo
+  placeholders visuales para no fingir que el contenido final ya existe.
+- Se incorpora localmente la familia CC0 de Puny Characters que usa el corte;
+  Kenney Isometric City queda documentado como fuente futura y no se empaqueta
+  hasta que exista una zona comercial que lo utilice.
+- El 3D anterior no se borra: queda como respaldo de sistemas y comparacion.
+  El nuevo corte 2D aun no esta conectado a toda la economia, inventario y
+  autoridad de red.
+- Compilacion Unity batch: correcta, sin errores C#.
+
 ## Hecho En Este Corte
 
 - Fase 5.42: entrada multitactil estable para mover y atacar en Android.
@@ -471,6 +489,8 @@ despues se replica el pipeline a las nueve zonas restantes.
 - Falta la comprobacion visual en un Android real: probar las cuatro clases,
   recorrer el campamento, entrar al area de combate y revisar que los anillos,
   banderas y coniferas no oculten al personaje durante idle, carrera y ataque.
+- El corte 2D debe probarse por separado: la compilacion confirma el codigo,
+  pero la escala y legibilidad de los sprites deben validarse en el dispositivo.
 
 ## Prioridad Recomendada
 
@@ -494,46 +514,49 @@ despues se replica el pipeline a las nueve zonas restantes.
 
 ## Siguiente Corte
 
-1. Reinstalar el APK y probar durante varios minutos joystick + ataque + giro de
+1. Verificar el vertical slice 2D en Unity y generar una APK especifica antes
+   de comparar rendimiento con la ruta 3D.
+2. Reinstalar el APK y probar durante varios minutos joystick + ataque + giro de
    camara, especialmente atravesando grupos de mobs.
-2. Confirmar que el campamento de la Zona 1 no contiene mobs y que la transicion
+3. Confirmar que el campamento de la Zona 1 no contiene mobs y que la transicion
    al campo de combate se entiende visualmente.
-3. Abrir TEST y pulsar `EXPORTAR QA` en cada perfil y recorrido de zona; seguir
+4. Abrir TEST y pulsar `EXPORTAR QA` en cada perfil y recorrido de zona; seguir
    la matriz de `docs/android-qa.md`.
-4. Ajustar cantidad de mobs, VFX, decoracion, TTK y radio del minimapa con datos
+5. Ajustar cantidad de mobs, VFX, decoracion, TTK y radio del minimapa con datos
    del telefono real.
-5. Completar la vertical slice nivel 1-10 con modelos propios de elite/jefe,
+6. Completar la vertical slice 2D nivel 1-10 con tiles, elite/jefe,
    recompensas calibradas y una interfaz de inventario/tienda mas clara.
-6. Probar desbloqueo y mejora de habilidades en Android, incluyendo nivel 8/20,
+7. Probar desbloqueo y mejora de habilidades en Android, incluyendo nivel 8/20,
    nivel 50, consumo de manuales, persistencia y lectura del boton G.
-7. Revisar las diez zonas en una sesion de recorrido, validando landmark, mobs
+8. Revisar las diez zonas en una sesion de recorrido, validando landmark, mobs
    3D, TTK, minimapa y lectura de los nuevos accesorios.
-8. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
+9. Levantar S-01 en LAN, probar dos telefonos y despues preparar endpoint publico
    con firewall, TLS/WSS y persistencia protegida.
-9. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
+10. Mover combate, recompensas, inventario, propiedad y compras a autoridad del
    servidor antes de una prueba publica.
-10. Validar en un telefono real las nuevas reacciones `Hit`/`Death`, el peso de
+11. Validar en un telefono real las nuevas reacciones `Hit`/`Death`, el peso de
     los cinco clips y la lectura de Guerrero/Ninja a distancia.
-11. Prioridad de lanzamiento: levantar S-01 en Hetzner con firewall, TLS/WSS,
+12. Prioridad de lanzamiento: levantar S-01 en Hetzner con firewall, TLS/WSS,
     persistencia protegida, backups y dos clientes Android antes de publicar.
-12. Sustituir por encargo artistico las siluetas authored y los modelos base de
+13. Sustituir por produccion 2D propia las siluetas authored y los modelos base de
     mobs/jefes por esculturas high-poly manuales, retopologia, UV, atlas 2K y
     animaciones profesionales cuando el presupuesto de arte este aprobado.
-13. Aplicar esa sustitucion por lotes: Zona 1 primero, luego zonas 2-4 y por
+14. Aplicar esa sustitucion por lotes: Zona 1 primero, luego zonas 2-4 y por
     ultimo 5-10; conservar contratos de nombres, LOD, hitboxes y controllers.
-14. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
+15. Ejecutar `MMORPG > QA > Generate Content Completeness Report` después de
     cada cambio de zonas, misiones, loot o equipos.
-15. Probar contratos diarios y Renacimiento con varios personajes antes de
+16. Probar contratos diarios y Renacimiento con varios personajes antes de
     mover sus recompensas a autoridad del servidor.
-16. Probar cambio de lunes UTC, cambio de temporada, hitos 5/10/15/20/25/30
+17. Probar cambio de lunes UTC, cambio de temporada, hitos 5/10/15/20/25/30
     calendario diario y persistencia de recompensas en Android.
-17. Validar en S-01 horarios del jefe, membresias de clan, ranking y resultados
+18. Validar en S-01 horarios del jefe, membresias de clan, ranking y resultados
     del modo todos contra todos antes de habilitar recompensas online.
 
 ## Registro
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-19 | 6.06 | Pivot 2D isometrico gratuito: vertical slice de Zona 1 con sprites CC0, movimiento, combate, NPC, minimapa y joystick; fuentes y licencias registradas | 58% sistemas / 15% corte 2D |
 | 2026-07-18 | 6.03 | Vertical slice visual de Zona 1: coniferas low-poly, rocas redondeadas, anillos de zonas, campamento con toldos y fogata propia; APK Android generada y auditoria 17/17 | 65% |
 | 2026-07-18 | 6.02 | Correccion de regresion visual: KayKit/Quaternius legibles, materiales originales, sin cubos importados ni kits duplicados | 64% |
 | 2026-07-18 | 5.99 | Auditoria 17/17 con 8 FBX y 8 controllers de personajes, 30 FBX y 30 controllers de mobs; APK limpia generada, instalacion y QA Android pendientes | 62% beta offline |
