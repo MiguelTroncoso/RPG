@@ -363,9 +363,11 @@ despues se replica el pipeline a las nueve zonas restantes.
   compilación del selector de servidor causado por la inicialización tardía de
   `selectedServerText`. El Asset Pipeline de Unity volvió a completar la
   compilación sin errores nuevos.
-- La APK disponible antes de este corte sigue siendo anterior a la activación
-  primaria de FBX. La validación visual y de rendimiento en Android queda
-  pendiente de generar una APK nueva desde Unity y recorrer las diez zonas.
+- La APK nueva se generó con Unity batch tras recompilar los assemblies y
+  limpiar la caché Bee/IL2CPP que provocaba símbolos duplicados. El archivo
+  `Builds/Android/valle-reliquias-debug.apk` queda en 48 MB, target SDK 35,
+  SHA-256 `788f6ec5108ab3c37e11c3d663a728ee20221a97c228e7f612525fac05a3a1f0`.
+  Falta instalarla y completar el QA visual/rendimiento en un Android real.
 
 ## Prioridad Recomendada
 
@@ -428,6 +430,7 @@ despues se replica el pipeline a las nueve zonas restantes.
 
 | Fecha | Fase | Resultado | Global |
 | --- | --- | --- | --- |
+| 2026-07-18 | 5.99 | Auditoria 17/17 con 8 FBX y 8 controllers de personajes, 30 FBX y 30 controllers de mobs; APK limpia generada, instalacion y QA Android pendientes | 62% beta offline |
 | 2026-07-18 | 5.98 | FBX skinned authored primarios: 8 personajes, 30 mobs/jefes, controllers de cinco clips y LODGroup de mobs; validacion Unity/Android pendiente | 61% beta offline |
 | 2026-07-18 | 5.97 | Siluetas authored de las cuatro clases y lobos/guardian de reliquia en Zona 1; validacion Unity/Android pendiente | 60% beta offline |
 | 2026-07-18 | 5.92 | HUD compacto, spawns por zona, suelo de bioma y campamento offline; APK requiere build desde Unity Hub | 60% beta offline |
