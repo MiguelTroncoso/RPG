@@ -17,10 +17,11 @@ namespace MmorpgPrototype
         private bool usingImportedModel;
         private bool usingOriginalArt;
 
-        // The authored FBX set is now the primary character presentation. The
-        // KayKit model remains available as a compatibility fallback while
-        // older saves or missing resources are encountered.
-        private static bool PreferExperimentalOriginalArt => true;
+        // The generated FBX pass is intentionally kept out of the beta runtime.
+        // It is a technical art source, not the final player-facing character
+        // presentation. KayKit supplies the readable humanoid silhouettes until
+        // the bespoke skinned character pack replaces it.
+        private static bool PreferExperimentalOriginalArt => false;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
@@ -72,7 +73,8 @@ namespace MmorpgPrototype
                 currentArtProfile.ModelScale * (gender == CharacterGender.Femenino ? 1.02f : 1.04f),
                 currentArtProfile.ModelScale);
 
-            // Modelo real si el asset existe en Resources; procedural si no.
+            // Use a recognizable humanoid model for the playable beta. The
+            // generated experimental FBX pass is opt-in only.
             usingImportedModel = TryBuildCharacterModel(definition, gender);
             if (usingImportedModel)
             {
@@ -162,6 +164,7 @@ namespace MmorpgPrototype
 
             var model = Instantiate(prefab, visualRoot.transform);
             model.name = "Character Model";
+            RemoveImportArtifacts(model);
             // El pivote de los personajes KayKit esta en los pies; el del
             // jugador (capsula) en el centro, a 1 unidad del suelo.
             model.transform.localPosition = new Vector3(0f, -1f, 0f);
@@ -260,7 +263,7 @@ namespace MmorpgPrototype
             var armorColor = profile.ArmorColor;
             var trimColor = profile.TrimColor;
             var accentColor = profile.AccentColor;
-            if (!usingOriginalArt)
+            if (!usingImportedModel && !usingOriginalArt)
             {
                 CreatePart(armorRoot.transform, "Armor Chest", PrimitiveType.Cube, new Vector3(0f, 0.18f, -0.39f), new Vector3(0.56f, 0.24f, 0.1f), armorColor);
                 CreatePart(armorRoot.transform, "Armor Belt", PrimitiveType.Cube, new Vector3(0f, -0.17f, -0.36f), new Vector3(0.6f, 0.1f, 0.08f), trimColor);
@@ -297,17 +300,22 @@ namespace MmorpgPrototype
 
             }
 
-            // The authored FBX supplies the animated body, but class identity
-            // remains a separate presentation layer so it cannot disappear
-            // when an imported model is selected.
-            BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
-            BuildClassSignature(armorRoot.transform, artProfile);
+            // KayKit already carries the class silhouette, clothing and starter
+            // weapon. Only the generated fallback needs the runtime identity kit.
+            if (!usingImportedModel)
+            {
+                BuildClassEmblem(armorRoot.transform, definition.Type, trimColor, accentColor);
+                BuildClassSignature(armorRoot.transform, artProfile);
+            }
 
             if (usingOriginalArt)
             {
                 OriginalArtVisualFactory.SetStarterWeaponVisible(visualRoot.transform, IsWeaponUnequipped());
             }
-            BuildEquippedVisuals(trimColor);
+            if (!usingImportedModel)
+            {
+                BuildEquippedVisuals(trimColor);
+            }
         }
 
         private void BuildClassSignature(Transform parent, CharacterArtProfile profile)
@@ -450,13 +458,14 @@ namespace MmorpgPrototype
         private static void ApplyModelArtTreatment(GameObject model, CharacterArtProfile profile)
         {
             var block = new MaterialPropertyBlock();
-            foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
             {
                 renderer.GetPropertyBlock(block);
-                block.SetColor(BaseColorId, Color.Lerp(Color.white, profile.PrimaryColor, 0.06f));
-                block.SetColor(LegacyColorId, Color.Lerp(Color.white, profile.PrimaryColor, 0.06f));
-                block.SetFloat(MetallicId, 0.18f);
-                block.SetFloat(SmoothnessId, 0.42f);
+                // Do not overwrite the imported albedo. The previous tint made
+                // the entire character read as a silver placeholder in-game.
+                block.SetFloat(MetallicId, 0.06f);
+                block.SetFloat(SmoothnessId, 0.3f);
+                renderer.receiveShadows = true;
                 renderer.SetPropertyBlock(block);
             }
         }
@@ -627,6 +636,28 @@ namespace MmorpgPrototype
             }
 
             return part;
+        }
+
+        private static void RemoveImportArtifacts(GameObject model)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            foreach (var child in model.GetComponentsInChildren<Transform>(true))
+            {
+                if (child == model.transform)
+                {
+                    continue;
+                }
+
+                var name = child.name;
+                if (name == "Cube" || name.StartsWith("Cube."))
+                {
+                    Destroy(child.gameObject);
+                }
+            }
         }
     }
 }

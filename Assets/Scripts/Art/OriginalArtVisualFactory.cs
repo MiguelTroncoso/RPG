@@ -81,6 +81,7 @@ namespace MmorpgPrototype
 
             var model = Object.Instantiate(prefab, parent);
             model.name = $"Authored {profile.ClassType} {profile.Gender}";
+            RemoveImportArtifacts(model);
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one;
@@ -151,6 +152,28 @@ namespace MmorpgPrototype
             lodGroup.RecalculateBounds();
 
             return model;
+        }
+
+        private static void RemoveImportArtifacts(GameObject model)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            foreach (var child in model.GetComponentsInChildren<Transform>(true))
+            {
+                if (child == model.transform)
+                {
+                    continue;
+                }
+
+                var name = child.name;
+                if (name == "Cube" || name.StartsWith("Cube."))
+                {
+                    Object.Destroy(child.gameObject);
+                }
+            }
         }
 
         public static GameObject BuildWarriorMale(Transform parent, CharacterArtProfile profile)

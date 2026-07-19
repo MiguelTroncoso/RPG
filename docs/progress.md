@@ -6,15 +6,15 @@ economia, seguridad, operacion y publicacion.
 
 ## Corte Diario: 2026-07-18
 
-- Avance global estimado hacia el MMORPG publicable: **98%**.
+- Avance global estimado hacia el MMORPG publicable: **64%**.
 - Prototipo jugable offline: **100%**.
-- Vertical slice de una zona pulida: **99%**.
+- Vertical slice de una zona pulida: **62%**.
 - Online persistente y preparado para produccion: **48%**.
 - Contenido funcional 1-105: **100%**.
 - Longevidad offline (contratos y Renacimiento): **75%**.
 - Eventos y temporadas offline: **82%**.
-- Arte authored integrado y listo para iteracion: **94%**.
-- Arte manual comercial, online y lanzamiento: **78%**.
+- Arte authored integrado como base tecnica: **62%**.
+- Arte manual comercial, online y lanzamiento: **18%**.
 
 La cifra global sube lentamente porque los sistemas base estan bastante
 avanzados, pero todavia faltan muchas horas de arte, contenido, pruebas y
@@ -388,6 +388,22 @@ despues se replica el pipeline a las nueve zonas restantes.
 - Cada NPC usa un humanoide 3D, tintado por rol, y props reconocibles: satchel
   y lanterna para el mercader, delantal/mazo/yunque para el herrero, y cofre,
   cerradura y llave para el almacen.
+
+## Fase 6.02: Correccion Visual De La Beta
+
+- Se desactiva en runtime el paquete `OriginalArt` generado que estaba entrando
+  como modelo principal aunque todavía era una malla técnica de transición.
+- La beta usa ahora las siluetas KayKit/Quaternius disponibles, conserva sus
+  texturas originales y evita superponer el antiguo kit de primitivas sobre los
+  personajes y mobs importados.
+- Se eliminan los objetos `Cube` de importación que provocaban cuadros verdes o
+  piezas flotantes, tanto en el camino importado como en el fallback authored.
+- Los NPC conservan su cuerpo 3D y props de rol sin el tinte plateado global;
+  las etiquetas del mundo se reducen y se muestran en una sola línea.
+- Este corte corrige una regresión visible de la beta. No se presenta como la
+  sustitución definitiva por personajes high-poly comerciales: ese salto aún
+  requiere FBX skinned authored real, texturas PBR pintadas y animaciones de
+  producción.
 - La capa de interaccion, misiones y servicios permanece intacta; solo cambia
   la presentacion visual y la posicion de la etiqueta para que acompañe al
   nuevo cuerpo.

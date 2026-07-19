@@ -23,10 +23,10 @@ namespace MmorpgPrototype
         private Coroutine deathRoutine;
         private bool usingOriginalArt;
 
-        // The authored FBX set is the primary mob presentation for every zone
-        // and tier. Quaternius/procedural visuals remain a safe fallback when
-        // a future content pack has not been imported yet.
-        private static bool PreferExperimentalOriginalArt => true;
+        // The generated FBX pass is not ready for player-facing use. The beta
+        // therefore uses the readable Quaternius silhouettes and keeps the
+        // generated pack available only for a later authored-content pass.
+        private static bool PreferExperimentalOriginalArt => false;
 
         public void Initialize(string enemyId, string displayName, EnemyTier tier, Color baseColor, float scale, Health enemyHealth)
         {
@@ -48,8 +48,8 @@ namespace MmorpgPrototype
             var builtRealModel = TryBuildRealModel(id, tier, baseColor, accent);
             if (builtRealModel)
             {
-                ApplyZoneVariant(id, baseColor, accent, tier);
-                BuildTierAdornment(tier, accent, id);
+                // Imported Quaternius models already have their own silhouette.
+                // Do not attach the old primitive zone kit on top of them.
             }
             else if (id.Contains("forest") || id.Contains("valley"))
             {
@@ -199,6 +199,7 @@ namespace MmorpgPrototype
             if (!string.IsNullOrWhiteSpace(modelResource))
             {
                 model.name = authoredPrefab != null ? "Authored Mob 3D Model" : "Enemy 3D Model";
+                RemoveImportArtifacts(model);
                 model.transform.localPosition = ModelOffsetFor(modelResource);
                 model.transform.localRotation = Quaternion.identity;
                 model.transform.localScale = Vector3.one * ModelScaleFor(modelResource, tier);
@@ -387,26 +388,14 @@ namespace MmorpgPrototype
 
         private static void ApplyModelArtTreatment(GameObject model, string enemyId, Color baseColor, Color accent, EnemyTier tier)
         {
-            var palette = tier == EnemyTier.Boss ? BossPaletteFor(enemyId, baseColor) : baseColor;
-            if (enemyId.Contains("valley"))
-            {
-                palette = tier == EnemyTier.Boss
-                    ? new Color(0.76f, 0.5f, 0.18f)
-                    : tier == EnemyTier.Elite
-                        ? new Color(0.38f, 0.2f, 0.12f)
-                        : new Color(0.24f, 0.1f, 0.08f);
-            }
-
-            var tintStrength = tier == EnemyTier.Boss ? 0.22f : tier == EnemyTier.Elite ? 0.16f : 0.1f;
             var block = new MaterialPropertyBlock();
-            foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
             {
                 renderer.GetPropertyBlock(block);
-                var tint = Color.Lerp(Color.white, palette, tintStrength);
-                block.SetColor(BaseColorId, tint);
-                block.SetColor(LegacyColorId, tint);
-                block.SetFloat(MetallicId, tier == EnemyTier.Boss ? 0.3f : 0.16f);
-                block.SetFloat(SmoothnessId, tier == EnemyTier.Boss ? 0.5f : 0.36f);
+                // Preserve the authored monster atlas. Tinting every renderer
+                // white was flattening the creatures into pale metal objects.
+                block.SetFloat(MetallicId, tier == EnemyTier.Boss ? 0.18f : 0.04f);
+                block.SetFloat(SmoothnessId, tier == EnemyTier.Boss ? 0.42f : 0.28f);
                 block.SetColor(EmissionColorId, Color.Lerp(Color.black, accent, tier == EnemyTier.Boss ? 0.12f : 0.035f));
                 renderer.SetPropertyBlock(block);
 
@@ -969,10 +958,11 @@ namespace MmorpgPrototype
             var label = labelObject.AddComponent<TextMesh>();
             label.text = displayName;
             label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            label.fontSize = tier == EnemyTier.Boss ? 34 : 28;
-            label.characterSize = tier == EnemyTier.Boss ? 0.045f : 0.038f;
+            label.fontSize = tier == EnemyTier.Boss ? 28 : 22;
+            label.characterSize = tier == EnemyTier.Boss ? 0.036f : 0.028f;
             label.anchor = TextAnchor.MiddleCenter;
             label.alignment = TextAlignment.Center;
+            label.fontStyle = FontStyle.Bold;
             label.color = tier == EnemyTier.Normal ? Color.white : accent;
 
             var background = CreateStatusPart("Health Background", new Vector3(healthBarWidth, 0.075f, 0.035f), new Color(0.03f, 0.04f, 0.05f));
@@ -1019,6 +1009,28 @@ namespace MmorpgPrototype
             if (collider != null)
             {
                 Object.Destroy(collider);
+            }
+        }
+
+        private static void RemoveImportArtifacts(GameObject model)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            foreach (var child in model.GetComponentsInChildren<Transform>(true))
+            {
+                if (child == model.transform)
+                {
+                    continue;
+                }
+
+                var name = child.name;
+                if (name == "Cube" || name.StartsWith("Cube."))
+                {
+                    Object.Destroy(child.gameObject);
+                }
             }
         }
 

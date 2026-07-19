@@ -1517,11 +1517,12 @@ namespace MmorpgPrototype
             labelObject.transform.localPosition = new Vector3(0f, height, 0f);
 
             var label = labelObject.AddComponent<TextMesh>();
-            label.text = text;
-            label.fontSize = 38;
-            label.characterSize = 0.045f;
+            label.text = text.Replace("\n", "  ·  ");
+            label.fontSize = 26;
+            label.characterSize = 0.031f;
             label.anchor = TextAnchor.MiddleCenter;
             label.alignment = TextAlignment.Center;
+            label.fontStyle = FontStyle.Bold;
             label.color = color;
         }
 

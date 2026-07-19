@@ -7,9 +7,6 @@ namespace MmorpgPrototype
     // identifiable before the final bespoke NPC meshes are authored.
     public static class NpcVisualFactory
     {
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
-
         public static void BuildMerchant(Transform parent)
         {
             var warmGold = new Color(0.82f, 0.43f, 0.12f);
@@ -58,6 +55,7 @@ namespace MmorpgPrototype
 
             var model = Object.Instantiate(prefab, parent);
             model.name = name;
+            RemoveImportArtifacts(model);
             model.transform.localPosition = Vector3.zero;
             model.transform.localRotation = Quaternion.identity;
             model.transform.localScale = Vector3.one * scale;
@@ -66,17 +64,36 @@ namespace MmorpgPrototype
                 Object.Destroy(collider);
             }
 
-            var block = new MaterialPropertyBlock();
             foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
             {
-                renderer.GetPropertyBlock(block);
-                var bodyTint = Color.Lerp(Color.white, tint, 0.2f);
-                block.SetColor(BaseColorId, bodyTint);
-                block.SetColor(LegacyColorId, bodyTint);
-                renderer.SetPropertyBlock(block);
+                // Keep the authored KayKit texture. Applying a broad runtime
+                // tint made every role look like the same silver mannequin.
+                renderer.receiveShadows = true;
             }
 
             return model;
+        }
+
+        private static void RemoveImportArtifacts(GameObject model)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            foreach (var child in model.GetComponentsInChildren<Transform>(true))
+            {
+                if (child == model.transform)
+                {
+                    continue;
+                }
+
+                var name = child.name;
+                if (name == "Cube" || name.StartsWith("Cube."))
+                {
+                    Object.Destroy(child.gameObject);
+                }
+            }
         }
 
         private static void CreateStaff(Transform parent, string name, Vector3 position, Color wood, Color crystal)
